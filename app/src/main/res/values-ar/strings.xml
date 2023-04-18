@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">رفيق الصلاة</string>
+
+    <string name="fajr">الفجر</string>
+    <string name="dhuhr">الظهر</string>
+    <string name="asr">العصر</string>
+    <string name="maghrib">المغرب</string>
+    <string name="isha">العشاء</string>
+
+    <string name="status">الحالة</string>
+    <string name="remaining_time">
+        الوقت المتبقي: %02d:%02d:%02d
+    </string>
+
+    <string name="error_something_went_wrong">نأسف, يبدوا ان هنالك مشكلة ما</string>
+
+    <string name="home_tab">الرئيسية</string>
+
+    <string name="jamaah_prayer_status">جماعة</string>
+    <string name="on_time_prayer_status">على الوقت</string>
+    <string name="late_prayer_status">متاخر</string>
+    <string name="missed_prayer_status">فاتت</string>
+    <string name="qadaa_prayer_status">قضاء</string>
+</resources>

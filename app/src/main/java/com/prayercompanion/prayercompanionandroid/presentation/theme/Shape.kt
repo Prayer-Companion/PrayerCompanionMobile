@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.ui.theme
+package com.prayercompanion.prayercompanionandroid.presentation.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes
