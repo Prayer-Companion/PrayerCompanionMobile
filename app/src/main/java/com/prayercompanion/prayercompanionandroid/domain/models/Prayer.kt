@@ -5,6 +5,7 @@ import com.prayercompanion.prayercompanionandroid.R
 
 enum class Prayer(@StringRes val nameId: Int) {
     FAJR(R.string.fajr),
+    DUHA(R.string.duha),
     DHUHR(R.string.dhuhr),
     ASR(R.string.asr),
     MAGHRIB(R.string.maghrib),

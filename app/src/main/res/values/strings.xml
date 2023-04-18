@@ -3,6 +3,7 @@
     <string name="app_name">Prayer companion</string>
 
     <string name="fajr">Fajr</string>
+    <string name="duha">Duha</string>
     <string name="dhuhr">Dhuhr</string>
     <string name="asr">Asr</string>
     <string name="maghrib">Maghrib</string>
