@@ -30,7 +30,7 @@ fun HomeScreen(
     val context = LocalContext.current
 
     LaunchedEffect(key1 = true) {
-        viewModel.uiEvents.collect {
+        viewModel.uiEventsChannel.collect {
             when (it) {
                 is UiEvent.ShowErrorSnackBar -> {
                     scaffoldState

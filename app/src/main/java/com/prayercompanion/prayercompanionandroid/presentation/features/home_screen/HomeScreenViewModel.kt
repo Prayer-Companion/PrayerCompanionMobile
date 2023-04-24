@@ -24,7 +24,6 @@ import kotlinx.coroutines.withContext
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,8 +36,8 @@ class HomeScreenViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var loadCurrentDatePrayersJob: Job? = null
-    private val _uiEvents = Channel<UiEvent>()
-    val uiEvents = _uiEvents.receiveAsFlow()
+    private val _uiEventsChannel = Channel<UiEvent>()
+    val uiEventsChannel = _uiEventsChannel.receiveAsFlow()
 
     private var currentPrayer by mutableStateOf(PrayerInfo.Default)
     var currentDate: LocalDate by mutableStateOf(LocalDate.now())
@@ -143,7 +142,7 @@ class HomeScreenViewModel @Inject constructor(
 
     private fun sendEvent(event: UiEvent) {
         viewModelScope.launch(Dispatchers.Main) {
-            _uiEvents.send(event)
+            _uiEventsChannel.send(event)
         }
     }
 }

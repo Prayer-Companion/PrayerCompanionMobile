@@ -21,18 +21,24 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
 import com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.HomeScreen
+import com.prayercompanion.prayercompanionandroid.presentation.features.sign_in.SignInScreen
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var googleSignInClient: GoogleSignInClient
+
     sealed class BottomNavItem(val route: String, @StringRes val nameId: Int) {
         object Home : BottomNavItem(Route.HOME, R.string.home_tab)
     }
-
 
     private val locationPermissionContract =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { locationsPermissions ->
@@ -90,11 +96,14 @@ class MainActivity : ComponentActivity() {
                     NavHost(
                         modifier = Modifier.padding(it),
                         navController = navController,
-                        startDestination = Route.HOME,
+                        startDestination = Route.SIGN_IN,
                     ) {
-                        composable(Route.HOME) {
-                            HomeScreen(scaffoldState = scaffoldState)
+                        composable(Route.SIGN_IN) {
+                            SignInScreen(googleSignInClient)
                         }
+//                        composable(Route.HOME) {
+//                            HomeScreen(scaffoldState = scaffoldState)
+//                        }
                     }
                 }
             }
