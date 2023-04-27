@@ -13,6 +13,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import logcat.asLog
 import logcat.logcat
+import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,19 +39,8 @@ class SignInViewModel @Inject constructor(
             val token = task.result.idToken ?: return
             authenticationHelper.signInWithGoogle(
                 token,
-                onSuccess = {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        accountSignIn.call(token)
-                    }
-                },
-                onFailure = {
-                    sendEvent(
-                        UiEvent.ShowErrorSnackBar(
-                            //todo
-                            UiText.DynamicString("Something went wrong")
-                        )
-                    )
-                },
+                onSuccess = ::onSignInSuccess,
+                onFailure = ::onSignInFail,
             )
         } else {
             sendEvent(
@@ -61,6 +51,28 @@ class SignInViewModel @Inject constructor(
             )
             logcat { task.exception?.asLog() ?: "" }
         }
+    }
+
+    fun onSignInAnonymously() {
+        authenticationHelper.signInAnonymously(
+            onSuccess = ::onSignInSuccess,
+            onFailure = ::onSignInFail
+        )
+    }
+
+    private fun onSignInSuccess() {
+        viewModelScope.launch(Dispatchers.IO) {
+            accountSignIn.call()
+        }
+    }
+
+    private fun onSignInFail(exception: Exception) {
+        sendEvent(
+            UiEvent.ShowErrorSnackBar(
+                //todo
+                UiText.DynamicString("Something went wrong")
+            )
+        )
     }
 
     private fun sendEvent(uiEvent: UiEvent) {

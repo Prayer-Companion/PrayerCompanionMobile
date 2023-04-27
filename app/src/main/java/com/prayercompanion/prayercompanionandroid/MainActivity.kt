@@ -12,6 +12,9 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -37,11 +40,11 @@ class MainActivity : ComponentActivity() {
     lateinit var googleSignInClient: GoogleSignInClient
 
     sealed class BottomNavItem(val route: String, @StringRes val nameId: Int) {
-        object Home : BottomNavItem(Route.HOME, R.string.home_tab)
+        object Home : BottomNavItem(Route.Home.name, R.string.home_tab)
     }
 
     private val locationPermissionContract =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { locationsPermissions ->
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
             // TODO:
         }
 
@@ -51,44 +54,57 @@ class MainActivity : ComponentActivity() {
             PrayerCompanionAndroidTheme {
                 val navController = rememberNavController()
                 val scaffoldState = rememberScaffoldState()
+                var shouldShowBottomNavigationBar by rememberSaveable {
+                    mutableStateOf(false)
+                }
+                navController.addOnDestinationChangedListener { _, destination, _ ->
+                    val route = Route.valueOf(destination.route ?: Route.SignIn.name)
+                    shouldShowBottomNavigationBar = when (route) {
+                        Route.SignIn -> false
+                        else -> true
+                    }
+                }
+
                 Scaffold(
                     scaffoldState = scaffoldState,
                     bottomBar = {
-                        BottomNavigation(
-                            modifier = Modifier.background(
-                                color = MaterialTheme.colors.primary,
-                                shape = RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp)
-                            )
-                        ) {
-                            val navBackStackEntry by navController.currentBackStackEntryAsState()
-                            val currentDestination = navBackStackEntry?.destination
-
-                            listOf(BottomNavItem.Home).forEach { screen ->
-                                BottomNavigationItem(
-                                    icon = {
-                                        Icon(
-                                            Icons.Filled.Home,
-                                            contentDescription = null
-                                        )
-                                    },
-                                    label = { Text(stringResource(screen.nameId)) },
-                                    selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                                    onClick = {
-                                        navController.navigate(screen.route) {
-                                            // Pop up to the start destination of the graph to
-                                            // avoid building up a large stack of destinations
-                                            // on the back stack as users select items
-                                            popUpTo(navController.graph.findStartDestination().id) {
-                                                saveState = true
-                                            }
-                                            // Avoid multiple copies of the same destination when
-                                            // re-selecting the same item
-                                            launchSingleTop = true
-                                            // Restore state when re-selecting a previously selected item
-                                            restoreState = true
-                                        }
-                                    }
+                        if (shouldShowBottomNavigationBar) {
+                            BottomNavigation(
+                                modifier = Modifier.background(
+                                    color = MaterialTheme.colors.primary,
+                                    shape = RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp)
                                 )
+                            ) {
+                                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                                val currentDestination = navBackStackEntry?.destination
+
+                                listOf(BottomNavItem.Home).forEach { screen ->
+                                    BottomNavigationItem(
+                                        icon = {
+                                            Icon(
+                                                Icons.Filled.Home,
+                                                contentDescription = null
+                                            )
+                                        },
+                                        label = { Text(stringResource(screen.nameId)) },
+                                        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                                        onClick = {
+                                            navController.navigate(screen.route) {
+                                                // Pop up to the start destination of the graph to
+                                                // avoid building up a large stack of destinations
+                                                // on the back stack as users select items
+                                                popUpTo(navController.graph.findStartDestination().id) {
+                                                    saveState = true
+                                                }
+                                                // Avoid multiple copies of the same destination when
+                                                // re-selecting the same item
+                                                launchSingleTop = true
+                                                // Restore state when re-selecting a previously selected item
+                                                restoreState = true
+                                            }
+                                        }
+                                    )
+                                }
                             }
                         }
                     }
@@ -96,14 +112,14 @@ class MainActivity : ComponentActivity() {
                     NavHost(
                         modifier = Modifier.padding(it),
                         navController = navController,
-                        startDestination = Route.SIGN_IN,
+                        startDestination = Route.SignIn.name,
                     ) {
-                        composable(Route.SIGN_IN) {
+                        composable(Route.SignIn.name) {
                             SignInScreen(googleSignInClient)
                         }
-//                        composable(Route.HOME) {
-//                            HomeScreen(scaffoldState = scaffoldState)
-//                        }
+                        composable(Route.Home.name) {
+                            HomeScreen(scaffoldState = scaffoldState)
+                        }
                     }
                 }
             }

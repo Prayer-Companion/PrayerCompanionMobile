@@ -21,4 +21,7 @@
     <string name="qadaa_prayer_status">Qadaa</string>
     <string name="late_prayer_status">Late</string>
     <string name="jamaah_prayer_status">Jamaah</string>
+    <string name="or">Or</string>
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="continue_as_guest">Continue as a Guest</string>
 </resources>

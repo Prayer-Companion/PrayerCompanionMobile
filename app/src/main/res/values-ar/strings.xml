@@ -23,4 +23,7 @@
     <string name="late_prayer_status">متاخر</string>
     <string name="missed_prayer_status">فاتت</string>
     <string name="qadaa_prayer_status">قضاء</string>
+    <string name="or">أو</string>
+    <string name="continue_with_google">تسجيل الدخول ب Google</string>
+    <string name="continue_as_guest">الاستمرار ك ضيف</string>
 </resources>

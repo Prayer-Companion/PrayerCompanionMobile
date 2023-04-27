@@ -8,7 +8,7 @@ import com.prayercompanion.prayercompanionandroid.data.remote.PrayerCompanionApi
 import com.prayercompanion.prayercompanionandroid.data.remote.dto.DayPrayerResponse
 import com.prayercompanion.prayercompanionandroid.data.remote.mappers.toDayPrayerInfo
 import com.prayercompanion.prayercompanionandroid.data.remote.mappers.toPrayerInfoEntity
-import com.prayercompanion.prayercompanionandroid.data.utils.DataConsts
+import com.prayercompanion.prayercompanionandroid.data.utils.Consts
 import com.prayercompanion.prayercompanionandroid.domain.models.*
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
 import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
@@ -44,17 +44,17 @@ class PrayersRepositoryImpl @Inject constructor(
             TimeZone.getDefault().id,
             location.latitude.toString(),
             location.longitude.toString(),
-            date.format(DataConsts.MonthYearFormatter)
+            date.format(Consts.MonthYearFormatter)
         )
 
         insertMonthPrayers(response, date)
 
         val dayPrayers = response
-            .find { it.date == date.format(DataConsts.DateFormatter) }
+            .find { it.date == date.format(Consts.DateFormatter) }
             ?: throw Exception(
                 "Response from BE doesn't have the required date ${
                     date.format(
-                        DataConsts.MonthYearFormatter
+                        Consts.MonthYearFormatter
                     )
                 }"
             )
