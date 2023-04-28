@@ -7,8 +7,8 @@ import android.content.pm.PackageManager
 import android.location.Location
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.LocationServices
-import com.prayercompanion.prayercompanionandroid.log
 import dagger.hilt.android.qualifiers.ApplicationContext
+import logcat.logcat
 import javax.inject.Inject
 
 class AppLocationManager @Inject constructor(
@@ -21,7 +21,7 @@ class AppLocationManager @Inject constructor(
     @SuppressLint("MissingPermission")
     fun getLastKnownLocation(callback: (Location?) -> Unit) {
         if (areAllPermissionsGranted().not()) {
-            log { "Location permission is missing" }
+            logcat { "Location permission is missing" }
             return
         }
 

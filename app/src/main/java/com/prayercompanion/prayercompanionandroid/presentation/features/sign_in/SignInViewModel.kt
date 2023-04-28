@@ -6,7 +6,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.tasks.Task
 import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.prayercompanionandroid.domain.usecases.AccountSignIn
+import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.utils.AuthenticationHelper
+import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
 import com.prayercompanion.prayercompanionandroid.presentation.utils.toUiText
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +18,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import logcat.asLog
 import logcat.logcat
-import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,13 +26,17 @@ class SignInViewModel @Inject constructor(
     private val accountSignIn: AccountSignIn
 ) : ViewModel() {
 
-    private val _uiEventsChannel = Channel<SignInUiEvent>()
+    private val _uiEventsChannel = Channel<UiEvent>()
     val uiEventsChannel = _uiEventsChannel.receiveAsFlow()
 
     fun onEvent(event: SignInEvents) {
         when (event) {
-            is SignInEvents.OnSignInWithGoogleResultReceived -> onSignInWithGoogleResultReceived(event.result, event.task)
-            is SignInEvents.OnSignInAnonymously -> onSignInAnonymously()
+            is SignInEvents.OnSignInWithGoogleResultReceived -> onSignInWithGoogleResultReceived(
+                event.result,
+                event.task
+            )
+
+            is SignInEvents.OnSignInAnonymously -> onSignInAnonymouslyClicked()
         }
     }
 
@@ -53,7 +58,7 @@ class SignInViewModel @Inject constructor(
         }
     }
 
-    private fun onSignInAnonymously() {
+    private fun onSignInAnonymouslyClicked() {
         authenticationHelper.signInAnonymously(
             onSuccess = ::onSignInSuccess,
             onFailure = ::onSignInFail
@@ -62,7 +67,12 @@ class SignInViewModel @Inject constructor(
 
     private fun onSignInSuccess() {
         viewModelScope.launch(Dispatchers.IO) {
-            accountSignIn.call()
+            val signInResult = accountSignIn.call()
+            signInResult.onSuccess {
+                sendEvent(UiEvent.Navigate(Route.Home))
+            }.onFailure {
+                sendErrorEvent(it.message.toUiText())
+            }
         }
     }
 
@@ -71,10 +81,10 @@ class SignInViewModel @Inject constructor(
     }
 
     private fun sendErrorEvent(text: UiText) {
-        sendEvent(SignInUiEvent.ShowErrorSnackBar(text))
+        sendEvent(UiEvent.ShowErrorSnackBar(text))
     }
 
-    private fun sendEvent(uiEvent: SignInUiEvent) {
+    private fun sendEvent(uiEvent: UiEvent) {
         viewModelScope.launch {
             _uiEventsChannel.send(uiEvent)
         }

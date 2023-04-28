@@ -17,6 +17,7 @@
     <string name="error_something_went_wrong">نأسف, يبدوا ان هنالك مشكلة ما</string>
 
     <string name="home_tab">الرئيسية</string>
+    <string name="qibla_tab">القبلة</string>
 
     <string name="jamaah_prayer_status">جماعة</string>
     <string name="on_time_prayer_status">على الوقت</string>

@@ -22,19 +22,21 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.firebase.auth.FirebaseAuth
 import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.data.utils.Consts
 import com.prayercompanion.prayercompanionandroid.presentation.components.OrSeparator
 import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
+import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
+import com.prayercompanion.prayercompanionandroid.showToast
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -42,11 +44,13 @@ import kotlinx.coroutines.flow.emptyFlow
 @Preview(locale = "ar")
 @Composable
 fun SignInScreen(
+    navigate: (UiEvent.Navigate) -> Unit = {},
     googleSignInClient: GoogleSignInClient? = null,
-    uiEvents: Flow<SignInUiEvent> = emptyFlow(),
+    uiEvents: Flow<UiEvent> = emptyFlow(),
     onEvent: (SignInEvents) -> Unit = {}
 ) {
     val spacing = LocalSpacing.current
+    val context = LocalContext.current
 
     val signInWithGoogleLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -54,6 +58,15 @@ fun SignInScreen(
             val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
             onEvent(SignInEvents.OnSignInWithGoogleResultReceived(result, task))
         }
+
+    LaunchedEffect(key1 = uiEvents) {
+        uiEvents.collect {
+            when (it) {
+                is UiEvent.Navigate -> navigate(it)
+                is UiEvent.ShowErrorSnackBar -> context.showToast(it.errorMessage.asString(context))
+            }
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -75,29 +88,6 @@ fun SignInScreen(
                 ),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            //todo remove
-            Button(
-                modifier = Modifier
-                    .defaultMinSize(minHeight = 45.dp)
-                    .fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(MaterialTheme.colors.primary),
-                shape = RoundedCornerShape(50.dp),
-                onClick = {
-                    FirebaseAuth.getInstance().signOut()
-                    googleSignInClient?.signOut()
-                    Consts.userToken = null
-                }) {
-                Row(
-                    modifier = Modifier
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_google),
-                        contentDescription = stringResource(id = R.string.continue_with_google)
-                    )
-                    Spacer(modifier = Modifier.width(spacing.spaceSmall))
-                    Text(text = "Log out ")
-                }
-            }
             Button(
                 modifier = Modifier
                     .defaultMinSize(minHeight = 45.dp)

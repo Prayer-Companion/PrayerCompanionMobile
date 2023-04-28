@@ -11,8 +11,12 @@ import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.models.RemainingDuration
-import com.prayercompanion.prayercompanionandroid.domain.usecases.*
+import com.prayercompanion.prayercompanionandroid.domain.usecases.GetCurrentPrayer
+import com.prayercompanion.prayercompanionandroid.domain.usecases.GetDayPrayers
+import com.prayercompanion.prayercompanionandroid.domain.usecases.GetNextPrayer
+import com.prayercompanion.prayercompanionandroid.domain.usecases.UpdatePrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
+import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -36,8 +40,8 @@ class HomeScreenViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var loadCurrentDatePrayersJob: Job? = null
-    private val _uiEventsChannel = Channel<UiEvent>()
-    val uiEventsChannel = _uiEventsChannel.receiveAsFlow()
+    private val _uiEvents = Channel<UiEvent>()
+    val uiEvents = _uiEvents.receiveAsFlow()
 
     private var currentPrayer by mutableStateOf(PrayerInfo.Default)
     var currentDate: LocalDate by mutableStateOf(LocalDate.now())
@@ -142,7 +146,7 @@ class HomeScreenViewModel @Inject constructor(
 
     private fun sendEvent(event: UiEvent) {
         viewModelScope.launch(Dispatchers.Main) {
-            _uiEventsChannel.send(event)
+            _uiEvents.send(event)
         }
     }
 }

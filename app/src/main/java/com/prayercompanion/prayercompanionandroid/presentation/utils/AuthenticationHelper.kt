@@ -6,8 +6,7 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.prayercompanion.prayercompanionandroid.data.utils.Consts
-import logcat.asLog
-import logcat.logcat
+import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
 import javax.inject.Inject
 
 class AuthenticationHelper @Inject constructor(
@@ -46,14 +45,14 @@ class AuthenticationHelper @Inject constructor(
         if (task.isSuccessful) {
             task.result.user?.getIdToken(false)
                 ?.addOnSuccessListener {
-                Consts.userToken = it.token
-            }
+                    Consts.userToken = it.token
+                }
             onSuccess()
         } else {
             signOut()
             task.exception?.let {
                 onFailure(it)
-                logcat { it.asLog() }
+                it.printStackTraceInDebug()
             }
         }
     }

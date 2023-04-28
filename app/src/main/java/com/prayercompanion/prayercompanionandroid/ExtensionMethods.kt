@@ -1,21 +1,20 @@
 package com.prayercompanion.prayercompanionandroid
 
-import android.util.Log
+import android.content.Context
+import android.widget.Toast
+import androidx.navigation.NavController
+import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
+
+fun NavController.navigate(event: UiEvent.Navigate) {
+    this.navigate(event.route.name)
+}
+
+fun Context.showToast(message: String?, length: Int = Toast.LENGTH_SHORT) {
+    Toast.makeText(this, message, length).show()
+}
 
 fun Throwable.printStackTraceInDebug() {
     if (BuildConfig.DEBUG) {
         printStackTrace()
-    }
-}
-
-inline fun Any.log(message: () -> String) {
-    if (BuildConfig.DEBUG) {
-        Log.d(this::class.java.simpleName, message())
-    }
-}
-
-inline fun Any.logE(message: () -> String) {
-    if (BuildConfig.DEBUG) {
-        Log.e(this::class.java.simpleName, message())
     }
 }

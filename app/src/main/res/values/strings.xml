@@ -15,6 +15,7 @@
     <string name="error_something_went_wrong">Sorry Something went wrong</string>
 
     <string name="home_tab">Home</string>
+    <string name="qibla_tab">Qibla</string>
 
     <string name="missed_prayer_status">Missed</string>
     <string name="on_time_prayer_status">On Time</string>
