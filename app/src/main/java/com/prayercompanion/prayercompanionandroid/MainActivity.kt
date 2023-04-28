@@ -18,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -28,6 +29,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
 import com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.HomeScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.sign_in.SignInScreen
+import com.prayercompanion.prayercompanionandroid.presentation.features.sign_in.SignInViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -115,7 +117,12 @@ class MainActivity : ComponentActivity() {
                         startDestination = Route.SignIn.name,
                     ) {
                         composable(Route.SignIn.name) {
-                            SignInScreen(googleSignInClient)
+                            val viewModel: SignInViewModel = hiltViewModel()
+                            SignInScreen(
+                                googleSignInClient,
+                                viewModel.uiEventsChannel,
+                                viewModel::onEvent
+                            )
                         }
                         composable(Route.Home.name) {
                             HomeScreen(scaffoldState = scaffoldState)

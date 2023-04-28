@@ -4,12 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.tasks.Task
+import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.prayercompanionandroid.domain.usecases.AccountSignIn
 import com.prayercompanion.prayercompanionandroid.presentation.utils.AuthenticationHelper
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
+import com.prayercompanion.prayercompanionandroid.presentation.utils.toUiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import logcat.asLog
 import logcat.logcat
@@ -22,17 +25,19 @@ class SignInViewModel @Inject constructor(
     private val accountSignIn: AccountSignIn
 ) : ViewModel() {
 
-    private val _uiEventsChannel = Channel<UiEvent>()
-//    val uiEventsChannel = _uiEventsChannel.receiveAsFlow()
+    private val _uiEventsChannel = Channel<SignInUiEvent>()
+    val uiEventsChannel = _uiEventsChannel.receiveAsFlow()
 
-    fun onSignInWithGoogleResultReceived(result: Boolean, task: Task<GoogleSignInAccount>) {
+    fun onEvent(event: SignInEvents) {
+        when (event) {
+            is SignInEvents.OnSignInWithGoogleResultReceived -> onSignInWithGoogleResultReceived(event.result, event.task)
+            is SignInEvents.OnSignInAnonymously -> onSignInAnonymously()
+        }
+    }
+
+    private fun onSignInWithGoogleResultReceived(result: Boolean, task: Task<GoogleSignInAccount>) {
         if (result.not()) {
-            sendEvent(
-                UiEvent.ShowErrorSnackBar(
-                    //todo
-                    UiText.DynamicString("Something went wrong")
-                )
-            )
+            sendErrorEvent(R.string.error_something_went_wrong.toUiText())
             return
         }
         if (task.isSuccessful) {
@@ -43,17 +48,12 @@ class SignInViewModel @Inject constructor(
                 onFailure = ::onSignInFail,
             )
         } else {
-            sendEvent(
-                UiEvent.ShowErrorSnackBar(
-                    //todo
-                    UiText.DynamicString("Something went wrong")
-                )
-            )
+            sendErrorEvent(task.exception?.message.toUiText())
             logcat { task.exception?.asLog() ?: "" }
         }
     }
 
-    fun onSignInAnonymously() {
+    private fun onSignInAnonymously() {
         authenticationHelper.signInAnonymously(
             onSuccess = ::onSignInSuccess,
             onFailure = ::onSignInFail
@@ -67,15 +67,14 @@ class SignInViewModel @Inject constructor(
     }
 
     private fun onSignInFail(exception: Exception) {
-        sendEvent(
-            UiEvent.ShowErrorSnackBar(
-                //todo
-                UiText.DynamicString("Something went wrong")
-            )
-        )
+        sendErrorEvent(exception.message.toUiText())
     }
 
-    private fun sendEvent(uiEvent: UiEvent) {
+    private fun sendErrorEvent(text: UiText) {
+        sendEvent(SignInUiEvent.ShowErrorSnackBar(text))
+    }
+
+    private fun sendEvent(uiEvent: SignInUiEvent) {
         viewModelScope.launch {
             _uiEventsChannel.send(uiEvent)
         }

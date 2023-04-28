@@ -21,6 +21,6 @@ interface PrayerCompanionApi {
         @Query("monthOfYear") monthOfYear: String,
     ): List<DayPrayerResponse>
 
-    @PUT("v1/user/sign_in")
+    @PUT("v1/user/signIn")
     suspend fun signIn()
 }

@@ -24,3 +24,11 @@ sealed class UiText {
         }
     }
 }
+
+fun String?.toUiText(): UiText.DynamicString {
+    return UiText.DynamicString(this ?: "")
+}
+
+fun @receiver:StringRes Int.toUiText(): UiText.StringResource {
+    return UiText.StringResource(this)
+}
