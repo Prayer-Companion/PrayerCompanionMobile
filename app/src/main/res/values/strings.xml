@@ -15,10 +15,14 @@
     <string name="error_something_went_wrong">Sorry Something went wrong</string>
 
     <string name="home_tab">Home</string>
+    <string name="qibla_tab">Qibla</string>
 
     <string name="missed_prayer_status">Missed</string>
     <string name="on_time_prayer_status">On Time</string>
     <string name="qadaa_prayer_status">Qadaa</string>
     <string name="late_prayer_status">Late</string>
     <string name="jamaah_prayer_status">Jamaah</string>
+    <string name="or">Or</string>
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="continue_as_guest">Continue as a Guest</string>
 </resources>

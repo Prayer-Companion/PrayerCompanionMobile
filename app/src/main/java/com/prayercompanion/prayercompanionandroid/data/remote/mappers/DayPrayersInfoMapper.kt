@@ -1,20 +1,20 @@
 package com.prayercompanion.prayercompanionandroid.data.remote.mappers
 
 import com.prayercompanion.prayercompanionandroid.data.remote.dto.DayPrayerResponse
-import com.prayercompanion.prayercompanionandroid.data.utils.DataConsts
+import com.prayercompanion.prayercompanionandroid.data.utils.Consts
 import com.prayercompanion.prayercompanionandroid.domain.models.*
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
 fun DayPrayerResponse.toDayPrayerInfo(): DayPrayersInfo {
-    val date = LocalDate.parse(date, DataConsts.DateFormatter)
-    val fajrTime = LocalTime.parse(fajrTime.uppercase(), DataConsts.TimeFormatter)
-    val duhaTime = LocalTime.parse(duhaTime.uppercase(), DataConsts.TimeFormatter)
-    val dhuhrTime = LocalTime.parse(dhuhrTime.uppercase(), DataConsts.TimeFormatter)
-    val asrTime = LocalTime.parse(asrTime.uppercase(), DataConsts.TimeFormatter)
-    val maghribTime = LocalTime.parse(maghribTime.uppercase(), DataConsts.TimeFormatter)
-    val ishaTime = LocalTime.parse(ishaTime.uppercase(), DataConsts.TimeFormatter)
+    val date = LocalDate.parse(date, Consts.DateFormatter)
+    val fajrTime = LocalTime.parse(fajrTime.uppercase(), Consts.TimeFormatter)
+    val duhaTime = LocalTime.parse(duhaTime.uppercase(), Consts.TimeFormatter)
+    val dhuhrTime = LocalTime.parse(dhuhrTime.uppercase(), Consts.TimeFormatter)
+    val asrTime = LocalTime.parse(asrTime.uppercase(), Consts.TimeFormatter)
+    val maghribTime = LocalTime.parse(maghribTime.uppercase(), Consts.TimeFormatter)
+    val ishaTime = LocalTime.parse(ishaTime.uppercase(), Consts.TimeFormatter)
 
     val prayers = listOf(
         PrayerInfo(

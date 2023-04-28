@@ -2,6 +2,7 @@ package com.prayercompanion.prayercompanionandroid.data.remote
 
 import com.prayercompanion.prayercompanionandroid.data.remote.dto.DayPrayerResponse
 import retrofit2.http.GET
+import retrofit2.http.PUT
 import retrofit2.http.Query
 
 interface PrayerCompanionApi {
@@ -19,4 +20,7 @@ interface PrayerCompanionApi {
         @Query("longitude") longitude: String,
         @Query("monthOfYear") monthOfYear: String,
     ): List<DayPrayerResponse>
+
+    @PUT("v1/user/signIn")
+    suspend fun signIn()
 }

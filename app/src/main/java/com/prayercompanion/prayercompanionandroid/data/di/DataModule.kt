@@ -7,6 +7,7 @@ import com.prayercompanion.prayercompanionandroid.data.local.PrayerCompanionData
 import com.prayercompanion.prayercompanionandroid.data.local.daos.PrayersInfoDao
 import com.prayercompanion.prayercompanionandroid.data.remote.PrayerCompanionApi
 import com.prayercompanion.prayercompanionandroid.data.repositories.PrayersRepositoryImpl
+import com.prayercompanion.prayercompanionandroid.data.utils.Consts
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
 import dagger.Module
 import dagger.Provides
@@ -22,16 +23,30 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
+
 class DataModule {
 
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
+
         val logger = HttpLoggingInterceptor()
         logger.setLevel(HttpLoggingInterceptor.Level.BODY)
-        return OkHttpClient.Builder()
-            .addInterceptor(logger)
-            .build()
+
+        val builder = OkHttpClient.Builder()
+
+        builder.addInterceptor { chain ->
+            val request = chain.request()
+            val new = request.newBuilder()
+                .addHeader("Authorization", "Bearer ${Consts.userToken}")
+                .build()
+            chain.proceed(new)
+        }
+
+        if (BuildConfig.DEBUG) {
+            builder.addInterceptor(logger)
+        }
+        return builder.build()
     }
 
     @Provides
