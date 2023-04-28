@@ -14,7 +14,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import logcat.logcat
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -41,7 +40,6 @@ class DataModule {
             val new = request.newBuilder()
                 .addHeader("Authorization", "Bearer ${Consts.userToken}")
                 .build()
-            logcat { request.headers.toString() }
             chain.proceed(new)
         }
 
