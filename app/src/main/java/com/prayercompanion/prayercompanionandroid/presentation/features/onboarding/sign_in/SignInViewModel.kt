@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.presentation.features.sign_in
+package com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.sign_in
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

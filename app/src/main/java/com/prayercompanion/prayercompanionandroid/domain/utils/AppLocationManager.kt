@@ -20,7 +20,7 @@ class AppLocationManager @Inject constructor(
 
     @SuppressLint("MissingPermission")
     fun getLastKnownLocation(callback: (Location?) -> Unit) {
-        if (areAllPermissionsGranted().not()) {
+        if (areAllPermissionsGranted(context).not()) {
             logcat { "Location permission is missing" }
             return
         }
@@ -31,17 +31,18 @@ class AppLocationManager @Inject constructor(
             }
     }
 
-    private fun areAllPermissionsGranted(): Boolean {
-        return permissions
-            .map {
-                ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
-            }.all { it }
-    }
-
     companion object {
         val permissions = arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION
         )
+
+        fun areAllPermissionsGranted(context: Context): Boolean {
+            return permissions
+                .map {
+                    ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+                }.all { it }
+        }
+
     }
 }

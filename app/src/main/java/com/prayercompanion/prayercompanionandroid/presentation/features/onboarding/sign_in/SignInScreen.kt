@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.presentation.features.sign_in
+package com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.sign_in
 
 import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -52,12 +52,13 @@ fun SignInScreen(
     val spacing = LocalSpacing.current
     val context = LocalContext.current
 
-    val signInWithGoogleLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            val result = it.resultCode == Activity.RESULT_OK
-            val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
-            onEvent(SignInEvents.OnSignInWithGoogleResultReceived(result, task))
-        }
+    val signInWithGoogleLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        val result = it.resultCode == Activity.RESULT_OK
+        val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
+        onEvent(SignInEvents.OnSignInWithGoogleResultReceived(result, task))
+    }
 
     LaunchedEffect(key1 = uiEvents) {
         uiEvents.collect {
@@ -95,10 +96,11 @@ fun SignInScreen(
                 colors = ButtonDefaults.buttonColors(MaterialTheme.colors.primary),
                 shape = RoundedCornerShape(50.dp),
                 onClick = {
+                    // TODO: Show loading until we get the result
                     signInWithGoogleLauncher.launch(googleSignInClient?.signInIntent)
                 }) {
                 Row(
-                    modifier = Modifier
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_google),

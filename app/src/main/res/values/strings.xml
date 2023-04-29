@@ -25,4 +25,6 @@
     <string name="or">Or</string>
     <string name="continue_with_google">Continue with Google</string>
     <string name="continue_as_guest">Continue as a Guest</string>
+    <string name="location_permission_request_cta">Grant Location Permission</string>
+    <string name="location_permission_request_explaination">Location permission is required to get the right prayer times</string>
 </resources>

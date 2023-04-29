@@ -3,7 +3,6 @@ package com.prayercompanion.prayercompanionandroid
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,9 +34,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseAuth
 import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
 import com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.HomeScreen
+import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.permissions.PermissionsRequestScreen
+import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.sign_in.SignInScreen
+import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.sign_in.SignInViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.QiblaScreen
-import com.prayercompanion.prayercompanionandroid.presentation.features.sign_in.SignInScreen
-import com.prayercompanion.prayercompanionandroid.presentation.features.sign_in.SignInViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,16 +51,13 @@ class MainActivity : ComponentActivity() {
 
     private val startingDestination: String
         get() {
-            return if (FirebaseAuth.getInstance().currentUser != null) {
-                Route.Home.name
-            } else {
-                Route.SignIn.name
-            }
-        }
-
-    private val locationPermissionContract =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-            // TODO:
+            val isSignedIn = FirebaseAuth.getInstance().currentUser != null
+            val hasNeededPermissions = AppLocationManager.areAllPermissionsGranted(this)
+            return when {
+                isSignedIn.not() -> Route.SignIn
+                hasNeededPermissions.not() -> Route.PermissionsRequests
+                else -> Route.Home
+            }.name
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,7 +72,7 @@ class MainActivity : ComponentActivity() {
                 navController.addOnDestinationChangedListener { _, destination, _ ->
                     val route = Route.valueOf(destination.route ?: Route.SignIn.name)
                     shouldShowBottomNavigationBar = when (route) {
-                        Route.SignIn -> false
+                        Route.SignIn, Route.PermissionsRequests -> false
                         else -> true
                     }
                 }
@@ -102,6 +99,9 @@ class MainActivity : ComponentActivity() {
                                 viewModel::onEvent
                             )
                         }
+                        composable(Route.PermissionsRequests.name) {
+                            PermissionsRequestScreen(navigate = navController::navigate)
+                        }
                         composable(Route.Home.name) {
                             HomeScreen(scaffoldState = scaffoldState)
                         }
@@ -112,8 +112,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-
-        handleLocationPermission()
     }
 
     @Composable
@@ -155,9 +153,5 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
-    }
-
-    private fun handleLocationPermission() {
-        locationPermissionContract.launch(AppLocationManager.permissions)
     }
 }
