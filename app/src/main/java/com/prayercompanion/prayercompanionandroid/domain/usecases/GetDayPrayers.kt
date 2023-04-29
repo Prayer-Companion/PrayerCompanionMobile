@@ -9,7 +9,11 @@ import javax.inject.Inject
 class GetDayPrayers @Inject constructor(
     private val prayersRepository: PrayersRepository
 ) {
-    suspend fun call(date: LocalDate, location: Location): Result<DayPrayersInfo> {
-        return prayersRepository.getDayPrayers(location, date)
+    suspend fun call(
+        date: LocalDate,
+        location: Location,
+        forceUpdate: Boolean
+    ): Result<DayPrayersInfo> {
+        return prayersRepository.getDayPrayers(location, date, forceUpdate)
     }
 }

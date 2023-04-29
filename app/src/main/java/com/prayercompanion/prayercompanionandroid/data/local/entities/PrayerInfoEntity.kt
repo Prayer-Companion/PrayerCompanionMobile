@@ -15,8 +15,8 @@ import java.util.*
 @Entity("PrayersInfo")
 data class PrayerInfoEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    @ColumnInfo("name")
-    val prayerName: Prayer,
+    @ColumnInfo("prayer")
+    val prayer: Prayer,
     @ColumnInfo("date")
     val date: LocalDate,
     @ColumnInfo("time")
@@ -29,7 +29,7 @@ fun List<PrayerInfoEntity>.toDayPrayerInfo(): DayPrayersInfo {
     return DayPrayersInfo(
         this.map {
             PrayerInfo(
-                prayer = it.prayerName,
+                prayer = it.prayer,
                 dateTime = LocalDateTime.of(it.date, it.time),
                 status = it.status
             )

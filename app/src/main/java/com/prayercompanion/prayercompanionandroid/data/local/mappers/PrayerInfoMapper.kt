@@ -5,5 +5,5 @@ import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import java.time.LocalDateTime
 
 fun PrayerInfoEntity.toPrayerInfo(): PrayerInfo {
-    return PrayerInfo(prayer = prayerName, dateTime = LocalDateTime.of(date, time), status = status)
+    return PrayerInfo(prayer = prayer, dateTime = LocalDateTime.of(date, time), status = status)
 }

@@ -10,7 +10,7 @@ data class DayPrayersInfo constructor(
 
     init {
         require(prayers.map { it.prayer } == Prayer.values().toList()) {
-            "DayPrayersInfo created on wrong prayers"
+            "DayPrayersInfo created on wrong prayers ${prayers.map { it.prayer }}"
         }
     }
 

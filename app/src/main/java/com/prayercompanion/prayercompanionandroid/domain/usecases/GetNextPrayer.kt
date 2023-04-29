@@ -1,6 +1,6 @@
 package com.prayercompanion.prayercompanionandroid.domain.usecases
 
-import android.location.Location
+import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
@@ -15,26 +15,25 @@ class GetNextPrayer @Inject constructor(
 ) {
 
     @OptIn(ExperimentalStdlibApi::class)
-    suspend fun call(location: Location): Result<PrayerInfo> {
+    suspend fun call(
+        currentDayPrayersInfo: DayPrayersInfo
+    ): Result<PrayerInfo> {
         val date = LocalDate.now(clock)
         val time = LocalTime.now(clock)
 
-        val prayers = prayersRepository.getDayPrayers(location, date)
+        if (time in LocalTime.MIN.rangeUntil(currentDayPrayersInfo.get(Prayer.FAJR).time)) {
+            return Result.success(currentDayPrayersInfo.get(Prayer.FAJR))
+        }
+        if (time in currentDayPrayersInfo.get(Prayer.ISHA).time.rangeTo(LocalTime.MAX)) {
+            return prayersRepository.getPrayer(Prayer.FAJR, date.plusDays(1))
+        }
 
-        return prayers.map {
-            if (time in LocalTime.MIN.rangeUntil(it.get(Prayer.FAJR).time)) {
-                return@map it.get(Prayer.FAJR)
-            }
-            if (time in it.get(Prayer.ISHA).time.rangeTo(LocalTime.MAX)) {
-                return@map prayersRepository.getPrayer(Prayer.FAJR, date.plusDays(1))
-            }
-
-            it.prayers.take(it.prayers.size - 1).forEachIndexed { index, prayerInfo ->
-                if (time in prayerInfo.time.rangeUntil(it.prayers[index + 1].time)) {
-                    return@map it.prayers[index + 1]
+        currentDayPrayersInfo.prayers.take(currentDayPrayersInfo.prayers.size - 1)
+            .forEachIndexed { index, prayerInfo ->
+                if (time in prayerInfo.time.rangeUntil(currentDayPrayersInfo.prayers[index + 1].time)) {
+                    return Result.success(currentDayPrayersInfo.prayers[index + 1])
                 }
             }
-            throw Exception("Something went wrong while getting next prayer")
-        }
+        return Result.failure(Exception("Something went wrong while getting next prayer"))
     }
 }

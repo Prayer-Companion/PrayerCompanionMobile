@@ -70,7 +70,8 @@ fun HomeScreen(
             onStatusSelected = viewModel::onStatusSelected
         )
         Spacer(modifier = Modifier.height(spacing.spaceSmall))
-        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr ) {
+        // TODO: add a way to get back to today's date quickly
+        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
@@ -84,7 +85,7 @@ fun HomeScreen(
                         contentDescription = "previous day"
                     )
                 }
-                Text(text = viewModel.currentDate.format(PresentationConsts.DateFormatter))
+                Text(text = viewModel.selectedDate.format(PresentationConsts.DateFormatter))
                 IconButton(onClick = {
                     viewModel.onNextDayButtonClicked()
                 }) {
@@ -102,11 +103,12 @@ fun HomeScreen(
                 .fillMaxHeight()
                 .padding(spacing.spaceMedium, 0.dp)
         ) {
-            items(viewModel.dayPrayersInfo.prayers) {
+            items(viewModel.selectedDayPrayersInfo.prayers) {
                 PrayerItem(
                     name = stringResource(id = it.prayer.nameId),
                     modifier = Modifier.fillMaxWidth(),
-                    prayerInfo = it
+                    prayerInfo = it,
+                    onStatusSelected = viewModel::onStatusSelected
                 )
                 Spacer(modifier = Modifier.height(spacing.spaceSmall))
             }

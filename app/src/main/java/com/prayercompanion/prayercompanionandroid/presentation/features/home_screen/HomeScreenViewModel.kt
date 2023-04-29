@@ -43,42 +43,48 @@ class HomeScreenViewModel @Inject constructor(
     private val _uiEvents = Channel<UiEvent>()
     val uiEvents = _uiEvents.receiveAsFlow()
 
-    private var currentPrayer by mutableStateOf(PrayerInfo.Default)
-    var currentDate: LocalDate by mutableStateOf(LocalDate.now())
-        private set
-    var dayPrayersInfo by mutableStateOf(DayPrayersInfo.Default)
+    var currentPrayer by mutableStateOf(PrayerInfo.Default)
         private set
     var nextPrayer by mutableStateOf(PrayerInfo.Default)
+        private set
+    var selectedDate: LocalDate by mutableStateOf(LocalDate.now())
+        private set
+    var currentDayPrayersInfo by mutableStateOf(DayPrayersInfo.Default)
+        private set
+    var selectedDayPrayersInfo by mutableStateOf(DayPrayersInfo.Default)
         private set
     var durationUntilNextPrayer by mutableStateOf(RemainingDuration(0, 0, 0))
         private set
 
     init {
-        loadCurrentDatePrayers()
+        loadSelectedDatePrayers(true)
     }
 
     fun onPreviousDayButtonClicked() {
-        currentDate = currentDate.minusDays(1)
-        loadCurrentDatePrayers()
+        selectedDate = selectedDate.minusDays(1)
+        loadSelectedDatePrayers()
     }
 
     fun onNextDayButtonClicked() {
-        currentDate = currentDate.plusDays(1)
-        loadCurrentDatePrayers()
+        selectedDate = selectedDate.plusDays(1)
+        loadSelectedDatePrayers()
     }
 
     fun onStatusSelected(prayerStatus: PrayerStatus, prayerInfo: PrayerInfo) {
-        viewModelScope.launch {
-            val result = updatePrayerStatus.call(currentDate, prayerInfo, prayerStatus)
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = updatePrayerStatus.call(prayerInfo, prayerStatus)
             result.onSuccess {
                 currentPrayer.status = prayerStatus
+                selectedDayPrayersInfo.get(prayerInfo.prayer).status = prayerStatus
+                selectedDayPrayersInfo = selectedDayPrayersInfo
             }.onFailure {
                 sendEvent(UiEvent.ShowErrorSnackBar(UiText.StringResource(R.string.error_something_went_wrong)))
             }
         }
     }
 
-    private fun loadCurrentDatePrayers() {
+    private fun loadSelectedDatePrayers(forceUpdate: Boolean = false) {
+        // TODO: we should block the Ui while loading instead of canceling and reloading again
         if (loadCurrentDatePrayersJob?.isActive == true) {
             loadCurrentDatePrayersJob?.cancel()
         }
@@ -86,18 +92,21 @@ class HomeScreenViewModel @Inject constructor(
         appLocationManager.getLastKnownLocation { location ->
             location ?: return@getLastKnownLocation
 
-            val currentDate = currentDate
+            val currentDate = selectedDate
             loadCurrentDatePrayersJob = viewModelScope.launch(Dispatchers.IO) {
-                getDayPrayers.call(currentDate, location)
+                getDayPrayers.call(currentDate, location, forceUpdate)
                     .onSuccess { dateDayPrayers ->
                         withContext(Dispatchers.Main) {
-                            dayPrayersInfo = dateDayPrayers
+                            if (currentDate == LocalDate.now()) {
+                                currentDayPrayersInfo = dateDayPrayers
+                            }
+                            selectedDayPrayersInfo = dateDayPrayers
                             updatePrayersAndStartCountDown()
                         }
                     }
                     .onFailure {
                         withContext(Dispatchers.Main) {
-                            dayPrayersInfo = DayPrayersInfo.Default
+                            selectedDayPrayersInfo = DayPrayersInfo.Default
                             sendEvent(UiEvent.ShowErrorSnackBar(UiText.DynamicString(it.message.toString())))
                         }
                     }
@@ -109,12 +118,12 @@ class HomeScreenViewModel @Inject constructor(
         appLocationManager.getLastKnownLocation { location ->
             location ?: return@getLastKnownLocation
             viewModelScope.launch(Dispatchers.IO) {
-                val currentPrayerResult = getCurrentPrayer.call(location)
+                val currentPrayerResult = getCurrentPrayer.call(currentDayPrayersInfo)
                     .onSuccess {
                         currentPrayer = it
                     }
 
-                val nextPrayerResult = getNextPrayer.call(location)
+                val nextPrayerResult = getNextPrayer.call(currentDayPrayersInfo)
                     .onSuccess {
                         nextPrayer = it
                         withContext(Dispatchers.Main) {

@@ -13,21 +13,21 @@ import java.time.LocalTime
 class PrayersFakeRepository : PrayersRepository {
     override suspend fun getDayPrayers(
         location: Location,
-        date: LocalDate
+        dayDate: LocalDate,
+        forceUpdate: Boolean
     ): Result<DayPrayersInfo> {
         return Result.success(DEFAULT_DAY_PRAYERS_INFO)
     }
 
-    override suspend fun getPrayer(prayer: Prayer, date: LocalDate): PrayerInfo {
-        return DEFAULT_DAY_PRAYERS_INFO.get(prayer)
+    override suspend fun getPrayer(prayer: Prayer, date: LocalDate): Result<PrayerInfo> {
+        return Result.success(DEFAULT_DAY_PRAYERS_INFO.get(prayer))
     }
 
     override suspend fun updatePrayerStatus(
-        date: LocalDate,
-        prayer: PrayerInfo,
-        status: PrayerStatus
-    ): Result<PrayerStatus> {
-        TODO("Not yet implemented")
+        prayerInfo: PrayerInfo,
+        prayerStatus: PrayerStatus
+    ): Result<Unit> {
+        return Result.success(Unit)
     }
 
     companion object {

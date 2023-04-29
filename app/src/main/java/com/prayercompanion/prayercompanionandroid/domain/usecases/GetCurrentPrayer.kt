@@ -1,6 +1,6 @@
 package com.prayercompanion.prayercompanionandroid.domain.usecases
 
-import android.location.Location
+import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
@@ -16,29 +16,26 @@ class GetCurrentPrayer @Inject constructor(
 
     @OptIn(ExperimentalStdlibApi::class)
     suspend fun call(
-        location: Location,
+        currentDayPrayersInfo: DayPrayersInfo
     ): Result<PrayerInfo> {
         val currentDate = LocalDate.now(clock)
         val currentTime = LocalTime.now(clock)
 
-        val prayers = prayersRepository.getDayPrayers(location, currentDate)
+        if (currentTime in LocalTime.MIN.rangeUntil(currentDayPrayersInfo.get(Prayer.FAJR).time)) {
+            return prayersRepository.getPrayer(Prayer.ISHA, currentDate.minusDays(1))
+        }
+        if (currentTime in currentDayPrayersInfo.get(Prayer.ISHA).time.rangeTo(LocalTime.MAX)) {
+            return Result.success(currentDayPrayersInfo.get(Prayer.ISHA))
+        }
 
-        return prayers.map {
-            if (currentTime in LocalTime.MIN.rangeUntil(it.get(Prayer.FAJR).time)) {
-                return@map prayersRepository.getPrayer(Prayer.ISHA, currentDate.minusDays(1))
-            }
-            if (currentTime in it.get(Prayer.ISHA).time.rangeTo(LocalTime.MAX)) {
-                return@map it.get(Prayer.ISHA)
-            }
-
-            it.prayers.take(it.prayers.size - 1).forEachIndexed { index, prayerInfo ->
+        currentDayPrayersInfo.prayers.take(currentDayPrayersInfo.prayers.size - 1)
+            .forEachIndexed { index, prayerInfo ->
                 val currentPrayerTime = prayerInfo.time
-                val nextPrayerTime = it.prayers[index + 1].time
+                val nextPrayerTime = currentDayPrayersInfo.prayers[index + 1].time
                 if (currentTime in currentPrayerTime.rangeUntil(nextPrayerTime)) {
-                    return@map prayerInfo
+                    return Result.success(prayerInfo)
                 }
             }
-            throw Exception("Something went wrong while getting current prayer")
-        }
+        return Result.failure(Exception("Something went wrong while getting current prayer"))
     }
 }

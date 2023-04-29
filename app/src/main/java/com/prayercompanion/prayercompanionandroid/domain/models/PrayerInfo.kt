@@ -1,5 +1,6 @@
 package com.prayercompanion.prayercompanionandroid.domain.models
 
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
@@ -8,6 +9,8 @@ data class PrayerInfo(
     val dateTime: LocalDateTime,
     var status: PrayerStatus
 ) {
+
+    val date: LocalDate get() = dateTime.toLocalDate()
 
     val time: LocalTime get() = dateTime.toLocalTime()
 
