@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "923721998607-8t4i8s4msihulqjn8snkdta1bt18t70o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.prayercompanion.prayercompanionandroid",
+            "certificate_hash": "6adcf376bdae875ede315e278f95aa5db6e45db7"
+          }
+        },
+        {
           "client_id": "923721998607-vpog5hdgb8kdj0b1blstv7jl6e798kj4.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -22,7 +30,7 @@
           }
         },
         {
-          "client_id": "923721998607-olntrhgi3t741rt0ohuj0p8dienhp4mt.apps.googleusercontent.com",
+          "client_id": "923721998607-arb7gij7up7a802f1gt3ck2hium71bip.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -35,7 +43,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "923721998607-olntrhgi3t741rt0ohuj0p8dienhp4mt.apps.googleusercontent.com",
+              "client_id": "923721998607-arb7gij7up7a802f1gt3ck2hium71bip.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
