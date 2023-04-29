@@ -126,6 +126,87 @@ class GetCurrentPrayerTest {
         }
     }
 
+    @Test
+    fun `should return the correct current prayer FAJR when its on the exact time`() = runTest {
+        val time = PrayersFakeRepository.DEFAULT_DAY_PRAYERS_INFO.get(Prayer.FAJR).time
+        stubClock(LocalDateTime.of(Consts.TODAY_DATE, time))
+        val prayer = usecase.call(LOCATION)
+
+        Truth.assertThat(prayer.isSuccess).isTrue()
+
+        prayer.onSuccess {
+            Truth.assertThat(it.prayer).isEqualTo(Prayer.FAJR)
+        }
+
+    }
+
+    @Test
+    fun `should return the correct current prayer DUHA when its on the exact time`() = runTest {
+        val time = PrayersFakeRepository.DEFAULT_DAY_PRAYERS_INFO.get(Prayer.DUHA).time
+        stubClock(LocalDateTime.of(Consts.TODAY_DATE, time))
+        val prayer = usecase.call(LOCATION)
+
+        Truth.assertThat(prayer.isSuccess).isTrue()
+
+        prayer.onSuccess {
+            Truth.assertThat(it.prayer).isEqualTo(Prayer.DUHA)
+        }
+    }
+
+    @Test
+    fun `should return the correct current prayer DHUHR when its on the exact time`() = runTest {
+        val time = PrayersFakeRepository.DEFAULT_DAY_PRAYERS_INFO.get(Prayer.DHUHR).time
+        stubClock(LocalDateTime.of(Consts.TODAY_DATE, time))
+        val prayer = usecase.call(LOCATION)
+
+        Truth.assertThat(prayer.isSuccess).isTrue()
+
+        prayer.onSuccess {
+            Truth.assertThat(it.prayer).isEqualTo(Prayer.DHUHR)
+        }
+    }
+
+    @Test
+    fun `should return the correct current prayer ASR when its on the exact time`() = runTest {
+        val time = PrayersFakeRepository.DEFAULT_DAY_PRAYERS_INFO.get(Prayer.ASR).time
+        stubClock(LocalDateTime.of(Consts.TODAY_DATE, time))
+        val prayer = usecase.call(LOCATION)
+
+        Truth.assertThat(prayer.isSuccess).isTrue()
+
+        prayer.onSuccess {
+            Truth.assertThat(it.prayer).isEqualTo(Prayer.ASR)
+        }
+
+    }
+
+    @Test
+    fun `should return the correct current prayer MAGHRIB when its on the exact time`() = runTest {
+        val time = PrayersFakeRepository.DEFAULT_DAY_PRAYERS_INFO.get(Prayer.MAGHRIB).time
+        stubClock(LocalDateTime.of(Consts.TODAY_DATE, time))
+        val prayer = usecase.call(LOCATION)
+
+        Truth.assertThat(prayer.isSuccess).isTrue()
+
+        prayer.onSuccess {
+            Truth.assertThat(it.prayer).isEqualTo(Prayer.MAGHRIB)
+        }
+
+    }
+
+    @Test
+    fun `should return the correct current prayer ISHA when its on the exact time`() = runTest {
+        val time = PrayersFakeRepository.DEFAULT_DAY_PRAYERS_INFO.get(Prayer.ISHA).time
+        stubClock(LocalDateTime.of(Consts.TODAY_DATE, time))
+        val prayer = usecase.call(LOCATION)
+
+        Truth.assertThat(prayer.isSuccess).isTrue()
+
+        prayer.onSuccess {
+            Truth.assertThat(it.prayer).isEqualTo(Prayer.ISHA)
+        }
+    }
+
     private fun stubClock(dateTime: LocalDateTime) {
         val newClock = Clock.fixed(
             dateTime.atZone(ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault()

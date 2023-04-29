@@ -18,7 +18,7 @@ class PrayersFakeRepository : PrayersRepository {
         return Result.success(DEFAULT_DAY_PRAYERS_INFO)
     }
 
-    override suspend fun getPrayer(prayer: Prayer, localDate: LocalDate): PrayerInfo {
+    override suspend fun getPrayer(prayer: Prayer, date: LocalDate): PrayerInfo {
         return DEFAULT_DAY_PRAYERS_INFO.get(prayer)
     }
 
@@ -31,7 +31,7 @@ class PrayersFakeRepository : PrayersRepository {
     }
 
     companion object {
-        private val DEFAULT_DAY_PRAYERS_INFO = DayPrayersInfo(
+        val DEFAULT_DAY_PRAYERS_INFO = DayPrayersInfo(
             listOf(
                 PrayerInfo(
                     prayer = Prayer.FAJR,
