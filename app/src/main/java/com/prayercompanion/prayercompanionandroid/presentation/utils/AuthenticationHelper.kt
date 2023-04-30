@@ -37,6 +37,12 @@ class AuthenticationHelper @Inject constructor(
             }
     }
 
+    fun signOut() {
+        auth.signOut()
+        googleSignInClient.signOut()
+        Consts.userToken = null
+    }
+
     private fun onSignInComplete(
         task: Task<AuthResult>,
         onSuccess: () -> Unit,
@@ -55,12 +61,6 @@ class AuthenticationHelper @Inject constructor(
                 it.printStackTraceInDebug()
             }
         }
-    }
-
-    private fun signOut() {
-        auth.signOut()
-        googleSignInClient.signOut()
-        Consts.userToken = null
     }
 
 }

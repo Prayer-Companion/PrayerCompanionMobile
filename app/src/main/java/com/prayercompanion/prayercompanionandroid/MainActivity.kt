@@ -31,12 +31,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.firebase.auth.FirebaseAuth
-import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
 import com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.HomeScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.permissions.PermissionsRequestScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.sign_in.SignInScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.sign_in.SignInViewModel
+import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.splash_screen.SplashScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.QiblaScreen
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
@@ -49,17 +48,6 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var googleSignInClient: GoogleSignInClient
 
-    private val startingDestination: String
-        get() {
-            val isSignedIn = FirebaseAuth.getInstance().currentUser != null
-            val hasNeededPermissions = AppLocationManager.areAllPermissionsGranted(this)
-            return when {
-                isSignedIn.not() -> Route.SignIn
-                hasNeededPermissions.not() -> Route.PermissionsRequests
-                else -> Route.Home
-            }.name
-        }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -71,10 +59,7 @@ class MainActivity : ComponentActivity() {
                 }
                 navController.addOnDestinationChangedListener { _, destination, _ ->
                     val route = Route.valueOf(destination.route ?: Route.SignIn.name)
-                    shouldShowBottomNavigationBar = when (route) {
-                        Route.SignIn, Route.PermissionsRequests -> false
-                        else -> true
-                    }
+                    shouldShowBottomNavigationBar = route.bottomNavBar
                 }
 
                 Scaffold(
@@ -88,8 +73,11 @@ class MainActivity : ComponentActivity() {
                     NavHost(
                         modifier = Modifier.padding(it),
                         navController = navController,
-                        startDestination = startingDestination,
+                        startDestination = Route.SplashScreen.name,
                     ) {
+                        composable(Route.SplashScreen.name) {
+                            SplashScreen(navController::navigate)
+                        }
                         composable(Route.SignIn.name) {
                             val viewModel: SignInViewModel = hiltViewModel()
                             SignInScreen(
