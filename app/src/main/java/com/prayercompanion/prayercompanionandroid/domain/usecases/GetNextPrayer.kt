@@ -1,5 +1,6 @@
 package com.prayercompanion.prayercompanionandroid.domain.usecases
 
+import android.location.Location
 import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
@@ -16,7 +17,8 @@ class GetNextPrayer @Inject constructor(
 
     @OptIn(ExperimentalStdlibApi::class)
     suspend fun call(
-        currentDayPrayersInfo: DayPrayersInfo
+        currentDayPrayersInfo: DayPrayersInfo,
+        location: Location
     ): Result<PrayerInfo> {
         val date = LocalDate.now(clock)
         val time = LocalTime.now(clock)
@@ -25,7 +27,7 @@ class GetNextPrayer @Inject constructor(
             return Result.success(currentDayPrayersInfo.get(Prayer.FAJR))
         }
         if (time in currentDayPrayersInfo.get(Prayer.ISHA).time.rangeTo(LocalTime.MAX)) {
-            return prayersRepository.getPrayer(Prayer.FAJR, date.plusDays(1))
+            return prayersRepository.getPrayer(Prayer.FAJR, date.plusDays(1), location)
         }
 
         currentDayPrayersInfo.prayers.take(currentDayPrayersInfo.prayers.size - 1)

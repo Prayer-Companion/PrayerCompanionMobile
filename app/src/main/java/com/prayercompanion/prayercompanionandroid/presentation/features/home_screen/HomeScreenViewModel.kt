@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.prayercompanion.prayercompanionandroid.R
+import com.prayercompanion.prayercompanionandroid.data.utils.PrayersNotificationsService
 import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
@@ -18,6 +19,7 @@ import com.prayercompanion.prayercompanionandroid.domain.usecases.UpdatePrayerSt
 import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
+import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -36,10 +38,11 @@ class HomeScreenViewModel @Inject constructor(
     private val getCurrentPrayer: GetCurrentPrayer,
     private val getNextPrayer: GetNextPrayer,
     private val updatePrayerStatus: UpdatePrayerStatus,
-    private val appLocationManager: AppLocationManager
+    private val appLocationManager: AppLocationManager,
+    private val prayersNotificationsService: PrayersNotificationsService
 ) : ViewModel() {
 
-    private var loadCurrentDatePrayersJob: Job? = null
+    private var loadSelectedDatePrayersJob: Job? = null
     private val _uiEvents = Channel<UiEvent>()
     val uiEvents = _uiEvents.receiveAsFlow()
 
@@ -85,15 +88,15 @@ class HomeScreenViewModel @Inject constructor(
 
     private fun loadSelectedDatePrayers(forceUpdate: Boolean = false) {
         // TODO: we should block the Ui while loading instead of canceling and reloading again
-        if (loadCurrentDatePrayersJob?.isActive == true) {
-            loadCurrentDatePrayersJob?.cancel()
+        if (loadSelectedDatePrayersJob?.isActive == true) {
+            loadSelectedDatePrayersJob?.cancel()
         }
 
         appLocationManager.getLastKnownLocation { location ->
             location ?: return@getLastKnownLocation
 
             val currentDate = selectedDate
-            loadCurrentDatePrayersJob = viewModelScope.launch(Dispatchers.IO) {
+            loadSelectedDatePrayersJob = viewModelScope.launch(Dispatchers.IO) {
                 getDayPrayers.call(currentDate, location, forceUpdate)
                     .onSuccess { dateDayPrayers ->
                         withContext(Dispatchers.Main) {
@@ -118,22 +121,27 @@ class HomeScreenViewModel @Inject constructor(
         appLocationManager.getLastKnownLocation { location ->
             location ?: return@getLastKnownLocation
             viewModelScope.launch(Dispatchers.IO) {
-                val currentPrayerResult = getCurrentPrayer.call(currentDayPrayersInfo)
+                // TODO: Create app's readable exceptions
+                getCurrentPrayer.call(currentDayPrayersInfo, location)
                     .onSuccess {
                         currentPrayer = it
                     }
+                    .onFailure {
+                        it.printStackTraceInDebug()
+                        sendEvent(UiEvent.ShowErrorSnackBar(UiText.StringResource(R.string.error_something_went_wrong)))
+                    }
 
-                val nextPrayerResult = getNextPrayer.call(currentDayPrayersInfo)
+                getNextPrayer.call(currentDayPrayersInfo, location)
                     .onSuccess {
                         nextPrayer = it
                         withContext(Dispatchers.Main) {
                             startDurationCountDown()
                         }
                     }
-
-                if (currentPrayerResult.isFailure || nextPrayerResult.isFailure) {
-                    sendEvent(UiEvent.ShowErrorSnackBar(UiText.StringResource(R.string.error_something_went_wrong)))
-                }
+                    .onFailure {
+                        it.printStackTraceInDebug()
+                        sendEvent(UiEvent.ShowErrorSnackBar(UiText.StringResource(R.string.error_something_went_wrong)))
+                    }
             }
         }
     }

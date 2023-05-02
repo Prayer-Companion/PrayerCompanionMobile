@@ -23,6 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -31,6 +32,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.prayercompanion.prayercompanionandroid.domain.utils.AlarmScheduler
 import com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.HomeScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.permissions.PermissionsRequestScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.sign_in.SignInScreen
@@ -40,6 +42,8 @@ import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.Qi
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -47,6 +51,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var googleSignInClient: GoogleSignInClient
+
+    @Inject
+    lateinit var alarmScheduler: AlarmScheduler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,6 +106,15 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+        }
+
+        setupNotifications()
+    }
+
+
+    fun setupNotifications() {
+        lifecycleScope.launch() {
+            alarmScheduler.scheduleDayPrayersNotifications(LocalDate.now())
         }
     }
 

@@ -1,5 +1,6 @@
 package com.prayercompanion.prayercompanionandroid.domain.models
 
+import java.io.Serializable
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -8,10 +9,8 @@ data class PrayerInfo(
     val prayer: Prayer,
     val dateTime: LocalDateTime,
     var status: PrayerStatus
-) {
-
+) : Serializable {
     val date: LocalDate get() = dateTime.toLocalDate()
-
     val time: LocalTime get() = dateTime.toLocalTime()
 
     companion object {

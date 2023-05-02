@@ -28,5 +28,5 @@
     <string name="continue_with_google">تسجيل الدخول ب Google</string>
     <string name="continue_as_guest">الاستمرار ك ضيف</string>
     <string name="location_permission_request_cta">منح إذن الموقع</string>
-    <string name="location_permission_request_explaination">إذن الموقع الجغرافي مطلوب للحصول على أوقات الصلاة الصحيحة</string>
+    <string name="location_permission_request_explanation">إذن الموقع الجغرافي مطلوب للحصول على أوقات الصلاة الصحيحة</string>
 </resources>

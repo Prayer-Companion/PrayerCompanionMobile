@@ -64,7 +64,7 @@ fun PermissionsRequestScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = stringResource(id = R.string.location_permission_request_explaination),
+                    text = stringResource(id = R.string.location_permission_request_explanation),
                     style = MaterialTheme.typography.body2,
                     color = MaterialTheme.colors.onPrimary,
                     textAlign = TextAlign.Center

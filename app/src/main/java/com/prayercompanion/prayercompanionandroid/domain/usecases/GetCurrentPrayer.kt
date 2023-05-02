@@ -1,5 +1,6 @@
 package com.prayercompanion.prayercompanionandroid.domain.usecases
 
+import android.location.Location
 import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
@@ -16,13 +17,14 @@ class GetCurrentPrayer @Inject constructor(
 
     @OptIn(ExperimentalStdlibApi::class)
     suspend fun call(
-        currentDayPrayersInfo: DayPrayersInfo
+        currentDayPrayersInfo: DayPrayersInfo,
+        location: Location
     ): Result<PrayerInfo> {
         val currentDate = LocalDate.now(clock)
         val currentTime = LocalTime.now(clock)
 
         if (currentTime in LocalTime.MIN.rangeUntil(currentDayPrayersInfo.get(Prayer.FAJR).time)) {
-            return prayersRepository.getPrayer(Prayer.ISHA, currentDate.minusDays(1))
+            return prayersRepository.getPrayer(Prayer.ISHA, currentDate.minusDays(1), location)
         }
         if (currentTime in currentDayPrayersInfo.get(Prayer.ISHA).time.rangeTo(LocalTime.MAX)) {
             return Result.success(currentDayPrayersInfo.get(Prayer.ISHA))
