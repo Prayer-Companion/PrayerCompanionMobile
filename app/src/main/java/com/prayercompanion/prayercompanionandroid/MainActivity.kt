@@ -91,7 +91,8 @@ class MainActivity : ComponentActivity() {
                                 navController::navigate,
                                 googleSignInClient,
                                 viewModel.uiEventsChannel,
-                                viewModel::onEvent
+                                viewModel::onEvent,
+                                viewModel.isLoading
                             )
                         }
                         composable(Route.PermissionsRequests.name) {

@@ -1,5 +1,8 @@
 package com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.sign_in
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -28,6 +31,8 @@ class SignInViewModel @Inject constructor(
 
     private val _uiEventsChannel = Channel<UiEvent>()
     val uiEventsChannel = _uiEventsChannel.receiveAsFlow()
+    var isLoading by mutableStateOf(false)
+        private set
 
     fun onEvent(event: SignInEvents) {
         when (event) {
@@ -41,6 +46,7 @@ class SignInViewModel @Inject constructor(
     }
 
     private fun onSignInWithGoogleResultReceived(result: Boolean, task: Task<GoogleSignInAccount>) {
+        isLoading = true
         if (result.not()) {
             sendErrorEvent(R.string.error_something_went_wrong.toUiText())
             return
@@ -66,6 +72,7 @@ class SignInViewModel @Inject constructor(
     }
 
     private fun onSignInSuccess() {
+        isLoading = false
         viewModelScope.launch(Dispatchers.IO) {
             val signInResult = accountSignIn.call()
             signInResult.onSuccess {
@@ -77,6 +84,7 @@ class SignInViewModel @Inject constructor(
     }
 
     private fun onSignInFail(exception: Exception) {
+        isLoading = false
         sendErrorEvent(exception.message.toUiText())
     }
 

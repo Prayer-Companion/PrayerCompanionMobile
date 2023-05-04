@@ -28,3 +28,7 @@ fun <T : Serializable?> Intent.getSerializable(key: String, m_class: Class<T>): 
     else
         this.getSerializableExtra(key) as T
 }
+
+fun <T> Result.Companion.failure(message: String): Result<T> {
+    return failure(Exception(message))
+}

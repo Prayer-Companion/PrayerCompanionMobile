@@ -65,7 +65,7 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(0.4f),
-            prayerInfo = viewModel.nextPrayer,
+            prayerInfo = viewModel.state.nextPrayer,
             durationUntilNextPrayer = viewModel.durationUntilNextPrayer,
             onStatusSelected = viewModel::onStatusSelected
         )
@@ -85,7 +85,7 @@ fun HomeScreen(
                         contentDescription = "previous day"
                     )
                 }
-                Text(text = viewModel.selectedDate.format(PresentationConsts.DateFormatter))
+                Text(text = viewModel.state.selectedDate.format(PresentationConsts.DateFormatter))
                 IconButton(onClick = {
                     viewModel.onNextDayButtonClicked()
                 }) {
@@ -103,7 +103,7 @@ fun HomeScreen(
                 .fillMaxHeight()
                 .padding(spacing.spaceMedium, 0.dp)
         ) {
-            items(viewModel.selectedDayPrayersInfo.prayers) {
+            items(viewModel.state.selectedDayPrayersInfo.prayers) {
                 PrayerItem(
                     name = stringResource(id = it.prayer.nameId),
                     modifier = Modifier.fillMaxWidth(),

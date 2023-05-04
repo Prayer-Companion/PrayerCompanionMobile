@@ -16,6 +16,7 @@ import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
+import com.prayercompanion.prayercompanionandroid.failure
 import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
 import com.skydoves.whatif.whatIfNotNull
 import java.time.LocalDate
@@ -148,7 +149,7 @@ class PrayersRepositoryImpl @Inject constructor(
 
                 Result.success(dayPrayers.get(prayer))
             } catch (e: Exception) {
-                Result.failure(Exception("Prayer Doesn't Exist"))
+                Result.failure("Prayer Doesn't Exist")
             }
         }
     }

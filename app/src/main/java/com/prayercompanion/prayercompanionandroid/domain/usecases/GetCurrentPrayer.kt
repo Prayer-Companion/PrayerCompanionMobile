@@ -1,10 +1,10 @@
 package com.prayercompanion.prayercompanionandroid.domain.usecases
 
-import android.location.Location
-import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
+import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
+import com.prayercompanion.prayercompanionandroid.failure
 import java.time.Clock
 import java.time.LocalDate
 import java.time.LocalTime
@@ -12,16 +12,22 @@ import javax.inject.Inject
 
 class GetCurrentPrayer @Inject constructor(
     private val prayersRepository: PrayersRepository,
+    private val appLocationManager: AppLocationManager,
     private val clock: Clock
 ) {
 
     @OptIn(ExperimentalStdlibApi::class)
-    suspend fun call(
-        currentDayPrayersInfo: DayPrayersInfo,
-        location: Location
-    ): Result<PrayerInfo> {
+    suspend fun call(): Result<PrayerInfo> {
+        val location = appLocationManager.getLastKnownLocation()
+            ?: return Result.failure("location can't be null")
+
         val currentDate = LocalDate.now(clock)
         val currentTime = LocalTime.now(clock)
+
+        val currentDayPrayersInfo = prayersRepository
+            .getDayPrayers(location, currentDate)
+            .getOrNull()
+            ?: return Result.failure("TODO")
 
         if (currentTime in LocalTime.MIN.rangeUntil(currentDayPrayersInfo.get(Prayer.FAJR).time)) {
             return prayersRepository.getPrayer(Prayer.ISHA, currentDate.minusDays(1), location)
@@ -38,6 +44,6 @@ class GetCurrentPrayer @Inject constructor(
                     return Result.success(prayerInfo)
                 }
             }
-        return Result.failure(Exception("Something went wrong while getting current prayer"))
+        return Result.failure("Something went wrong while getting current prayer")
     }
 }

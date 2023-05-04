@@ -10,6 +10,8 @@ import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.qualifiers.ApplicationContext
 import logcat.logcat
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class AppLocationManager @Inject constructor(
     @ApplicationContext
@@ -30,16 +32,18 @@ class AppLocationManager @Inject constructor(
         }
 
     @SuppressLint("MissingPermission")
-    fun getLastKnownLocation(callback: (Location?) -> Unit) {
+    suspend fun getLastKnownLocation(): Location? {
         if (areAllPermissionsGranted.not()) {
             logcat { "Location permission is missing" }
-            return
+            return null
         }
 
-        fusedLocationClient.lastLocation
-            .addOnSuccessListener { location: Location? ->
-                callback(location)
-            }
+        return suspendCoroutine {
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location: Location? ->
+                    it.resume(location)
+                }
+        }
     }
 
     companion object {

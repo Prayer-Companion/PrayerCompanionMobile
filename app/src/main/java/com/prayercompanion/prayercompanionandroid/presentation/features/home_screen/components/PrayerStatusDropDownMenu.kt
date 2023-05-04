@@ -14,6 +14,7 @@ fun PrayerStatusDropDownMenu(
     onDismissRequest: () -> Unit = {},
     onItemSelected: (PrayerStatus) -> Unit = {}
 ) {
+    //TODO either don't allow updating future prayers, or add a "Not set" value
     DropdownMenu(expanded = expanded, onDismissRequest = onDismissRequest) {
         PrayerStatusMenuItem(
             modifier = Modifier.clickable {

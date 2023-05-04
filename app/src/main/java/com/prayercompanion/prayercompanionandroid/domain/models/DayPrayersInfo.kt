@@ -18,6 +18,10 @@ data class DayPrayersInfo constructor(
         return prayers.find { it.prayer == prayer } ?: throw Exception("prayer not found")
     }
 
+    fun updateStatus(prayer: Prayer, prayerStatus: PrayerStatus) {
+        get(prayer).status = prayerStatus
+    }
+
     companion object {
         val Default = DayPrayersInfo(
             listOf(
