@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -25,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -47,7 +49,8 @@ fun SignInScreen(
     navigate: (UiEvent.Navigate) -> Unit = {},
     googleSignInClient: GoogleSignInClient? = null,
     uiEvents: Flow<UiEvent> = emptyFlow(),
-    onEvent: (SignInEvents) -> Unit = {}
+    onEvent: (SignInEvents) -> Unit = {},
+    isLoadingState: Boolean = false
 ) {
     val spacing = LocalSpacing.current
     val context = LocalContext.current
@@ -72,9 +75,11 @@ fun SignInScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.primaryVariant),
-        contentAlignment = Alignment.BottomCenter
+            .background(MaterialTheme.colors.primaryVariant)
     ) {
+        if (isLoadingState) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center),color = Color.White)
+        }
         Column(
             modifier = Modifier
                 .background(
@@ -86,7 +91,8 @@ fun SignInScreen(
                     top = spacing.spaceLarge,
                     bottom = spacing.spaceExtraLarge,
                     end = spacing.spaceLarge
-                ),
+                )
+                .align(Alignment.BottomCenter),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Button(

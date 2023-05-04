@@ -16,6 +16,7 @@ import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
+import com.prayercompanion.prayercompanionandroid.failure
 import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
 import java.time.LocalDate
 import java.time.YearMonth
@@ -62,13 +63,11 @@ class PrayersRepositoryImpl @Inject constructor(
             val dayPrayers = prayersResponse
                 .find { it.date == dayDate.format(Consts.DateFormatter) }
                 ?: return Result.failure(
-                    Exception(
-                        "Response from BE doesn't have the required date ${
-                            dayDate.format(
-                                Consts.MonthYearFormatter
-                            )
-                        }"
-                    )
+                    "Response from BE doesn't have the required date ${
+                        dayDate.format(
+                            Consts.MonthYearFormatter
+                        )
+                    }"
                 )
 
             val dayStatus = statusesResponse
@@ -111,7 +110,7 @@ class PrayersRepositoryImpl @Inject constructor(
             Result.success(prayerInfo)
         } else {
             // TODO: fetch if needed
-            Result.failure(Exception("Prayer Doesn't Exist"))
+            Result.failure("Prayer Doesn't Exist")
         }
     }
 

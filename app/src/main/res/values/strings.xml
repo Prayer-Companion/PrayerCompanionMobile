@@ -12,8 +12,6 @@
     <string name="status">Status</string>
     <string name="remaining_time">Remaining Time: %02d:%02d:%02d</string>
 
-    <string name="error_something_went_wrong">Sorry Something went wrong</string>
-
     <string name="home_tab">Home</string>
     <string name="qibla_tab">Qibla</string>
 
@@ -27,4 +25,8 @@
     <string name="continue_as_guest">Continue as a Guest</string>
     <string name="location_permission_request_cta">Grant Location Permission</string>
     <string name="location_permission_request_explaination">Location permission is required to get the right prayer times</string>
+
+
+<!--  Errors  -->
+    <string name="error_something_went_wrong">Sorry Something went wrong</string>
 </resources>

@@ -18,3 +18,7 @@ fun Throwable.printStackTraceInDebug() {
         printStackTrace()
     }
 }
+
+fun <T> Result.Companion.failure(message: String): Result<T> {
+    return failure(Exception(message))
+}

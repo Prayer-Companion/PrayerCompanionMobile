@@ -10,4 +10,15 @@ enum class Prayer(@StringRes val nameId: Int) {
     ASR(R.string.asr),
     MAGHRIB(R.string.maghrib),
     ISHA(R.string.isha);
+
+    fun next(): Prayer? {
+        return when (this) {
+            FAJR -> DUHA
+            DUHA -> DHUHR
+            DHUHR -> ASR
+            ASR -> MAGHRIB
+            MAGHRIB -> ISHA
+            ISHA -> null
+        }
+    }
 }
