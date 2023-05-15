@@ -3,14 +3,21 @@ package com.prayercompanion.prayercompanionandroid.domain.usecases
 import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
+import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
+import com.prayercompanion.prayercompanionandroid.failure
 import java.time.LocalDate
 import javax.inject.Inject
 
 class GetNextPrayer @Inject constructor(
-    private val prayersRepository: PrayersRepository
+    private val prayersRepository: PrayersRepository,
+    private val appLocationManager: AppLocationManager
 ) {
 
     suspend fun call(prayerInfo: PrayerInfo): Result<PrayerInfo> {
+        val location = appLocationManager
+            .getLastKnownLocation()
+            ?: return Result.failure("location can't be null")
+
         var nextPrayer = prayerInfo.prayer.next()
         var date: LocalDate = prayerInfo.date
         if (nextPrayer == null) {
@@ -20,7 +27,8 @@ class GetNextPrayer @Inject constructor(
 
         return prayersRepository.getPrayer(
             prayer = nextPrayer,
-            date = date
+            date = date,
+            location = location
         )
     }
 }

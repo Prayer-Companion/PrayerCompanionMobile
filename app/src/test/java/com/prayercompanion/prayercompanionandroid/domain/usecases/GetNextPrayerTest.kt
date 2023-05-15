@@ -33,7 +33,7 @@ class GetNextPrayerTest {
     fun `should return the correct next prayer FAJR`() = runTest {
         val time = LocalTime.of(2, 0, 0)
         stubClock(LocalDateTime.of(Consts.TODAY_DATE, time))
-        val prayer = usecase.call(LOCATION)
+        val prayer = usecase.call(LOCATION, location)
 
         Truth.assertThat(prayer.isSuccess).isTrue()
 
@@ -46,7 +46,7 @@ class GetNextPrayerTest {
     fun `should return the correct next prayer DUHA`() = runTest {
         val time = LocalTime.of(5, 30, 0)
         stubClock(LocalDateTime.of(Consts.TODAY_DATE, time))
-        val prayer = usecase.call(LOCATION)
+        val prayer = usecase.call(LOCATION, location)
 
         Truth.assertThat(prayer.isSuccess).isTrue()
 
@@ -60,7 +60,7 @@ class GetNextPrayerTest {
     fun `should return the correct next prayer DHUHR`() = runTest {
         val time = LocalTime.of(7, 30, 0)
         stubClock(LocalDateTime.of(Consts.TODAY_DATE, time))
-        val prayer = usecase.call(LOCATION)
+        val prayer = usecase.call(LOCATION, location)
 
         Truth.assertThat(prayer.isSuccess).isTrue()
 
@@ -74,7 +74,7 @@ class GetNextPrayerTest {
     fun `should return the correct next prayer ASR`() = runTest {
         val time = LocalTime.of(12, 30, 0)
         stubClock(LocalDateTime.of(Consts.TODAY_DATE, time))
-        val prayer = usecase.call(LOCATION)
+        val prayer = usecase.call(LOCATION, location)
 
         Truth.assertThat(prayer.isSuccess).isTrue()
 
@@ -87,7 +87,7 @@ class GetNextPrayerTest {
     fun `should return the correct next prayer MAGHRIB`() = runTest {
         val time = LocalTime.of(15, 30, 0)
         stubClock(LocalDateTime.of(Consts.TODAY_DATE, time))
-        val prayer = usecase.call(LOCATION)
+        val prayer = usecase.call(LOCATION, location)
 
         Truth.assertThat(prayer.isSuccess).isTrue()
 
@@ -101,7 +101,7 @@ class GetNextPrayerTest {
     fun `should return the correct next prayer ISHA`() = runTest {
         val time = LocalTime.of(18, 30, 0)
         stubClock(LocalDateTime.of(Consts.TODAY_DATE, time))
-        val prayer = usecase.call(LOCATION)
+        val prayer = usecase.call(LOCATION, location)
 
         Truth.assertThat(prayer.isSuccess).isTrue()
 
@@ -115,7 +115,7 @@ class GetNextPrayerTest {
     fun `should return the correct next prayer Next FAJR`() = runTest {
         val time = LocalTime.of(20, 30, 0)
         stubClock(LocalDateTime.of(Consts.TODAY_DATE, time))
-        val prayer = usecase.call(LOCATION)
+        val prayer = usecase.call(LOCATION, location)
 
         Truth.assertThat(prayer.isSuccess).isTrue()
 
@@ -128,7 +128,7 @@ class GetNextPrayerTest {
     fun `should return the correct next prayer DUHA at the exact time of previous Salah`() = runTest {
         val time = PrayersFakeRepository.DEFAULT_DAY_PRAYERS_INFO.get(Prayer.FAJR).time
         stubClock(LocalDateTime.of(Consts.TODAY_DATE, time))
-        val prayer = usecase.call(LOCATION)
+        val prayer = usecase.call(LOCATION, location)
 
         Truth.assertThat(prayer.isSuccess).isTrue()
 
@@ -142,7 +142,7 @@ class GetNextPrayerTest {
     fun `should return the correct next prayer DHUHR at the exact time of previous Salah`() = runTest {
         val time = PrayersFakeRepository.DEFAULT_DAY_PRAYERS_INFO.get(Prayer.DUHA).time
         stubClock(LocalDateTime.of(Consts.TODAY_DATE, time))
-        val prayer = usecase.call(LOCATION)
+        val prayer = usecase.call(LOCATION, location)
 
         Truth.assertThat(prayer.isSuccess).isTrue()
 
@@ -156,7 +156,7 @@ class GetNextPrayerTest {
     fun `should return the correct next prayer ASR at the exact time of previous Salah`() = runTest {
         val time = PrayersFakeRepository.DEFAULT_DAY_PRAYERS_INFO.get(Prayer.DHUHR).time
         stubClock(LocalDateTime.of(Consts.TODAY_DATE, time))
-        val prayer = usecase.call(LOCATION)
+        val prayer = usecase.call(LOCATION, location)
 
         Truth.assertThat(prayer.isSuccess).isTrue()
 
@@ -169,7 +169,7 @@ class GetNextPrayerTest {
     fun `should return the correct next prayer MAGHRIB at the exact time of previous Salah`() = runTest {
         val time = PrayersFakeRepository.DEFAULT_DAY_PRAYERS_INFO.get(Prayer.ASR).time
         stubClock(LocalDateTime.of(Consts.TODAY_DATE, time))
-        val prayer = usecase.call(LOCATION)
+        val prayer = usecase.call(LOCATION, location)
 
         Truth.assertThat(prayer.isSuccess).isTrue()
 
@@ -183,7 +183,7 @@ class GetNextPrayerTest {
     fun `should return the correct next prayer ISHA at the exact time of previous Salah`() = runTest {
         val time = PrayersFakeRepository.DEFAULT_DAY_PRAYERS_INFO.get(Prayer.MAGHRIB).time
         stubClock(LocalDateTime.of(Consts.TODAY_DATE, time))
-        val prayer = usecase.call(LOCATION)
+        val prayer = usecase.call(LOCATION, location)
 
         Truth.assertThat(prayer.isSuccess).isTrue()
 
@@ -197,7 +197,7 @@ class GetNextPrayerTest {
     fun `should return the correct next prayer Next FAJR at the exact time of previous Salah`() = runTest {
         val time = PrayersFakeRepository.DEFAULT_DAY_PRAYERS_INFO.get(Prayer.ISHA).time
         stubClock(LocalDateTime.of(Consts.TODAY_DATE, time))
-        val prayer = usecase.call(LOCATION)
+        val prayer = usecase.call(LOCATION, location)
 
         Truth.assertThat(prayer.isSuccess).isTrue()
 

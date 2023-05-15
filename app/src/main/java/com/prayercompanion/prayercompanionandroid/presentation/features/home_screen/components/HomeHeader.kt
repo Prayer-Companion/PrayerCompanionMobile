@@ -1,7 +1,16 @@
 package com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -19,80 +28,99 @@ import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.models.RemainingDuration
 import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
-import com.prayercompanion.prayercompanionandroid.presentation.utils.PresentationConsts
+import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 
 @Preview(locale = "ar")
 @Composable
 fun HomeHeader(
     modifier: Modifier = Modifier,
-    prayerInfo: PrayerInfo = PrayerInfo.Default,
+    currentPrayer: PrayerInfo = PrayerInfo.Default,
+    nextPrayer: PrayerInfo = PrayerInfo.Default,
     durationUntilNextPrayer: RemainingDuration = RemainingDuration(0, 0, 0),
-    onStatusSelected: (PrayerStatus, PrayerInfo) -> Unit = { _,_->}
+    onStatusSelected: (PrayerStatus, PrayerInfo) -> Unit = { _, _ -> }
 ) {
-    val spacing = LocalSpacing.current
-    Surface(
-        modifier = modifier,
-        elevation = 15.dp,
-        shape = RoundedCornerShape(
-            bottomStart = 50.dp,
-            bottomEnd = 50.dp
-        ),
-        color = Color.Black
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(color = Color.White)
-                .background(
-                    brush = Brush.horizontalGradient(
-                        colors = listOf(
-                            MaterialTheme.colors.primary,
-                            MaterialTheme.colors.primary.copy(alpha = 0.8f)
-                        )
-                    ),
-                    shape = RoundedCornerShape(
-                        bottomStart = 50.dp,
-                        bottomEnd = 50.dp
-                    )
-                )
+    PrayerCompanionAndroidTheme {
+
+        val spacing = LocalSpacing.current
+        Surface(
+            modifier = modifier,
+            elevation = 15.dp,
+            shape = RoundedCornerShape(
+                bottomStart = 50.dp,
+                bottomEnd = 50.dp
+            ),
+            color = Color.Black,
         ) {
-            Column(
-                modifier = Modifier.fillMaxSize()
-                    .padding(spacing.spaceLarge),
-                verticalArrangement = Arrangement.Center
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(color = Color.White)
+                    .background(
+                        brush = Brush.radialGradient(
+                            colors = listOf(
+                                Color(0xFF397778),
+                                Color(0xFF2d6061)
+                            )
+                        ),
+                        shape = RoundedCornerShape(
+                            bottomStart = 50.dp,
+                            bottomEnd = 50.dp
+                        )
+                    )
             ) {
-                Row(
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                        .fillMaxSize()
+                        .padding(spacing.spaceLarge),
+                    verticalArrangement = Arrangement.Center
                 ) {
-                    Column {
-                        Text(
-                            text = stringResource(id = prayerInfo.prayer.nameId),
-                            style = MaterialTheme.typography.h1,
-                            color = MaterialTheme.colors.onPrimary
-                        )
-                        Text(
-                            text = prayerInfo.time.format(PresentationConsts.TimeFormatter),
-                            style = MaterialTheme.typography.h1,
-                            color = MaterialTheme.colors.onPrimary
-                        )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Column {
+                            Text(
+                                text = stringResource(id = R.string.current_prayer),
+                                style = MaterialTheme.typography.h3,
+                                color = MaterialTheme.colors.secondary
+                            )
+                            Spacer(modifier = Modifier.height(spacing.spaceSmall))
+                            Text(
+                                text = stringResource(id = currentPrayer.prayer.nameId),
+                                style = MaterialTheme.typography.h1,
+                                color = MaterialTheme.colors.onPrimary
+                            )
+                        }
+                        PrayerStatusPicker {
+                            onStatusSelected(it, currentPrayer)
+                        }
                     }
-                    PrayerStatusPicker {
-                        onStatusSelected(it, prayerInfo)
+                    Row {
+                        Text(
+                            modifier = Modifier.alignByBaseline(),
+                            text = stringResource(
+                                id = R.string.remaining_time_value,
+                                durationUntilNextPrayer.hours,
+                                durationUntilNextPrayer.minutes,
+                                durationUntilNextPrayer.seconds,
+                            ),
+                            style = MaterialTheme.typography.subtitle1,
+                            color = MaterialTheme.colors.onPrimary
+                        )
+                        Spacer(modifier = Modifier.width(spacing.spaceSmall))
+                        Text(
+                            modifier = Modifier.alignByBaseline(),
+                            text = stringResource(
+                                id = R.string.remaining_time,
+                                stringResource(id = nextPrayer.prayer.nameId)
+                            ),
+                            style = MaterialTheme.typography.h3,
+                            color = MaterialTheme.colors.secondary,
+                        )
                     }
                 }
-                Text(
-                    text = stringResource(
-                        id = R.string.remaining_time,
-                        durationUntilNextPrayer.hours,
-                        durationUntilNextPrayer.minutes,
-                        durationUntilNextPrayer.seconds,
-                    ),
-                    style = MaterialTheme.typography.h1,
-                    color = MaterialTheme.colors.onPrimary
-                )
             }
         }
     }

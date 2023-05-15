@@ -18,6 +18,7 @@ import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
 import com.prayercompanion.prayercompanionandroid.failure
 import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
+import com.skydoves.whatif.whatIfNotNull
 import java.time.LocalDate
 import java.time.YearMonth
 import java.util.TimeZone
@@ -33,53 +34,76 @@ class PrayersRepositoryImpl @Inject constructor(
         dayDate: LocalDate,
         forceUpdate: Boolean
     ): Result<DayPrayersInfo> {
-
         return try {
             if (forceUpdate.not()) {
                 val savedPrayers = dao.getPrayers(dayDate)
                 if (savedPrayers.isNotEmpty()) {
-                    return Result.success(savedPrayers.toDayPrayerInfo())
+                    val dayPrayersInfo = savedPrayers.toDayPrayerInfo()
+                    return Result.success(dayPrayersInfo)
                 }
             }
 
             val yearMonth = YearMonth.from(dayDate)
-            val startOfMonth = yearMonth.atDay(1)
-            val endOfMonth = yearMonth.atEndOfMonth()
+            val (prayersResponse, statusesResponse) = loadMonthPrayers(yearMonth, location)
 
-            val prayersResponse = prayerCompanionApi.getPrayers(
-                TimeZone.getDefault().id,
-                location.latitude.toString(),
-                location.longitude.toString(),
-                Consts.MonthYearFormatter.format(yearMonth)
+            val dayPrayer = dayPrayerResponseAndStatusResponseToDayPrayerInfo(
+                dayDate,
+                prayersResponse,
+                statusesResponse
             )
 
-            val statusesResponse = prayerCompanionApi.getPrayerStatuses(
-                startDate = Consts.DateFormatter.format(startOfMonth),
-                endDate = Consts.DateFormatter.format(endOfMonth)
-            )
-
-            insertMonthPrayers(startOfMonth, endOfMonth, prayersResponse, statusesResponse)
-
-            val dayPrayers = prayersResponse
-                .find { it.date == dayDate.format(Consts.DateFormatter) }
-                ?: return Result.failure(
-                    "Response from BE doesn't have the required date ${
-                        dayDate.format(
-                            Consts.MonthYearFormatter
-                        )
-                    }"
-                )
-
-            val dayStatus = statusesResponse
-                .find { it.date == dayDate.format(Consts.DateFormatter) }
-
-            Result.success(responsesToDayPrayerInfo(dayPrayers, dayStatus))
+            Result.success(dayPrayer)
         } catch (e: Exception) {
             e.printStackTraceInDebug()
             Result.failure(e)
         }
     }
 
+    private suspend fun loadMonthPrayers(
+        yearMonth: YearMonth,
+        location: Location
+    ): Pair<List<DayPrayerResponse>, List<DayPrayerStatusResponse>> {
+        val startOfMonth = yearMonth.atDay(1)
+        val endOfMonth = yearMonth.atEndOfMonth()
+
+        val prayersResponse = prayerCompanionApi.getPrayers(
+            TimeZone.getDefault().id,
+            location.latitude.toString(),
+            location.longitude.toString(),
+            Consts.MonthYearFormatter.format(yearMonth)
+        )
+
+        val statusesResponse = prayerCompanionApi.getPrayerStatuses(
+            startDate = Consts.DateFormatter.format(startOfMonth),
+            endDate = Consts.DateFormatter.format(endOfMonth)
+        )
+
+        insertMonthPrayers(startOfMonth, endOfMonth, prayersResponse, statusesResponse)
+
+        return prayersResponse to statusesResponse
+    }
+
+    private fun dayPrayerResponseAndStatusResponseToDayPrayerInfo(
+        dayDate: LocalDate,
+        prayersResponse: List<DayPrayerResponse>,
+        statusesResponse: List<DayPrayerStatusResponse>
+    ): DayPrayersInfo {
+
+        prayersResponse
+            .find { it.date == dayDate.format(Consts.DateFormatter) }
+            .whatIfNotNull { dayPrayers ->
+
+                val dayStatus = statusesResponse
+                    .find { it.date == dayDate.format(Consts.DateFormatter) }
+
+                return responsesToDayPrayerInfo(dayPrayers, dayStatus)
+            }
+
+        throw Exception(
+            "Response from BE doesn't have the required date ${dayDate.format(Consts.MonthYearFormatter)}"
+        )
+
+    }
 
     private fun insertMonthPrayers(
         startOfMonth: LocalDate,
@@ -96,21 +120,38 @@ class PrayersRepositoryImpl @Inject constructor(
 
         dao.delete(dates)
 
-        val prayersWithStatuses: List<PrayerInfoEntity> = prayersResponse.map { dayPrayers ->
+        val prayersWithStatuses: List<PrayerInfoEntity> = prayersResponse.flatMap { dayPrayers ->
             val dayStatuses = statusesResponse.find { status -> status.date == dayPrayers.date }
             responsesToPrayerInfoEntity(dayPrayers, dayStatuses)
-        }.flatten()
+        }
 
         dao.insertAll(prayersWithStatuses)
     }
 
-    override suspend fun getPrayer(prayer: Prayer, date: LocalDate): Result<PrayerInfo> {
+    override suspend fun getPrayer(
+        prayer: Prayer,
+        date: LocalDate,
+        location: Location
+    ): Result<PrayerInfo> {
         val prayerInfo = dao.getPrayer(prayer, date)?.toPrayerInfo()
         return if (prayerInfo != null) {
             Result.success(prayerInfo)
         } else {
-            // TODO: fetch if needed
-            Result.failure("Prayer Doesn't Exist")
+
+            val yearMonth = YearMonth.from(date)
+            val (prayersResponse, statusesResponse) = loadMonthPrayers(yearMonth, location)
+
+            try {
+                val dayPrayers = dayPrayerResponseAndStatusResponseToDayPrayerInfo(
+                    date,
+                    prayersResponse,
+                    statusesResponse
+                )
+
+                Result.success(dayPrayers.get(prayer))
+            } catch (e: Exception) {
+                Result.failure("Prayer Doesn't Exist")
+            }
         }
     }
 

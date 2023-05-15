@@ -18,7 +18,8 @@ class GetCurrentPrayer @Inject constructor(
 
     @OptIn(ExperimentalStdlibApi::class)
     suspend fun call(): Result<PrayerInfo> {
-        val location = appLocationManager.getLastKnownLocation() ?: return Result.failure("location can't be null")
+        val location = appLocationManager.getLastKnownLocation()
+            ?: return Result.failure("location can't be null")
 
         val currentDate = LocalDate.now(clock)
         val currentTime = LocalTime.now(clock)
@@ -29,7 +30,7 @@ class GetCurrentPrayer @Inject constructor(
             ?: return Result.failure("TODO")
 
         if (currentTime in LocalTime.MIN.rangeUntil(currentDayPrayersInfo.get(Prayer.FAJR).time)) {
-            return prayersRepository.getPrayer(Prayer.ISHA, currentDate.minusDays(1))
+            return prayersRepository.getPrayer(Prayer.ISHA, currentDate.minusDays(1), location)
         }
         if (currentTime in currentDayPrayersInfo.get(Prayer.ISHA).time.rangeTo(LocalTime.MAX)) {
             return Result.success(currentDayPrayersInfo.get(Prayer.ISHA))

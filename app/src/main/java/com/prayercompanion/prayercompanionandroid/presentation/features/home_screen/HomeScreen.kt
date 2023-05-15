@@ -1,11 +1,12 @@
 package com.prayercompanion.prayercompanionandroid.presentation.features.home_screen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -13,7 +14,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.components.HomeHeader
 import com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.components.PrayerItem
+import com.prayercompanion.prayercompanionandroid.presentation.theme.AppBackground
 import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
 import com.prayercompanion.prayercompanionandroid.presentation.utils.PresentationConsts
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
@@ -57,60 +58,66 @@ fun HomeScreen(
             }
         }
     }
-    Column(
-        modifier = Modifier.background(MaterialTheme.colors.primaryVariant),
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        HomeHeader(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.4f),
-            prayerInfo = viewModel.state.nextPrayer,
-            durationUntilNextPrayer = viewModel.durationUntilNextPrayer,
-            onStatusSelected = viewModel::onStatusSelected
+    Box {
+        AppBackground(
+            modifier = Modifier.fillMaxSize()
         )
-        Spacer(modifier = Modifier.height(spacing.spaceSmall))
-        // TODO: add a way to get back to today's date quickly
-        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(onClick = {
-                    viewModel.onPreviousDayButtonClicked()
-                }) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "previous day"
-                    )
-                }
-                Text(text = viewModel.state.selectedDate.format(PresentationConsts.DateFormatter))
-                IconButton(onClick = {
-                    viewModel.onNextDayButtonClicked()
-                }) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowForward,
-                        contentDescription = "next day"
-                    )
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            HomeHeader(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.4f),
+                currentPrayer = viewModel.state.currentPrayer,
+                nextPrayer = viewModel.state.nextPrayer,
+                durationUntilNextPrayer = viewModel.durationUntilNextPrayer,
+                onStatusSelected = viewModel::onStatusSelected
+            )
+            Spacer(modifier = Modifier.height(spacing.spaceSmall))
+            // TODO: add a way to get back to today's date quickly
+            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = {
+                        viewModel.onPreviousDayButtonClicked()
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "previous day"
+                        )
+                    }
+                    Text(text = viewModel.state.selectedDate.format(PresentationConsts.DateFormatter))
+                    IconButton(onClick = {
+                        viewModel.onNextDayButtonClicked()
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowForward,
+                            contentDescription = "next day"
+                        )
+                    }
                 }
             }
-        }
-        Spacer(modifier = Modifier.height(spacing.spaceSmall))
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .padding(spacing.spaceMedium, 0.dp)
-        ) {
-            items(viewModel.state.selectedDayPrayersInfo.prayers) {
-                PrayerItem(
-                    name = stringResource(id = it.prayer.nameId),
-                    modifier = Modifier.fillMaxWidth(),
-                    prayerInfo = it,
-                    onStatusSelected = viewModel::onStatusSelected
-                )
-                Spacer(modifier = Modifier.height(spacing.spaceSmall))
+            Spacer(modifier = Modifier.height(spacing.spaceSmall))
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .padding(spacing.spaceMedium, 0.dp)
+            ) {
+                items(viewModel.state.selectedDayPrayersInfo.prayers) {
+                    PrayerItem(
+                        name = stringResource(id = it.prayer.nameId),
+                        modifier = Modifier.fillMaxWidth(),
+                        prayerInfo = it,
+                        onStatusSelected = viewModel::onStatusSelected
+                    )
+                    Spacer(modifier = Modifier.height(spacing.spaceSmall))
+                }
             }
         }
     }
