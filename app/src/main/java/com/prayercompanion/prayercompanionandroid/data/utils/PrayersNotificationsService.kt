@@ -8,7 +8,6 @@ import androidx.core.app.NotificationCompat
 import com.prayercompanion.prayercompanionandroid.MainActivity
 import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerNotificationItem
-import com.prayercompanion.prayercompanionandroid.presentation.utils.PresentationConsts
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -24,14 +23,13 @@ class PrayersNotificationsService @Inject constructor(
         val activityIntent = Intent(context, MainActivity::class.java)
         val activityPendingInject = PendingIntent.getActivity(
             context,
-            0,
+            REQUEST_CODE,
             activityIntent,
             PendingIntent.FLAG_IMMUTABLE
         )
 
         val prayerName = context.getString(item.prayerInfo.prayer.nameId)
-        val prayerTime = PresentationConsts.TimeFormatter.format(item.prayerInfo.time)
-        val title = context.getString(R.string.prayer_notification_title, prayerName, prayerTime)
+        val title = context.getString(R.string.prayer_notification_title, prayerName)
 
         val notification = NotificationCompat
             .Builder(context, CHANNEL_ID)
@@ -42,12 +40,27 @@ class PrayersNotificationsService @Inject constructor(
             .setOngoing(item.isOngoing)
             .build()
 
-        val notificationId = 0 //todo figure out an id
+        val notificationId = item.hashCode()
+
+        println("Notified: $item")
+        notificationManager.notify(notificationId, notification)
+    }
+
+    fun showTestNotification(title: String, content: String = "") {
+        val notification = NotificationCompat
+            .Builder(context, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_mosque)
+            .setContentTitle(title)
+            .setContentText(content)
+            .build()
+
+        val notificationId = (title + content).hashCode()
 
         notificationManager.notify(notificationId, notification)
     }
 
     companion object {
+        const val REQUEST_CODE = 111
         const val CHANNEL_ID = "prayers_notifications_channel"
     }
 }

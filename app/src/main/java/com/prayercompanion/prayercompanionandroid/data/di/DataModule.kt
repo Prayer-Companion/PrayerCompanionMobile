@@ -7,10 +7,10 @@ import com.prayercompanion.prayercompanionandroid.data.local.PrayerCompanionData
 import com.prayercompanion.prayercompanionandroid.data.local.daos.PrayersInfoDao
 import com.prayercompanion.prayercompanionandroid.data.remote.PrayerCompanionApi
 import com.prayercompanion.prayercompanionandroid.data.repositories.PrayersRepositoryImpl
-import com.prayercompanion.prayercompanionandroid.data.utils.AndroidAlarmScheduler
+import com.prayercompanion.prayercompanionandroid.data.utils.AndroidPrayersAlarmScheduler
 import com.prayercompanion.prayercompanionandroid.data.utils.Consts
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
-import com.prayercompanion.prayercompanionandroid.domain.utils.AlarmScheduler
+import com.prayercompanion.prayercompanionandroid.domain.utils.PrayersAlarmScheduler
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -71,8 +71,8 @@ class DataModule {
     @Provides
     @Singleton
     internal fun provideAlarmScheduler(
-        usecase: AndroidAlarmScheduler
-    ): AlarmScheduler = usecase
+        util: AndroidPrayersAlarmScheduler
+    ): PrayersAlarmScheduler = util
 
     @Provides
     @Singleton

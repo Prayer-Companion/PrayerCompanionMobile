@@ -27,7 +27,6 @@ class AlarmReceiver : BroadcastReceiver() {
 
         prayersNotificationsService.showNotification(item)
     }
-
     companion object {
         const val EXTRA_PRAYER_NOTIFICATION_ITEM = "EXTRA_PRAYER_NOTIFICATION_ITEM"
     }

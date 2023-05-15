@@ -38,7 +38,8 @@ class PrayersRepositoryImpl @Inject constructor(
             if (forceUpdate.not()) {
                 val savedPrayers = dao.getPrayers(dayDate)
                 if (savedPrayers.isNotEmpty()) {
-                    return Result.success(savedPrayers.toDayPrayerInfo())
+                    val dayPrayersInfo = savedPrayers.toDayPrayerInfo()
+                    return Result.success(dayPrayersInfo)
                 }
             }
 

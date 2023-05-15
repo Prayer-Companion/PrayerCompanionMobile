@@ -10,7 +10,8 @@
     <string name="isha">Isha</string>
 
     <string name="status">Status</string>
-    <string name="remaining_time">Remaining Time: %02d:%02d:%02d</string>
+    <string name="remaining_time_value">%02d:%02d:%02d</string>
+    <string name="remaining_time">Remaining Time</string>
 
     <string name="home_tab">Home</string>
     <string name="qibla_tab">Qibla</string>
@@ -27,11 +28,12 @@
     <string name="location_permission_request_explanation">Location permission is required to get the right prayer times</string>
     <string name="prayer_reminders_channel_name">Prayers Reminders</string>
     <string name="prayer_reminders_channel_description">Daily Prayers Reminders</string> <!-- change to a more useful description-->
-    <string name="prayer_notification_title">Its %1$s prayer time: %2$s</string>
+    <string name="prayer_notification_title">It\'s time for the %1$s prayer</string>
 
     <string name="location_permission_request_explaination">Location permission is required to get the right prayer times</string>
 
 
 <!--  Errors  -->
     <string name="error_something_went_wrong">Sorry Something went wrong</string>
+    <string name="current_prayer">Current Prayer</string>
 </resources>

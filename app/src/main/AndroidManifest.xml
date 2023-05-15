@@ -39,7 +39,15 @@
                 android:value="true" />
         </service>
 
-        <receiver android:name=".data.receivers.AlarmReceiver"/>
+        <receiver android:name=".data.receivers.AlarmReceiver" />
+        <receiver android:name=".data.receivers.DailyReceiver" />
+        <receiver
+            android:name=".data.receivers.BootCompletedReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
     </application>
 

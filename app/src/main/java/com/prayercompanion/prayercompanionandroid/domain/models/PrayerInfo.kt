@@ -16,12 +16,7 @@ data class PrayerInfo(
     companion object {
         val Default = PrayerInfo(
             prayer = Prayer.FAJR,
-            dateTime = LocalDateTime.now(),
-            status = PrayerStatus.NotSet
-        )
-        val ErrorValue = PrayerInfo(
-            prayer = Prayer.FAJR,
-            dateTime = LocalDateTime.of(0, 0, 0, 0, 0, 0, 0),
+            dateTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0)),
             status = PrayerStatus.NotSet
         )
     }

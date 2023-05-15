@@ -1,19 +1,30 @@
 package com.prayercompanion.prayercompanionandroid.presentation.theme
 
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.graphics.Color
 
-private val DarkColorPalette = darkColors()
+val PaleGreenishBlue = Color(0xFFC6DFD4)
+val White = Color(0xFFFFFFFF)
+val DarkGrey = Color(0xFF747474)
 
+val PrayerStatusJamaah = Color(0xFF34DF34)
+val PrayerStatusOnTime = Color(0xFFFDE14E)
+val PrayerStatusLate = Color(0xFFEBA26D)
+val PrayerStatusMissed = Color(0xFFF14F4F)
+val PrayerStatusQadaa = Color(0xFF9B5832)
+val PrayerStatusNotSet = Color(0xFF989898)
+
+//todo use named colors
 private val LightColorPalette = lightColors(
-    primary = MutedTeal,
+    background = Color(0xFF407E80),
+    primary = Color(0xFF2D6061),
     primaryVariant = PaleGreenishBlue,
-    secondary = MutedGreen,
+    secondary = Color(0xFFC5C5C5),
     onPrimary = White,
-    onSecondary = White
+    onSecondary = White,
 
     /* Other default colors to override
     background = Color.White,
@@ -27,18 +38,11 @@ private val LightColorPalette = lightColors(
 
 @Composable
 fun PrayerCompanionAndroidTheme(
-    darkTheme: Boolean = false,//isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val colors = if (darkTheme) {
-        DarkColorPalette
-    } else {
-        LightColorPalette
-    }
-
     CompositionLocalProvider(LocalSpacing provides Dimensions()) {
         MaterialTheme(
-            colors = colors,
+            colors = LightColorPalette,
             typography = Typography,
             shapes = Shapes,
             content = content

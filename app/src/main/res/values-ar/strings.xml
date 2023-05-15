@@ -10,9 +10,8 @@
     <string name="isha">العشاء</string>
 
     <string name="status">الحالة</string>
-    <string name="remaining_time">
-        الوقت المتبقي: %02d:%02d:%02d
-    </string>
+    <string name="remaining_time_value">%02d:%02d:%02d</string>
+    <string name="remaining_time">الوقت المتبقي حتى صلاة %1$s</string>
 
     <string name="error_something_went_wrong">نأسف, يبدوا ان هنالك مشكلة ما</string>
 
@@ -29,4 +28,12 @@
     <string name="continue_as_guest">الاستمرار ك ضيف</string>
     <string name="location_permission_request_cta">منح إذن الموقع</string>
     <string name="location_permission_request_explanation">إذن الموقع الجغرافي مطلوب للحصول على أوقات الصلاة الصحيحة</string>
+
+    <string name="prayer_reminders_channel_name">التذكير للصلاوات</string>
+    <string name="prayer_reminders_channel_description">التذكير للصلوات اليومية</string> <!-- change to a more useful description-->
+    <string name="prayer_notification_title">حان موعد اذان ال%1$s</string>
+
+    <string name="location_permission_request_explaination">Location permission is required to get the right prayer times</string>
+    <string name="current_prayer">الصلاة الحالية</string>
+
 </resources>
