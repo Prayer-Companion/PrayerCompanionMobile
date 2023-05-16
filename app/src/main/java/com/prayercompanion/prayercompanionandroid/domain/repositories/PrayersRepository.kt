@@ -15,7 +15,11 @@ interface PrayersRepository {
         forceUpdate: Boolean = false
     ): Result<DayPrayersInfo>
 
-    suspend fun getPrayer(prayer: Prayer, date: LocalDate): Result<PrayerInfo>
+    suspend fun getPrayer(
+        prayer: Prayer,
+        date: LocalDate,
+        location: Location
+    ): Result<PrayerInfo>
 
     suspend fun updatePrayerStatus(
         prayerInfo: PrayerInfo,

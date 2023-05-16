@@ -35,7 +35,7 @@ class SplashScreenViewModel @Inject constructor(
             user.getIdToken(false)
                 .addOnSuccessListener {
                     Consts.userToken = it.token
-                    if (appLocationManager.areAllPermissionsGranted) {
+                    if (appLocationManager.areAllPermissionsGranted) { //todo this sometimes doesn't work for some reason
                         sendNavigateEvent(Route.Home)
                     } else {
                         sendNavigateEvent(Route.PermissionsRequests)

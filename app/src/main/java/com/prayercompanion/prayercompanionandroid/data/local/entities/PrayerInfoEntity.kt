@@ -14,7 +14,8 @@ import java.util.*
 
 @Entity("PrayersInfo")
 data class PrayerInfoEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
     @ColumnInfo("prayer")
     val prayer: Prayer,
     @ColumnInfo("date")

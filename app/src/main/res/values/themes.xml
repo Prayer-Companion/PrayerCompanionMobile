@@ -2,6 +2,7 @@
 <resources>
 
     <style name="Theme.PrayerCompanionAndroid" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">#7FCDAB</item>
+        <!-- todo find a way to use compose colors, or add it to the colors.xml file -->
+        <item name="android:statusBarColor">#2d6061</item>
     </style>
 </resources>

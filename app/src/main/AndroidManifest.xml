@@ -5,6 +5,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!--TODO check if our app is eligible for this permission otherwise use SCHEDULE_EXACT_ALARM-->
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
 
     <application
         android:name=".PrayerCompanionApplication"
@@ -34,6 +38,16 @@
                 android:name="autoStoreLocales"
                 android:value="true" />
         </service>
+
+        <receiver android:name=".data.receivers.AlarmReceiver" />
+        <receiver android:name=".data.receivers.DailyReceiver" />
+        <receiver
+            android:name=".data.receivers.BootCompletedReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
     </application>
 
