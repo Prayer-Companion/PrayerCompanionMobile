@@ -17,6 +17,11 @@ val PrayerStatusMissed = Color(0xFFF14F4F)
 val PrayerStatusQadaa = Color(0xFF9B5832)
 val PrayerStatusNotSet = Color(0xFF989898)
 
+val SensorAccuracyHigh = Color(0xFF34DF34)
+val SensorAccuracyMedium = Color(0xFFFDE14E)
+val SensorAccuracyLow = Color(0xFFF14F4F)
+val SensorAccuracyNoContact = Color(0xFF000000)
+
 //todo use named colors
 private val LightColorPalette = lightColors(
     background = Color(0xFF407E80),

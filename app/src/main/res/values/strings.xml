@@ -32,8 +32,18 @@
 
     <string name="location_permission_request_explaination">Location permission is required to get the right prayer times</string>
 
+    <string name="sensor_accuracy_high">mobile sensor accuracy is high</string>
+    <string name="sensor_accuracy_medium">mobile sensor accuracy is medium</string>
+    <string name="sensor_accuracy_low">mobile sensor accuracy needs calibration</string>
+    <string name="sensor_accuracy_no_contact">mobile sensor accuracy is not working</string>
 
-<!--  Errors  -->
+    <string name="qibla_dialog_sensor_accuracy_title">The accuracy is low ?</string>
+    <string name="qibla_dialog_sensor_accuracy_text">Kindly rotate your phone and make an 8 in the air in order to get accuracte Qibla directions</string>
+
+    <!-- General -->
+    <string name="ok">OK</string>
+
+    <!--  Errors  -->
     <string name="error_something_went_wrong">Sorry Something went wrong</string>
     <string name="current_prayer">Current Prayer</string>
 </resources>
