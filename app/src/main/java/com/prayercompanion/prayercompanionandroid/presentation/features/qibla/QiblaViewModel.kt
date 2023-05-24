@@ -53,7 +53,6 @@ class QiblaViewModel @Inject constructor(
             },
             onAccuracyChangedListener = {
                 sensorAccuracy = it
-                Log.d("JOSEF" , "sensorAccuracy = ${sensorAccuracy}")
             }
         )
     }
