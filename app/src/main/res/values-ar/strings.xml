@@ -36,4 +36,15 @@
     <string name="location_permission_request_explaination">Location permission is required to get the right prayer times</string>
     <string name="current_prayer">الصلاة الحالية</string>
 
+    <string name="sensor_accuracy_high">دقة مستشعر الهاتف جيدة</string>
+    <string name="sensor_accuracy_medium">دقة مستشعر الهاتف متوسطة</string>
+    <string name="sensor_accuracy_low">دقة مستشعر الهاتف تحتاج الى معايرة</string>
+    <string name="sensor_accuracy_no_contact">مستشعر الهاتف لا يعمل</string>
+
+    <string name="qibla_dialog_sensor_accuracy_title">هل دقة المستشعر منخفضة ؟</string>
+    <string name="qibla_dialog_sensor_accuracy_text">يرجى تحريك هاتفك في الهواء على شكل الرقم 8 من اجل الحصول على اتجاهات القبلة الدقيقة</string>
+
+    <!-- General -->
+    <string name="ok">حسنا</string>
+
 </resources>

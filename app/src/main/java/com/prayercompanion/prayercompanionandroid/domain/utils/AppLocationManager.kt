@@ -31,6 +31,20 @@ class AppLocationManager @Inject constructor(
                 }.all { it }
         }
 
+
+    //TODO: Remove me :)
+    @SuppressLint("MissingPermission")
+    fun getLastKnownLocation(callback: (Location?) -> Unit) {
+        if (areAllPermissionsGranted.not()) {
+            logcat { "Location permission is missing" }
+            return
+        }
+
+        fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+            callback(location)
+        }
+    }
+
     @SuppressLint("MissingPermission")
     suspend fun getLastKnownLocation(): Location? {
         if (areAllPermissionsGranted.not()) {
