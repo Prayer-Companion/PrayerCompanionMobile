@@ -46,11 +46,12 @@ class SignInViewModel @Inject constructor(
     }
 
     private fun onSignInWithGoogleResultReceived(result: Boolean, task: Task<GoogleSignInAccount>) {
-        isLoading = true
         if (result.not()) {
             sendErrorEvent(R.string.error_something_went_wrong.toUiText())
             return
         }
+
+        isLoading = true
         if (task.isSuccessful) {
             val token = task.result.idToken ?: return
             authenticationHelper.signInWithGoogle(
@@ -59,6 +60,7 @@ class SignInViewModel @Inject constructor(
                 onFailure = ::onSignInFail,
             )
         } else {
+            isLoading = false
             sendErrorEvent(task.exception?.message.toUiText())
             logcat { task.exception?.asLog() ?: "" }
         }

@@ -3,16 +3,17 @@ package com.prayercompanion.prayercompanionandroid.presentation.features.onboard
 import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,8 +36,8 @@ import androidx.compose.ui.unit.dp
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.presentation.components.OrSeparator
 import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
+import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.showToast
 import kotlinx.coroutines.flow.Flow
@@ -51,7 +52,7 @@ fun SignInScreen(
     uiEvents: Flow<UiEvent> = emptyFlow(),
     onEvent: (SignInEvents) -> Unit = {},
     isLoadingState: Boolean = false
-) {
+) = PrayerCompanionAndroidTheme {
     val spacing = LocalSpacing.current
     val context = LocalContext.current
 
@@ -75,15 +76,36 @@ fun SignInScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.primaryVariant)
+            .background(MaterialTheme.colors.background)
     ) {
-        if (isLoadingState) {
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center),color = Color.White)
+        Box(modifier = Modifier.fillMaxSize()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight(0.5f)
+                    .fillMaxWidth()
+            ) {
+                Image(
+                    modifier = Modifier
+                        .fillMaxWidth(0.4f)
+                        .aspectRatio(1f)
+                        .align(Alignment.Center)
+                        .background(MaterialTheme.colors.primary, RoundedCornerShape(100))
+                        .padding(30.dp),
+                    painter = painterResource(id = R.drawable.ic_app_logo),
+                    contentDescription = "Location Icon"
+                )
+                if (isLoadingState) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.BottomCenter),
+                        color = Color.White
+                    )
+                }
+            }
         }
         Column(
             modifier = Modifier
                 .background(
-                    MaterialTheme.colors.onPrimary,
+                    MaterialTheme.colors.primary,
                     shape = RoundedCornerShape(topEnd = 50.dp, topStart = 50.dp)
                 )
                 .padding(
@@ -99,10 +121,9 @@ fun SignInScreen(
                 modifier = Modifier
                     .defaultMinSize(minHeight = 45.dp)
                     .fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(MaterialTheme.colors.primary),
+                colors = ButtonDefaults.buttonColors(MaterialTheme.colors.onPrimary),
                 shape = RoundedCornerShape(50.dp),
                 onClick = {
-                    // TODO: Show loading until we get the result
                     signInWithGoogleLauncher.launch(googleSignInClient?.signInIntent)
                 }) {
                 Row(
@@ -110,23 +131,29 @@ fun SignInScreen(
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_google),
-                        contentDescription = stringResource(id = R.string.continue_with_google)
+                        contentDescription = stringResource(id = R.string.continue_with_google),
+                        tint = MaterialTheme.colors.primary
                     )
                     Spacer(modifier = Modifier.width(spacing.spaceSmall))
-                    Text(text = stringResource(id = R.string.continue_with_google))
+                    Text(
+                        text = stringResource(id = R.string.continue_with_google),
+                        color = MaterialTheme.colors.primary,
+                        style = MaterialTheme.typography.h3
+                    )
                 }
             }
-            Spacer(modifier = Modifier.height(spacing.spaceMedium))
-            OrSeparator(
-                Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(spacing.spaceMedium))
-            Text(
-                modifier = Modifier.clickable {
-                    onEvent(SignInEvents.OnSignInAnonymously)
-                },
-                text = stringResource(id = R.string.continue_as_guest),
-            )
+//Commenting out anonymous sign in for now as it might add extra complexity and unnecessary edge cases
+//            Spacer(modifier = Modifier.height(spacing.spaceMedium))
+//            OrSeparator(
+//                Modifier.fillMaxWidth()
+//            )
+//            Spacer(modifier = Modifier.height(spacing.spaceMedium))
+//            Text(
+//                modifier = Modifier.clickable {
+//                    onEvent(SignInEvents.OnSignInAnonymously)
+//                },
+//                text = stringResource(id = R.string.continue_as_guest),
+//            )
         }
     }
 

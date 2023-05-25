@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Prayer companion</string>
+    <string name="app_name">Prayer Companion</string>
 
     <string name="fajr">Fajr</string>
     <string name="duha">Duha</string>
@@ -25,7 +25,9 @@
     <string name="continue_with_google">Continue with Google</string>
     <string name="continue_as_guest">Continue as a Guest</string>
     <string name="location_permission_request_cta">Grant Location Permission</string>
-    <string name="location_permission_request_explanation">Location permission is required to get the right prayer times</string>
+    <!--  app name is used here  -->
+    <string name="location_permission_request_title">Allow Prayer Companion to use your location</string>
+    <string name="location_permission_request_explanation">To provide you with precise prayer times</string>
     <string name="prayer_reminders_channel_name">Prayers Reminders</string>
     <string name="prayer_reminders_channel_description">Daily Prayers Reminders</string> <!-- change to a more useful description-->
     <string name="prayer_notification_title">It\'s time for the %1$s prayer</string>

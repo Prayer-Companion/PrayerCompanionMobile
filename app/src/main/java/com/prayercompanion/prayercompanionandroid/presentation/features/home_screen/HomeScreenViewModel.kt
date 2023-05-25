@@ -27,7 +27,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -87,20 +87,18 @@ class HomeScreenViewModel @Inject constructor(
                     }
                     return@withContext
                 }
-
-                //todo this will be triggered on each change, fix it
-                dataStoresRepo.appPreferencesDataStore.data.collectLatest { storedData ->
-                    if (storedData.hasInitiatedFirstDailyNotifications.not()) {
-
-                        prayersAlarmScheduler.scheduleTodayPrayersNotifications()
-
-                        dataStoresRepo.appPreferencesDataStore.updateData {
-                            it.copy(hasInitiatedFirstDailyNotifications = true)
-                        }
-                    }
-                }
                 withContext(Dispatchers.Main) {
                     state = state.copy(selectedDayPrayersInfo = dateDayPrayers)
+                }
+
+                val storedData = dataStoresRepo.appPreferencesDataStore.data.firstOrNull()
+                if (storedData?.hasInitiatedFirstDailyNotifications != true) {
+
+                    prayersAlarmScheduler.scheduleTodayPrayersNotifications()
+
+                    dataStoresRepo.appPreferencesDataStore.updateData {
+                        it.copy(hasInitiatedFirstDailyNotifications = true)
+                    }
                 }
             }
         }

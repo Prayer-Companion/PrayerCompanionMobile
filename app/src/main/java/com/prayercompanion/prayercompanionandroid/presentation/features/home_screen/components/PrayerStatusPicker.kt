@@ -1,7 +1,10 @@
 package com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.components
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -22,13 +25,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
+import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 
 @Preview
 @Composable
 fun PrayerStatusPicker(
     modifier: Modifier = Modifier,
     onStatusSelected: (PrayerStatus) -> Unit = {}
-) {
+) = PrayerCompanionAndroidTheme {
     var isStatusSelectorExpanded by remember {
         mutableStateOf(false)
     }
@@ -41,14 +45,30 @@ fun PrayerStatusPicker(
             },
             shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = MaterialTheme.colors.onPrimary
+                backgroundColor = MaterialTheme.colors.primaryVariant
+            ),
+            contentPadding = PaddingValues(
+                top = 3.dp,
+                bottom = 3.dp,
+                start = 16.dp,
+                end = 8.dp
             )
         ) {
             Row(
+                modifier = Modifier,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = stringResource(id = R.string.status))
-                Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = "Drop Down")
+                Text(
+                    text = stringResource(id = R.string.status),
+                    style = MaterialTheme.typography.button,
+                    color = MaterialTheme.colors.onPrimary
+                )
+                Spacer(modifier = Modifier.width(2.dp))
+                Icon(
+                    imageVector = Icons.Default.ArrowDropDown,
+                    contentDescription = "Drop Down",
+                    tint = MaterialTheme.colors.onPrimary
+                )
             }
         }
         PrayerStatusDropDownMenu(

@@ -29,6 +29,7 @@ import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.models.RemainingDuration
 import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
+import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerStatusJamaahColor
 
 @Preview(locale = "ar")
 @Composable
@@ -71,31 +72,33 @@ fun HomeHeader(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
+                        .padding(top = spacing.spaceLarge)
                         .padding(spacing.spaceLarge),
-                    verticalArrangement = Arrangement.Center
+                    verticalArrangement = Arrangement.Top
                 ) {
+                    Text(
+                        text = stringResource(id = R.string.current_prayer),
+                        style = MaterialTheme.typography.h3,
+                        color = MaterialTheme.colors.secondary
+                    )
+                    Spacer(modifier = Modifier.height(spacing.spaceSmall))
                     Row(
                         modifier = Modifier
                             .fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Column {
-                            Text(
-                                text = stringResource(id = R.string.current_prayer),
-                                style = MaterialTheme.typography.h3,
-                                color = MaterialTheme.colors.secondary
-                            )
-                            Spacer(modifier = Modifier.height(spacing.spaceSmall))
-                            Text(
-                                text = stringResource(id = currentPrayer.prayer.nameId),
-                                style = MaterialTheme.typography.h1,
-                                color = MaterialTheme.colors.onPrimary
-                            )
-                        }
-                        PrayerStatusPicker {
-                            onStatusSelected(it, currentPrayer)
-                        }
+                        Text(
+                            text = stringResource(id = currentPrayer.prayer.nameId),
+                            style = MaterialTheme.typography.h1,
+                            color = MaterialTheme.colors.onPrimary
+                        )
+                        PrayerStatusPicker(
+                            modifier = Modifier.height(32.dp),
+                            onStatusSelected = {
+                                onStatusSelected(it, currentPrayer)
+                            }
+                        )
                     }
                     Row {
                         Text(
@@ -120,6 +123,19 @@ fun HomeHeader(
                             color = MaterialTheme.colors.secondary,
                         )
                     }
+                    Spacer(modifier = Modifier.height(spacing.spaceMedium))
+                    Text(
+                        text = "الأيام السبعة الماضية",
+                        style = MaterialTheme.typography.subtitle2,
+                        color = Color.White
+                    )
+                    Spacer(modifier = Modifier.height(spacing.spaceSmall))
+                    Box(
+                        modifier = Modifier
+                            .background(color = PrayerStatusJamaahColor, RoundedCornerShape(25.dp))
+                            .fillMaxWidth()
+                            .height(50.dp)
+                    )
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.prayercompanion.prayercompanionandroid.presentation.features.home_screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,8 +13,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -75,34 +78,50 @@ fun HomeScreen(
                 durationUntilNextPrayer = viewModel.durationUntilNextPrayer,
                 onStatusSelected = viewModel::onStatusSelected
             )
-            Spacer(modifier = Modifier.height(spacing.spaceSmall))
+            Spacer(modifier = Modifier.height(spacing.spaceMedium))
             // TODO: add a way to get back to today's date quickly
             CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-                Row(
+                Box(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
+                    contentAlignment = Alignment.Center
                 ) {
-                    IconButton(onClick = {
-                        viewModel.onPreviousDayButtonClicked()
-                    }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "previous day"
+                    Row(
+                        modifier = Modifier
+                            .height(28.dp)
+                            .background(
+                                color = MaterialTheme.colors.primary,
+                                shape = RoundedCornerShape(10.dp)
+                            ),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        IconButton(onClick = {
+                            viewModel.onPreviousDayButtonClicked()
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.ArrowBack,
+                                contentDescription = "previous day",
+                                tint = MaterialTheme.colors.onPrimary
+                            )
+                        }
+                        Text(
+                            text = viewModel.state.selectedDate.format(PresentationConsts.DateFormatter),
+                            style = MaterialTheme.typography.subtitle2,
+                            color = MaterialTheme.colors.onPrimary
                         )
-                    }
-                    Text(text = viewModel.state.selectedDate.format(PresentationConsts.DateFormatter))
-                    IconButton(onClick = {
-                        viewModel.onNextDayButtonClicked()
-                    }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowForward,
-                            contentDescription = "next day"
-                        )
+                        IconButton(onClick = {
+                            viewModel.onNextDayButtonClicked()
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.ArrowForward,
+                                contentDescription = "next day",
+                                tint = MaterialTheme.colors.onPrimary
+                            )
+                        }
                     }
                 }
             }
-            Spacer(modifier = Modifier.height(spacing.spaceSmall))
+            Spacer(modifier = Modifier.height(spacing.spaceMedium))
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()

@@ -33,7 +33,7 @@ class PrayersNotificationsService @Inject constructor(
 
         val notification = NotificationCompat
             .Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_mosque)
+            .setSmallIcon(R.drawable.ic_app_logo)
             .setContentTitle(title)
 //            .setContentText(item.body)
             .setContentIntent(activityPendingInject)
@@ -49,7 +49,7 @@ class PrayersNotificationsService @Inject constructor(
     fun showTestNotification(title: String, content: String = "") {
         val notification = NotificationCompat
             .Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_mosque)
+            .setSmallIcon(R.drawable.ic_app_logo)
             .setContentTitle(title)
             .setContentText(content)
             .build()

@@ -27,7 +27,9 @@
     <string name="continue_with_google">تسجيل الدخول ب Google</string>
     <string name="continue_as_guest">الاستمرار ك ضيف</string>
     <string name="location_permission_request_cta">منح إذن الموقع</string>
-    <string name="location_permission_request_explanation">إذن الموقع الجغرافي مطلوب للحصول على أوقات الصلاة الصحيحة</string>
+    <!--  app name is used here  -->
+    <string name="location_permission_request_title">السماح لتطبيق رفيق الصلاة باستخدام موقعك الحالي</string>
+    <string name="location_permission_request_explanation">لتقديم اوقات صلاة دقيقة تناسب موقعك الحالي</string>
 
     <string name="prayer_reminders_channel_name">التذكير للصلاوات</string>
     <string name="prayer_reminders_channel_description">التذكير للصلوات اليومية</string> <!-- change to a more useful description-->
