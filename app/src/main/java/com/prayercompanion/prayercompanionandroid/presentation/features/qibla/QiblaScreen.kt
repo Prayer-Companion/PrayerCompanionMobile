@@ -40,7 +40,6 @@ fun QiblaScreen(
     val isDialogOpen = remember { mutableStateOf(false) }
 
     DisposableEffect(key1 = viewModel) {
-        viewModel.onStart()
         onDispose {
             viewModel.onDispose()
         }
@@ -61,15 +60,12 @@ fun QiblaScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-
             Spacer(modifier = Modifier.weight(0.7f))
-
             Image(
                 modifier = Modifier
                     .size(280.dp)
                     .rotate(rotation),
-                painter = painterResource(R.drawable.qibla),
+                painter = painterResource(R.drawable.img_qibla_compass),
                 contentDescription = "",
             )
 
