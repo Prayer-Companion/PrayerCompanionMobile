@@ -5,11 +5,12 @@ import android.content.Intent
 import android.os.Build
 import android.widget.Toast
 import androidx.navigation.NavController
+import androidx.navigation.NavOptionsBuilder
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import java.io.Serializable
 
-fun NavController.navigate(event: UiEvent.Navigate) {
-    this.navigate(event.route.name)
+fun NavController.navigate(event: UiEvent.Navigate, builder: NavOptionsBuilder.() -> Unit = {}) {
+    this.navigate(route = event.route.name, builder)
 }
 
 fun Context.showToast(message: String?, length: Int = Toast.LENGTH_SHORT) {

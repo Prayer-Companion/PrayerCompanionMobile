@@ -30,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavOptionsBuilder
 import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
@@ -40,7 +41,7 @@ import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 @Preview
 @Composable
 fun PermissionsRequestScreen(
-    navigate: (UiEvent.Navigate) -> Unit = {},
+    navigate: (UiEvent.Navigate, NavOptionsBuilder.() -> Unit) -> Unit = { _, _ -> },
 ) {
 
     val spacing = LocalSpacing.current
@@ -50,7 +51,11 @@ fun PermissionsRequestScreen(
     ) { permissions ->
         // TODO: Handle the rejection case
         if (permissions.all { it.value }) {
-            navigate(UiEvent.Navigate(Route.Home))
+            navigate(UiEvent.Navigate(Route.Home)) {
+                popUpTo(Route.SplashScreen.name) {
+                    inclusive = true
+                }
+            }
         }
     }
 

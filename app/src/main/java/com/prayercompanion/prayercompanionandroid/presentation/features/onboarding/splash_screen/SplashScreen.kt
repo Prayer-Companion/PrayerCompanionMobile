@@ -12,19 +12,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavOptionsBuilder
+import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 
 @Preview
 @Composable
 fun SplashScreen(
-    navigate: (UiEvent.Navigate) -> Unit = {},
+    navigate: (UiEvent.Navigate, NavOptionsBuilder.() -> Unit) -> Unit = { _, _ -> },
     viewModel: SplashScreenViewModel = hiltViewModel()
 ) {
 
     LaunchedEffect(key1 = viewModel.uiEvents) {
         viewModel.uiEvents.collect {
             when (it) {
-                is UiEvent.Navigate -> navigate(it)
+                is UiEvent.Navigate -> navigate(it) {
+                    popUpTo(Route.SplashScreen.name) {
+                        inclusive = true
+                    }
+                }
+
                 else -> Unit
             }
         }

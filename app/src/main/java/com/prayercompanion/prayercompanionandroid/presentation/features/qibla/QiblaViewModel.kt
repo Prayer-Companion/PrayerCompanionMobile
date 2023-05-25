@@ -24,7 +24,7 @@ class QiblaViewModel @Inject constructor(
 
     var qiblaDirection by mutableStateOf<Double?>(null)
 
-    init {
+    fun onStart() {
         viewModelScope.launch {
             val location = appLocationManager.getLastKnownLocation()
 

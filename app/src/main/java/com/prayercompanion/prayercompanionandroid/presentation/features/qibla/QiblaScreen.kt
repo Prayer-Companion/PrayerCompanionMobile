@@ -40,6 +40,7 @@ fun QiblaScreen(
     val isDialogOpen = remember { mutableStateOf(false) }
 
     DisposableEffect(key1 = viewModel) {
+        viewModel.onStart()
         onDispose {
             viewModel.onDispose()
         }
