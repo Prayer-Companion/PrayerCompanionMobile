@@ -118,14 +118,12 @@ class PrayersRepositoryImpl @Inject constructor(
             currentDate = currentDate.plusDays(1)
         }
 
-        dao.delete(dates)
-
         val prayersWithStatuses: List<PrayerInfoEntity> = prayersResponse.flatMap { dayPrayers ->
             val dayStatuses = statusesResponse.find { status -> status.date == dayPrayers.date }
             responsesToPrayerInfoEntity(dayPrayers, dayStatuses)
         }
 
-        dao.insertAll(prayersWithStatuses)
+        dao.deleteOldAndInsertNewTransaction(dates, prayersWithStatuses)
     }
 
     override suspend fun getPrayer(
@@ -182,14 +180,15 @@ class PrayersRepositoryImpl @Inject constructor(
     }
 
     //Client to Backend values mapper
-    private fun prayerStatusToString(prayerStatus: PrayerStatus): String {
+    private fun prayerStatusToString(prayerStatus: PrayerStatus?): String {
         return when (prayerStatus) {
             PrayerStatus.Jamaah -> "jamaah"
             PrayerStatus.OnTime -> "onTime"
+            PrayerStatus.AfterHalfTime -> "afterHalfTime"
             PrayerStatus.Late -> "late"
             PrayerStatus.Qadaa -> "missed"
             PrayerStatus.Missed -> "qadaa"
-            PrayerStatus.NotSet -> "none"
+            else -> "none"
         }
     }
 

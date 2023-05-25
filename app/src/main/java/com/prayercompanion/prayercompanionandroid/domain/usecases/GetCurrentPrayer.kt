@@ -27,7 +27,7 @@ class GetCurrentPrayer @Inject constructor(
         val currentDayPrayersInfo = prayersRepository
             .getDayPrayers(location, currentDate)
             .getOrNull()
-            ?: return Result.failure("TODO")
+            ?: return Result.failure("location can't be null")
 
         if (currentTime in LocalTime.MIN.rangeUntil(currentDayPrayersInfo.get(Prayer.FAJR).time)) {
             return prayersRepository.getPrayer(Prayer.ISHA, currentDate.minusDays(1), location)

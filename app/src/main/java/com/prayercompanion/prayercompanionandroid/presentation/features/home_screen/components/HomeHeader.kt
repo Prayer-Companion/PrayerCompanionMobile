@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -39,104 +38,100 @@ fun HomeHeader(
     nextPrayer: PrayerInfo = PrayerInfo.Default,
     durationUntilNextPrayer: RemainingDuration = RemainingDuration(0, 0, 0),
     onStatusSelected: (PrayerStatus, PrayerInfo) -> Unit = { _, _ -> }
-) {
-    PrayerCompanionAndroidTheme {
+) = PrayerCompanionAndroidTheme {
 
-        val spacing = LocalSpacing.current
-        Surface(
-            modifier = modifier,
-            elevation = 15.dp,
-            shape = RoundedCornerShape(
-                bottomStart = 50.dp,
-                bottomEnd = 50.dp
-            ),
-            color = Color.Black,
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(color = Color.White)
-                    .background(
-                        brush = Brush.radialGradient(
-                            colors = listOf(
-                                Color(0xFF397778),
-                                Color(0xFF2d6061)
-                            )
-                        ),
-                        shape = RoundedCornerShape(
-                            bottomStart = 50.dp,
-                            bottomEnd = 50.dp
+    val spacing = LocalSpacing.current
+    Surface(
+        modifier = modifier,
+        elevation = 15.dp,
+        shape = RoundedCornerShape(
+            bottomStart = 50.dp,
+            bottomEnd = 50.dp
+        ),
+        color = Color.Black,
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = Color.White)
+                .background(
+                    brush = Brush.radialGradient(
+                        colors = listOf(
+                            Color(0xFF397778),
+                            Color(0xFF2d6061)
                         )
+                    ),
+                    shape = RoundedCornerShape(
+                        bottomStart = 50.dp,
+                        bottomEnd = 50.dp
                     )
+                )
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(top = spacing.spaceMedium)
+                    .padding(spacing.spaceLarge),
+                verticalArrangement = Arrangement.Top
             ) {
-                Column(
+                Text(
+                    text = stringResource(id = R.string.current_prayer),
+                    style = MaterialTheme.typography.h3,
+                    color = MaterialTheme.colors.secondary
+                )
+                Row(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(top = spacing.spaceLarge)
-                        .padding(spacing.spaceLarge),
-                    verticalArrangement = Arrangement.Top
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = stringResource(id = R.string.current_prayer),
-                        style = MaterialTheme.typography.h3,
-                        color = MaterialTheme.colors.secondary
+                        text = stringResource(id = currentPrayer.prayer.nameId),
+                        style = MaterialTheme.typography.h1,
+                        color = MaterialTheme.colors.onPrimary
                     )
-                    Spacer(modifier = Modifier.height(spacing.spaceSmall))
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = stringResource(id = currentPrayer.prayer.nameId),
-                            style = MaterialTheme.typography.h1,
-                            color = MaterialTheme.colors.onPrimary
-                        )
-                        PrayerStatusPicker(
-                            modifier = Modifier.height(32.dp),
-                            onStatusSelected = {
-                                onStatusSelected(it, currentPrayer)
-                            }
-                        )
-                    }
-                    Row {
-                        Text(
-                            modifier = Modifier.alignByBaseline(),
-                            text = stringResource(
-                                id = R.string.remaining_time_value,
-                                durationUntilNextPrayer.hours,
-                                durationUntilNextPrayer.minutes,
-                                durationUntilNextPrayer.seconds,
-                            ),
-                            style = MaterialTheme.typography.subtitle1,
-                            color = MaterialTheme.colors.onPrimary
-                        )
-                        Spacer(modifier = Modifier.width(spacing.spaceSmall))
-                        Text(
-                            modifier = Modifier.alignByBaseline(),
-                            text = stringResource(
-                                id = R.string.remaining_time,
-                                stringResource(id = nextPrayer.prayer.nameId)
-                            ),
-                            style = MaterialTheme.typography.h3,
-                            color = MaterialTheme.colors.secondary,
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(spacing.spaceMedium))
-                    Text(
-                        text = "الأيام السبعة الماضية",
-                        style = MaterialTheme.typography.subtitle2,
-                        color = Color.White
-                    )
-                    Spacer(modifier = Modifier.height(spacing.spaceSmall))
-                    Box(
-                        modifier = Modifier
-                            .background(color = PrayerStatusJamaahColor, RoundedCornerShape(25.dp))
-                            .fillMaxWidth()
-                            .height(50.dp)
+                    PrayerStatusPicker(
+                        modifier = Modifier.width(120.dp),
+                        onStatusSelected = {
+                            onStatusSelected(it, currentPrayer)
+                        }
                     )
                 }
+                Row {
+                    Text(
+                        modifier = Modifier.alignByBaseline(),
+                        text = stringResource(
+                            id = R.string.remaining_time_value,
+                            durationUntilNextPrayer.hours,
+                            durationUntilNextPrayer.minutes,
+                            durationUntilNextPrayer.seconds,
+                        ),
+                        style = MaterialTheme.typography.subtitle1,
+                        color = MaterialTheme.colors.onPrimary
+                    )
+                    Spacer(modifier = Modifier.width(spacing.spaceSmall))
+                    Text(
+                        modifier = Modifier.alignByBaseline(),
+                        text = stringResource(
+                            id = R.string.remaining_time,
+                            stringResource(id = nextPrayer.prayer.nameId)
+                        ),
+                        style = MaterialTheme.typography.h3,
+                        color = MaterialTheme.colors.secondary,
+                    )
+                }
+                Spacer(modifier = Modifier.height(spacing.spaceMedium))
+                Text(
+                    text = "الأيام السبعة الماضية",
+                    style = MaterialTheme.typography.subtitle2,
+                    color = Color.White
+                )
+                Spacer(modifier = Modifier.height(spacing.spaceSmall))
+                Box(
+                    modifier = Modifier
+                        .background(color = PrayerStatusJamaahColor, RoundedCornerShape(25.dp))
+                        .fillMaxWidth()
+                        .height(45.dp)
+                )
             }
         }
     }

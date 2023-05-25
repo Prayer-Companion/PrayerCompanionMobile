@@ -5,8 +5,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
+import com.prayercompanion.prayercompanionandroid.domain.models.getColorOrDefault
 import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.prayercompanionandroid.presentation.utils.PresentationConsts
@@ -49,7 +51,7 @@ fun PrayerItem(
             .height(55.dp),
         horizontalArrangement = Arrangement.Center
     ) {
-        Box(
+        Row(
             modifier = Modifier
                 .fillMaxHeight()
                 .background(
@@ -61,28 +63,29 @@ fun PrayerItem(
                 )
                 .weight(1f)
                 .padding(start = spacing.spaceMedium),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                modifier = Modifier
-                    .align(Alignment.CenterStart),
                 text = name,
                 style = MaterialTheme.typography.h2,
                 color = MaterialTheme.colors.onPrimary
             )
-            Text(
-                modifier = Modifier
-                    .align(Alignment.Center),
-                text = prayerInfo.time.format(PresentationConsts.TimeFormatter),
-                style = MaterialTheme.typography.body1,
-                color = MaterialTheme.colors.onPrimary
-            )
+            Box(modifier = Modifier.fillMaxSize()) {
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.Center),
+                    text = prayerInfo.time.format(PresentationConsts.TimeFormatter),
+                    style = MaterialTheme.typography.body1,
+                    color = MaterialTheme.colors.onPrimary
+                )
+            }
         }
         Row(
             modifier = Modifier
                 .fillMaxHeight()
-                .defaultMinSize(minWidth = 92.dp)
+                .fillMaxWidth(0.30f)
                 .background(
-                    color = prayerInfo.status.color,
+                    color = prayerInfo.status.getColorOrDefault(),
                     shape = RoundedCornerShape(
                         topEnd = 15.dp,
                         bottomEnd = 15.dp
@@ -91,9 +94,10 @@ fun PrayerItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            if (prayerInfo.status != PrayerStatus.NotSet) {
+            val status = prayerInfo.status
+            if (status != null) {
                 Text(
-                    text = stringResource(id = prayerInfo.status.nameId),
+                    text = stringResource(id = status.nameId),
                     color = MaterialTheme.colors.onPrimary,
                     style = MaterialTheme.typography.button
                 )

@@ -19,7 +19,11 @@ class PrayersFakeRepository : PrayersRepository {
         return Result.success(DEFAULT_DAY_PRAYERS_INFO)
     }
 
-    override suspend fun getPrayer(prayer: Prayer, date: LocalDate): Result<PrayerInfo> {
+    override suspend fun getPrayer(
+        prayer: Prayer,
+        date: LocalDate,
+        location: Location
+    ): Result<PrayerInfo> {
         return Result.success(DEFAULT_DAY_PRAYERS_INFO.get(prayer))
     }
 
@@ -36,32 +40,32 @@ class PrayersFakeRepository : PrayersRepository {
                 PrayerInfo(
                     prayer = Prayer.FAJR,
                     dateTime = LocalDateTime.of(Consts.TODAY_DATE, LocalTime.of(5, 0)),
-                    status = PrayerStatus.NotSet
+                    status = null
                 ),
                 PrayerInfo(
                     prayer = Prayer.DUHA,
                     dateTime = LocalDateTime.of(Consts.TODAY_DATE, LocalTime.of(7, 0)),
-                    status = PrayerStatus.NotSet
+                    status = null
                 ),
                 PrayerInfo(
                     prayer = Prayer.DHUHR,
                     dateTime = LocalDateTime.of(Consts.TODAY_DATE, LocalTime.of(12, 0)),
-                    status = PrayerStatus.NotSet
+                    status = null
                 ),
                 PrayerInfo(
                     prayer = Prayer.ASR,
                     dateTime = LocalDateTime.of(Consts.TODAY_DATE, LocalTime.of(15, 0)),
-                    status = PrayerStatus.NotSet
+                    status = null
                 ),
                 PrayerInfo(
                     prayer = Prayer.MAGHRIB,
                     dateTime = LocalDateTime.of(Consts.TODAY_DATE, LocalTime.of(18, 0)),
-                    status = PrayerStatus.NotSet
+                    status = null
                 ),
                 PrayerInfo(
                     prayer = Prayer.ISHA,
                     dateTime = LocalDateTime.of(Consts.TODAY_DATE, LocalTime.of(20, 0)),
-                    status = PrayerStatus.NotSet
+                    status = null
                 )
             )
         )

@@ -20,6 +20,7 @@
 
     <string name="jamaah_prayer_status">جماعة</string>
     <string name="on_time_prayer_status">على الوقت</string>
+    <string name="after_half_time_prayer_status">بعد نصف الوقت</string>
     <string name="late_prayer_status">متاخر</string>
     <string name="missed_prayer_status">فاتت</string>
     <string name="qadaa_prayer_status">قضاء</string>

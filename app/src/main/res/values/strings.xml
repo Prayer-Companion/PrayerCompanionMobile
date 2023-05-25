@@ -18,6 +18,7 @@
 
     <string name="missed_prayer_status">Missed</string>
     <string name="on_time_prayer_status">On Time</string>
+    <string name="after_half_time_prayer_status">After half the Time</string>
     <string name="qadaa_prayer_status">Qadaa</string>
     <string name="late_prayer_status">Late</string>
     <string name="jamaah_prayer_status">Jamaah</string>

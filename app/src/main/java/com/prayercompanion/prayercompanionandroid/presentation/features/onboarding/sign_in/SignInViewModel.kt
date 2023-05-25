@@ -78,7 +78,7 @@ class SignInViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val signInResult = accountSignIn.call()
             signInResult.onSuccess {
-                sendEvent(UiEvent.Navigate(Route.Home))
+                sendEvent(UiEvent.Navigate(Route.PermissionsRequests))
             }.onFailure {
                 sendErrorEvent(it.message.toUiText())
             }

@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -50,8 +51,8 @@ fun PrayerStatusPicker(
             contentPadding = PaddingValues(
                 top = 3.dp,
                 bottom = 3.dp,
-                start = 16.dp,
-                end = 8.dp
+                start = 24.dp,
+                end = 16.dp
             )
         ) {
             Row(
@@ -65,6 +66,7 @@ fun PrayerStatusPicker(
                 )
                 Spacer(modifier = Modifier.width(2.dp))
                 Icon(
+                    modifier = Modifier.rotate(if (isStatusSelectorExpanded) 180f else 0f),
                     imageVector = Icons.Default.ArrowDropDown,
                     contentDescription = "Drop Down",
                     tint = MaterialTheme.colors.onPrimary

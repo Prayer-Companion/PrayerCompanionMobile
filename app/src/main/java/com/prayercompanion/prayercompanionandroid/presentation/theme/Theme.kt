@@ -9,8 +9,9 @@ import androidx.compose.ui.graphics.Color
 val White = Color(0xFFFFFFFF)
 
 val PrayerStatusJamaahColor = Color(0xFF34C859)
-val PrayerStatusOnTimeColor = Color(0xFFFDE14E)
-val PrayerStatusLateColor = Color(0xFFEBA26D)
+val PrayerStatusOnTimeColor = Color(0xFF33984C)
+val PrayerStatusAfterHalfTimeColor = Color(0xFFF3D743)
+val PrayerStatusLateColor = Color(0xFFFB9905)
 val PrayerStatusMissedColor = Color(0xFFF14F4F)
 val PrayerStatusQadaaColor = Color(0xFF9B5832)
 val PrayerStatusNotSetColor = Color(0xFF989898)
@@ -28,6 +29,7 @@ private val LightColorPalette = lightColors(
     secondary = Color(0xFFC5C5C5),
     onPrimary = White,
     onSecondary = White,
+    surface = Color.Transparent
 
     /* Other default colors to override
     background = Color.White,

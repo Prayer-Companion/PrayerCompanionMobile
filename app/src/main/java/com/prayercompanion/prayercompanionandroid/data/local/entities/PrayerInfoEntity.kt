@@ -23,7 +23,7 @@ data class PrayerInfoEntity(
     @ColumnInfo("time")
     val time: LocalTime,
     @ColumnInfo("status")
-    val status: PrayerStatus
+    val status: PrayerStatus?
 )
 
 fun List<PrayerInfoEntity>.toDayPrayerInfo(): DayPrayersInfo {

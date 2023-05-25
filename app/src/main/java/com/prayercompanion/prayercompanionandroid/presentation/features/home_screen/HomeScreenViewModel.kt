@@ -57,25 +57,29 @@ class HomeScreenViewModel @Inject constructor(
 
     init {
         suspend fun loadCurrentAndNextPrayers() {
+            suspend fun updateState(
+                currentPrayer: PrayerInfo = state.currentPrayer,
+                nextPrayer: PrayerInfo = state.nextPrayer
+            ) = withContext(Dispatchers.Main) {
+                state = state.copy(currentPrayer = currentPrayer, nextPrayer = nextPrayer)
+            }
+
             val currentPrayerInfo = getCurrentPrayer.call().getOrElse {
                 it.printStackTraceInDebug()
                 sendErrorEvent(R.string.error_something_went_wrong.toUiText())
-                state = state.copy(
+                updateState(
                     currentPrayer = PrayerInfo.Default,
                     nextPrayer = PrayerInfo.Default
                 )
                 return
             }
 
-            state = state.copy(currentPrayer = currentPrayerInfo)
-
             val nextPrayerInfo = getNextPrayer.call(currentPrayerInfo).getOrElse {
                 it.printStackTraceInDebug()
                 sendErrorEvent(R.string.error_something_went_wrong.toUiText())
-                state = state.copy(nextPrayer = PrayerInfo.Default)
-                return
+                PrayerInfo.Default
             }
-            state = state.copy(nextPrayer = nextPrayerInfo)
+            updateState(currentPrayer = currentPrayerInfo, nextPrayer = nextPrayerInfo)
         }
 
         suspend fun loadInitialDayPrayers() {
@@ -183,8 +187,8 @@ class HomeScreenViewModel @Inject constructor(
     private fun moveToNextPrayer() {
         viewModelScope.launch(Dispatchers.IO) {
             val nextPrayer = getNextPrayer.call(state.nextPrayer).getOrElse {
-                sendErrorEvent(R.string.error_something_went_wrong.toUiText())
                 it.printStackTraceInDebug()
+                sendErrorEvent(R.string.error_something_went_wrong.toUiText())
                 return@launch
             }
             state = state.copy(currentPrayer = state.nextPrayer, nextPrayer = nextPrayer)
@@ -194,9 +198,7 @@ class HomeScreenViewModel @Inject constructor(
 
     private fun sendErrorEvent(message: UiText) {
         sendEvent(
-            UiEvent.ShowErrorSnackBar(
-                UiText.DynamicString(message.toString())
-            )
+            UiEvent.ShowErrorSnackBar(message)
         )
     }
 

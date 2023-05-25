@@ -28,32 +28,32 @@ data class DayPrayersInfo constructor(
                 PrayerInfo(
                     prayer = Prayer.FAJR,
                     dateTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0)),
-                    status = PrayerStatus.NotSet
+                    status = null
                 ),
                 PrayerInfo(
                     prayer = Prayer.DUHA,
                     dateTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0)),
-                    status = PrayerStatus.NotSet
+                    status = null
                 ),
                 PrayerInfo(
                     prayer = Prayer.DHUHR,
                     dateTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0)),
-                    status = PrayerStatus.NotSet
+                    status = null
                 ),
                 PrayerInfo(
                     prayer = Prayer.ASR,
                     dateTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0)),
-                    status = PrayerStatus.NotSet
+                    status = null
                 ),
                 PrayerInfo(
                     prayer = Prayer.MAGHRIB,
                     dateTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0)),
-                    status = PrayerStatus.NotSet
+                    status = null
                 ),
                 PrayerInfo(
                     prayer = Prayer.ISHA,
                     dateTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0)),
-                    status = PrayerStatus.NotSet
+                    status = null
                 )
             )
         )
