@@ -38,7 +38,8 @@ class PrayersRepositoryImpl @Inject constructor(
     ): Result<DayPrayersInfo> {
         return try {
             if (forceUpdate.not()) {
-                val savedPrayers = dao.getPrayers(dayDate.atStartOfDay(), dayDate.atTime(LocalTime.MAX))
+                val savedPrayers =
+                    dao.getPrayers(dayDate.atStartOfDay(), dayDate.atTime(LocalTime.MAX))
                 if (savedPrayers.isNotEmpty()) {
                     val dayPrayersInfo = savedPrayers.toDayPrayerInfo()
                     return Result.success(dayPrayersInfo)
@@ -57,6 +58,59 @@ class PrayersRepositoryImpl @Inject constructor(
             Result.success(dayPrayer)
         } catch (e: Exception) {
             e.printStackTraceInDebug()
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getPrayer(
+        prayer: Prayer,
+        date: LocalDate,
+        location: Location
+    ): Result<PrayerInfo> {
+        val prayerInfo = dao.getPrayer(prayer, date)?.toPrayerInfo()
+        return if (prayerInfo != null) {
+            Result.success(prayerInfo)
+        } else {
+
+            val yearMonth = YearMonth.from(date)
+            val (prayersResponse, statusesResponse) = loadMonthPrayers(yearMonth, location)
+
+            try {
+                val dayPrayers = dayPrayerResponseAndStatusResponseToDayPrayerInfo(
+                    date,
+                    prayersResponse,
+                    statusesResponse
+                )
+
+                Result.success(dayPrayers.get(prayer))
+            } catch (e: Exception) {
+                Result.failure("Prayer Doesn't Exist")
+            }
+        }
+    }
+
+    override suspend fun updatePrayerStatus(
+        prayerInfo: PrayerInfo,
+        prayerStatus: PrayerStatus
+    ): Result<Unit> {
+        val prayerDateStr = Consts.DateFormatter.format(prayerInfo.date)
+        val prayerStatusStr = prayerStatusToString(prayerStatus)
+        val prayerName = prayerToPrayerNameString(prayerInfo.prayer)
+
+        return try {
+            prayerCompanionApi.updatePrayerStatus(
+                prayerDateStr,
+                prayerName,
+                prayerStatusStr
+            )
+
+            dao.updatePrayerStatus(
+                prayer = prayerInfo.prayer,
+                date = prayerInfo.date,
+                status = prayerStatus
+            )
+            Result.success(Unit)
+        } catch (e: Exception) {
             Result.failure(e)
         }
     }
@@ -125,60 +179,11 @@ class PrayersRepositoryImpl @Inject constructor(
             responsesToPrayerInfoEntity(dayPrayers, dayStatuses)
         }
 
-        dao.deleteOldAndInsertNewTransaction(startOfMonth.atStartOfDay(), endOfMonth.atEndOfDay(), prayersWithStatuses)
-    }
-
-    override suspend fun getPrayer(
-        prayer: Prayer,
-        date: LocalDate,
-        location: Location
-    ): Result<PrayerInfo> {
-        val prayerInfo = dao.getPrayer(prayer, date)?.toPrayerInfo()
-        return if (prayerInfo != null) {
-            Result.success(prayerInfo)
-        } else {
-
-            val yearMonth = YearMonth.from(date)
-            val (prayersResponse, statusesResponse) = loadMonthPrayers(yearMonth, location)
-
-            try {
-                val dayPrayers = dayPrayerResponseAndStatusResponseToDayPrayerInfo(
-                    date,
-                    prayersResponse,
-                    statusesResponse
-                )
-
-                Result.success(dayPrayers.get(prayer))
-            } catch (e: Exception) {
-                Result.failure("Prayer Doesn't Exist")
-            }
-        }
-    }
-
-    override suspend fun updatePrayerStatus(
-        prayerInfo: PrayerInfo,
-        prayerStatus: PrayerStatus
-    ): Result<Unit> {
-        val prayerDateStr = Consts.DateFormatter.format(prayerInfo.date)
-        val prayerStatusStr = prayerStatusToString(prayerStatus)
-        val prayerName = prayerToPrayerNameString(prayerInfo.prayer)
-
-        return try {
-            prayerCompanionApi.updatePrayerStatus(
-                prayerDateStr,
-                prayerName,
-                prayerStatusStr
-            )
-
-            dao.updatePrayerStatus(
-                prayer = prayerInfo.prayer,
-                date = prayerInfo.date,
-                status = prayerStatus
-            )
-            Result.success(Unit)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+        dao.deleteOldAndInsertNewTransaction(
+            startOfMonth.atStartOfDay(),
+            endOfMonth.atEndOfDay(),
+            prayersWithStatuses
+        )
     }
 
     //Client to Backend values mapper
