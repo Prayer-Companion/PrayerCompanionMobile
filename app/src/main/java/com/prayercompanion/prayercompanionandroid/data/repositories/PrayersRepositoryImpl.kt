@@ -1,6 +1,7 @@
 package com.prayercompanion.prayercompanionandroid.data.repositories
 
 import android.location.Location
+import com.prayercompanion.prayercompanionandroid.atEndOfDay
 import com.prayercompanion.prayercompanionandroid.data.local.daos.PrayersInfoDao
 import com.prayercompanion.prayercompanionandroid.data.local.entities.PrayerInfoEntity
 import com.prayercompanion.prayercompanionandroid.data.local.entities.toDayPrayerInfo
@@ -20,6 +21,7 @@ import com.prayercompanion.prayercompanionandroid.failure
 import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
 import com.skydoves.whatif.whatIfNotNull
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.YearMonth
 import java.util.TimeZone
 import javax.inject.Inject
@@ -36,7 +38,7 @@ class PrayersRepositoryImpl @Inject constructor(
     ): Result<DayPrayersInfo> {
         return try {
             if (forceUpdate.not()) {
-                val savedPrayers = dao.getPrayers(dayDate)
+                val savedPrayers = dao.getPrayers(dayDate.atStartOfDay(), dayDate.atTime(LocalTime.MAX))
                 if (savedPrayers.isNotEmpty()) {
                     val dayPrayersInfo = savedPrayers.toDayPrayerInfo()
                     return Result.success(dayPrayersInfo)
@@ -123,7 +125,7 @@ class PrayersRepositoryImpl @Inject constructor(
             responsesToPrayerInfoEntity(dayPrayers, dayStatuses)
         }
 
-        dao.deleteOldAndInsertNewTransaction(dates, prayersWithStatuses)
+        dao.deleteOldAndInsertNewTransaction(startOfMonth.atStartOfDay(), endOfMonth.atEndOfDay(), prayersWithStatuses)
     }
 
     override suspend fun getPrayer(

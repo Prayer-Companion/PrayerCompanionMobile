@@ -7,9 +7,7 @@ import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalTime
 import java.util.*
 
 @Entity("PrayersInfo")
@@ -18,10 +16,8 @@ data class PrayerInfoEntity(
     val id: Int = 0,
     @ColumnInfo("prayer")
     val prayer: Prayer,
-    @ColumnInfo("date")
-    val date: LocalDate,
-    @ColumnInfo("time")
-    val time: LocalTime,
+    @ColumnInfo("dateTime")
+    val dateTime: LocalDateTime,
     @ColumnInfo("status")
     val status: PrayerStatus?
 )
@@ -31,7 +27,7 @@ fun List<PrayerInfoEntity>.toDayPrayerInfo(): DayPrayersInfo {
         this.map {
             PrayerInfo(
                 prayer = it.prayer,
-                dateTime = LocalDateTime.of(it.date, it.time),
+                dateTime = it.dateTime,
                 status = it.status
             )
         }

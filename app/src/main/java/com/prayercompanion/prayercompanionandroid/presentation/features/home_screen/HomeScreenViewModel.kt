@@ -24,8 +24,6 @@ import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -108,15 +106,9 @@ class HomeScreenViewModel @Inject constructor(
         }
 
         viewModelScope.launch(Dispatchers.IO) {
-            awaitAll(
-                async(Dispatchers.IO) {
-                    loadCurrentAndNextPrayers()
-                    withContext(Dispatchers.Main) { startDurationCountDown() }
-                },
-                async(Dispatchers.IO) {
-                    loadInitialDayPrayers()
-                }
-            )
+            loadInitialDayPrayers()
+            loadCurrentAndNextPrayers()
+            withContext(Dispatchers.Main) { startDurationCountDown() }
         }
     }
 

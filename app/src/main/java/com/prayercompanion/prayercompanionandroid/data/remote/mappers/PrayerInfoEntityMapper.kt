@@ -6,47 +6,68 @@ import com.prayercompanion.prayercompanionandroid.data.remote.dto.DayPrayerStatu
 import com.prayercompanion.prayercompanionandroid.data.utils.Consts
 import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 
 fun responsesToPrayerInfoEntity(
     dayPrayerResponse: DayPrayerResponse,
     dayStatuses: DayPrayerStatusResponse?
 ): List<PrayerInfoEntity> {
+    val fajrDateTime = LocalDateTime.of(
+        LocalDate.parse(dayPrayerResponse.date, Consts.DateFormatter),
+        LocalTime.parse(dayPrayerResponse.fajrTime.uppercase(), Consts.TimeFormatter)
+    )
+    val duhaDateTime = LocalDateTime.of(
+        LocalDate.parse(dayPrayerResponse.date, Consts.DateFormatter),
+        LocalTime.parse(dayPrayerResponse.duhaTime.uppercase(), Consts.TimeFormatter),
+    )
+    val dhuhrDateTime = LocalDateTime.of(
+        LocalDate.parse(dayPrayerResponse.date, Consts.DateFormatter),
+        LocalTime.parse(dayPrayerResponse.dhuhrTime.uppercase(), Consts.TimeFormatter),
+    )
+    val asrDateTime = LocalDateTime.of(
+        LocalDate.parse(dayPrayerResponse.date, Consts.DateFormatter),
+        LocalTime.parse(dayPrayerResponse.asrTime.uppercase(), Consts.TimeFormatter),
+    )
+    val maghribDateTime = LocalDateTime.of(
+        LocalDate.parse(dayPrayerResponse.date, Consts.DateFormatter),
+        LocalTime.parse(dayPrayerResponse.maghribTime.uppercase(), Consts.TimeFormatter),
+    )
+    val ishaDateTime = LocalDateTime.of(
+        LocalDate.parse(dayPrayerResponse.date, Consts.DateFormatter),
+        LocalTime.parse(dayPrayerResponse.ishaTime.uppercase(), Consts.TimeFormatter),
+    )
+
+
     return listOf(
         PrayerInfoEntity(
             prayer = Prayer.FAJR,
-            date = LocalDate.parse(dayPrayerResponse.date, Consts.DateFormatter),
-            time = LocalTime.parse(dayPrayerResponse.fajrTime.uppercase(), Consts.TimeFormatter),
+            dateTime = fajrDateTime,
             status = responseStatusToStatus(dayStatuses?.fajr)
         ),
         PrayerInfoEntity(
             prayer = Prayer.DUHA,
-            date = LocalDate.parse(dayPrayerResponse.date, Consts.DateFormatter),
-            time = LocalTime.parse(dayPrayerResponse.duhaTime.uppercase(), Consts.TimeFormatter),
+            dateTime = duhaDateTime,
             status = responseStatusToStatus(dayStatuses?.duha)
         ),
         PrayerInfoEntity(
             prayer = Prayer.DHUHR,
-            date = LocalDate.parse(dayPrayerResponse.date, Consts.DateFormatter),
-            time = LocalTime.parse(dayPrayerResponse.dhuhrTime.uppercase(), Consts.TimeFormatter),
+            dateTime = dhuhrDateTime,
             status = responseStatusToStatus(dayStatuses?.dhuhr)
         ),
         PrayerInfoEntity(
             prayer = Prayer.ASR,
-            date = LocalDate.parse(dayPrayerResponse.date, Consts.DateFormatter),
-            time = LocalTime.parse(dayPrayerResponse.asrTime.uppercase(), Consts.TimeFormatter),
+            dateTime = asrDateTime,
             status = responseStatusToStatus(dayStatuses?.asr)
         ),
         PrayerInfoEntity(
             prayer = Prayer.MAGHRIB,
-            date = LocalDate.parse(dayPrayerResponse.date, Consts.DateFormatter),
-            time = LocalTime.parse(dayPrayerResponse.maghribTime.uppercase(), Consts.TimeFormatter),
+            dateTime = maghribDateTime,
             status = responseStatusToStatus(dayStatuses?.maghrib)
         ),
         PrayerInfoEntity(
             prayer = Prayer.ISHA,
-            date = LocalDate.parse(dayPrayerResponse.date, Consts.DateFormatter),
-            time = LocalTime.parse(dayPrayerResponse.ishaTime.uppercase(), Consts.TimeFormatter),
+            dateTime = ishaDateTime,
             status = responseStatusToStatus(dayStatuses?.isha)
         )
     )

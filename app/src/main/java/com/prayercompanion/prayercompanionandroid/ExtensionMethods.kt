@@ -8,6 +8,9 @@ import androidx.navigation.NavController
 import androidx.navigation.NavOptionsBuilder
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import java.io.Serializable
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 
 fun NavController.navigate(event: UiEvent.Navigate, builder: NavOptionsBuilder.() -> Unit = {}) {
     this.navigate(route = event.route.name, builder)
@@ -32,4 +35,8 @@ fun <T : Serializable?> Intent.getSerializable(key: String, m_class: Class<T>): 
 
 fun <T> Result.Companion.failure(message: String): Result<T> {
     return failure(Exception(message))
+}
+
+fun LocalDate.atEndOfDay(): LocalDateTime {
+    return this.atTime(LocalTime.MAX)
 }
