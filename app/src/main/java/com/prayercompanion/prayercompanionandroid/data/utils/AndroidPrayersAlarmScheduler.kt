@@ -13,21 +13,18 @@ import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.time.LocalDateTime
 import java.time.ZoneId
-import java.util.Calendar
 import javax.inject.Inject
 
 class AndroidPrayersAlarmScheduler @Inject constructor(
     @ApplicationContext
     private val context: Context,
-    private val getDayPrayers: GetDayPrayers,
-    private val prayersNotificationsService: PrayersNotificationsService
+    private val getDayPrayers: GetDayPrayers
 ) : PrayersAlarmScheduler {
 
     private val alarmManager = context.getSystemService(AlarmManager::class.java)
 
     override suspend fun scheduleTodayPrayersNotifications() {
         val now = LocalDateTime.now()
-        prayersNotificationsService.showTestNotification("Today's notifications has been scheduled $now")
         getDayPrayers
             .call(now.toLocalDate(), false)
             .getOrElse {

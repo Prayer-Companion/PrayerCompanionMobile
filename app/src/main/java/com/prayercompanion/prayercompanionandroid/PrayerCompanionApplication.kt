@@ -65,7 +65,7 @@ class PrayerCompanionApplication : Application(), Configuration.Provider {
 
     private fun setupScheduleDailyPrayersWorker() {
         val scheduleDailyPrayersPeriodicWorkRequest =
-            PeriodicWorkRequestBuilder<ScheduleDailyPrayersWorker>(15, TimeUnit.MINUTES)
+            PeriodicWorkRequestBuilder<ScheduleDailyPrayersWorker>(1, TimeUnit.HOURS)
                 .build()
 
 
