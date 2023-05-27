@@ -28,16 +28,18 @@ import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.models.RemainingDuration
 import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
-import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerStatusJamaahColor
+import java.util.SortedMap
 
-@Preview(locale = "ar")
+@Preview(name = "en", locale = "en")
+@Preview(name = "ar", locale = "ar")
 @Composable
 fun HomeHeader(
     modifier: Modifier = Modifier,
     currentPrayer: PrayerInfo = PrayerInfo.Default,
     nextPrayer: PrayerInfo = PrayerInfo.Default,
     durationUntilNextPrayer: RemainingDuration = RemainingDuration(0, 0, 0),
-    onStatusSelected: (PrayerStatus, PrayerInfo) -> Unit = { _, _ -> }
+    onStatusSelected: (PrayerStatus, PrayerInfo) -> Unit = { _, _ -> },
+    statusesCounts: SortedMap<PrayerStatus, Int> = sortedMapOf()
 ) = PrayerCompanionAndroidTheme {
 
     val spacing = LocalSpacing.current
@@ -126,11 +128,11 @@ fun HomeHeader(
                     color = Color.White
                 )
                 Spacer(modifier = Modifier.height(spacing.spaceSmall))
-                Box(
+                PrayerStatusesOverViewBar(
                     modifier = Modifier
-                        .background(color = PrayerStatusJamaahColor, RoundedCornerShape(25.dp))
                         .fillMaxWidth()
-                        .height(45.dp)
+                        .height(45.dp),
+                    statusesCounts = statusesCounts
                 )
             }
         }

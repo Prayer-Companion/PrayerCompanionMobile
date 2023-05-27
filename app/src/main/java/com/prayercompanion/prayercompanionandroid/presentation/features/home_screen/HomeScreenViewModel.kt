@@ -14,6 +14,7 @@ import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.models.RemainingDuration
 import com.prayercompanion.prayercompanionandroid.domain.usecases.GetCurrentPrayer
 import com.prayercompanion.prayercompanionandroid.domain.usecases.GetDayPrayers
+import com.prayercompanion.prayercompanionandroid.domain.usecases.GetLastWeekStatusesOverView
 import com.prayercompanion.prayercompanionandroid.domain.usecases.GetNextPrayer
 import com.prayercompanion.prayercompanionandroid.domain.usecases.UpdatePrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.utils.PrayersAlarmScheduler
@@ -24,6 +25,8 @@ import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -41,7 +44,8 @@ class HomeScreenViewModel @Inject constructor(
     private val getNextPrayer: GetNextPrayer,
     private val updatePrayerStatus: UpdatePrayerStatus,
     private val prayersAlarmScheduler: PrayersAlarmScheduler,
-    private val dataStoresRepo: DataStoresRepo
+    private val dataStoresRepo: DataStoresRepo,
+    private val getLastWeekStatusesOverView: GetLastWeekStatusesOverView
 ) : ViewModel() {
 
     private var loadSelectedDatePrayersJob: Job? = null
@@ -107,8 +111,21 @@ class HomeScreenViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             loadInitialDayPrayers()
-            loadCurrentAndNextPrayers()
-            withContext(Dispatchers.Main) { startDurationCountDown() }
+            awaitAll(
+                async {
+                    loadCurrentAndNextPrayers()
+                    withContext(Dispatchers.Main) { startDurationCountDown() }
+                },
+                async {
+                    getLastWeekStatusesOverView.call()
+                        .collect { statuses ->
+                            withContext(Dispatchers.Main) {
+                                state = state.copy(lastWeekStatuses = statuses)
+                            }
+                        }
+                }
+            )
+
         }
     }
 

@@ -3,10 +3,9 @@ package com.prayercompanion.prayercompanionandroid.presentation.features.onboard
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
-import com.prayercompanion.prayercompanionandroid.data.utils.Consts
+import com.prayercompanion.prayercompanionandroid.domain.usecases.UpdateAuthToken
 import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
-import com.prayercompanion.prayercompanionandroid.presentation.utils.AuthenticationHelper
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -18,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SplashScreenViewModel @Inject constructor(
     appLocationManager: AppLocationManager,
-    authenticationHelper: AuthenticationHelper
+    updateAuthToken: UpdateAuthToken
 ) : ViewModel() {
 
     val auth = FirebaseAuth.getInstance()
@@ -28,25 +27,22 @@ class SplashScreenViewModel @Inject constructor(
 
 
     init {
-        val user = auth.currentUser
-        if (user == null) {
-            sendNavigateEvent(Route.SignIn)
-        } else {
-            user.getIdToken(false)
-                .addOnSuccessListener {
-                    Consts.userToken = it.token
-                    if (appLocationManager.areAllPermissionsGranted) { //todo this sometimes doesn't work for some reason
-                        sendNavigateEvent(Route.Home)
-                    } else {
-                        sendNavigateEvent(Route.PermissionsRequests)
-                    }
+        updateAuthToken.call(
+            forceRefresh = false,
+            onSuccess = {
+                if (appLocationManager.areAllPermissionsGranted) { //todo this sometimes doesn't work for some reason
+                    sendNavigateEvent(Route.Home)
+                } else {
+                    sendNavigateEvent(Route.PermissionsRequests)
                 }
-                .addOnFailureListener {
-                    // TODO: Handle offline case
-                    authenticationHelper.signOut()
-                    sendNavigateEvent(Route.SignIn)
-                }
-        }
+            },
+            onFailure = { // TODO: Handle offline case
+                sendNavigateEvent(Route.SignIn)
+            },
+            onUserNotSignedIn = {
+                sendNavigateEvent(Route.SignIn)
+            },
+        )
     }
 
     private fun sendNavigateEvent(route: Route) {

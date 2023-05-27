@@ -20,7 +20,9 @@ import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRep
 import com.prayercompanion.prayercompanionandroid.failure
 import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
 import com.skydoves.whatif.whatIfNotNull
+import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.YearMonth
 import java.util.TimeZone
@@ -113,6 +115,11 @@ class PrayersRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             Result.failure(e)
         }
+    }
+
+    //todo what if last week doesn't exist?
+    override fun getStatusesByDate(startDateTime: LocalDateTime, endDateTime: LocalDateTime): Flow<List<PrayerStatus?>> {
+        return dao.getPrayersStatusesByDate(startDateTime, endDateTime)
     }
 
     private suspend fun loadMonthPrayers(

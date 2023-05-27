@@ -76,7 +76,8 @@ fun HomeScreen(
                 currentPrayer = viewModel.state.currentPrayer,
                 nextPrayer = viewModel.state.nextPrayer,
                 durationUntilNextPrayer = viewModel.durationUntilNextPrayer,
-                onStatusSelected = viewModel::onStatusSelected
+                onStatusSelected = viewModel::onStatusSelected,
+                statusesCounts = viewModel.state.lastWeekStatuses
             )
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
             // TODO: add a way to get back to today's date quickly

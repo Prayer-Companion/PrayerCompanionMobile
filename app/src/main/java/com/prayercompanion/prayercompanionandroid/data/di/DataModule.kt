@@ -10,6 +10,7 @@ import com.prayercompanion.prayercompanionandroid.data.repositories.PrayersRepos
 import com.prayercompanion.prayercompanionandroid.data.utils.AndroidPrayersAlarmScheduler
 import com.prayercompanion.prayercompanionandroid.data.utils.Consts
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
+import com.prayercompanion.prayercompanionandroid.domain.usecases.UpdateAuthToken
 import com.prayercompanion.prayercompanionandroid.domain.utils.PrayersAlarmScheduler
 import dagger.Module
 import dagger.Provides
@@ -17,6 +18,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import okhttp3.internal.http.HTTP_UNAUTHORIZED
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -30,7 +32,7 @@ class DataModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideOkHttpClient(updateAuthToken: UpdateAuthToken): OkHttpClient {
 
         val logger = HttpLoggingInterceptor()
         logger.setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -43,6 +45,17 @@ class DataModule {
                 .addHeader("Authorization", "Bearer ${Consts.userToken}")
                 .build()
             chain.proceed(new)
+        }
+
+        builder.addInterceptor { chain ->
+            val request = chain.request()
+            val response = chain.proceed(request)
+
+            if (response.code == HTTP_UNAUTHORIZED) {
+                updateAuthToken.call(true)
+            }
+
+            response
         }
 
         if (BuildConfig.DEBUG) {

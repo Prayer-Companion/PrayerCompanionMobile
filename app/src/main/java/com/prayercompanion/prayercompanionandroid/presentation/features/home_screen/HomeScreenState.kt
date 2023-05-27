@@ -4,12 +4,14 @@ import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import java.time.LocalDate
+import java.util.SortedMap
 
 data class HomeScreenState(
     val currentPrayer: PrayerInfo = PrayerInfo.Default,
     val nextPrayer: PrayerInfo = PrayerInfo.Default,
     val selectedDayPrayersInfo: DayPrayersInfo = DayPrayersInfo.Default,
-    val selectedDate: LocalDate = LocalDate.now()
+    val selectedDate: LocalDate = LocalDate.now(),
+    val lastWeekStatuses: SortedMap<PrayerStatus, Int> = sortedMapOf()
 ) {
 
 

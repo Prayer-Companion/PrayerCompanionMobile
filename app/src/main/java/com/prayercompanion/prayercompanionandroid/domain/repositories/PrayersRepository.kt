@@ -5,7 +5,9 @@ import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
+import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 interface PrayersRepository {
 
@@ -25,4 +27,6 @@ interface PrayersRepository {
         prayerInfo: PrayerInfo,
         prayerStatus: PrayerStatus
     ): Result<Unit>
+
+    fun getStatusesByDate(startDateTime: LocalDateTime, endDateTime: LocalDateTime): Flow<List<PrayerStatus?>>
 }

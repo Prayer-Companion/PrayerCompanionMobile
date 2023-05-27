@@ -8,6 +8,7 @@ import com.prayercompanion.prayercompanionandroid.atEndOfDay
 import com.prayercompanion.prayercompanionandroid.data.local.entities.PrayerInfoEntity
 import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
+import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -26,6 +27,12 @@ interface PrayersInfoDao {
         startOfDay: LocalDateTime,
         endOfDay: LocalDateTime
     ): PrayerInfoEntity?
+
+    @Query("SELECT status FROM PrayersInfo WHERE dateTime >= :startDateTime and dateTime <= :endDateTime")
+    fun getPrayersStatusesByDate(
+        startDateTime: LocalDateTime,
+        endDateTime: LocalDateTime
+    ): Flow<List<PrayerStatus?>>
 
     @Query("UPDATE PrayersInfo SET status = :status WHERE dateTime >= :startOfDay and dateTime <= :endOfDay AND prayer = :prayer")
     fun updatePrayerStatus(
