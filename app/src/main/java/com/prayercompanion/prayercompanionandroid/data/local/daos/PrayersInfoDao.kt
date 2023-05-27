@@ -28,10 +28,11 @@ interface PrayersInfoDao {
         endOfDay: LocalDateTime
     ): PrayerInfoEntity?
 
-    @Query("SELECT status FROM PrayersInfo WHERE dateTime >= :startDateTime and dateTime <= :endDateTime")
+    @Query("SELECT status FROM PrayersInfo WHERE dateTime >= :startDateTime and dateTime <= :endDateTime AND prayer != :excludedPrayer")
     fun getPrayersStatusesByDate(
         startDateTime: LocalDateTime,
-        endDateTime: LocalDateTime
+        endDateTime: LocalDateTime,
+        excludedPrayer: Prayer = Prayer.DUHA
     ): Flow<List<PrayerStatus?>>
 
     @Query("UPDATE PrayersInfo SET status = :status WHERE dateTime >= :startOfDay and dateTime <= :endOfDay AND prayer = :prayer")

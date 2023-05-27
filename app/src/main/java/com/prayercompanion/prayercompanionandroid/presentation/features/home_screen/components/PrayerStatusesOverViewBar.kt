@@ -37,7 +37,6 @@ fun PrayerStatusesOverViewBar(
                 cornerRadius = CornerRadius(100f)
             )
         } else {
-//            val directedStatusesCounts = if (isLTR) statusesCounts else statusesCounts.reverse()
             statusesCounts.forEach { (key, value) ->
                 val componentWidth = (accumulatedValue / totalStatuses) * size.width
                 val startOffset = if (isLTR) {
