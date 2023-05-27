@@ -15,6 +15,7 @@ import com.prayercompanion.prayercompanionandroid.data.preferences.AppPreference
 import com.prayercompanion.prayercompanionandroid.data.preferences.AppPreferencesSerializer
 import com.prayercompanion.prayercompanionandroid.data.utils.PrayersNotificationsService
 import com.prayercompanion.prayercompanionandroid.data.utils.ScheduleDailyPrayersWorker
+import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
 import dagger.hilt.android.HiltAndroidApp
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -29,6 +30,9 @@ class PrayerCompanionApplication : Application(), Configuration.Provider {
 
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
+
+    @Inject
+    lateinit var appLocationManager: AppLocationManager
 
     override fun getWorkManagerConfiguration() =
         Configuration.Builder()
@@ -64,6 +68,10 @@ class PrayerCompanionApplication : Application(), Configuration.Provider {
     }
 
     private fun setupScheduleDailyPrayersWorker() {
+        if (appLocationManager.areAllPermissionsGranted.not()) {
+            return
+        }
+
         val scheduleDailyPrayersPeriodicWorkRequest =
             PeriodicWorkRequestBuilder<ScheduleDailyPrayersWorker>(1, TimeUnit.HOURS)
                 .build()
