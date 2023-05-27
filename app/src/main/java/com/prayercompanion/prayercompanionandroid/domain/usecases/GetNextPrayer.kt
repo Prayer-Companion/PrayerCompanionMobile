@@ -14,10 +14,9 @@ class GetNextPrayer @Inject constructor(
 ) {
 
     suspend fun call(prayerInfo: PrayerInfo): Result<PrayerInfo> {
-        val location = appLocationManager
-            .getLastKnownLocation()
+        val location = appLocationManager.getLastKnownLocation()
             ?: return Result.failure("location can't be null")
-
+        val address = appLocationManager.getAddress()
         var nextPrayer = prayerInfo.prayer.next()
         var date: LocalDate = prayerInfo.date
         if (nextPrayer == null) {
@@ -28,7 +27,8 @@ class GetNextPrayer @Inject constructor(
         return prayersRepository.getPrayer(
             prayer = nextPrayer,
             date = date,
-            location = location
+            location = location,
+            address = address
         )
     }
 }

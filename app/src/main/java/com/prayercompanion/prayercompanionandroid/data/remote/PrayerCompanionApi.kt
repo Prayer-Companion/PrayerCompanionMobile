@@ -12,13 +12,20 @@ interface PrayerCompanionApi {
      * @param timeZone: current location's time zone
      * @param latitude: current location's latitude
      * @param longitude: current location's longitude
+     * @param countryCode: current location's countryCode
+     * @param cityName: current location's cityName
      * @param monthOfYear: the month of year we want data for (MM/yyyy)
+     *
+     * if country code and city name are null then it will
+     * default to the lat and long values to get prayer times
      * */
     @GET("v1/prayerTimes")
     suspend fun getPrayers(
         @Query("timeZone") timeZone: String,
         @Query("latitude") latitude: String,
         @Query("longitude") longitude: String,
+        @Query("countryCode") countryCode: String?,
+        @Query("cityName") cityName: String?,
         @Query("monthOfYear") monthOfYear: String,
     ): List<DayPrayerResponse>
 

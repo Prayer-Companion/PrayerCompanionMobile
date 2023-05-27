@@ -21,16 +21,18 @@ class GetCurrentPrayer @Inject constructor(
         val location = appLocationManager.getLastKnownLocation()
             ?: return Result.failure("location can't be null")
 
+        val address = appLocationManager.getAddress()
+
         val currentDate = LocalDate.now(clock)
         val currentTime = LocalTime.now(clock)
 
         val currentDayPrayersInfo = prayersRepository
-            .getDayPrayers(location, currentDate)
+            .getDayPrayers(location, address, currentDate)
             .getOrNull()
             ?: return Result.failure("location can't be null")
 
         if (currentTime in LocalTime.MIN.rangeUntil(currentDayPrayersInfo.get(Prayer.FAJR).time)) {
-            return prayersRepository.getPrayer(Prayer.ISHA, currentDate.minusDays(1), location)
+            return prayersRepository.getPrayer(Prayer.ISHA, currentDate.minusDays(1), location, address)
         }
         if (currentTime in currentDayPrayersInfo.get(Prayer.ISHA).time.rangeTo(LocalTime.MAX)) {
             return Result.success(currentDayPrayersInfo.get(Prayer.ISHA))

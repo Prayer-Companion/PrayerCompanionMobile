@@ -1,5 +1,6 @@
 package com.prayercompanion.prayercompanionandroid.data.repositories
 
+import android.location.Address
 import android.location.Location
 import com.prayercompanion.prayercompanionandroid.atEndOfDay
 import com.prayercompanion.prayercompanionandroid.data.local.daos.PrayersInfoDao
@@ -35,6 +36,7 @@ class PrayersRepositoryImpl @Inject constructor(
 
     override suspend fun getDayPrayers(
         location: Location,
+        address: Address?,
         dayDate: LocalDate,
         forceUpdate: Boolean
     ): Result<DayPrayersInfo> {
@@ -49,7 +51,7 @@ class PrayersRepositoryImpl @Inject constructor(
             }
 
             val yearMonth = YearMonth.from(dayDate)
-            val (prayersResponse, statusesResponse) = loadMonthPrayers(yearMonth, location)
+            val (prayersResponse, statusesResponse) = loadMonthPrayers(yearMonth, location, address)
 
             val dayPrayer = dayPrayerResponseAndStatusResponseToDayPrayerInfo(
                 dayDate,
@@ -67,7 +69,8 @@ class PrayersRepositoryImpl @Inject constructor(
     override suspend fun getPrayer(
         prayer: Prayer,
         date: LocalDate,
-        location: Location
+        location: Location,
+        address: Address?
     ): Result<PrayerInfo> {
         val prayerInfo = dao.getPrayer(prayer, date)?.toPrayerInfo()
         return if (prayerInfo != null) {
@@ -75,7 +78,7 @@ class PrayersRepositoryImpl @Inject constructor(
         } else {
 
             val yearMonth = YearMonth.from(date)
-            val (prayersResponse, statusesResponse) = loadMonthPrayers(yearMonth, location)
+            val (prayersResponse, statusesResponse) = loadMonthPrayers(yearMonth, location, address)
 
             try {
                 val dayPrayers = dayPrayerResponseAndStatusResponseToDayPrayerInfo(
@@ -118,22 +121,28 @@ class PrayersRepositoryImpl @Inject constructor(
     }
 
     //todo what if last week doesn't exist?
-    override fun getStatusesByDate(startDateTime: LocalDateTime, endDateTime: LocalDateTime): Flow<List<PrayerStatus?>> {
+    override fun getStatusesByDate(
+        startDateTime: LocalDateTime,
+        endDateTime: LocalDateTime
+    ): Flow<List<PrayerStatus?>> {
         return dao.getPrayersStatusesByDate(startDateTime, endDateTime)
     }
 
     private suspend fun loadMonthPrayers(
         yearMonth: YearMonth,
-        location: Location
+        location: Location,
+        address: Address?
     ): Pair<List<DayPrayerResponse>, List<DayPrayerStatusResponse>> {
         val startOfMonth = yearMonth.atDay(1)
         val endOfMonth = yearMonth.atEndOfMonth()
 
         val prayersResponse = prayerCompanionApi.getPrayers(
-            TimeZone.getDefault().id,
-            location.latitude.toString(),
-            location.longitude.toString(),
-            Consts.MonthYearFormatter.format(yearMonth)
+            timeZone = TimeZone.getDefault().id,
+            latitude = location.latitude.toString(),
+            longitude = location.longitude.toString(),
+            countryCode = address?.countryCode,
+            cityName = address?.locality,
+            monthOfYear = Consts.MonthYearFormatter.format(yearMonth)
         )
 
         val statusesResponse = prayerCompanionApi.getPrayerStatuses(

@@ -17,6 +17,7 @@ class GetDayPrayers @Inject constructor(
     ): Result<DayPrayersInfo> {
         val location = appLocationManager.getLastKnownLocation()
             ?: return Result.failure("location can't be null")
-        return prayersRepository.getDayPrayers(location, date, forceUpdate)
+        val address = appLocationManager.getAddress()
+        return prayersRepository.getDayPrayers(location, address, date, forceUpdate)
     }
 }
