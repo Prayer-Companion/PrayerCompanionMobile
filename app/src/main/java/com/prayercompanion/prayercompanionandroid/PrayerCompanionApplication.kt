@@ -6,10 +6,18 @@ import android.app.NotificationManager
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.prayercompanion.prayercompanionandroid.data.preferences.AppPreferences
 import com.prayercompanion.prayercompanionandroid.data.preferences.AppPreferencesSerializer
 import com.prayercompanion.prayercompanionandroid.data.utils.PrayersNotificationsService
+import com.prayercompanion.prayercompanionandroid.data.utils.ScheduleDailyPrayersWorker
 import dagger.hilt.android.HiltAndroidApp
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 val Context.appPreferencesDataStore: DataStore<AppPreferences> by dataStore(
     "app_preferences1.json",
@@ -17,11 +25,20 @@ val Context.appPreferencesDataStore: DataStore<AppPreferences> by dataStore(
 )
 
 @HiltAndroidApp
-class PrayerCompanionApplication : Application() {
+class PrayerCompanionApplication : Application(), Configuration.Provider {
+
+    @Inject
+    lateinit var workerFactory: HiltWorkerFactory
+
+    override fun getWorkManagerConfiguration() =
+        Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
 
     override fun onCreate() {
         super.onCreate()
         setupNotificationsChannels()
+        setupScheduleDailyPrayersWorker()
     }
 
     private fun setupNotificationsChannels() {
@@ -45,4 +62,18 @@ class PrayerCompanionApplication : Application() {
 
         notificationManager.createNotificationChannel(channel)
     }
+
+    private fun setupScheduleDailyPrayersWorker() {
+        val scheduleDailyPrayersPeriodicWorkRequest =
+            PeriodicWorkRequestBuilder<ScheduleDailyPrayersWorker>(15, TimeUnit.MINUTES)
+                .build()
+
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            ScheduleDailyPrayersWorker::class.simpleName!!,
+            ExistingPeriodicWorkPolicy.UPDATE,
+            scheduleDailyPrayersPeriodicWorkRequest
+        )
+    }
+
 }

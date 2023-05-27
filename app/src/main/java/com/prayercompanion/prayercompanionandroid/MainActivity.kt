@@ -31,6 +31,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.prayercompanion.prayercompanionandroid.data.utils.PrayersNotificationsService
 import com.prayercompanion.prayercompanionandroid.domain.utils.PrayersAlarmScheduler
 import com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.HomeScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.permissions.PermissionsRequestScreen
@@ -107,7 +108,6 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        handleDailyAlarmsService()
     }
 
     @Composable
@@ -149,11 +149,6 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
-    }
-
-    private fun handleDailyAlarmsService() {
-        //todo set this to be only triggered once
-        prayersAlarmScheduler.scheduleDailyService()
     }
 
 }
