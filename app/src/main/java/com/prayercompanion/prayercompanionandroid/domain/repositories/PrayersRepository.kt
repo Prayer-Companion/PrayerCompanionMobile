@@ -13,7 +13,7 @@ import java.time.LocalDateTime
 interface PrayersRepository {
 
     suspend fun getDayPrayers(
-        location: Location,
+        location: Location?,
         address: Address?,
         dayDate: LocalDate,
         forceUpdate: Boolean = false
@@ -22,7 +22,7 @@ interface PrayersRepository {
     suspend fun getPrayer(
         prayer: Prayer,
         date: LocalDate,
-        location: Location,
+        location: Location?,
         address: Address?
     ): Result<PrayerInfo>
 

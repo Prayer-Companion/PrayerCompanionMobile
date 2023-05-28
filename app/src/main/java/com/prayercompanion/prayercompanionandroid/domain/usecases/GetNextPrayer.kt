@@ -4,7 +4,6 @@ import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
 import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
-import com.prayercompanion.prayercompanionandroid.failure
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -15,8 +14,8 @@ class GetNextPrayer @Inject constructor(
 
     suspend fun call(prayerInfo: PrayerInfo): Result<PrayerInfo> {
         val location = appLocationManager.getLastKnownLocation()
-            ?: return Result.failure("location can't be null")
         val address = appLocationManager.getAddress()
+
         var nextPrayer = prayerInfo.prayer.next()
         var date: LocalDate = prayerInfo.date
         if (nextPrayer == null) {

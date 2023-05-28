@@ -69,19 +69,18 @@ class HomeScreenViewModel @Inject constructor(
             val currentPrayerInfo = getCurrentPrayer.call().getOrElse {
                 it.printStackTraceInDebug()
                 sendErrorEvent(R.string.error_something_went_wrong.toUiText())
-                updateState(
-                    currentPrayer = PrayerInfo.Default,
-                    nextPrayer = PrayerInfo.Default
-                )
                 return
             }
+
+            updateState(currentPrayer = currentPrayerInfo)
 
             val nextPrayerInfo = getNextPrayer.call(currentPrayerInfo).getOrElse {
                 it.printStackTraceInDebug()
                 sendErrorEvent(R.string.error_something_went_wrong.toUiText())
-                PrayerInfo.Default
+                return
             }
-            updateState(currentPrayer = currentPrayerInfo, nextPrayer = nextPrayerInfo)
+            updateState(nextPrayer = nextPrayerInfo)
+            withContext(Dispatchers.Main) { startDurationCountDown() }
         }
 
         suspend fun loadInitialDayPrayers() {
@@ -114,7 +113,6 @@ class HomeScreenViewModel @Inject constructor(
             awaitAll(
                 async {
                     loadCurrentAndNextPrayers()
-                    withContext(Dispatchers.Main) { startDurationCountDown() }
                 },
                 async {
                     getLastWeekStatusesOverView.call()

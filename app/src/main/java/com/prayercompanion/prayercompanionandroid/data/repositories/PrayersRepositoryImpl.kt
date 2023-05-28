@@ -35,19 +35,26 @@ class PrayersRepositoryImpl @Inject constructor(
 ) : PrayersRepository {
 
     override suspend fun getDayPrayers(
-        location: Location,
+        location: Location?,
         address: Address?,
         dayDate: LocalDate,
         forceUpdate: Boolean
     ): Result<DayPrayersInfo> {
         return try {
-            if (forceUpdate.not()) {
-                val savedPrayers =
-                    dao.getPrayers(dayDate.atStartOfDay(), dayDate.atTime(LocalTime.MAX))
+            if (forceUpdate.not() || location == null) {
+                val savedPrayers = dao.getPrayers(
+                    startDateTime = dayDate.atStartOfDay(),
+                    endDateTime = dayDate.atTime(LocalTime.MAX)
+                )
+
                 if (savedPrayers.isNotEmpty()) {
                     val dayPrayersInfo = savedPrayers.toDayPrayerInfo()
                     return Result.success(dayPrayersInfo)
                 }
+            }
+
+            if (location == null) {
+                return Result.failure("Failed to get day prayers: Location is null")
             }
 
             val yearMonth = YearMonth.from(dayDate)
@@ -69,13 +76,17 @@ class PrayersRepositoryImpl @Inject constructor(
     override suspend fun getPrayer(
         prayer: Prayer,
         date: LocalDate,
-        location: Location,
+        location: Location?,
         address: Address?
     ): Result<PrayerInfo> {
         val prayerInfo = dao.getPrayer(prayer, date)?.toPrayerInfo()
         return if (prayerInfo != null) {
             Result.success(prayerInfo)
         } else {
+
+            if (location == null) {
+                return Result.failure("Failed to get prayer: Location is null")
+            }
 
             val yearMonth = YearMonth.from(date)
             val (prayersResponse, statusesResponse) = loadMonthPrayers(yearMonth, location, address)

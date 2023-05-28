@@ -19,7 +19,6 @@ class GetCurrentPrayer @Inject constructor(
     @OptIn(ExperimentalStdlibApi::class)
     suspend fun call(): Result<PrayerInfo> {
         val location = appLocationManager.getLastKnownLocation()
-            ?: return Result.failure("location can't be null")
 
         val address = appLocationManager.getAddress()
 
@@ -28,11 +27,17 @@ class GetCurrentPrayer @Inject constructor(
 
         val currentDayPrayersInfo = prayersRepository
             .getDayPrayers(location, address, currentDate)
-            .getOrNull()
-            ?: return Result.failure("location can't be null")
+            .getOrElse {
+                return Result.failure(it)
+            }
 
         if (currentTime in LocalTime.MIN.rangeUntil(currentDayPrayersInfo.get(Prayer.FAJR).time)) {
-            return prayersRepository.getPrayer(Prayer.ISHA, currentDate.minusDays(1), location, address)
+            return prayersRepository.getPrayer(
+                prayer = Prayer.ISHA,
+                date = currentDate.minusDays(1),
+                location = location,
+                address = address
+            )
         }
         if (currentTime in currentDayPrayersInfo.get(Prayer.ISHA).time.rangeTo(LocalTime.MAX)) {
             return Result.success(currentDayPrayersInfo.get(Prayer.ISHA))
@@ -46,6 +51,7 @@ class GetCurrentPrayer @Inject constructor(
                     return Result.success(prayerInfo)
                 }
             }
+
         return Result.failure("Something went wrong while getting current prayer")
     }
 }
