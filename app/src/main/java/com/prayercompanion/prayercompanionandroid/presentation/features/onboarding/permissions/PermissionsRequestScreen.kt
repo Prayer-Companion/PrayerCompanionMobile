@@ -52,7 +52,7 @@ fun PermissionsRequestScreen(
         // TODO: Handle the rejection case
         if (permissions.all { it.value }) {
             navigate(UiEvent.Navigate(Route.Home)) {
-                popUpTo(Route.SplashScreen.name) {
+                popUpTo(Route.PermissionsRequests.name) {
                     inclusive = true
                 }
             }

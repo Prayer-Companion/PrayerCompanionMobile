@@ -1,5 +1,6 @@
 package com.prayercompanion.prayercompanionandroid.data.utils
 
+import android.app.Notification
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
@@ -31,11 +32,10 @@ class PrayersNotificationsService @Inject constructor(
         val prayerName = context.getString(item.prayerInfo.prayer.nameId)
         val title = context.getString(R.string.prayer_notification_title, prayerName)
 
-        val notification = NotificationCompat
+        val notification = Notification
             .Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_app_logo)
             .setContentTitle(title)
-//            .setContentText(item.body)
             .setContentIntent(activityPendingInject)
             .setOngoing(item.isOngoing)
             .build()

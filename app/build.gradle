@@ -32,10 +32,34 @@ android {
         }
         buildConfigField "String", "PRAYER_COMPANION_API_BASE_URL", "${PrayerCompanionApiBaseUrl}"
     }
-
-    buildTypes {
+    signingConfigs {
         release {
+            storeFile file("../prayer_companion_keystore.jks")
+            keyAlias "PrayerCompanionKeyStore"
+            storePassword "xiwzez-ruDwig-cidqy1"
+            keyPassword "xiwzez-ruDwig-cidqy1"
+        }
+    }
+    buildTypes {
+        debug {
+            debuggable true
             minifyEnabled false
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+            manifestPlaceholders = [
+                    app_name: "Debug prayer companion"
+            ]
+
+            signingConfig android.signingConfigs.debug
+        }
+        release {
+            signingConfig signingConfigs.release
+
+            debuggable false
+            minifyEnabled true
+            manifestPlaceholders = [
+                    app_name: "@string/app_name"
+            ]
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

@@ -7,7 +7,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.data.preferences.DataStoresRepo
 import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
@@ -17,7 +16,6 @@ import com.prayercompanion.prayercompanionandroid.domain.usecases.GetDayPrayers
 import com.prayercompanion.prayercompanionandroid.domain.usecases.GetLastWeekStatusesOverView
 import com.prayercompanion.prayercompanionandroid.domain.usecases.GetNextPrayer
 import com.prayercompanion.prayercompanionandroid.domain.usecases.UpdatePrayerStatus
-import com.prayercompanion.prayercompanionandroid.domain.utils.PrayersAlarmScheduler
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
 import com.prayercompanion.prayercompanionandroid.presentation.utils.toUiText
@@ -28,7 +26,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -43,9 +40,7 @@ class HomeScreenViewModel @Inject constructor(
     private val getCurrentPrayer: GetCurrentPrayer,
     private val getNextPrayer: GetNextPrayer,
     private val updatePrayerStatus: UpdatePrayerStatus,
-    private val prayersAlarmScheduler: PrayersAlarmScheduler,
-    private val dataStoresRepo: DataStoresRepo,
-    private val getLastWeekStatusesOverView: GetLastWeekStatusesOverView
+    private val getLastWeekStatusesOverView: GetLastWeekStatusesOverView,
 ) : ViewModel() {
 
     private var loadSelectedDatePrayersJob: Job? = null
@@ -96,15 +91,6 @@ class HomeScreenViewModel @Inject constructor(
                     state = state.copy(selectedDayPrayersInfo = dateDayPrayers)
                 }
 
-                val storedData = dataStoresRepo.appPreferencesDataStore.data.firstOrNull()
-                if (storedData?.hasInitiatedFirstDailyNotifications != true) {
-
-                    prayersAlarmScheduler.scheduleTodayPrayersNotifications()
-
-                    dataStoresRepo.appPreferencesDataStore.updateData {
-                        it.copy(hasInitiatedFirstDailyNotifications = true)
-                    }
-                }
             }
         }
 

@@ -33,9 +33,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavOptionsBuilder
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.prayercompanion.prayercompanionandroid.R
+import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
@@ -47,7 +49,7 @@ import kotlinx.coroutines.flow.emptyFlow
 @Preview(locale = "ar")
 @Composable
 fun SignInScreen(
-    navigate: (UiEvent.Navigate) -> Unit = {},
+    navigate: (UiEvent.Navigate, NavOptionsBuilder.() -> Unit) -> Unit = { _, _ -> },
     googleSignInClient: GoogleSignInClient? = null,
     uiEvents: Flow<UiEvent> = emptyFlow(),
     onEvent: (SignInEvents) -> Unit = {},
@@ -67,7 +69,12 @@ fun SignInScreen(
     LaunchedEffect(key1 = uiEvents) {
         uiEvents.collect {
             when (it) {
-                is UiEvent.Navigate -> navigate(it)
+                is UiEvent.Navigate -> navigate(it) {
+                    popUpTo(Route.SignIn.name) {
+                        inclusive = true
+                    }
+                }
+
                 is UiEvent.ShowErrorSnackBar -> context.showToast(it.errorMessage.asString(context))
             }
         }
