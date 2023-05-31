@@ -3,6 +3,8 @@ package com.prayercompanion.prayercompanionandroid.data.preferences
 import android.content.Context
 import androidx.datastore.core.Serializer
 import com.prayercompanion.prayercompanionandroid.appPreferencesDataStore
+import com.prayercompanion.prayercompanionandroid.domain.models.Address
+import com.prayercompanion.prayercompanionandroid.domain.models.Location
 import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -23,13 +25,17 @@ class DataStoresRepo @Inject constructor(
 
 @Serializable
 data class AppPreferences(
-    val hasInitiatedFirstDailyNotifications: Boolean
-)
+    val location: Location?,
+    val address: Address?,
+) {
+
+}
 
 object AppPreferencesSerializer : Serializer<AppPreferences> {
     override val defaultValue: AppPreferences
         get() = AppPreferences(
-            hasInitiatedFirstDailyNotifications = false
+            location = null,
+            address = null
         )
 
     override suspend fun readFrom(input: InputStream): AppPreferences {

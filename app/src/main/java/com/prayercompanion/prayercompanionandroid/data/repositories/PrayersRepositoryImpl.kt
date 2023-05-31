@@ -1,7 +1,5 @@
 package com.prayercompanion.prayercompanionandroid.data.repositories
 
-import android.location.Address
-import android.location.Location
 import com.prayercompanion.prayercompanionandroid.atEndOfDay
 import com.prayercompanion.prayercompanionandroid.data.local.daos.PrayersInfoDao
 import com.prayercompanion.prayercompanionandroid.data.local.entities.PrayerInfoEntity
@@ -13,7 +11,9 @@ import com.prayercompanion.prayercompanionandroid.data.remote.dto.DayPrayerStatu
 import com.prayercompanion.prayercompanionandroid.data.remote.mappers.responsesToDayPrayerInfo
 import com.prayercompanion.prayercompanionandroid.data.remote.mappers.responsesToPrayerInfoEntity
 import com.prayercompanion.prayercompanionandroid.data.utils.Consts
+import com.prayercompanion.prayercompanionandroid.domain.models.Address
 import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
+import com.prayercompanion.prayercompanionandroid.domain.models.Location
 import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus

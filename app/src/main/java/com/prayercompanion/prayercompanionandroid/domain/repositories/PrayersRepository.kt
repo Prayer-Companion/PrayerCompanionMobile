@@ -1,8 +1,8 @@
 package com.prayercompanion.prayercompanionandroid.domain.repositories
 
-import android.location.Address
-import android.location.Location
+import com.prayercompanion.prayercompanionandroid.domain.models.Address
 import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
+import com.prayercompanion.prayercompanionandroid.domain.models.Location
 import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
@@ -30,5 +30,9 @@ interface PrayersRepository {
         prayerInfo: PrayerInfo,
         prayerStatus: PrayerStatus
     ): Result<Unit>
-    fun getStatusesByDate(startDateTime: LocalDateTime, endDateTime: LocalDateTime): Flow<List<PrayerStatus?>>
+
+    fun getStatusesByDate(
+        startDateTime: LocalDateTime,
+        endDateTime: LocalDateTime
+    ): Flow<List<PrayerStatus?>>
 }
