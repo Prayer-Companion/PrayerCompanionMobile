@@ -1,6 +1,10 @@
 package com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.permissions
 
+import android.app.Activity
+import android.content.Context
+import android.content.IntentSender
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -24,13 +28,22 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavOptionsBuilder
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.Priority
+import com.prayercompanion.prayercompanionandroid.MainActivity
 import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
@@ -45,17 +58,80 @@ fun PermissionsRequestScreen(
 ) {
 
     val spacing = LocalSpacing.current
+    val activity = LocalContext.current as Activity
+
+    fun navigateToHome() {
+        navigate(UiEvent.Navigate(Route.Home)) {
+            popUpTo(Route.PermissionsRequests.name) {
+                inclusive = true
+            }
+        }
+    }
+
+
+    val locationSettingsLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartIntentSenderForResult(),
+        onResult = { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                navigateToHome()
+            }
+        }
+    )
+
+    fun requestTurnOnLocation(activity: Activity) {
+        val intervalForLocationUpdateInMillis = 10000L
+
+        val locationRequest = LocationRequest
+            .Builder(Priority.PRIORITY_HIGH_ACCURACY, intervalForLocationUpdateInMillis)
+            .build()
+
+        val locationSettingsRequest =
+            LocationSettingsRequest
+                .Builder()
+                .addLocationRequest(locationRequest)
+                .build()
+
+        val client = LocationServices.getSettingsClient(activity)
+
+        val task = client.checkLocationSettings(locationSettingsRequest)
+
+        task.addOnSuccessListener { locationSettingsResponse ->
+            // All location settings are satisfied. The client can initialize
+            // location requests here.
+            // ...
+            navigateToHome()
+        }
+
+        task.addOnFailureListener { exception ->
+            if (exception is ResolvableApiException) {
+                // Location settings are not satisfied, but this can be fixed
+                // by showing the user a dialog.
+                try {
+                    // Show the dialog by calling startResolutionForResult(),
+                    // and check the result in onActivityResult().
+//                    exception.startResolutionForResult(activity, requestCode)
+                    val intentSenderRequest =
+                        IntentSenderRequest.Builder(exception.resolution.intentSender).build()
+                    locationSettingsLauncher.launch(intentSenderRequest)
+
+                } catch (sendEx: IntentSender.SendIntentException) {
+                    // Ignore the error.
+                }
+            }
+        }
+
+    }
+
+    val locationPermissionDeclined = remember { mutableStateOf(false) }
 
     val locationPermissionContract = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         // TODO: Handle the rejection case
         if (permissions.all { it.value }) {
-            navigate(UiEvent.Navigate(Route.Home)) {
-                popUpTo(Route.PermissionsRequests.name) {
-                    inclusive = true
-                }
-            }
+            requestTurnOnLocation(activity)
+        } else {
+            locationPermissionDeclined.value = true
         }
     }
 
@@ -148,3 +224,6 @@ fun PermissionsRequestScreen(
     }
 
 }
+
+
+
