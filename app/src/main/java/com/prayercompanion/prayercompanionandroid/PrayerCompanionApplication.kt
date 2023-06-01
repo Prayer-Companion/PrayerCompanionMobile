@@ -15,8 +15,10 @@ import com.prayercompanion.prayercompanionandroid.data.preferences.AppPreference
 import com.prayercompanion.prayercompanionandroid.data.preferences.AppPreferencesSerializer
 import com.prayercompanion.prayercompanionandroid.data.utils.PrayersNotificationsService
 import com.prayercompanion.prayercompanionandroid.data.utils.ScheduleDailyPrayersWorker
-import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
+import com.prayercompanion.prayercompanionandroid.domain.utils.PermissionsManager
 import dagger.hilt.android.HiltAndroidApp
+import logcat.AndroidLogcatLogger
+import logcat.LogPriority
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -32,7 +34,7 @@ class PrayerCompanionApplication : Application(), Configuration.Provider {
     lateinit var workerFactory: HiltWorkerFactory
 
     @Inject
-    lateinit var appLocationManager: AppLocationManager
+    lateinit var permissionsManager: PermissionsManager
 
     override fun getWorkManagerConfiguration() =
         Configuration.Builder()
@@ -43,6 +45,7 @@ class PrayerCompanionApplication : Application(), Configuration.Provider {
         super.onCreate()
         setupNotificationsChannels()
         setupScheduleDailyPrayersWorker()
+        AndroidLogcatLogger.installOnDebuggableApp(this, minPriority = LogPriority.VERBOSE)
     }
 
     private fun setupNotificationsChannels() {
@@ -68,7 +71,7 @@ class PrayerCompanionApplication : Application(), Configuration.Provider {
     }
 
     private fun setupScheduleDailyPrayersWorker() {
-        if (appLocationManager.areAllPermissionsGranted.not()) {
+        if (permissionsManager.isLocationPermissionGranted.not()) {
             return
         }
 

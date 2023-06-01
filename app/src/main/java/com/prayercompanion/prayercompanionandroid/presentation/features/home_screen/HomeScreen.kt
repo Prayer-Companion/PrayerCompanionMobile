@@ -1,5 +1,8 @@
 package com.prayercompanion.prayercompanionandroid.presentation.features.home_screen
 
+import android.app.Activity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -48,6 +51,13 @@ fun HomeScreen(
     val spacing = LocalSpacing.current
     val context = LocalContext.current
 
+    val locationSettingsLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartIntentSenderForResult(),
+        onResult = { result ->
+            viewModel.onLocationSettingsResult(result.resultCode == Activity.RESULT_OK)
+        }
+    )
+
     LaunchedEffect(key1 = true) {
         viewModel.uiEvents.collect {
             when (it) {
@@ -56,11 +66,14 @@ fun HomeScreen(
                         .snackbarHostState
                         .showSnackbar(it.errorMessage.asString(context))
                 }
-
+                is UiEvent.LaunchIntentSenderRequest -> {
+                    locationSettingsLauncher.launch(it.intentSenderRequest)
+                }
                 else -> Unit
             }
         }
     }
+
     Box {
         AppBackground(
             modifier = Modifier.fillMaxSize()
