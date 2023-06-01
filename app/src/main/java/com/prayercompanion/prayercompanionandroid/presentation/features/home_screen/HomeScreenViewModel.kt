@@ -1,11 +1,14 @@
 package com.prayercompanion.prayercompanionandroid.presentation.features.home_screen
 
+import android.content.IntentSender
 import android.os.CountDownTimer
+import androidx.activity.result.IntentSenderRequest
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.common.api.ResolvableApiException
 import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
@@ -16,6 +19,7 @@ import com.prayercompanion.prayercompanionandroid.domain.usecases.GetDayPrayers
 import com.prayercompanion.prayercompanionandroid.domain.usecases.GetLastWeekStatusesOverView
 import com.prayercompanion.prayercompanionandroid.domain.usecases.GetNextPrayer
 import com.prayercompanion.prayercompanionandroid.domain.usecases.UpdatePrayerStatus
+import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
 import com.prayercompanion.prayercompanionandroid.presentation.utils.toUiText
@@ -29,6 +33,8 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import logcat.asLog
+import logcat.logcat
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -41,6 +47,7 @@ class HomeScreenViewModel @Inject constructor(
     private val getNextPrayer: GetNextPrayer,
     private val updatePrayerStatus: UpdatePrayerStatus,
     private val getLastWeekStatusesOverView: GetLastWeekStatusesOverView,
+    private val locationManager: AppLocationManager
 ) : ViewModel() {
 
     private var loadSelectedDatePrayersJob: Job? = null
@@ -111,6 +118,25 @@ class HomeScreenViewModel @Inject constructor(
             )
 
         }
+
+        val locationServiceTask = locationManager.checkLocationService()
+        locationServiceTask
+            .addOnFailureListener { exception ->
+                if (exception is ResolvableApiException) {
+                    // Location settings are not satisfied, but this can be fixed
+                    // by showing the user a dialog.
+                    try {
+                        val intentSenderRequest = IntentSenderRequest
+                            .Builder(exception.resolution.intentSender)
+                            .build()
+
+                        sendEvent(UiEvent.LaunchIntentSenderRequest(intentSenderRequest))
+
+                    } catch (sendEx: IntentSender.SendIntentException) {
+                        logcat { sendEx.asLog() }
+                    }
+                }
+            }
     }
 
     fun onPreviousDayButtonClicked() {
@@ -132,6 +158,14 @@ class HomeScreenViewModel @Inject constructor(
             }
 
             state = state.updateStatus(prayerInfo, prayerStatus)
+        }
+    }
+
+    fun onLocationSettingsResult(result: Boolean) {
+        if (result) {
+            locationManager.getRequestLocationUpdates {
+                loadSelectedDatePrayers(true)
+            }
         }
     }
 
