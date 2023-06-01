@@ -10,6 +10,7 @@ import com.prayercompanion.prayercompanionandroid.MainActivity
 import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerNotificationItem
 import dagger.hilt.android.qualifiers.ApplicationContext
+import logcat.logcat
 import javax.inject.Inject
 
 class PrayersNotificationsService @Inject constructor(
@@ -42,7 +43,7 @@ class PrayersNotificationsService @Inject constructor(
 
         val notificationId = item.hashCode()
 
-        println("Notified: $item")
+        logcat { "Notified: $item" }
         notificationManager.notify(notificationId, notification)
     }
 
