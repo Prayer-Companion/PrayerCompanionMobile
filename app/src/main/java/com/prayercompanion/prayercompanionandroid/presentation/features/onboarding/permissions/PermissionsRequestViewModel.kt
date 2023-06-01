@@ -72,7 +72,7 @@ class PermissionsRequestViewModel @Inject constructor(
                         if (permissionsManager.isPushNotificationAllowed) {
                             goToHomeScreen()
                         } else {
-                            setNotificationPermissionState()
+                            nextState()
                         }
                     } else {
                         uiState = uiState
@@ -131,7 +131,7 @@ class PermissionsRequestViewModel @Inject constructor(
                         }
                     }
                 } else {
-                    setNotificationPermissionState()
+                    nextState()
                 }
             }
 
@@ -149,9 +149,23 @@ class PermissionsRequestViewModel @Inject constructor(
                         }
                     }
                 } else {
-                    goToHomeScreen()
+                    nextState()
                 }
             }
+        }
+    }
+
+    private fun nextState() {
+        when (currentState) {
+            State.Location -> {
+                if (permissionsManager.isPushNotificationAllowed) {
+                    goToHomeScreen()
+                } else {
+                    setNotificationPermissionState()
+                }
+            }
+
+            State.Notification -> goToHomeScreen()
         }
     }
 
