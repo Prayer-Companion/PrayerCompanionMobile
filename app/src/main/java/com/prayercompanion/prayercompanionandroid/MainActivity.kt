@@ -33,6 +33,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.HomeScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.permissions.PermissionsRequestScreen
+import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.permissions.PermissionsRequestViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.sign_in.SignInScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.sign_in.SignInViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.splash_screen.SplashScreen
@@ -82,15 +83,21 @@ class MainActivity : ComponentActivity() {
                         composable(Route.SignIn.name) {
                             val viewModel: SignInViewModel = hiltViewModel()
                             SignInScreen(
-                                navController::navigate,
-                                googleSignInClient,
-                                viewModel.uiEventsChannel,
-                                viewModel::onEvent,
-                                viewModel.isLoading
+                                navigate = navController::navigate,
+                                googleSignInClient = googleSignInClient,
+                                uiEvents = viewModel.uiEventsChannel,
+                                onEvent = viewModel::onEvent,
+                                isLoadingState = viewModel.isLoading
                             )
                         }
                         composable(Route.PermissionsRequests.name) {
-                            PermissionsRequestScreen(navigate = navController::navigate)
+                            val viewModel: PermissionsRequestViewModel = hiltViewModel()
+                            PermissionsRequestScreen(
+                                navigate = navController::navigate,
+                                uiState = viewModel.uiState,
+                                uiEvents = viewModel.uiEvents,
+                                onEvent = viewModel::onEvent
+                            )
                         }
                         composable(Route.Home.name) {
                             HomeScreen(scaffoldState = scaffoldState)

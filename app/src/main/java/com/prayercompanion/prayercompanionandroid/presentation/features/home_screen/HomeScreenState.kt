@@ -18,7 +18,6 @@ data class HomeScreenState(
     fun updateStatus(prayerInfo: PrayerInfo, prayerStatus: PrayerStatus): HomeScreenState {
         if (prayerInfo.date == selectedDate) {
             selectedDayPrayersInfo.updateStatus(prayerInfo.prayer, prayerStatus)
-            println()
         }
         if (currentPrayer.date == prayerInfo.date && currentPrayer.prayer == prayerInfo.prayer) {
             currentPrayer.status = prayerStatus

@@ -76,6 +76,7 @@ fun SignInScreen(
                 }
 
                 is UiEvent.ShowErrorSnackBar -> context.showToast(it.errorMessage.asString(context))
+                else -> Unit
             }
         }
     }

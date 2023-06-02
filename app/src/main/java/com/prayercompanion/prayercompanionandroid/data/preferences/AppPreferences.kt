@@ -27,15 +27,19 @@ class DataStoresRepo @Inject constructor(
 data class AppPreferences(
     val location: Location?,
     val address: Address?,
-) {
-
-}
+    val hasSkippedNotificationPermission: Boolean,
+    val deniedLocationPermissionsCount: Int,
+    val deniedNotificationPermissionsCount: Int,
+)
 
 object AppPreferencesSerializer : Serializer<AppPreferences> {
     override val defaultValue: AppPreferences
         get() = AppPreferences(
             location = null,
-            address = null
+            address = null,
+            hasSkippedNotificationPermission = false,
+            deniedLocationPermissionsCount = 0,
+            deniedNotificationPermissionsCount = 0,
         )
 
     override suspend fun readFrom(input: InputStream): AppPreferences {
