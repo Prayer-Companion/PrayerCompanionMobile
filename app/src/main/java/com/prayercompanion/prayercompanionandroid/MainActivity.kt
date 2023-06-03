@@ -38,6 +38,7 @@ import com.prayercompanion.prayercompanionandroid.presentation.features.onboardi
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.sign_in.SignInViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.splash_screen.SplashScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.QiblaScreen
+import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.QiblaViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -103,7 +104,12 @@ class MainActivity : ComponentActivity() {
                             HomeScreen(scaffoldState = scaffoldState)
                         }
                         composable(Route.Qibla.name) {
-                            QiblaScreen()
+                            val viewModel: QiblaViewModel = hiltViewModel()
+                            QiblaScreen(
+                                viewModel::onEvent,
+                                viewModel.sensorAccuracy,
+                                viewModel.qiblaDirection
+                            )
                         }
                     }
                 }

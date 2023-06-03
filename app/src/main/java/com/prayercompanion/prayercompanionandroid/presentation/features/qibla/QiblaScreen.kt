@@ -3,7 +3,9 @@ package com.prayercompanion.prayercompanionandroid.presentation.features.qibla
 import android.annotation.SuppressLint
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,22 +29,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.prayercompanionandroid.domain.utils.SensorAccuracy
+import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.components.QiblaSensorAccuracyDialog
+import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.components.QiblaSensorAccuracyIndicator
+import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
+import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 
 @SuppressLint("MissingPermission")
+@Preview(locale = "ar", showSystemUi = true)
 @Composable
 fun QiblaScreen(
-    viewModel: QiblaViewModel = hiltViewModel()
-) {
+    onEvent: (QiblaUiEvent) -> Unit = { },
+    sensorAccuracy: SensorAccuracy = SensorAccuracy.NO_CONTACT,
+    qiblaDirection: Double? = 0.0
+) = PrayerCompanionAndroidTheme {
+    val spacing = LocalSpacing.current
     val isDialogOpen = remember { mutableStateOf(false) }
 
-    DisposableEffect(key1 = viewModel) {
-        viewModel.onStart()
+    DisposableEffect(key1 = true) {
+        onEvent(QiblaUiEvent.OnStart)
         onDispose {
-            viewModel.onDispose()
+            onEvent(QiblaUiEvent.OnDispose)
         }
     }
 
@@ -53,11 +63,20 @@ fun QiblaScreen(
     }
 
 
-    viewModel.qiblaDirection?.let { qiblaDirection ->
+    if (qiblaDirection == null) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Text(
+                modifier = Modifier.align(Alignment.Center),
+                text = "Retrieving location..."
+            )
+        }
+    } else {
         val rotation: Float by animateFloatAsState(qiblaDirection.toFloat())
 
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = MaterialTheme.colors.background),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -67,7 +86,7 @@ fun QiblaScreen(
                     .size(280.dp)
                     .rotate(rotation),
                 painter = painterResource(R.drawable.img_qibla_compass),
-                contentDescription = "",
+                contentDescription = "Qibla compass",
             )
 
             Spacer(modifier = Modifier.weight(0.4f))
@@ -82,21 +101,21 @@ fun QiblaScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 30.dp),
+                    .padding(start = spacing.spaceLarge),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically,
 
                 ) {
-                QiblaSensorAccuracyIndicator(color = viewModel.sensorAccuracy.color)
+                QiblaSensorAccuracyIndicator(color = sensorAccuracy.color)
 
                 Text(
-                    modifier = Modifier.padding(start = 10.dp),
-                    text = stringResource(id = viewModel.sensorAccuracy.nameId),
+                    modifier = Modifier.padding(start = spacing.spaceSmall),
+                    text = stringResource(id = sensorAccuracy.nameId),
                     style = MaterialTheme.typography.h3,
                     color = MaterialTheme.colors.secondary
                 )
 
-                if (viewModel.sensorAccuracy != SensorAccuracy.HIGH) {
+                if (sensorAccuracy != SensorAccuracy.HIGH) {
                     IconButton(
                         onClick = {
                             isDialogOpen.value = true
@@ -112,7 +131,5 @@ fun QiblaScreen(
             }
             Spacer(modifier = Modifier.weight(0.35f))
         }
-    } ?: run {
-        Text(text = "Retrieving location...")
     }
 }

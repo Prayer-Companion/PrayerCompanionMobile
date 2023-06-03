@@ -21,10 +21,18 @@ class QiblaViewModel @Inject constructor(
 ) : ViewModel() {
 
     var sensorAccuracy by mutableStateOf(SensorAccuracy.NO_CONTACT)
-
+        private set
     var qiblaDirection by mutableStateOf<Double?>(null)
+        private set
 
-    fun onStart() {
+    fun onEvent(event: QiblaUiEvent) {
+        when (event) {
+            QiblaUiEvent.OnStart -> onStart()
+            QiblaUiEvent.OnDispose -> onDispose()
+        }
+    }
+
+    private fun onStart() {
         viewModelScope.launch {
             val location = appLocationManager.getLastKnownLocation()
 
@@ -49,7 +57,7 @@ class QiblaViewModel @Inject constructor(
 
     }
 
-    fun onDispose() {
+    private fun onDispose() {
         orientationSensor.dispose()
     }
 

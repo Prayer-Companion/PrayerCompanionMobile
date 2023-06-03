@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.presentation.features.qibla
+package com.prayercompanion.prayercompanionandroid.presentation.features.qibla.components
 
 import android.os.Build.VERSION.SDK_INT
 import androidx.compose.foundation.Image
@@ -24,10 +24,13 @@ import coil.compose.rememberAsyncImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import com.prayercompanion.prayercompanionandroid.R
+import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 
 @Preview
 @Composable
-fun QiblaSensorAccuracyDialog(onDismissRequest: () -> Unit = {}) {
+fun QiblaSensorAccuracyDialog(
+    onDismissRequest: () -> Unit = {}
+) = PrayerCompanionAndroidTheme {
     val imageLoader = ImageLoader.Builder(LocalContext.current)
         .components {
             if (SDK_INT >= 28) {
