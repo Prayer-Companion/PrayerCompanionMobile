@@ -3,13 +3,15 @@ package com.prayercompanion.prayercompanionandroid.data.di
 import android.content.Context
 import androidx.room.Room
 import com.prayercompanion.prayercompanionandroid.BuildConfig
-import com.prayercompanion.prayercompanionandroid.data.local.PrayerCompanionDatabase
-import com.prayercompanion.prayercompanionandroid.data.local.daos.PrayersInfoDao
+import com.prayercompanion.prayercompanionandroid.data.local.db.PrayerCompanionDatabase
+import com.prayercompanion.prayercompanionandroid.data.local.db.daos.PrayersInfoDao
 import com.prayercompanion.prayercompanionandroid.data.remote.PrayerCompanionApi
 import com.prayercompanion.prayercompanionandroid.data.repositories.PrayersRepositoryImpl
+import com.prayercompanion.prayercompanionandroid.data.repositories.QuranRepositoryImpl
 import com.prayercompanion.prayercompanionandroid.data.utils.AndroidPrayersAlarmScheduler
 import com.prayercompanion.prayercompanionandroid.data.utils.Consts
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
+import com.prayercompanion.prayercompanionandroid.domain.repositories.QuranRepository
 import com.prayercompanion.prayercompanionandroid.domain.usecases.UpdateAuthToken
 import com.prayercompanion.prayercompanionandroid.domain.utils.PrayersAlarmScheduler
 import dagger.Module
@@ -80,6 +82,12 @@ class DataModule {
     internal fun providePrayersRepository(
         usecase: PrayersRepositoryImpl
     ): PrayersRepository = usecase
+
+    @Provides
+    @Singleton
+    internal fun provideQuranRepository(
+        usecase: QuranRepositoryImpl
+    ): QuranRepository = usecase
 
     @Provides
     @Singleton

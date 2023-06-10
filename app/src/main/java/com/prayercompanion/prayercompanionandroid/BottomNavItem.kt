@@ -10,5 +10,17 @@ enum class BottomNavItem(
     @DrawableRes val icon: Int
 ) {
     Qibla(Route.Qibla.name, R.string.qibla_tab, R.drawable.ic_qibla),
-    Home(Route.Home.name, R.string.home_tab, R.drawable.ic_mosque)
+    Home(Route.Home.name, R.string.home_tab, R.drawable.ic_mosque),
+    Quran(Route.Quran.name, R.string.quran_tab, R.drawable.ic_quran);
+
+    companion object {
+
+        fun getOrdered(): List<BottomNavItem> {
+            return listOf(
+                Quran,
+                Home,
+                Qibla
+            )
+        }
+    }
 }

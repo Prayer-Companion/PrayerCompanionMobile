@@ -2,6 +2,8 @@ package com.prayercompanion.prayercompanionandroid.data.remote
 
 import com.prayercompanion.prayercompanionandroid.data.remote.dto.DayPrayerResponse
 import com.prayercompanion.prayercompanionandroid.data.remote.dto.DayPrayerStatusResponse
+import com.prayercompanion.prayercompanionandroid.data.remote.dto.MemorizedChapterVersesResponse
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.PUT
 import retrofit2.http.Query
@@ -54,5 +56,30 @@ interface PrayerCompanionApi {
         @Query("endDate") endDate: String
     ): List<DayPrayerStatusResponse>
 
+    /**
+     * Get all memorized Chapters Verses
+     * */
+    @GET("v1/user/memorizedSurahAyat")
+    suspend fun getMemorizedChapterVerses(): List<MemorizedChapterVersesResponse>
+    
+    /**
+     * Insert or update a Chapter Verses for the user
+     * @param startVerse: starting aya index inclusive
+     * @param endVerse: ending aya index inclusive
+     * */
+    @PUT("v1/user/memorizedSurahAyat")
+    suspend fun addOrUpdateMemorizedChapterVerses(
+        @Query("surahId") chapterId: Int,
+        @Query("startAya") startVerse: Int,
+        @Query("endAya") endVerse: Int
+    )
+
+    /**
+     * Delete a Chapter Verses from the user memorized collection
+     * */
+    @DELETE("v1/user/memorizedSurahAyat")
+    suspend fun deleteMemorizedChapterVerses(
+        @Query("surahId") chapterId: Int
+    )
 
 }

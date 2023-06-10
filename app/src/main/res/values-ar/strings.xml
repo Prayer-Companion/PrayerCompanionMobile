@@ -17,6 +17,7 @@
 
     <string name="home_tab">الرئيسية</string>
     <string name="qibla_tab">القبلة</string>
+    <string name="quran_tab">القرآن</string>
 
     <string name="jamaah_prayer_status">جماعة</string>
     <string name="on_time_prayer_status">على الوقت</string>
@@ -52,6 +53,16 @@
 
     <string name="qibla_dialog_sensor_accuracy_title">هل دقة المستشعر منخفضة ؟</string>
     <string name="qibla_dialog_sensor_accuracy_text">يرجى تحريك هاتفك في الهواء على شكل الرقم 8 من اجل الحصول على اتجاهات القبلة الدقيقة</string>
+
+    <string name="verses_count">%1$d أية</string>
+    <string name="from_verse">من آية</string>
+    <string name="to_verse">الى آية</string>
+
+    <string name="quran_title">السور المحفوظة</string>
+    <string name="chapter_name">اسم السورة</string>
+
+    <string name="edit_aya_from">من</string>
+    <string name="edit_aya_to">الى</string>
 
     <!-- General -->
     <string name="ok">حسنا</string>

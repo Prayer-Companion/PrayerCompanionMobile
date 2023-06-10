@@ -6,6 +6,7 @@ import com.prayercompanion.prayercompanionandroid.domain.Consts
 import com.prayercompanion.prayercompanionandroid.domain.PrayersFakeRepository
 import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
+import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetNextPrayer
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi

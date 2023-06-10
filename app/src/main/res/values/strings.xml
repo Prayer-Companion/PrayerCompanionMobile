@@ -15,6 +15,7 @@
 
     <string name="home_tab">Home</string>
     <string name="qibla_tab">Qibla</string>
+    <string name="quran_tab">Quran</string>
 
     <string name="missed_prayer_status">Missed</string>
     <string name="on_time_prayer_status">On Time</string>
@@ -49,6 +50,16 @@
     <string name="qibla_dialog_sensor_accuracy_title">The accuracy is low ?</string>
     <string name="qibla_dialog_sensor_accuracy_text">Kindly rotate your phone and make an 8 in the air in order to get accuracte Qibla directions</string>
 
+    <string name="verses_count">%1$d verses</string>
+    <string name="from_verse">From verse</string>
+    <string name="to_verse">To verse</string>
+
+    <string name="quran_title">Memorized Chapters</string>
+    <string name="chapter_name">Chapter name</string>
+
+    <string name="edit_aya_from">From</string>
+    <string name="edit_aya_to">To</string>
+
     <!-- General -->
     <string name="ok">OK</string>
 
@@ -56,4 +67,5 @@
     <string name="error_something_went_wrong">Sorry Something went wrong</string>
     <string name="current_prayer">Current Prayer</string>
     <string name="skip">Skip</string>
+
 </resources>

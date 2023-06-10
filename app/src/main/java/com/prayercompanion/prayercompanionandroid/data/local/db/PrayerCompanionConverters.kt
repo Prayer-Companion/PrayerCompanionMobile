@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.data.local
+package com.prayercompanion.prayercompanionandroid.data.local.db
 
 import androidx.room.TypeConverter
 import java.time.LocalDateTime

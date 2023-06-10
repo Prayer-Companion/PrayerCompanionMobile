@@ -1,6 +1,6 @@
 package com.prayercompanion.prayercompanionandroid.data.remote.mappers
 
-import com.prayercompanion.prayercompanionandroid.data.local.entities.PrayerInfoEntity
+import com.prayercompanion.prayercompanionandroid.data.local.db.entities.PrayerInfoEntity
 import com.prayercompanion.prayercompanionandroid.data.remote.dto.DayPrayerResponse
 import com.prayercompanion.prayercompanionandroid.data.remote.dto.DayPrayerStatusResponse
 import com.prayercompanion.prayercompanionandroid.data.utils.Consts

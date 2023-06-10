@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.domain.usecases
+package com.prayercompanion.prayercompanionandroid.domain.usecases.prayers
 
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus

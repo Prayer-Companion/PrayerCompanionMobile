@@ -1,11 +1,11 @@
-package com.prayercompanion.prayercompanionandroid.data.local.daos
+package com.prayercompanion.prayercompanionandroid.data.local.db.daos
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import com.prayercompanion.prayercompanionandroid.atEndOfDay
-import com.prayercompanion.prayercompanionandroid.data.local.entities.PrayerInfoEntity
+import com.prayercompanion.prayercompanionandroid.data.local.db.entities.PrayerInfoEntity
 import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import kotlinx.coroutines.flow.Flow

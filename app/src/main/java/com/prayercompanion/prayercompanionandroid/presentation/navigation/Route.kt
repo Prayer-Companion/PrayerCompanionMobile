@@ -6,4 +6,5 @@ enum class Route(val bottomNavBar: Boolean) {
     PermissionsRequests(false),
     Home(true),
     Qibla(true),
+    Quran(true),
 }

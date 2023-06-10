@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.data.local.entities
+package com.prayercompanion.prayercompanionandroid.data.local.db.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

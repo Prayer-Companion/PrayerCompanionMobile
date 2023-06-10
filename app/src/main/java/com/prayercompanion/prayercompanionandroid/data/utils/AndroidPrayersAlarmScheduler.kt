@@ -7,7 +7,7 @@ import android.content.Context
 import android.content.Intent
 import com.prayercompanion.prayercompanionandroid.data.receivers.AlarmReceiver
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerNotificationItem
-import com.prayercompanion.prayercompanionandroid.domain.usecases.GetDayPrayers
+import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetDayPrayers
 import com.prayercompanion.prayercompanionandroid.domain.utils.PrayersAlarmScheduler
 import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
 import dagger.hilt.android.qualifiers.ApplicationContext

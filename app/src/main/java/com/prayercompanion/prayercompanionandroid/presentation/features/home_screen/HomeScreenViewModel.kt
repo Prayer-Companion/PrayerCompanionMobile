@@ -14,11 +14,11 @@ import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.models.RemainingDuration
-import com.prayercompanion.prayercompanionandroid.domain.usecases.GetCurrentPrayer
-import com.prayercompanion.prayercompanionandroid.domain.usecases.GetDayPrayers
-import com.prayercompanion.prayercompanionandroid.domain.usecases.GetLastWeekStatusesOverView
-import com.prayercompanion.prayercompanionandroid.domain.usecases.GetNextPrayer
-import com.prayercompanion.prayercompanionandroid.domain.usecases.UpdatePrayerStatus
+import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetCurrentPrayer
+import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetDayPrayers
+import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetLastWeekStatusesOverView
+import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetNextPrayer
+import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.UpdatePrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText

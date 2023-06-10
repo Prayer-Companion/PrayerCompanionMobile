@@ -12,6 +12,9 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
+import androidx.compose.material.Snackbar
+import androidx.compose.material.SnackbarHost
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -20,6 +23,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -39,6 +43,8 @@ import com.prayercompanion.prayercompanionandroid.presentation.features.onboardi
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.splash_screen.SplashScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.QiblaScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.QiblaViewModel
+import com.prayercompanion.prayercompanionandroid.presentation.features.quran.QuranScreen
+import com.prayercompanion.prayercompanionandroid.presentation.features.quran.QuranViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -67,6 +73,14 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     scaffoldState = scaffoldState,
+                    snackbarHost = {
+                        SnackbarHost(it) { data ->
+                            Snackbar(
+                                snackbarData = data,
+                                backgroundColor = Color.LightGray,
+                            )
+                        }
+                    },
                     bottomBar = {
                         if (shouldShowBottomNavigationBar) {
                             BottomNavigationBar(navController)
@@ -111,11 +125,21 @@ class MainActivity : ComponentActivity() {
                                 viewModel.qiblaDirection
                             )
                         }
+                        composable(Route.Quran.name) {
+                            val viewModel: QuranViewModel = hiltViewModel()
+                            QuranScreen(
+                                state = viewModel.state,
+                                onEvent = viewModel::onEvent,
+                                uiEventsChannel = viewModel.uiEventsChannel,
+                                showSnackBar = {
+                                    showSnackBar(scaffoldState, it)
+                                }
+                            )
+                        }
                     }
                 }
             }
         }
-
     }
 
     @Composable
@@ -129,7 +153,7 @@ class MainActivity : ComponentActivity() {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentDestination = navBackStackEntry?.destination
 
-            BottomNavItem.values().forEach { screen ->
+            BottomNavItem.getOrdered().forEach { screen ->
                 BottomNavigationItem(
                     icon = {
                         Icon(
@@ -159,4 +183,9 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private suspend fun showSnackBar(scaffoldState: ScaffoldState, message: String) {
+        scaffoldState
+            .snackbarHostState
+            .showSnackbar(message)
+    }
 }
