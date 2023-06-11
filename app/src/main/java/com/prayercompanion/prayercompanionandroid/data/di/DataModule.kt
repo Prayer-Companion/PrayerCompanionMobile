@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.prayercompanion.prayercompanionandroid.BuildConfig
 import com.prayercompanion.prayercompanionandroid.data.local.db.PrayerCompanionDatabase
 import com.prayercompanion.prayercompanionandroid.data.local.db.daos.PrayersInfoDao
+import com.prayercompanion.prayercompanionandroid.data.local.db.daos.QuranReadingSectionsDao
 import com.prayercompanion.prayercompanionandroid.data.remote.PrayerCompanionApi
 import com.prayercompanion.prayercompanionandroid.data.repositories.PrayersRepositoryImpl
 import com.prayercompanion.prayercompanionandroid.data.repositories.QuranRepositoryImpl
@@ -109,6 +110,12 @@ class DataModule {
     @Singleton
     fun providePrayersInfoDao(prayerCompanionDatabase: PrayerCompanionDatabase): PrayersInfoDao {
         return prayerCompanionDatabase.prayersInfoDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideQuranReadingSectionsDao(prayerCompanionDatabase: PrayerCompanionDatabase): QuranReadingSectionsDao {
+        return prayerCompanionDatabase.quranReadingSectionsDao()
     }
 
 }

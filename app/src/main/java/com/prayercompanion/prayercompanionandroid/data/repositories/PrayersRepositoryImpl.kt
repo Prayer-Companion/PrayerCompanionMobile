@@ -3,7 +3,7 @@ package com.prayercompanion.prayercompanionandroid.data.repositories
 import com.prayercompanion.prayercompanionandroid.atEndOfDay
 import com.prayercompanion.prayercompanionandroid.data.local.db.daos.PrayersInfoDao
 import com.prayercompanion.prayercompanionandroid.data.local.db.entities.PrayerInfoEntity
-import com.prayercompanion.prayercompanionandroid.data.local.db.entities.toDayPrayerInfo
+import com.prayercompanion.prayercompanionandroid.data.local.db.mappers.toDayPrayerInfo
 import com.prayercompanion.prayercompanionandroid.data.local.db.mappers.toPrayerInfo
 import com.prayercompanion.prayercompanionandroid.data.remote.PrayerCompanionApi
 import com.prayercompanion.prayercompanionandroid.data.remote.dto.DayPrayerResponse

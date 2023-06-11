@@ -7,13 +7,14 @@ import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.NavOptionsBuilder
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
+import com.squareup.moshi.Moshi
 import java.io.Serializable
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
 fun NavController.navigate(event: UiEvent.Navigate, builder: NavOptionsBuilder.() -> Unit = {}) {
-    this.navigate(route = event.route.name, builder)
+    this.navigate(route = event.route.name + event.args.joinToString { "/$it" }, builder)
 }
 
 fun Context.showToast(message: String?, length: Int = Toast.LENGTH_SHORT) {
@@ -39,4 +40,20 @@ fun <T> Result.Companion.failure(message: String): Result<T> {
 
 fun LocalDate.atEndOfDay(): LocalDateTime {
     return this.atTime(LocalTime.MAX)
+}
+
+inline fun <reified T> fromJson(str: String): T? {
+    return Moshi
+        .Builder()
+        .build()
+        .adapter(T::class.java)
+        .fromJson(str)
+}
+
+inline fun <reified T> toJson(t: T): String {
+    return Moshi
+        .Builder()
+        .build()
+        .adapter(T::class.java)
+        .toJson(t)
 }

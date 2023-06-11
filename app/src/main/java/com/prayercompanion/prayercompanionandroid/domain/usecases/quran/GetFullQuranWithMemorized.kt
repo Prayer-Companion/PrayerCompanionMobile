@@ -1,10 +1,10 @@
 package com.prayercompanion.prayercompanionandroid.domain.usecases.quran
 
-import com.prayercompanion.prayercompanionandroid.domain.models.Quran
+import com.prayercompanion.prayercompanionandroid.domain.models.quran.Quran
 import com.prayercompanion.prayercompanionandroid.domain.repositories.QuranRepository
 import javax.inject.Inject
 
-class GetFullQuran @Inject constructor(
+class GetFullQuranWithMemorized @Inject constructor(
     private val quranRepository: QuranRepository
 ) {
 

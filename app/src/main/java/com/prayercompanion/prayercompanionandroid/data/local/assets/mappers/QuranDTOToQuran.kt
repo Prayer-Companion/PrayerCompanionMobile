@@ -1,9 +1,9 @@
 package com.prayercompanion.prayercompanionandroid.data.local.assets.mappers
 
 import com.prayercompanion.prayercompanionandroid.data.local.assets.dto.QuranDTO
-import com.prayercompanion.prayercompanionandroid.domain.models.Quran
-import com.prayercompanion.prayercompanionandroid.domain.models.QuranChapter
-import com.prayercompanion.prayercompanionandroid.domain.models.QuranVerse
+import com.prayercompanion.prayercompanionandroid.domain.models.quran.Quran
+import com.prayercompanion.prayercompanionandroid.domain.models.quran.QuranChapter
+import com.prayercompanion.prayercompanionandroid.domain.models.quran.QuranVerse
 
 fun QuranDTO.toQuran(): Quran {
     val chapters = this.chapters.map { chapterDTO ->

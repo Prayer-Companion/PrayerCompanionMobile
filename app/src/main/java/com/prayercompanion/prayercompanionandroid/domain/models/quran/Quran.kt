@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.domain.models
+package com.prayercompanion.prayercompanionandroid.domain.models.quran
 
 data class Quran(
     val chapters: List<QuranChapter>

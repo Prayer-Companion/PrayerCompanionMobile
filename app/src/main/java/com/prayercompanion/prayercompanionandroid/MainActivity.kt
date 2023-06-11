@@ -30,11 +30,14 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.prayercompanion.prayercompanionandroid.domain.models.quran.PrayerQuranReadingSections
 import com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.HomeScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.permissions.PermissionsRequestScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.permissions.PermissionsRequestViewModel
@@ -43,8 +46,9 @@ import com.prayercompanion.prayercompanionandroid.presentation.features.onboardi
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.splash_screen.SplashScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.QiblaScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.QiblaViewModel
-import com.prayercompanion.prayercompanionandroid.presentation.features.quran.QuranScreen
-import com.prayercompanion.prayercompanionandroid.presentation.features.quran.QuranViewModel
+import com.prayercompanion.prayercompanionandroid.presentation.features.quran.full_sections.FullPrayerQuranSections
+import com.prayercompanion.prayercompanionandroid.presentation.features.quran.list.QuranScreen
+import com.prayercompanion.prayercompanionandroid.presentation.features.quran.list.QuranViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -66,7 +70,7 @@ class MainActivity : ComponentActivity() {
                     mutableStateOf(false)
                 }
                 navController.addOnDestinationChangedListener { _, destination, _ ->
-                    val route = Route.valueOf(destination.route ?: Route.SignIn.name)
+                    val route = Route.fromStringRoute(destination.route)
                     shouldShowBottomNavigationBar = route.bottomNavBar
                 }
 
@@ -86,16 +90,16 @@ class MainActivity : ComponentActivity() {
                             BottomNavigationBar(navController)
                         }
                     }
-                ) {
+                ) { scaffold  ->
                     NavHost(
-                        modifier = Modifier.padding(it),
+                        modifier = Modifier.padding(scaffold),
                         navController = navController,
-                        startDestination = Route.SplashScreen.name,
+                        startDestination = Route.SplashScreen.routeName,
                     ) {
-                        composable(Route.SplashScreen.name) {
+                        composable(Route.SplashScreen.routeName) {
                             SplashScreen(navController::navigate)
                         }
-                        composable(Route.SignIn.name) {
+                        composable(Route.SignIn.routeName) {
                             val viewModel: SignInViewModel = hiltViewModel()
                             SignInScreen(
                                 navigate = navController::navigate,
@@ -105,7 +109,7 @@ class MainActivity : ComponentActivity() {
                                 isLoadingState = viewModel.isLoading
                             )
                         }
-                        composable(Route.PermissionsRequests.name) {
+                        composable(Route.PermissionsRequests.routeName) {
                             val viewModel: PermissionsRequestViewModel = hiltViewModel()
                             PermissionsRequestScreen(
                                 navigate = navController::navigate,
@@ -114,20 +118,21 @@ class MainActivity : ComponentActivity() {
                                 onEvent = viewModel::onEvent
                             )
                         }
-                        composable(Route.Home.name) {
+                        composable(Route.Home.routeName) {
                             HomeScreen(scaffoldState = scaffoldState)
                         }
-                        composable(Route.Qibla.name) {
+                        composable(Route.Qibla.routeName) {
                             val viewModel: QiblaViewModel = hiltViewModel()
                             QiblaScreen(
-                                viewModel::onEvent,
-                                viewModel.sensorAccuracy,
-                                viewModel.qiblaDirection
+                                onEvent = viewModel::onEvent,
+                                sensorAccuracy = viewModel.sensorAccuracy,
+                                qiblaDirection = viewModel.qiblaDirection
                             )
                         }
-                        composable(Route.Quran.name) {
+                        composable(Route.Quran.routeName) {
                             val viewModel: QuranViewModel = hiltViewModel()
                             QuranScreen(
+                                navigate = navController::navigate,
                                 state = viewModel.state,
                                 onEvent = viewModel::onEvent,
                                 uiEventsChannel = viewModel.uiEventsChannel,
@@ -135,6 +140,19 @@ class MainActivity : ComponentActivity() {
                                     showSnackBar(scaffoldState, it)
                                 }
                             )
+                        }
+                        composable(
+                            route = Route.FullQuranSections.routeName,
+                            arguments = listOf(
+                                navArgument("sections") {
+                                    type = NavType.StringType
+                                }
+                            )
+                        ) {
+                            val sectionsJson = it.arguments?.getString("sections") ?: "{}"
+                            val sections = fromJson(sectionsJson) ?: PrayerQuranReadingSections.EMPTY
+
+                            FullPrayerQuranSections(sections)
                         }
                     }
                 }
@@ -168,7 +186,7 @@ class MainActivity : ComponentActivity() {
                             // Pop up to the start destination of the graph to
                             // avoid building up a large stack of destinations
                             // on the back stack as users select items
-                            popUpTo(Route.Home.name) {
+                            popUpTo(Route.Home.routeName) {
                                 saveState = true
                             }
                             // Avoid multiple copies of the same destination when

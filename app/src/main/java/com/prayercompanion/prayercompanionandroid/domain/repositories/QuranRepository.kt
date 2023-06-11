@@ -1,6 +1,7 @@
 package com.prayercompanion.prayercompanionandroid.domain.repositories
 
-import com.prayercompanion.prayercompanionandroid.domain.models.Quran
+import com.prayercompanion.prayercompanionandroid.domain.models.quran.PrayerQuranReadingSections
+import com.prayercompanion.prayercompanionandroid.domain.models.quran.Quran
 
 interface QuranRepository {
     suspend fun getFullQuran(): Result<Quran>
@@ -17,4 +18,6 @@ interface QuranRepository {
     ): Result<Unit>
 
     suspend fun deleteMemorizedChapterAyat(chapterId: Int): Result<Unit>
+    suspend fun getNextQuranReadingSections(): Result<PrayerQuranReadingSections>
+    suspend fun markQuranSectionAsRead(quranReadingSections: PrayerQuranReadingSections)
 }

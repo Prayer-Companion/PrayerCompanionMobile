@@ -7,9 +7,13 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.sp
 import com.prayercompanion.prayercompanionandroid.R
 
-// Set of Material typography styles to start with
 val BoldFontFamily = FontFamily(Font(R.font.bold))
 val RegularFontFamily = FontFamily(Font(R.font.regular))
+// Set of Material typography styles to start with
+val SmallTextStyle = TextStyle(
+    fontFamily = RegularFontFamily,
+    fontSize = 8.sp
+)
 
 val Typography = Typography(
     h1 = TextStyle(

@@ -3,6 +3,7 @@ package com.prayercompanion.prayercompanionandroid.data.remote
 import com.prayercompanion.prayercompanionandroid.data.remote.dto.DayPrayerResponse
 import com.prayercompanion.prayercompanionandroid.data.remote.dto.DayPrayerStatusResponse
 import com.prayercompanion.prayercompanionandroid.data.remote.dto.MemorizedChapterVersesResponse
+import com.prayercompanion.prayercompanionandroid.data.remote.dto.QuranReadingSectionResponse
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.PUT
@@ -61,7 +62,7 @@ interface PrayerCompanionApi {
      * */
     @GET("v1/user/memorizedSurahAyat")
     suspend fun getMemorizedChapterVerses(): List<MemorizedChapterVersesResponse>
-    
+
     /**
      * Insert or update a Chapter Verses for the user
      * @param startVerse: starting aya index inclusive
@@ -81,5 +82,8 @@ interface PrayerCompanionApi {
     suspend fun deleteMemorizedChapterVerses(
         @Query("surahId") chapterId: Int
     )
+
+    @GET("v1/user/quranReadingSections")
+    suspend fun getQuranReadingSections(): List<QuranReadingSectionResponse>
 
 }

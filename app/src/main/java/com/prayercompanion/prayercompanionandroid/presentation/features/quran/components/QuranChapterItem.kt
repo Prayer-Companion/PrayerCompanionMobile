@@ -37,22 +37,15 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.domain.models.QuranChapter
+import com.prayercompanion.prayercompanionandroid.domain.models.quran.QuranChapter
 import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
-import com.prayercompanion.prayercompanionandroid.presentation.theme.RegularFontFamily
-
-val SmallTextStyle = TextStyle(
-    fontFamily = RegularFontFamily,
-    fontSize = 8.sp
-)
+import com.prayercompanion.prayercompanionandroid.presentation.theme.SmallTextStyle
 
 @Composable
 fun QuranChapterItem(
