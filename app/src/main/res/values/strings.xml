@@ -59,7 +59,7 @@
 
     <string name="edit_aya_from">From</string>
     <string name="edit_aya_to">To</string>
-    <string name="quran_reading_section">{سورة %1$s (%2$d-%3$s): %4$s}</string>
+    <string name="quran_reading_section">سورة %1$s (%2$d-%3$s):\n {%4$s}</string>
     <string name="first_quran_reading_section">First section</string>
     <string name="second_quran_reading_section">Second section</string>
     <string name="show_full_quran_reading_sections">Show all</string>
