@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
@@ -99,14 +100,18 @@ fun PrayerItem(
                 Text(
                     text = stringResource(id = status.nameId),
                     color = MaterialTheme.colors.onPrimary,
-                    style = MaterialTheme.typography.button
+                    style = MaterialTheme.typography.button,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.weight(2.5f),
                 )
             }
 
             Icon(
-                modifier = Modifier.clickable {
-                    isStatusSelectorExpanded = !isStatusSelectorExpanded
-                },
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable {
+                        isStatusSelectorExpanded = !isStatusSelectorExpanded
+                    },
                 imageVector = Icons.Default.ArrowDropDown,
                 contentDescription = "",
                 tint = MaterialTheme.colors.onPrimary
