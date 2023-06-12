@@ -1,6 +1,8 @@
 package com.prayercompanion.prayercompanionandroid
 
+import android.os.Build
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -62,6 +64,11 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.setDecorFitsSystemWindows(true)
+        } else {
+            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        }
         setContent {
             PrayerCompanionAndroidTheme {
                 val navController = rememberNavController()
@@ -90,7 +97,7 @@ class MainActivity : ComponentActivity() {
                             BottomNavigationBar(navController)
                         }
                     }
-                ) { scaffold  ->
+                ) { scaffold ->
                     NavHost(
                         modifier = Modifier.padding(scaffold),
                         navController = navController,
@@ -150,7 +157,8 @@ class MainActivity : ComponentActivity() {
                             )
                         ) {
                             val sectionsJson = it.arguments?.getString("sections") ?: "{}"
-                            val sections = fromJson(sectionsJson) ?: PrayerQuranReadingSections.EMPTY
+                            val sections = fromJson(sectionsJson)
+                                ?: PrayerQuranReadingSections.EMPTY
 
                             FullPrayerQuranSections(sections)
                         }

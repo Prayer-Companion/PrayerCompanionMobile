@@ -64,6 +64,7 @@ class QuranViewModel @Inject constructor(
             )
 
             is QuranEvent.OnChapterDeselected -> removeMemorizedChapterAyat(event.chapterId)
+            is QuranEvent.OnSearchQueryChanged -> onSearchQueryChanged(event.query)
             QuranEvent.OnNextSectionClicked -> onNextSectionClicked()
             QuranEvent.OnViewFullClicked -> onViewFullClicked()
         }
@@ -141,6 +142,10 @@ class QuranViewModel @Inject constructor(
                 listOf(toJson(sections))
             )
         )
+    }
+
+    private fun onSearchQueryChanged(query: String) {
+        state = state.copy(searchQuery = query)
     }
 
     private fun getNextSections() {

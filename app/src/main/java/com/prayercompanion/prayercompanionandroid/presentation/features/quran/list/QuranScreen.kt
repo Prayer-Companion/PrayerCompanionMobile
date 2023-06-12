@@ -26,11 +26,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -62,9 +57,6 @@ fun QuranScreen(
 
     val spacing = LocalSpacing.current
     val context = LocalContext.current
-    var searchText by remember {
-        mutableStateOf("")
-    }
 
     LaunchedEffect(key1 = true) {
         uiEventsChannel.collect {
@@ -72,9 +64,11 @@ fun QuranScreen(
                 is UiEvent.ShowErrorSnackBar -> {
                     showSnackBar(it.errorMessage.asString(context))
                 }
+
                 is UiEvent.Navigate -> {
                     navigate(it) {}
                 }
+
                 else -> Unit
             }
         }
@@ -155,61 +149,63 @@ fun QuranScreen(
             } else {
                 Spacer(modifier = Modifier.height(spacing.spaceMedium))
             }
-            if (false) {
-                Row(
-                    modifier = Modifier,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    TextField(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = spacing.spaceLarge),
-                        value = searchText,
-                        leadingIcon = {
-                            Icon(
-                                modifier = Modifier.size(28.dp),
-                                imageVector = Icons.Default.Search,
-                                contentDescription = "Search Icon",
-                                tint = MaterialTheme.colors.onPrimary,
-                            )
-                        },
-                        onValueChange = {
-                            searchText = it
-                        },
-                        placeholder = {
-                            Text(
-                                text = stringResource(id = R.string.chapter_name),
-                                color = MaterialTheme.colors.secondary,
-                                style = MaterialTheme.typography.subtitle2
-                            )
-                        },
-                        colors = TextFieldDefaults
-                            .textFieldColors(
-                                textColor = MaterialTheme.colors.secondary,
-                                backgroundColor = MaterialTheme.colors.primary,
-                                cursorColor = MaterialTheme.colors.onPrimary,
-                                disabledIndicatorColor = Color.Transparent,
-                                errorIndicatorColor = Color.Transparent,
-                                focusedIndicatorColor = Color.Transparent,
-                                unfocusedIndicatorColor = Color.Transparent,
-                            ),
-                        textStyle = MaterialTheme.typography.subtitle2,
-                        singleLine = true,
-                        shape = RoundedCornerShape(15.dp)
+            TextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = spacing.spaceMedium),
+                value = state.searchQuery,
+                leadingIcon = {
+                    Icon(
+                        modifier = Modifier.size(28.dp),
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Search Icon",
+                        tint = MaterialTheme.colors.onPrimary,
                     )
-                }
-            }
+                },
+                onValueChange = {
+                    onEvent(QuranEvent.OnSearchQueryChanged(it))
+                },
+                placeholder = {
+                    Text(
+                        text = stringResource(id = R.string.chapter_name),
+                        color = MaterialTheme.colors.secondary,
+                        style = MaterialTheme.typography.subtitle2
+                    )
+                },
+                colors = TextFieldDefaults
+                    .textFieldColors(
+                        textColor = MaterialTheme.colors.secondary,
+                        backgroundColor = MaterialTheme.colors.primary,
+                        cursorColor = MaterialTheme.colors.onPrimary,
+                        disabledIndicatorColor = Color.Transparent,
+                        errorIndicatorColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                    ),
+                textStyle = MaterialTheme.typography.subtitle2,
+                singleLine = true,
+                shape = RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp)
+            )
+            Box(
+                modifier = Modifier
+                    .height(2.dp)
+                    .background(color = MaterialTheme.colors.secondary),
+            )
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(spacing.spaceMedium)
+                    .padding(horizontal = spacing.spaceMedium)
+                    .padding(bottom = spacing.spaceMedium)
                     .background(
                         color = MaterialTheme.colors.primary,
-                        shape = RoundedCornerShape(15.dp)
+                        shape = RoundedCornerShape(bottomEnd = 15.dp, bottomStart = 15.dp)
                     )
                     .padding(vertical = spacing.spaceSmall, horizontal = 2.dp)
             ) {
-                items(state.quran.chapters) { chapter ->
+                items(
+                    items = state.filteredQuranChapters,
+                    key = { it.id }
+                ) { chapter ->
                     QuranChapterItem(
                         modifier = Modifier
                             .fillMaxWidth(),
