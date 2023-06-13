@@ -98,7 +98,7 @@ fun SignInScreen(
                         .aspectRatio(1f)
                         .align(Alignment.Center)
                         .background(MaterialTheme.colors.primary, RoundedCornerShape(100))
-                        .padding(10.dp),
+                        .padding(20.dp),
                     painter = painterResource(id = R.drawable.ic_app_logo),
                     contentDescription = "Location Icon"
                 )
