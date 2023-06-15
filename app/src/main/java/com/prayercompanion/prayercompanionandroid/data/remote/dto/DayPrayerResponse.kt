@@ -1,41 +1,41 @@
 package com.prayercompanion.prayercompanionandroid.data.remote.dto
 
-import com.squareup.moshi.Json
+import com.google.gson.annotations.SerializedName
 
 data class DayPrayerResponse(
     /**
      * Prayers date in dd/MM/yyyy format
      * */
-    @field:Json(name = "date")
+    @SerializedName("date")
     val date: String,
     /**
      * Prayer time in 24h format (HH:mm)
      * */
-    @field:Json(name = "fajr")
+    @SerializedName("fajr")
     val fajrTime: String,
     /**
      * Prayer time in 24h format (HH:mm)
      * */
-    @field:Json(name = "sunrise")
+    @SerializedName("sunrise")
     val duhaTime: String,
     /**
      * Prayer time in 24h format (HH:mm)
      * */
-    @field:Json(name = "dhuhr")
+    @SerializedName("dhuhr")
     val dhuhrTime: String,
     /**
      * Prayer time in 24h format (HH:mm)
      * */
-    @field:Json(name = "asr")
+    @SerializedName("asr")
     val asrTime: String,
     /**
      * Prayer time in 24h format (HH:mm)
      * */
-    @field:Json(name = "maghrib")
+    @SerializedName("maghrib")
     val maghribTime: String,
     /**
      * Prayer time in 24h format (HH:mm)
      * */
-    @field:Json(name = "isha")
+    @SerializedName("isha")
     val ishaTime: String,
 )

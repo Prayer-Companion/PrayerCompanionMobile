@@ -6,8 +6,8 @@ import android.os.Build
 import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.NavOptionsBuilder
+import com.google.gson.Gson
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
-import com.squareup.moshi.Moshi
 import java.io.Serializable
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -43,17 +43,9 @@ fun LocalDate.atEndOfDay(): LocalDateTime {
 }
 
 inline fun <reified T> fromJson(str: String): T? {
-    return Moshi
-        .Builder()
-        .build()
-        .adapter(T::class.java)
-        .fromJson(str)
+    return Gson().fromJson(str, T::class.java)
 }
 
 inline fun <reified T> toJson(t: T): String {
-    return Moshi
-        .Builder()
-        .build()
-        .adapter(T::class.java)
-        .toJson(t)
+    return Gson().toJson(t)
 }

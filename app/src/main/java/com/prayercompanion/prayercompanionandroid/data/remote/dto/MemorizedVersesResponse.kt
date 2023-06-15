@@ -1,12 +1,12 @@
 package com.prayercompanion.prayercompanionandroid.data.remote.dto
 
-import com.squareup.moshi.Json
+import com.google.gson.annotations.SerializedName
 
 data class MemorizedChapterVersesResponse(
-    @field:Json(name = "surahId")
+    @SerializedName("surahId")
     val chapterId: Int,
-    @field:Json(name = "startAya")
+    @SerializedName("startAya")
     val startVerse: Int,
-    @field:Json(name = "endAya")
+    @SerializedName("endAya")
     val endVerse: Int
 )

@@ -24,7 +24,7 @@ import okhttp3.OkHttpClient
 import okhttp3.internal.http.HTTP_UNAUTHORIZED
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
 import javax.inject.Singleton
 
@@ -69,10 +69,10 @@ class DataModule {
 
     @Provides
     @Singleton
-    fun provideOpenFoodApi(client: OkHttpClient): PrayerCompanionApi {
+    fun providePrayerCompanionApi(client: OkHttpClient): PrayerCompanionApi {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.PRAYER_COMPANION_API_BASE_URL)
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()
             .create()
