@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.presentation.features.quran.list
+package com.prayercompanion.prayercompanionandroid.presentation.features.quran.quran
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

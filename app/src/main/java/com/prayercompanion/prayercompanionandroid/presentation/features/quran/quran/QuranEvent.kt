@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.presentation.features.quran.list
+package com.prayercompanion.prayercompanionandroid.presentation.features.quran.quran
 
 sealed class QuranEvent {
     data class OnChapterSelected(

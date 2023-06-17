@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.presentation.features.quran.list
+package com.prayercompanion.prayercompanionandroid.presentation.features.quran.quran
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

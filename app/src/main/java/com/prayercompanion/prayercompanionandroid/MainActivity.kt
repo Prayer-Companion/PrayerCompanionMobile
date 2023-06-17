@@ -49,8 +49,8 @@ import com.prayercompanion.prayercompanionandroid.presentation.features.onboardi
 import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.QiblaScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.QiblaViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.features.quran.full_sections.FullPrayerQuranSections
-import com.prayercompanion.prayercompanionandroid.presentation.features.quran.list.QuranScreen
-import com.prayercompanion.prayercompanionandroid.presentation.features.quran.list.QuranViewModel
+import com.prayercompanion.prayercompanionandroid.presentation.features.quran.quran.QuranScreen
+import com.prayercompanion.prayercompanionandroid.presentation.features.quran.quran.QuranViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 import dagger.hilt.android.AndroidEntryPoint

@@ -15,7 +15,7 @@ android {
         applicationId "com.prayercompanion.prayercompanionandroid"
         minSdk 26
         targetSdk 33
-        versionCode 1
+        versionCode 3
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -56,7 +56,9 @@ android {
             signingConfig signingConfigs.release
 
             debuggable false
-            minifyEnabled true
+            // TODO currently proguard is creating a lot of issues
+            // lets revisit and make sure to set correct rules before enabling it again
+            minifyEnabled false
             manifestPlaceholders = [
                     app_name: "@string/app_name"
             ]

@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.presentation.features.quran.list
+package com.prayercompanion.prayercompanionandroid.presentation.features.quran.quran
 
 import com.prayercompanion.prayercompanionandroid.domain.models.quran.PrayerQuranReadingSections
 import com.prayercompanion.prayercompanionandroid.domain.models.quran.Quran
