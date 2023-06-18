@@ -1,6 +1,7 @@
 package com.prayercompanion.prayercompanionandroid.presentation.features.quran.quran
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,6 +27,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -79,25 +81,34 @@ fun QuranScreen(
         Column(modifier = Modifier.fillMaxSize()) {
             TitleHeader(title = stringResource(id = R.string.quran_title))
             val readingSections = state.sections
-            if (readingSections != null) {
+            val quranSectionsHeightFraction = if (readingSections != null) 0.4f else 0.2f
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(quranSectionsHeightFraction)
+                    .padding(top = spacing.spaceMedium, bottom = spacing.spaceSmall)
+                    .padding(horizontal = spacing.spaceMedium)
+            ) {
+                val shape = if (readingSections != null) {
+                    RoundedCornerShape(
+                        topEnd = 15.dp,
+                        topStart = 15.dp
+                    )
+                } else {
+                    RoundedCornerShape(15.dp)
+                }
+
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight(0.4f)
-                        .padding(top = spacing.spaceMedium, bottom = spacing.spaceSmall)
-                        .padding(horizontal = spacing.spaceMedium)
+                        .background(
+                            color = MaterialTheme.colors.primary,
+                            shape = shape
+                        )
+                        .weight(1f)
+                        .padding(spacing.spaceMedium)
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(
-                                color = MaterialTheme.colors.primary,
-                                shape = RoundedCornerShape(topEnd = 15.dp, topStart = 15.dp)
-                            )
-                            .weight(1f)
-                            .padding(spacing.spaceMedium)
-
-                    ) {
+                    if (readingSections != null) {
                         QuranSection(
                             modifier = Modifier.weight(1f),
                             stringResource(id = R.string.first_quran_reading_section),
@@ -109,7 +120,32 @@ fun QuranScreen(
                             stringResource(id = R.string.second_quran_reading_section),
                             readingSections.secondSection
                         )
+                    } else {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            if (state.quranChapters.any { it.isMemorized }) {
+                                Text(
+                                    modifier = Modifier.clickable {
+                                        onEvent(QuranEvent.OnLoadQuranSectionsClicked)
+                                    },
+                                    text = stringResource(id = R.string.load_quran_sections),
+                                    style = MaterialTheme.typography.body2,
+                                    textDecoration = TextDecoration.Underline,
+                                    color = MaterialTheme.colors.onPrimary
+                                )
+                            } else {
+                                Text(
+                                    text = stringResource(id = R.string.empty_quran_sections_prompt),
+                                    style = MaterialTheme.typography.body2,
+                                    color = MaterialTheme.colors.onPrimary
+                                )
+                            }
+                        }
                     }
+                }
+                if (readingSections != null) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -146,9 +182,8 @@ fun QuranScreen(
                         }
                     }
                 }
-            } else {
-                Spacer(modifier = Modifier.height(spacing.spaceMedium))
             }
+
             TextField(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -174,7 +209,7 @@ fun QuranScreen(
                 },
                 colors = TextFieldDefaults
                     .textFieldColors(
-                        textColor = MaterialTheme.colors.secondary,
+                        textColor = MaterialTheme.colors.onPrimary,
                         backgroundColor = MaterialTheme.colors.primary,
                         cursorColor = MaterialTheme.colors.onPrimary,
                         disabledIndicatorColor = Color.Transparent,

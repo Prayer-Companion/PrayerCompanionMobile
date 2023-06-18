@@ -9,16 +9,17 @@ import com.prayercompanion.prayercompanionandroid.domain.usecases.quran.AddMemor
 import com.prayercompanion.prayercompanionandroid.domain.usecases.quran.EditMemorizedChapterAyat
 import com.prayercompanion.prayercompanionandroid.domain.usecases.quran.GetFullQuranWithMemorized
 import com.prayercompanion.prayercompanionandroid.domain.usecases.quran.GetNextQuranReadingSections
+import com.prayercompanion.prayercompanionandroid.domain.usecases.quran.LoadQuranReadingSuggestions
 import com.prayercompanion.prayercompanionandroid.domain.usecases.quran.MarkQuranSectionAsRead
 import com.prayercompanion.prayercompanionandroid.domain.usecases.quran.RemoveMemorizedChapterAyat
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
-import com.prayercompanion.prayercompanionandroid.presentation.utils.toUiText
 import com.prayercompanion.prayercompanionandroid.toJson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -30,7 +31,8 @@ class QuranViewModel @Inject constructor(
     private val addMemorizedChapterAyat: AddMemorizedChapterAyat,
     private val editMemorizedChapterAyat: EditMemorizedChapterAyat,
     private val removeMemorizedChapterAyat: RemoveMemorizedChapterAyat,
-    private val getNextQuranReadingSections: GetNextQuranReadingSections,
+    private val getNextQuranReadingSectionsFlow: GetNextQuranReadingSections,
+    private val loadQuranReadingSuggestions: LoadQuranReadingSuggestions,
     private val markQuranSectionAsRead: MarkQuranSectionAsRead
 ) : ViewModel() {
 
@@ -41,12 +43,24 @@ class QuranViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            val quranResult = getFullQuranWithMemorized.call()
-            quranResult.onSuccess { quran ->
-                state = state.copy(quran = quran)
+            launch {
+                val quranResult = getFullQuranWithMemorized.call()
+                quranResult.onSuccess { quranChapters ->
+                    state.quranChapters = quranChapters
+                }
+            }
+            launch {
+                getNextQuranReadingSectionsFlow.call().collectLatest { sections ->
+                    withContext(Dispatchers.Main) {
+                        state.sections = sections
+                    }
+                }
+            }
+            launch {
+                loadQuranReadingSuggestions.call()
             }
         }
-        getNextSections()
+
     }
 
     fun onEvent(event: QuranEvent) {
@@ -65,6 +79,7 @@ class QuranViewModel @Inject constructor(
 
             is QuranEvent.OnChapterDeselected -> removeMemorizedChapterAyat(event.chapterId)
             is QuranEvent.OnSearchQueryChanged -> onSearchQueryChanged(event.query)
+            QuranEvent.OnLoadQuranSectionsClicked -> onLoadQuranSectionsClicked()
             QuranEvent.OnNextSectionClicked -> onNextSectionClicked()
             QuranEvent.OnViewFullClicked -> onViewFullClicked()
         }
@@ -75,14 +90,15 @@ class QuranViewModel @Inject constructor(
             val result = addMemorizedChapterAyat.call(chapterId, fromVerse, toVerse)
 
             result.onSuccess {
-                val quran = state.quran
-                quran.chapters.firstOrNull { it.id == chapterId }?.apply {
-                    isMemorized = true
-                    memorizedFrom = fromVerse
+                val quranChapters = state.quranChapters.toMutableList()
+                val index = quranChapters.indexOfFirst { it.id == chapterId }
+                quranChapters[index] = quranChapters[index].copy(
+                    isMemorized = true,
+                    memorizedFrom = fromVerse,
                     memorizedTo = toVerse
-                }
+                )
 
-                state = state.copy(quran = quran)
+                state.quranChapters = quranChapters
             }.onFailure {
                 sendUiEvent(UiEvent.ShowErrorSnackBar(UiText.DynamicString(it.toString())))
             }
@@ -95,14 +111,15 @@ class QuranViewModel @Inject constructor(
 
             result.onSuccess {
                 withContext(Dispatchers.Main) {
-                    val quran = state.quran
-                    quran.chapters.find { it.id == chapterId }?.apply {
-                        isMemorized = true
-                        memorizedFrom = fromVerse
+                    val quranChapters = state.quranChapters.toMutableList()
+                    val index = quranChapters.indexOfFirst { it.id == chapterId }
+                    quranChapters[index] = quranChapters[index].copy(
+                        isMemorized = true,
+                        memorizedFrom = fromVerse,
                         memorizedTo = toVerse
-                    }
+                    )
 
-                    state = state.copy(quran = quran)
+                    state.quranChapters = quranChapters
                 }
             }.onFailure {
                 sendUiEvent(UiEvent.ShowErrorSnackBar(UiText.DynamicString(it.toString())))
@@ -115,13 +132,20 @@ class QuranViewModel @Inject constructor(
             val result = removeMemorizedChapterAyat.call(chapterId)
 
             result.onSuccess {
-                val quran = state.quran
-                val chapter = quran.chapters.firstOrNull { it.id == chapterId } ?: return@launch
-                chapter.isMemorized = false
-                state = state.copy(quran = quran)
+                val quranChapters = state.quranChapters.toMutableList()
+                val index = quranChapters.indexOfFirst { it.id == chapterId }
+                quranChapters[index] = quranChapters[index].copy(isMemorized = false)
+
+                state.quranChapters = quranChapters
             }.onFailure {
                 sendUiEvent(UiEvent.ShowErrorSnackBar(UiText.DynamicString(it.toString())))
             }
+        }
+    }
+
+    private fun onLoadQuranSectionsClicked() {
+        viewModelScope.launch(Dispatchers.IO) {
+            loadQuranReadingSuggestions.call()
         }
     }
 
@@ -129,7 +153,6 @@ class QuranViewModel @Inject constructor(
         state.sections?.let { sections ->
             viewModelScope.launch(Dispatchers.IO) {
                 markQuranSectionAsRead.call(sections)
-                getNextSections()
             }
         }
     }
@@ -145,18 +168,7 @@ class QuranViewModel @Inject constructor(
     }
 
     private fun onSearchQueryChanged(query: String) {
-        state = state.copy(searchQuery = query)
-    }
-
-    private fun getNextSections() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val sections = getNextQuranReadingSections.call()
-            sections.onSuccess {
-                state = state.copy(sections = it)
-            }.onFailure {
-                sendUiEvent(UiEvent.ShowErrorSnackBar(it.message.toUiText()))
-            }
-        }
+        state.searchQuery = query
     }
 
     private fun sendUiEvent(uiEvent: UiEvent) {

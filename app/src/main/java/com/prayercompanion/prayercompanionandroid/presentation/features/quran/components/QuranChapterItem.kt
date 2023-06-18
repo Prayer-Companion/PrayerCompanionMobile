@@ -319,8 +319,8 @@ fun QuranChapterItem(
                         ),
                     onClick = {
                         onSaveClicked(
-                            getFromVerse().also { quranChapter.memorizedFrom = it },
-                            getToVerse().also { quranChapter.memorizedTo = it }
+                            getFromVerse(),
+                            getToVerse()
                         )
                         isEditMode = false
                     }

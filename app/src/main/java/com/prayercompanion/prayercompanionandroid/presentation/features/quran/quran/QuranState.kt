@@ -1,14 +1,15 @@
 package com.prayercompanion.prayercompanionandroid.presentation.features.quran.quran
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.prayercompanion.prayercompanionandroid.domain.models.quran.PrayerQuranReadingSections
-import com.prayercompanion.prayercompanionandroid.domain.models.quran.Quran
 import com.prayercompanion.prayercompanionandroid.domain.models.quran.QuranChapter
 
-data class QuranState(
-    val quran: Quran = Quran(emptyList()),
-    val sections: PrayerQuranReadingSections? = null,
-    val searchQuery: String = ""
-) {
-    val filteredQuranChapters: List<QuranChapter> get() = quran.chapters.filter { searchQuery in it.name }
+class QuranState {
+    var quranChapters by mutableStateOf(emptyList<QuranChapter>())
+    var sections: PrayerQuranReadingSections? by mutableStateOf(null)
+    var searchQuery: String by mutableStateOf("")
+    val filteredQuranChapters: List<QuranChapter> get() = quranChapters.filter { searchQuery in it.name }
 
 }

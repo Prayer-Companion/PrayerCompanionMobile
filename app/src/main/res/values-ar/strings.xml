@@ -69,6 +69,8 @@
     <string name="second_quran_reading_section">في الركعة الثانية</string>
     <string name="show_full_quran_reading_sections">إظهار الكل</string>
     <string name="next_quran_reading_sections">التالي</string>
+    <string name="load_quran_sections">حمل اقسام القرآن</string>
+    <string name="empty_quran_sections_prompt">اختر بعض سور القران لتحصل على اقتراحات القرائة</string>
 
     <!-- General -->
     <string name="ok">حسنا</string>

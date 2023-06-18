@@ -1,16 +1,12 @@
 package com.prayercompanion.prayercompanionandroid.domain.models.quran
 
-data class Quran(
-    val chapters: List<QuranChapter>
-)
-
 data class QuranChapter(
     val id: Int,
     val name: String,
     val verses: List<QuranVerse>,
-    var isMemorized: Boolean,
-    var memorizedFrom: Int,
-    var memorizedTo: Int
+    val isMemorized: Boolean,
+    val memorizedFrom: Int,
+    val memorizedTo: Int
 ) {
     val versesCount = verses.size
 
@@ -27,9 +23,3 @@ data class QuranChapter(
         memorizedTo = verses.size,
     )
 }
-
-data class QuranVerse(
-    val index: Int,
-    val text: String,
-    val hasBismillah: Boolean
-)
