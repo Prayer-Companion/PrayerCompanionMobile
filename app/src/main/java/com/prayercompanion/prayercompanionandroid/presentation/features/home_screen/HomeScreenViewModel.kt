@@ -30,6 +30,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -109,7 +110,7 @@ class HomeScreenViewModel @Inject constructor(
                 },
                 async {
                     getLastWeekStatusesOverView.call()
-                        .collect { statuses ->
+                        .collectLatest { statuses ->
                             withContext(Dispatchers.Main) {
                                 state = state.copy(lastWeekStatuses = statuses)
                             }

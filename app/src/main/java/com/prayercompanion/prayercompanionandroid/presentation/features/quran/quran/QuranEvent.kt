@@ -15,6 +15,7 @@ sealed class QuranEvent {
 
     data class OnChapterDeselected(val chapterId: Int) : QuranEvent()
     data class OnSearchQueryChanged(val query: String) : QuranEvent()
+    object OnLoadQuranSectionsClicked : QuranEvent()
     object OnNextSectionClicked : QuranEvent()
     object OnViewFullClicked : QuranEvent()
 

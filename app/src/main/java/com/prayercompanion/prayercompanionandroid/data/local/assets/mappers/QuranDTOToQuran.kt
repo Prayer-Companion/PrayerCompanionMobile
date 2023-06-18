@@ -1,11 +1,10 @@
 package com.prayercompanion.prayercompanionandroid.data.local.assets.mappers
 
 import com.prayercompanion.prayercompanionandroid.data.local.assets.dto.QuranDTO
-import com.prayercompanion.prayercompanionandroid.domain.models.quran.Quran
 import com.prayercompanion.prayercompanionandroid.domain.models.quran.QuranChapter
 import com.prayercompanion.prayercompanionandroid.domain.models.quran.QuranVerse
 
-fun QuranDTO.toQuran(): Quran {
+fun QuranDTO.toQuranChapters(): List<QuranChapter> {
     val chapters = this.chapters.map { chapterDTO ->
         val verses = chapterDTO.verses.map { verseDTO ->
             QuranVerse(
@@ -21,5 +20,5 @@ fun QuranDTO.toQuran(): Quran {
         )
     }
 
-    return Quran(chapters = chapters)
+    return chapters
 }

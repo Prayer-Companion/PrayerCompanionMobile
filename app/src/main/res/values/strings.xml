@@ -64,6 +64,8 @@
     <string name="second_quran_reading_section">Second section</string>
     <string name="show_full_quran_reading_sections">Show all</string>
     <string name="next_quran_reading_sections">Next</string>
+    <string name="load_quran_sections">Load suggestions</string>
+    <string name="empty_quran_sections_prompt">Select some chapters to get suggestions</string>
     <!-- General -->
     <string name="ok">OK</string>
 
