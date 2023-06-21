@@ -92,7 +92,13 @@ class AppLocationManager @Inject constructor(
                 )
 
             } else {
-                gcd.getFromLocation(location.latitude, location.longitude, 1)
+                val addresses = gcd.getFromLocation(location.latitude, location.longitude, 1) ?: emptyList()
+                if (addresses.isNotEmpty()) {
+                    val address = addresses.first()
+                    it.resume(Address(address.countryCode, address.locality))
+                } else {
+                    it.resume(null)
+                }
             }
 
         }

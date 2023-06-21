@@ -18,6 +18,10 @@ class AssetsReader @Inject constructor(
             try {
                 val xmlString = inputStream.bufferedReader().use { it.readText() }
                 val quranDTO = parseXml(QuranDTO::class.java, xmlString)
+                val chaptersWithoutFatiha = quranDTO.chapters.toMutableList().also {
+                    it.removeFirst()
+                }
+                quranDTO.chapters = chaptersWithoutFatiha
 
                 Result.success(quranDTO)
             } catch (e: Exception) {
