@@ -25,17 +25,24 @@ import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class AppLocationManager @Inject constructor(
+interface AppLocationManager {
+    suspend fun getLastKnownLocation(): Location?
+    suspend fun getAddress(): Address?
+    fun checkLocationService(): Task<LocationSettingsResponse>
+    fun getRequestLocationUpdates(onLocationRetrieved: (Location) -> Unit)
+}
+
+class AppLocationManagerImpl @Inject constructor(
     @ApplicationContext
     private val context: Context,
     private val dataStoresRepo: DataStoresRepo,
     private val permissionsManager: PermissionsManager
-) {
+) : AppLocationManager {
 
     private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
 
     @SuppressLint("MissingPermission")
-    suspend fun getLastKnownLocation(): Location? {
+    override suspend fun getLastKnownLocation(): Location? {
         if (permissionsManager.isLocationPermissionGranted.not()) {
             logcat { "Location permission is missing" }
             return dataStoresRepo.appPreferencesDataStore.data.firstOrNull()?.location
@@ -61,7 +68,7 @@ class AppLocationManager @Inject constructor(
     }
 
     @Suppress("DEPRECATION")
-    suspend fun getAddress(): Address? {
+    override suspend fun getAddress(): Address? {
         val lastSavedAddress = dataStoresRepo.appPreferencesDataStore.data.firstOrNull()?.address
 
         val location = getLastKnownLocation() ?: return lastSavedAddress
@@ -92,7 +99,8 @@ class AppLocationManager @Inject constructor(
                 )
 
             } else {
-                val addresses = gcd.getFromLocation(location.latitude, location.longitude, 1) ?: emptyList()
+                val addresses =
+                    gcd.getFromLocation(location.latitude, location.longitude, 1) ?: emptyList()
                 if (addresses.isNotEmpty()) {
                     val address = addresses.first()
                     it.resume(Address(address.countryCode, address.locality))
@@ -112,7 +120,7 @@ class AppLocationManager @Inject constructor(
         return address ?: lastSavedAddress
     }
 
-    fun checkLocationService(): Task<LocationSettingsResponse> {
+    override fun checkLocationService(): Task<LocationSettingsResponse> {
         val intervalForLocationUpdateInMillis = 10000L
 
         val locationRequest = LocationRequest
@@ -130,7 +138,7 @@ class AppLocationManager @Inject constructor(
     }
 
     @SuppressLint("MissingPermission")
-    fun getRequestLocationUpdates(onLocationRetrieved: (Location) -> Unit) {
+    override fun getRequestLocationUpdates(onLocationRetrieved: (Location) -> Unit) {
         if (permissionsManager.isLocationPermissionGranted.not()) {
             logcat { "Location permission is missing" }
             return

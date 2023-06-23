@@ -5,6 +5,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.prayercompanion.prayercompanionandroid.R
+import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
+import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManagerImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,4 +34,8 @@ class DomainModule {
 
         return GoogleSignIn.getClient(context, gso)
     }
+    
+    @Provides
+    @Singleton
+    internal fun provideAppLocationManager(usecase: AppLocationManagerImpl): AppLocationManager = usecase
 }

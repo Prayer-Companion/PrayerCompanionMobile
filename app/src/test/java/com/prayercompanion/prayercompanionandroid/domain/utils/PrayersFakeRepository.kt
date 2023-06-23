@@ -1,18 +1,22 @@
-package com.prayercompanion.prayercompanionandroid.domain
+package com.prayercompanion.prayercompanionandroid.domain.utils
 
-import android.location.Location
+import com.prayercompanion.prayercompanionandroid.domain.Consts
+import com.prayercompanion.prayercompanionandroid.domain.models.Address
 import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
+import com.prayercompanion.prayercompanionandroid.domain.models.Location
 import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
+import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
 class PrayersFakeRepository : PrayersRepository {
     override suspend fun getDayPrayers(
-        location: Location,
+        location: Location?,
+        address: Address?,
         dayDate: LocalDate,
         forceUpdate: Boolean
     ): Result<DayPrayersInfo> {
@@ -22,9 +26,17 @@ class PrayersFakeRepository : PrayersRepository {
     override suspend fun getPrayer(
         prayer: Prayer,
         date: LocalDate,
-        location: Location
+        location: Location?,
+        address: Address?
     ): Result<PrayerInfo> {
         return Result.success(DEFAULT_DAY_PRAYERS_INFO.get(prayer))
+    }
+
+    override fun getStatusesByDate(
+        startDateTime: LocalDateTime,
+        endDateTime: LocalDateTime
+    ): Flow<List<PrayerStatus?>> {
+        TODO("Not yet implemented")
     }
 
     override suspend fun updatePrayerStatus(
