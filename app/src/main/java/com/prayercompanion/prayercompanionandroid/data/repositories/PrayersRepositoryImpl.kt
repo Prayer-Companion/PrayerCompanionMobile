@@ -18,6 +18,7 @@ import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
+import com.prayercompanion.prayercompanionandroid.domain.usecases.IsConnectedToInternet
 import com.prayercompanion.prayercompanionandroid.failure
 import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
 import com.skydoves.whatif.whatIfNotNull
@@ -31,7 +32,8 @@ import javax.inject.Inject
 
 class PrayersRepositoryImpl @Inject constructor(
     private val prayerCompanionApi: PrayerCompanionApi,
-    private val dao: PrayersInfoDao
+    private val dao: PrayersInfoDao,
+    private val isConnectedToInternet: IsConnectedToInternet
 ) : PrayersRepository {
 
     override suspend fun getDayPrayers(
@@ -41,7 +43,7 @@ class PrayersRepositoryImpl @Inject constructor(
         forceUpdate: Boolean
     ): Result<DayPrayersInfo> {
         return try {
-            if (forceUpdate.not() || location == null) {
+            if (forceUpdate.not() || location == null || isConnectedToInternet.call().not()) {
                 val savedPrayers = dao.getPrayers(
                     startDateTime = dayDate.atStartOfDay(),
                     endDateTime = dayDate.atTime(LocalTime.MAX)
