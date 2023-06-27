@@ -44,10 +44,14 @@ class QuranViewModel @Inject constructor(
     init {
         viewModelScope.launch(Dispatchers.IO) {
             launch {
-                val quranResult = getFullQuranWithMemorized.call()
-                quranResult.onSuccess { quranChapters ->
-                    state.quranChapters = quranChapters
-                }
+                getFullQuranWithMemorized.call()
+                    .collectLatest { quranResult ->
+                        quranResult.onSuccess { quranChapters ->
+                            withContext(Dispatchers.Main) {
+                                state.quranChapters = quranChapters
+                            }
+                        }
+                    }
             }
             launch {
                 getNextQuranReadingSectionsFlow.call().collectLatest { sections ->

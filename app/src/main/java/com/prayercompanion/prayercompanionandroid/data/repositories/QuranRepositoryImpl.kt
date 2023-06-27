@@ -2,7 +2,9 @@ package com.prayercompanion.prayercompanionandroid.data.repositories
 
 import com.prayercompanion.prayercompanionandroid.data.local.assets.AssetsReader
 import com.prayercompanion.prayercompanionandroid.data.local.assets.mappers.toQuranChapters
+import com.prayercompanion.prayercompanionandroid.data.local.db.daos.MemorizedQuranChapterDao
 import com.prayercompanion.prayercompanionandroid.data.local.db.daos.QuranReadingSectionsDao
+import com.prayercompanion.prayercompanionandroid.data.local.db.entities.MemorizedQuranChapterEntity
 import com.prayercompanion.prayercompanionandroid.data.local.db.entities.QuranReadingSectionEntity
 import com.prayercompanion.prayercompanionandroid.data.remote.PrayerCompanionApi
 import com.prayercompanion.prayercompanionandroid.domain.models.quran.PrayerQuranReadingSection
@@ -11,35 +13,62 @@ import com.prayercompanion.prayercompanionandroid.domain.models.quran.QuranChapt
 import com.prayercompanion.prayercompanionandroid.domain.repositories.QuranRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import logcat.asLog
+import logcat.logcat
 import javax.inject.Inject
 
 class QuranRepositoryImpl @Inject constructor(
-    private val assetsReader: AssetsReader,
+    assetsReader: AssetsReader,
     private val api: PrayerCompanionApi,
-    private val dao: QuranReadingSectionsDao
+    private val readingSectionDao: QuranReadingSectionsDao,
+    private val memorizedChaptersDao: MemorizedQuranChapterDao
 ) : QuranRepository {
 
-    override suspend fun getFullQuran(): Result<List<QuranChapter>> {
-        var quranChapters = assetsReader.quran.map { it.toQuranChapters() }
+    private val quranChapters = assetsReader.quran.map { it.toQuranChapters() }
+
+    override suspend fun loadMemorizedChapters() {
+        try {
+            val chapters = api.getMemorizedChapterVerses()
+            val entities = chapters.map {
+                MemorizedQuranChapterEntity(
+                    chapterId = it.chapterId,
+                    memorizedFrom = it.startVerse,
+                    memorizedTo = it.endVerse
+                )
+            }
+            memorizedChaptersDao.deleteAllAndInsertNew(entities)
+        } catch (e: Exception) {
+            logcat { e.asLog() }
+        }
+    }
+
+    override suspend fun getFullQuranFlow(): Flow<Result<List<QuranChapter>>> {
+        val quranChapters = this.quranChapters
 
         kotlin.runCatching {
-            val memorizedChapterVerses = api.getMemorizedChapterVerses()
+            val memorizedChapterVerses = memorizedChaptersDao.getAllMemorizedChaptersFlow()
 
-            quranChapters = quranChapters.map { chapters ->
-                val mutableChapters = chapters.toMutableList()
-                memorizedChapterVerses.forEach { memorized ->
-                    val index = mutableChapters.indexOfFirst { it.id == memorized.chapterId }
-                    mutableChapters[index] = mutableChapters[index].copy(
-                        isMemorized = true,
-                        memorizedFrom = memorized.startVerse,
-                        memorizedTo = memorized.endVerse
-                    )
+            return memorizedChapterVerses.map { memorizedChapters ->
+                quranChapters.map { chapters ->
+                    val mutableChapters = chapters.toMutableList()
+
+                    memorizedChapters.forEach { memorized ->
+                        val index = mutableChapters.indexOfFirst { it.id == memorized.chapterId }
+                        mutableChapters[index] = mutableChapters[index].copy(
+                            isMemorized = true,
+                            memorizedFrom = memorized.memorizedFrom,
+                            memorizedTo = memorized.memorizedTo
+                        )
+                    }
+
+                    mutableChapters
                 }
-                mutableChapters
             }
         }
-        return quranChapters
+
+        return flowOf(quranChapters)
     }
 
     override suspend fun addMemorizedChapterAyat(
@@ -71,7 +100,7 @@ class QuranRepositoryImpl @Inject constructor(
     override suspend fun deleteMemorizedChapterAyat(chapterId: Int): Result<Unit> {
         return try {
             api.deleteMemorizedChapterVerses(chapterId)
-            dao.deleteQuranReadingSectionByChapter(chapterId)
+            readingSectionDao.deleteQuranReadingSectionByChapter(chapterId)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -79,20 +108,20 @@ class QuranRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getNextQuranReadingSections(): Flow<PrayerQuranReadingSections?> {
-        val entities = dao.getNextReadingSections()
+        val entities = readingSectionDao.getNextReadingSections()
         return entities.map {
             mapEntitiesToNextQuranReadingSections(it).getOrNull()
         }
     }
 
     override suspend fun markQuranSectionAsRead(quranReadingSections: PrayerQuranReadingSections) {
-        dao.markSectionAsRead(
+        readingSectionDao.markSectionAsRead(
             listOf(
                 quranReadingSections.firstSection.sectionId,
                 quranReadingSections.secondSection.sectionId
             )
         )
-        if (dao.getNextReadingSections().first().isEmpty()) {
+        if (readingSectionDao.getNextReadingSections().first().isEmpty()) {
             loadAndSaveQuranReadingSections()
         }
     }
@@ -109,7 +138,7 @@ class QuranRepositoryImpl @Inject constructor(
                     )
                 }
             if (entities.isNotEmpty()) {
-                dao.insertReadingSections(entities)
+                readingSectionDao.insertReadingSections(entities)
             }
             Result.success(Unit)
         } catch (e: Exception) {
@@ -117,7 +146,7 @@ class QuranRepositoryImpl @Inject constructor(
         }
     }
 
-    private suspend fun mapEntitiesToNextQuranReadingSections(entities: List<QuranReadingSectionEntity>): Result<PrayerQuranReadingSections?> {
+    private fun mapEntitiesToNextQuranReadingSections(entities: List<QuranReadingSectionEntity>): Result<PrayerQuranReadingSections?> {
         if (entities.isEmpty()) {
             return Result.success(null)
         }
@@ -133,10 +162,10 @@ class QuranRepositoryImpl @Inject constructor(
         return quranEntitiesToPrayerQuranReadingSections(mutableEntities)
     }
 
-    private suspend fun quranEntitiesToPrayerQuranReadingSections(
+    private fun quranEntitiesToPrayerQuranReadingSections(
         entities: List<QuranReadingSectionEntity>
     ): Result<PrayerQuranReadingSections> {
-        return getFullQuran()
+        return quranChapters
             .map { quranChapters ->
                 require(entities.size == 2)
 
