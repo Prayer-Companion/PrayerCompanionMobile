@@ -56,6 +56,7 @@ class QuranRepositoryImpl @Inject constructor(
 
                     memorizedChapters.forEach { memorized ->
                         val index = mutableChapters.indexOfFirst { it.id == memorized.chapterId }
+                            .takeUnless { it == -1 } ?: return@forEach
                         mutableChapters[index] = mutableChapters[index].copy(
                             isMemorized = true,
                             memorizedFrom = memorized.memorizedFrom,
@@ -78,6 +79,13 @@ class QuranRepositoryImpl @Inject constructor(
     ): Result<Unit> {
         return try {
             api.addOrUpdateMemorizedChapterVerses(chapterId, startVerse, endVerse)
+            memorizedChaptersDao.insert(
+                MemorizedQuranChapterEntity(
+                    chapterId = chapterId,
+                    memorizedFrom = startVerse,
+                    memorizedTo = endVerse
+                )
+            )
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -91,6 +99,7 @@ class QuranRepositoryImpl @Inject constructor(
     ): Result<Unit> {
         return try {
             api.addOrUpdateMemorizedChapterVerses(chapterId, startVerse, endVerse)
+            memorizedChaptersDao.update(chapterId, startVerse, endVerse)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -101,6 +110,7 @@ class QuranRepositoryImpl @Inject constructor(
         return try {
             api.deleteMemorizedChapterVerses(chapterId)
             readingSectionDao.deleteQuranReadingSectionByChapter(chapterId)
+            memorizedChaptersDao.delete(chapterId)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
