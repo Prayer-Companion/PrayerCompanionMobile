@@ -152,7 +152,7 @@ fun HomeHeader(
                 PrayerStatusesOverViewBar(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(45.dp),
+                        .height(42.dp),
                     statusesCounts = statusesCounts
                 )
             }
