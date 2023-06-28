@@ -170,7 +170,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun BottomNavigationBar(navController: NavController) {
         BottomNavigation(
-            modifier = Modifier.height(64.dp),
+            modifier = Modifier.height(62.dp),
             backgroundColor = MaterialTheme.colors.primary,
 
             ) {
