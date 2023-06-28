@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -20,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.prayercompanion.prayercompanionandroid.R
@@ -28,6 +30,7 @@ import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.models.RemainingDuration
 import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
+import com.prayercompanion.prayercompanionandroid.presentation.utils.MeasureUnconstrainedViewWidth
 import java.util.SortedMap
 
 @Preview(name = "en", locale = "en")
@@ -99,17 +102,35 @@ fun HomeHeader(
                     )
                 }
                 Row {
-                    Text(
-                        modifier = Modifier.alignByBaseline(),
-                        text = stringResource(
-                            id = R.string.remaining_time_value,
-                            durationUntilNextPrayer.hours,
-                            durationUntilNextPrayer.minutes,
-                            durationUntilNextPrayer.seconds,
-                        ),
-                        style = MaterialTheme.typography.subtitle1,
-                        color = MaterialTheme.colors.onPrimary
-                    )
+                    MeasureUnconstrainedViewWidth(
+                        modifier = Modifier
+                            .alignByBaseline(),
+                        viewToMeasure = {
+                            Text(
+                                modifier = Modifier.alignByBaseline(),
+                                text = stringResource(
+                                    id = R.string.remaining_time_value,
+                                    durationUntilNextPrayer.hours,
+                                    durationUntilNextPrayer.minutes,
+                                    0,
+                                ),
+                                style = MaterialTheme.typography.subtitle1,
+                            )
+                        }) {
+                        Text(
+                            modifier = Modifier
+                                .defaultMinSize(minWidth = it),
+                            text = stringResource(
+                                id = R.string.remaining_time_value,
+                                durationUntilNextPrayer.hours,
+                                durationUntilNextPrayer.minutes,
+                                durationUntilNextPrayer.seconds,
+                            ),
+                            style = MaterialTheme.typography.subtitle1,
+                            color = MaterialTheme.colors.onPrimary,
+                            textAlign = TextAlign.Left
+                        )
+                    }
                     Spacer(modifier = Modifier.width(spacing.spaceSmall))
                     Text(
                         modifier = Modifier.alignByBaseline(),

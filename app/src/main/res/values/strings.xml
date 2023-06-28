@@ -11,7 +11,7 @@
 
     <string name="status">Status</string>
     <string name="remaining_time_value">%02d:%02d:%02d</string>
-    <string name="remaining_time">Remaining Time</string>
+    <string name="remaining_time">Remaining time till %1$s prayer</string>
 
     <string name="home_tab">Home</string>
     <string name="qibla_tab">Qibla</string>
@@ -22,7 +22,7 @@
     <string name="after_half_time_prayer_status">After half time</string>
     <string name="qadaa_prayer_status">Qadaa</string>
     <string name="late_prayer_status">Late</string>
-    <string name="jamaah_prayer_status">Jamaah</string>
+    <string name="jamaah_prayer_status">In The Mosque</string>
     <string name="or">Or</string>
     <string name="continue_with_google">Continue with Google</string>
     <string name="continue_as_guest">Continue as a Guest</string>

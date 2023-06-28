@@ -5,10 +5,9 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
@@ -171,11 +170,10 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun BottomNavigationBar(navController: NavController) {
         BottomNavigation(
-            modifier = Modifier.background(
-                color = MaterialTheme.colors.primary,
-                shape = RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp)
-            )
-        ) {
+            modifier = Modifier.height(64.dp),
+            backgroundColor = MaterialTheme.colors.primary,
+
+            ) {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentDestination = navBackStackEntry?.destination
 

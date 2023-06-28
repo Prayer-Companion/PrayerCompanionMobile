@@ -84,8 +84,7 @@ fun HomeScreen(
         ) {
             HomeHeader(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.4f),
+                    .fillMaxWidth(),
                 currentPrayer = viewModel.state.currentPrayer,
                 nextPrayer = viewModel.state.nextPrayer,
                 durationUntilNextPrayer = viewModel.durationUntilNextPrayer,
