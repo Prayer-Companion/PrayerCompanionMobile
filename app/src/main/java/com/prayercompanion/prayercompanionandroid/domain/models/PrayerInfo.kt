@@ -12,7 +12,7 @@ data class PrayerInfo(
 ) : Serializable {
     val date: LocalDate get() = dateTime.toLocalDate()
     val time: LocalTime get() = dateTime.toLocalTime()
-
+    val isStateSelectable get() = LocalDateTime.now() > dateTime
     companion object {
         val Default = PrayerInfo(
             prayer = Prayer.FAJR,
