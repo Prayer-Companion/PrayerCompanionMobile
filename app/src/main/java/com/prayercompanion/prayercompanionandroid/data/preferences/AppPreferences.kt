@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.datastore.core.Serializer
 import com.prayercompanion.prayercompanionandroid.appPreferencesDataStore
 import com.prayercompanion.prayercompanionandroid.domain.models.Address
-import com.prayercompanion.prayercompanionandroid.domain.models.AppLanguage
 import com.prayercompanion.prayercompanionandroid.domain.models.Location
 import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -32,7 +31,6 @@ data class AppPreferences(
     val hasSkippedNotificationPermission: Boolean,
     val deniedLocationPermissionsCount: Int,
     val deniedNotificationPermissionsCount: Int,
-    val appLanguage: AppLanguage?
 )
 
 object AppPreferencesSerializer : Serializer<AppPreferences> {
@@ -43,8 +41,7 @@ object AppPreferencesSerializer : Serializer<AppPreferences> {
             address = null,
             hasSkippedNotificationPermission = false,
             deniedLocationPermissionsCount = 0,
-            deniedNotificationPermissionsCount = 0,
-            appLanguage = null
+            deniedNotificationPermissionsCount = 0
         )
 
     override suspend fun readFrom(input: InputStream): AppPreferences {

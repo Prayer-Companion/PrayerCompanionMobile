@@ -181,6 +181,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.onResume()
+    }
+
     @Composable
     private fun BottomNavigationBar(navController: NavController) {
         BottomNavigation(

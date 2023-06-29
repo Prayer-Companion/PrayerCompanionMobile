@@ -101,12 +101,7 @@ fun HomeHeader(
                 Row {
                     Text(
                         modifier = Modifier.alignByBaseline(),
-                        text = stringResource(
-                            id = R.string.remaining_time_value,
-                            durationUntilNextPrayer.hours,
-                            durationUntilNextPrayer.minutes,
-                            durationUntilNextPrayer.seconds,
-                        ),
+                        text = durationUntilNextPrayer.toString(),
                         style = MaterialTheme.typography.subtitle1,
                         color = MaterialTheme.colors.onPrimary
                     )

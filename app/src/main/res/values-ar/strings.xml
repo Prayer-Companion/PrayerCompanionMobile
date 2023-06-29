@@ -10,7 +10,6 @@
     <string name="isha">العشاء</string>
 
     <string name="status">الحالة</string>
-    <string name="remaining_time_value">%02d:%02d:%02d</string>
     <string name="remaining_time">الوقت المتبقي حتى صلاة %1$s</string>
 
     <string name="error_something_went_wrong">نأسف, يبدوا ان هنالك مشكلة ما</string>

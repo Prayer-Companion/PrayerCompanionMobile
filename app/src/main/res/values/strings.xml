@@ -10,7 +10,6 @@
     <string name="isha">Isha</string>
 
     <string name="status">Status</string>
-    <string name="remaining_time_value">%02d:%02d:%02d</string>
     <string name="remaining_time">Remaining Time</string>
 
     <string name="home_tab">Home</string>

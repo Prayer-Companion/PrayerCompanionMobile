@@ -10,4 +10,8 @@ object PresentationConsts {
     val TimeFormatter: DateTimeFormatter
         get() = DateTimeFormatter
             .ofPattern("hh:mm a", Locale.getDefault())
+
+    val CounterTimeFormatter: DateTimeFormatter
+        get() = DateTimeFormatter
+            .ofPattern("hh:mm:ss", Locale.getDefault())
 }
