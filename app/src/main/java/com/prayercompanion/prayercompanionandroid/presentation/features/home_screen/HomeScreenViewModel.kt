@@ -14,6 +14,7 @@ import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.models.RemainingDuration
+import com.prayercompanion.prayercompanionandroid.domain.repositories.QuranRepository
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetCurrentPrayer
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetDayPrayers
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetLastWeekStatusesOverView
@@ -25,6 +26,7 @@ import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
 import com.prayercompanion.prayercompanionandroid.presentation.utils.toUiText
 import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
@@ -48,8 +50,9 @@ class HomeScreenViewModel @Inject constructor(
     private val getNextPrayer: GetNextPrayer,
     private val updatePrayerStatus: UpdatePrayerStatus,
     private val getLastWeekStatusesOverView: GetLastWeekStatusesOverView,
-    private val locationManager: AppLocationManager
-) : ViewModel() {
+    private val locationManager: AppLocationManager,
+    private val quranRepository: QuranRepository
+    ) : ViewModel() {
 
     private var loadSelectedDatePrayersJob: Job? = null
     private val _uiEvents = Channel<UiEvent>()
@@ -102,6 +105,13 @@ class HomeScreenViewModel @Inject constructor(
             }
         }
 
+        fun loadStartingData() {
+            CoroutineScope(Dispatchers.IO).launch {
+                quranRepository.loadMemorizedChapters()
+            }
+        }
+
+        loadStartingData()
         viewModelScope.launch(Dispatchers.IO) {
             loadInitialDayPrayers()
             awaitAll(
