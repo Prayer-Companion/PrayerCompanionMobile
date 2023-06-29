@@ -25,6 +25,7 @@ class DataStoresRepo @Inject constructor(
 
 @Serializable
 data class AppPreferences(
+    val isSignedIn: Boolean,
     val location: Location?,
     val address: Address?,
     val hasSkippedNotificationPermission: Boolean,
@@ -35,6 +36,7 @@ data class AppPreferences(
 object AppPreferencesSerializer : Serializer<AppPreferences> {
     override val defaultValue: AppPreferences
         get() = AppPreferences(
+            isSignedIn = false,
             location = null,
             address = null,
             hasSkippedNotificationPermission = false,

@@ -5,7 +5,7 @@ import com.prayercompanion.prayercompanionandroid.domain.models.quran.QuranChapt
 import kotlinx.coroutines.flow.Flow
 
 interface QuranRepository {
-    suspend fun getFullQuran(): Result<List<QuranChapter>>
+    suspend fun getFullQuranFlow(): Flow<Result<List<QuranChapter>>>
     suspend fun addMemorizedChapterAyat(
         chapterId: Int,
         startVerse: Int,
@@ -22,4 +22,5 @@ interface QuranRepository {
     suspend fun getNextQuranReadingSections(): Flow<PrayerQuranReadingSections?>
     suspend fun markQuranSectionAsRead(quranReadingSections: PrayerQuranReadingSections)
     suspend fun loadAndSaveQuranReadingSections(): Result<Unit>
+    suspend fun loadMemorizedChapters()
 }
