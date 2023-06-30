@@ -46,9 +46,6 @@ fun PrayerItem(
     onStatusSelected: (PrayerStatus, PrayerInfo) -> Unit = { _, _ -> }
 ) = PrayerCompanionAndroidTheme {
     val spacing = LocalSpacing.current
-    var isStatusSelectorExpanded by remember {
-        mutableStateOf(false)
-    }
 
     Row(
         modifier = modifier
@@ -94,31 +91,49 @@ fun PrayerItem(
                 )
             }
         }
-        Row(
-            modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth(0.30f)
-                .background(
-                    color = prayerInfo.status.getColorOrDefault(),
-                    shape = RoundedCornerShape(
-                        topEnd = 15.dp,
-                        bottomEnd = 15.dp
-                    )
-                ),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly
+        PrayerItemState(
+            prayerInfo.status,
+            prayerInfo.isStateSelectable
         ) {
-            val status = prayerInfo.status
-            if (status != null) {
-                Text(
-                    text = stringResource(id = status.nameId),
-                    color = MaterialTheme.colors.onPrimary,
-                    style = MaterialTheme.typography.button,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.weight(2.5f),
-                )
-            }
+            onStatusSelected(it, prayerInfo)
+        }
+    }
+}
 
+@Composable
+private fun PrayerItemState(
+    status: PrayerStatus?,
+    isStateSelectable: Boolean,
+    onStatusSelected: (PrayerStatus) -> Unit
+) {
+    var isStatusSelectorExpanded by remember {
+        mutableStateOf(false)
+    }
+
+    Row(
+        modifier = Modifier
+            .fillMaxHeight()
+            .fillMaxWidth(0.30f)
+            .background(
+                color = status.getColorOrDefault(),
+                shape = RoundedCornerShape(
+                    topEnd = 15.dp,
+                    bottomEnd = 15.dp
+                )
+            ),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        if (status != null) {
+            Text(
+                text = stringResource(id = status.nameId),
+                color = MaterialTheme.colors.onPrimary,
+                style = MaterialTheme.typography.button,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.weight(2.5f),
+            )
+        }
+        if (isStateSelectable) {
             Icon(
                 modifier = Modifier
                     .weight(1f)
@@ -129,16 +144,16 @@ fun PrayerItem(
                 contentDescription = "",
                 tint = MaterialTheme.colors.onPrimary
             )
-            PrayerStatusDropDownMenu(
-                expanded = isStatusSelectorExpanded,
-                onItemSelected = {
-                    onStatusSelected(it, prayerInfo)
-                    isStatusSelectorExpanded = false
-                },
-                onDismissRequest = {
-                    isStatusSelectorExpanded = !isStatusSelectorExpanded
-                }
-            )
         }
+        PrayerStatusDropDownMenu(
+            expanded = isStatusSelectorExpanded,
+            onItemSelected = {
+                onStatusSelected(it)
+                isStatusSelectorExpanded = false
+            },
+            onDismissRequest = {
+                isStatusSelectorExpanded = !isStatusSelectorExpanded
+            }
+        )
     }
 }

@@ -89,7 +89,7 @@ android {
 }
 
 dependencies {
-    def appcompat_version = "1.6.1"
+    def appcompat_version = "1.7.0-alpha02"
 
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation "androidx.appcompat:appcompat:$appcompat_version"

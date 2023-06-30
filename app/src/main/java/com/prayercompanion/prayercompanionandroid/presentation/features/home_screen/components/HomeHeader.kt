@@ -108,24 +108,14 @@ fun HomeHeader(
                         viewToMeasure = {
                             Text(
                                 modifier = Modifier.alignByBaseline(),
-                                text = stringResource(
-                                    id = R.string.remaining_time_value,
-                                    durationUntilNextPrayer.hours,
-                                    durationUntilNextPrayer.minutes,
-                                    0,
-                                ),
+                                text = durationUntilNextPrayer.copy(seconds = 0).toString(),
                                 style = MaterialTheme.typography.subtitle1,
                             )
                         }) {
                         Text(
                             modifier = Modifier
                                 .defaultMinSize(minWidth = it),
-                            text = stringResource(
-                                id = R.string.remaining_time_value,
-                                durationUntilNextPrayer.hours,
-                                durationUntilNextPrayer.minutes,
-                                durationUntilNextPrayer.seconds,
-                            ),
+                            text = durationUntilNextPrayer.toString(),
                             style = MaterialTheme.typography.subtitle1,
                             color = MaterialTheme.colors.onPrimary,
                             textAlign = TextAlign.Left

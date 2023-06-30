@@ -10,12 +10,12 @@
     <string name="isha">Isha</string>
 
     <string name="status">Status</string>
-    <string name="remaining_time_value">%02d:%02d:%02d</string>
     <string name="remaining_time">Remaining time till %1$s prayer</string>
 
     <string name="home_tab">Home</string>
     <string name="qibla_tab">Qibla</string>
     <string name="quran_tab">Quran</string>
+    <string name="settings_tab">Settings</string>
 
     <string name="missed_prayer_status">Missed</string>
     <string name="on_time_prayer_status">On Time</string>
@@ -68,6 +68,13 @@
     <string name="empty_quran_sections_prompt">Select some chapters to get suggestions</string>
     <!-- General -->
     <string name="ok">OK</string>
+
+    <!-- Settings screen -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_items_language">Language</string>
+    <string name="settings_items_language_options_arabic">العربية</string>
+    <string name="settings_items_language_options_english">English</string>
+    <string name="settings_items_signOut">Sign out</string>
 
     <!--  Errors  -->
     <string name="error_something_went_wrong">Sorry Something went wrong</string>

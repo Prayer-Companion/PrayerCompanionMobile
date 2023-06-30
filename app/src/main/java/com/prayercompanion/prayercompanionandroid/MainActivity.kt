@@ -3,8 +3,9 @@ package com.prayercompanion.prayercompanionandroid
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -50,17 +51,22 @@ import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.Qi
 import com.prayercompanion.prayercompanionandroid.presentation.features.quran.full_sections.FullPrayerQuranSections
 import com.prayercompanion.prayercompanionandroid.presentation.features.quran.quran.QuranScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.quran.quran.QuranViewModel
+import com.prayercompanion.prayercompanionandroid.presentation.features.settings.SettingsScreen
+import com.prayercompanion.prayercompanionandroid.presentation.features.settings.SettingsScreenViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
+
+    private val viewModel: MainActivityViewModel by viewModels()
 
     @Inject
     lateinit var googleSignInClient: GoogleSignInClient
 
+    @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -161,10 +167,22 @@ class MainActivity : ComponentActivity() {
 
                             FullPrayerQuranSections(sections)
                         }
+                        composable(Route.Settings.routeName) {
+                            val viewModel: SettingsScreenViewModel = hiltViewModel()
+                            SettingsScreen(
+                                viewModel.state,
+                                viewModel::onEvent
+                            )
+                        }
                     }
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.onResume()
     }
 
     @Composable
