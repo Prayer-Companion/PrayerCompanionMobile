@@ -13,21 +13,22 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsScreenViewModel @Inject constructor(
     private val setAppLanguage: SetAppLanguage,
-    getAppLanguage: GetAppLanguage
+    private val getAppLanguage: GetAppLanguage
 ) : ViewModel() {
 
     var state by mutableStateOf(SettingsState())
         private set
 
-    init {
-        val language = getAppLanguage.call()
-        state = state.copy(language = language ?: AppLanguage.AR)
-    }
-
     fun onEvent(event: SettingsEvent) {
         when (event) {
+            is SettingsEvent.OnStart -> onStart()
             is SettingsEvent.OnLanguageSelected -> onLanguageSelected(event.language)
         }
+    }
+
+    private fun onStart() {
+        val language = getAppLanguage.call()
+        state = state.copy(language = language)
     }
 
     private fun onLanguageSelected(language: AppLanguage) {

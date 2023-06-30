@@ -31,6 +31,8 @@ data class AppPreferences(
     val hasSkippedNotificationPermission: Boolean,
     val deniedLocationPermissionsCount: Int,
     val deniedNotificationPermissionsCount: Int,
+    /** The default app language should be arabic, so we set it to Arabic the first time only */
+    val hasSetArabicLanguageFirstTime: Boolean
 )
 
 object AppPreferencesSerializer : Serializer<AppPreferences> {
@@ -41,7 +43,8 @@ object AppPreferencesSerializer : Serializer<AppPreferences> {
             address = null,
             hasSkippedNotificationPermission = false,
             deniedLocationPermissionsCount = 0,
-            deniedNotificationPermissionsCount = 0
+            deniedNotificationPermissionsCount = 0,
+            hasSetArabicLanguageFirstTime = false
         )
 
     override suspend fun readFrom(input: InputStream): AppPreferences {

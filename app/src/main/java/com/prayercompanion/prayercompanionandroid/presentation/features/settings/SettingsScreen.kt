@@ -15,6 +15,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
@@ -34,6 +35,10 @@ fun SettingsScreen(
     onEvent: (SettingsEvent) -> Unit
 ) {
     val spacing = LocalSpacing.current
+
+    LaunchedEffect(key1 = true) {
+        onEvent(SettingsEvent.OnStart)
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         AppBackground()

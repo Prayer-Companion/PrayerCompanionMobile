@@ -3,5 +3,6 @@ package com.prayercompanion.prayercompanionandroid.presentation.features.setting
 import com.prayercompanion.prayercompanionandroid.domain.models.AppLanguage
 
 sealed class SettingsEvent {
+    object OnStart: SettingsEvent()
     data class OnLanguageSelected(val language: AppLanguage) : SettingsEvent()
 }
