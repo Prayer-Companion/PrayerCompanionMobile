@@ -27,6 +27,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,7 +44,9 @@ import com.prayercompanion.prayercompanionandroid.presentation.features.quran.co
 import com.prayercompanion.prayercompanionandroid.presentation.theme.AppBackground
 import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
+import com.prayercompanion.prayercompanionandroid.presentation.utils.KeyboardConfig
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
+import com.prayercompanion.prayercompanionandroid.presentation.utils.keyboardAsState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -59,6 +62,7 @@ fun QuranScreen(
 
     val spacing = LocalSpacing.current
     val context = LocalContext.current
+    val keyboardConfig by keyboardAsState()
 
     LaunchedEffect(key1 = true) {
         uiEventsChannel.collect {
@@ -82,108 +86,113 @@ fun QuranScreen(
             TitleHeader(title = stringResource(id = R.string.quran_title))
             val readingSections = state.sections
             val quranSectionsHeightFraction = if (readingSections != null) 0.4f else 0.2f
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(quranSectionsHeightFraction)
-                    .padding(top = spacing.spaceMedium, bottom = spacing.spaceSmall)
-                    .padding(horizontal = spacing.spaceMedium)
-            ) {
-                val shape = if (readingSections != null) {
-                    RoundedCornerShape(
-                        topEnd = 15.dp,
-                        topStart = 15.dp
-                    )
-                } else {
-                    RoundedCornerShape(15.dp)
-                }
-
+            Spacer(modifier = Modifier.height(spacing.spaceMedium))
+            if (keyboardConfig == KeyboardConfig.Closed) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(
-                            color = MaterialTheme.colors.primary,
-                            shape = shape
-                        )
-                        .weight(1f)
-                        .padding(spacing.spaceMedium)
+                        .fillMaxHeight(quranSectionsHeightFraction)
+                        .padding(bottom = spacing.spaceMedium)
+                        .padding(horizontal = spacing.spaceMedium)
                 ) {
-                    if (readingSections != null) {
-                        QuranSection(
-                            modifier = Modifier.weight(1f),
-                            stringResource(id = R.string.first_quran_reading_section),
-                            readingSections.firstSection
-                        )
-                        Spacer(modifier = Modifier.height(spacing.spaceMedium))
-                        QuranSection(
-                            modifier = Modifier.weight(1f),
-                            stringResource(id = R.string.second_quran_reading_section),
-                            readingSections.secondSection
+                    val shape = if (readingSections != null) {
+                        RoundedCornerShape(
+                            topEnd = 15.dp,
+                            topStart = 15.dp
                         )
                     } else {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
+                        RoundedCornerShape(15.dp)
+                    }
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                color = MaterialTheme.colors.primary,
+                                shape = shape
+                            )
+                            .weight(1f)
+                            .padding(spacing.spaceMedium)
+                    ) {
+                        if (readingSections != null) {
+                            QuranSection(
+                                modifier = Modifier.weight(1f),
+                                stringResource(id = R.string.first_quran_reading_section),
+                                readingSections.firstSection
+                            )
+                            Spacer(modifier = Modifier.height(spacing.spaceMedium))
+                            QuranSection(
+                                modifier = Modifier.weight(1f),
+                                stringResource(id = R.string.second_quran_reading_section),
+                                readingSections.secondSection
+                            )
+                        } else {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                if (state.quranChapters.any { it.isMemorized }) {
+                                    Text(
+                                        modifier = Modifier.clickable {
+                                            onEvent(QuranEvent.OnLoadQuranSectionsClicked)
+                                        },
+                                        text = stringResource(id = R.string.load_quran_sections),
+                                        style = MaterialTheme.typography.body2,
+                                        textDecoration = TextDecoration.Underline,
+                                        color = MaterialTheme.colors.onPrimary
+                                    )
+                                } else {
+                                    Text(
+                                        text = stringResource(id = R.string.empty_quran_sections_prompt),
+                                        style = MaterialTheme.typography.body2,
+                                        color = MaterialTheme.colors.onPrimary
+                                    )
+                                }
+                            }
+                        }
+                    }
+                    if (readingSections != null) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    color = MaterialTheme.colors.primaryVariant,
+                                    shape = RoundedCornerShape(
+                                        bottomEnd = 15.dp,
+                                        bottomStart = 15.dp
+                                    )
+                                )
+                                .padding(
+                                    horizontal = spacing.spaceExtraSmall
+                                ),
+                            horizontalArrangement = Arrangement.End
                         ) {
-                            if (state.quranChapters.any { it.isMemorized }) {
+                            TextButton(
+                                onClick = { onEvent(QuranEvent.OnViewFullClicked) },
+                                contentPadding = PaddingValues(0.dp)
+                            ) {
                                 Text(
-                                    modifier = Modifier.clickable {
-                                        onEvent(QuranEvent.OnLoadQuranSectionsClicked)
-                                    },
-                                    text = stringResource(id = R.string.load_quran_sections),
+                                    text = stringResource(id = R.string.show_full_quran_reading_sections),
                                     style = MaterialTheme.typography.body2,
                                     textDecoration = TextDecoration.Underline,
                                     color = MaterialTheme.colors.onPrimary
                                 )
-                            } else {
+                            }
+                            TextButton(
+                                onClick = { onEvent(QuranEvent.OnNextSectionClicked) },
+                                contentPadding = PaddingValues(0.dp)
+                            ) {
                                 Text(
-                                    text = stringResource(id = R.string.empty_quran_sections_prompt),
+                                    text = stringResource(id = R.string.next_quran_reading_sections),
                                     style = MaterialTheme.typography.body2,
+                                    textDecoration = TextDecoration.Underline,
                                     color = MaterialTheme.colors.onPrimary
                                 )
                             }
                         }
                     }
                 }
-                if (readingSections != null) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(
-                                color = MaterialTheme.colors.primaryVariant,
-                                shape = RoundedCornerShape(bottomEnd = 15.dp, bottomStart = 15.dp)
-                            )
-                            .padding(
-                                horizontal = spacing.spaceExtraSmall
-                            ),
-                        horizontalArrangement = Arrangement.End
-                    ) {
-                        TextButton(
-                            onClick = { onEvent(QuranEvent.OnViewFullClicked) },
-                            contentPadding = PaddingValues(0.dp)
-                        ) {
-                            Text(
-                                text = stringResource(id = R.string.show_full_quran_reading_sections),
-                                style = MaterialTheme.typography.body2,
-                                textDecoration = TextDecoration.Underline,
-                                color = MaterialTheme.colors.onPrimary
-                            )
-                        }
-                        TextButton(
-                            onClick = { onEvent(QuranEvent.OnNextSectionClicked) },
-                            contentPadding = PaddingValues(0.dp)
-                        ) {
-                            Text(
-                                text = stringResource(id = R.string.next_quran_reading_sections),
-                                style = MaterialTheme.typography.body2,
-                                textDecoration = TextDecoration.Underline,
-                                color = MaterialTheme.colors.onPrimary
-                            )
-                        }
-                    }
-                }
             }
-
             TextField(
                 modifier = Modifier
                     .fillMaxWidth()
