@@ -1,6 +1,8 @@
 package com.prayercompanion.prayercompanionandroid.data.utils
 
 import android.content.Context
+import android.media.AudioAttributes
+import android.media.AudioFocusRequest
 import android.media.AudioManager
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
@@ -24,23 +26,14 @@ class ScheduleDailyPrayersWorker @AssistedInject constructor(
     }
 
     private fun requestAudioFocus() {
-        val focusRequest = AudioManager.OnAudioFocusChangeListener { focusChange ->
-            when (focusChange) {
-                AudioManager.AUDIOFOCUS_LOSS -> {} // Handle if necessary
-                AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {} // Handle if necessary
-                AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {} // Handle if necessary
-                AudioManager.AUDIOFOCUS_GAIN -> {} // Handle if necessary
-            }
-        }
+        val focusRequest: AudioFocusRequest =
+            AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                .setAudioAttributes(
+                    AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA).build()
+                )
+                .build()
 
-        audioManager.requestAudioFocus(
-            focusRequest,
-            AudioManager.STREAM_MUSIC,
-            AudioManager.AUDIOFOCUS_GAIN_TRANSIENT
-        )
-    }
-
-    private fun abandonAudioFocus() {
-        audioManager.abandonAudioFocus(null)
+        audioManager.requestAudioFocus(focusRequest)
+        audioManager.abandonAudioFocusRequest(focusRequest)
     }
 }
