@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.data.utils
+package com.prayercompanion.prayercompanionandroid.domain.utils
 
 import android.content.Context
 import android.media.AudioAttributes
@@ -11,16 +11,15 @@ import javax.inject.Inject
 class MediaController @Inject constructor(
     @ApplicationContext
     private val context: Context
-){
-    private val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+) {
+    private val audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+    private val focusRequest: AudioFocusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+        .setAudioAttributes(
+            AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA).build()
+        )
+        .build()
 
     fun pauseMedia() {
-        val focusRequest: AudioFocusRequest =
-            AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
-                .setAudioAttributes(
-                    AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA).build()
-                )
-                .build()
 
         audioManager.requestAudioFocus(focusRequest)
         audioManager.abandonAudioFocusRequest(focusRequest)
