@@ -17,23 +17,8 @@ class ScheduleDailyPrayersWorker @AssistedInject constructor(
     private val alarmScheduler: AndroidPrayersAlarmScheduler,
 ) : CoroutineWorker(context, workerParams) {
 
-    private val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-
     override suspend fun doWork(): Result {
-        requestAudioFocus()
         alarmScheduler.scheduleTodayPrayersNotifications()
         return Result.success()
-    }
-
-    private fun requestAudioFocus() {
-        val focusRequest: AudioFocusRequest =
-            AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
-                .setAudioAttributes(
-                    AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA).build()
-                )
-                .build()
-
-        audioManager.requestAudioFocus(focusRequest)
-        audioManager.abandonAudioFocusRequest(focusRequest)
     }
 }
