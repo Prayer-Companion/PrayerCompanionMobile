@@ -165,7 +165,8 @@ private fun SettingsToggle(
             colors = SwitchDefaults.colors(
                 checkedThumbColor = MaterialTheme.colors.onPrimary,
                 checkedTrackColor = MaterialTheme.colors.primaryVariant,
-                checkedTrackAlpha = 1f
+                checkedTrackAlpha = 1f,
+                uncheckedThumbColor = MaterialTheme.colors.onPrimary,
             ),
         )
     }

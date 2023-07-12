@@ -36,6 +36,8 @@ class QuranViewModel @Inject constructor(
     private val markQuranSectionAsRead: MarkQuranSectionAsRead
 ) : ViewModel() {
 
+    private var hasChaptersBeenSorted = false
+    private var chaptersOrder = listOf<Int>()
     var state: QuranState by mutableStateOf(QuranState())
         private set
     private val _uiEventsChannel = Channel<UiEvent>()
@@ -48,8 +50,19 @@ class QuranViewModel @Inject constructor(
                     .collectLatest { quranResult ->
                         quranResult.onSuccess { quranChapters ->
                             withContext(Dispatchers.Main) {
-                                state.quranChapters = quranChapters.sortedBy { it.id }
-                                    .sortedByDescending { it.isMemorized }
+                                if (hasChaptersBeenSorted.not()) {
+                                    state.quranChapters = quranChapters.sortedBy { it.id }
+                                        .sortedByDescending { it.isMemorized }
+                                        .also {
+                                            chaptersOrder = it.map { chapter ->
+                                                chapter.id
+                                            }
+                                        }
+                                    hasChaptersBeenSorted = true
+                                } else {
+                                    state.quranChapters = quranChapters
+                                        .sortedBy { a -> chaptersOrder.indexOfFirst { it == a.id } }
+                                }
                             }
                         }
                     }
@@ -87,7 +100,21 @@ class QuranViewModel @Inject constructor(
             QuranEvent.OnLoadQuranSectionsClicked -> onLoadQuranSectionsClicked()
             QuranEvent.OnNextSectionClicked -> onNextSectionClicked()
             QuranEvent.OnViewFullClicked -> onViewFullClicked()
+            QuranEvent.OnStart -> onStart()
         }
+    }
+
+    private fun onStart() {
+        if (hasChaptersBeenSorted) {
+            state.quranChapters = state.quranChapters.sortedBy { it.id }
+                .sortedByDescending { it.isMemorized }
+                .also {
+                    chaptersOrder = it.map { chapter ->
+                        chapter.id
+                    }
+                }
+        }
+        sendUiEvent(UiEvent.ScrollListToPosition(0))
     }
 
     private fun addMemorizedChapterAyat(chapterId: Int, fromVerse: Int, toVerse: Int) {

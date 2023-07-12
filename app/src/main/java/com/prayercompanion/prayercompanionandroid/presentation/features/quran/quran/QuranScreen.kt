@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -36,6 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavOptionsBuilder
 import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.prayercompanionandroid.presentation.components.TitleHeader
@@ -46,6 +48,7 @@ import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacin
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.compose.KeyboardConfig
+import com.prayercompanion.prayercompanionandroid.presentation.utils.compose.OnLifecycleEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.compose.keyboardAsState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -63,18 +66,20 @@ fun QuranScreen(
     val spacing = LocalSpacing.current
     val context = LocalContext.current
     val keyboardConfig by keyboardAsState()
+    val chaptersListState = rememberLazyListState()
+
+    OnLifecycleEvent { _, event ->
+        if (event == Lifecycle.Event.ON_START) {
+            onEvent(QuranEvent.OnStart)
+        }
+    }
 
     LaunchedEffect(key1 = true) {
         uiEventsChannel.collect {
             when (it) {
-                is UiEvent.ShowErrorSnackBar -> {
-                    showSnackBar(it.errorMessage.asString(context))
-                }
-
-                is UiEvent.Navigate -> {
-                    navigate(it) {}
-                }
-
+                is UiEvent.ShowErrorSnackBar -> showSnackBar(it.errorMessage.asString(context))
+                is UiEvent.Navigate -> navigate(it) {}
+                is UiEvent.ScrollListToPosition -> chaptersListState.scrollToItem(it.position)
                 else -> Unit
             }
         }
@@ -244,7 +249,8 @@ fun QuranScreen(
                         color = MaterialTheme.colors.primary,
                         shape = RoundedCornerShape(bottomEnd = 15.dp, bottomStart = 15.dp)
                     )
-                    .padding(vertical = spacing.spaceSmall, horizontal = 2.dp)
+                    .padding(vertical = spacing.spaceSmall, horizontal = 2.dp),
+                state = chaptersListState
             ) {
                 items(
                     items = state.filteredQuranChapters,
