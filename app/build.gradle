@@ -47,7 +47,8 @@ android {
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
             manifestPlaceholders = [
-                    app_name: "Debug prayer companion"
+                    app_icon: "@mipmap/ic_launcher_debug",
+                    app_icon_round: "@mipmap/ic_launcher_debug_round"
             ]
 
             signingConfig android.signingConfigs.debug
@@ -60,7 +61,8 @@ android {
             // lets revisit and make sure to set correct rules before enabling it again
             minifyEnabled false
             manifestPlaceholders = [
-                    app_name: "@string/app_name"
+                    app_icon: "@mipmap/ic_launcher",
+                    app_icon_round: "@mipmap/ic_launcher_round"
             ]
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
