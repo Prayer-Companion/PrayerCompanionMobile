@@ -64,7 +64,6 @@
     <string name="edit_aya_from">من</string>
     <string name="edit_aya_to">الى</string>
 
-    <string name="quran_reading_section">سورة %1$s (%2$d-%3$s):\n {%4$s}</string>
     <string name="first_quran_reading_section">في الركعة الاولى</string>
     <string name="second_quran_reading_section">في الركعة الثانية</string>
     <string name="show_full_quran_reading_sections">إظهار الكل</string>
@@ -82,4 +81,5 @@
     <string name="settings_items_language_options_arabic">العربية</string>
     <string name="settings_items_language_options_english">English</string>
     <string name="settings_items_signOut">تسجيل الخروج</string>
+    <string name="last_7_days_status_overview">الأيام السبعة الماضية</string>
 </resources>

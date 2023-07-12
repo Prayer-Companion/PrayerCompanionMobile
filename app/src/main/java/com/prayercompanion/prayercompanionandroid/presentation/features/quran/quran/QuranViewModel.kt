@@ -48,7 +48,8 @@ class QuranViewModel @Inject constructor(
                     .collectLatest { quranResult ->
                         quranResult.onSuccess { quranChapters ->
                             withContext(Dispatchers.Main) {
-                                state.quranChapters = quranChapters
+                                state.quranChapters = quranChapters.sortedBy { it.id }
+                                    .sortedByDescending { it.isMemorized }
                             }
                         }
                     }
@@ -91,59 +92,28 @@ class QuranViewModel @Inject constructor(
 
     private fun addMemorizedChapterAyat(chapterId: Int, fromVerse: Int, toVerse: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            val result = addMemorizedChapterAyat.call(chapterId, fromVerse, toVerse)
-
-            result.onSuccess {
-                val quranChapters = state.quranChapters.toMutableList()
-                val index = quranChapters.indexOfFirst { it.id == chapterId }
-                quranChapters[index] = quranChapters[index].copy(
-                    isMemorized = true,
-                    memorizedFrom = fromVerse,
-                    memorizedTo = toVerse
-                )
-
-                state.quranChapters = quranChapters
-            }.onFailure {
-                sendUiEvent(UiEvent.ShowErrorSnackBar(UiText.DynamicString(it.toString())))
-            }
+            addMemorizedChapterAyat.call(chapterId, fromVerse, toVerse)
+                .onFailure {
+                    sendUiEvent(UiEvent.ShowErrorSnackBar(UiText.DynamicString(it.toString())))
+                }
         }
     }
 
     private fun editMemorizedChapterAyat(chapterId: Int, fromVerse: Int, toVerse: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            val result = editMemorizedChapterAyat.call(chapterId, fromVerse, toVerse)
-
-            result.onSuccess {
-                withContext(Dispatchers.Main) {
-                    val quranChapters = state.quranChapters.toMutableList()
-                    val index = quranChapters.indexOfFirst { it.id == chapterId }
-                    quranChapters[index] = quranChapters[index].copy(
-                        isMemorized = true,
-                        memorizedFrom = fromVerse,
-                        memorizedTo = toVerse
-                    )
-
-                    state.quranChapters = quranChapters
+            editMemorizedChapterAyat.call(chapterId, fromVerse, toVerse)
+                .onFailure {
+                    sendUiEvent(UiEvent.ShowErrorSnackBar(UiText.DynamicString(it.toString())))
                 }
-            }.onFailure {
-                sendUiEvent(UiEvent.ShowErrorSnackBar(UiText.DynamicString(it.toString())))
-            }
         }
     }
 
     private fun removeMemorizedChapterAyat(chapterId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            val result = removeMemorizedChapterAyat.call(chapterId)
-
-            result.onSuccess {
-                val quranChapters = state.quranChapters.toMutableList()
-                val index = quranChapters.indexOfFirst { it.id == chapterId }
-                quranChapters[index] = quranChapters[index].copy(isMemorized = false)
-
-                state.quranChapters = quranChapters
-            }.onFailure {
-                sendUiEvent(UiEvent.ShowErrorSnackBar(UiText.DynamicString(it.toString())))
-            }
+            removeMemorizedChapterAyat.call(chapterId)
+                .onFailure {
+                    sendUiEvent(UiEvent.ShowErrorSnackBar(UiText.DynamicString(it.toString())))
+                }
         }
     }
 

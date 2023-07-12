@@ -14,7 +14,7 @@ val PrayerStatusAfterHalfTimeColor = Color(0xFFF3D743)
 val PrayerStatusLateColor = Color(0xFFFB9905)
 val PrayerStatusMissedColor = Color(0xFFF14F4F)
 val PrayerStatusQadaaColor = Color(0xFF9B5832)
-val PrayerStatusNotSetColor = Color(0xFF989898)
+val PrayerStatusNotSetColor = Color(0xFFC5C5C5)
 
 val SensorAccuracyHigh = Color(0xFF34DF34)
 val SensorAccuracyMedium = Color(0xFFFDE14E)

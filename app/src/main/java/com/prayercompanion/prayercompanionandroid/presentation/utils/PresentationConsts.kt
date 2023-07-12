@@ -13,5 +13,5 @@ object PresentationConsts {
 
     val CounterTimeFormatter: DateTimeFormatter
         get() = DateTimeFormatter
-            .ofPattern("hh:mm:ss", Locale.getDefault())
+            .ofPattern("HH:mm:ss", Locale.getDefault())
 }
