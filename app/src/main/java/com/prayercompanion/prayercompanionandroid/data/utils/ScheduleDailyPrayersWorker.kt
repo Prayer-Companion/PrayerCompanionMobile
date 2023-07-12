@@ -9,9 +9,9 @@ import dagger.assisted.AssistedInject
 
 @HiltWorker
 class ScheduleDailyPrayersWorker @AssistedInject constructor(
+    private val alarmScheduler: AndroidPrayersAlarmScheduler,
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
-    private val alarmScheduler: AndroidPrayersAlarmScheduler,
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {

@@ -8,6 +8,7 @@ sealed class UiEvent {
     data class Navigate(val route: Route, val args: List<String> = emptyList()) : UiEvent()
     data class RequestPermissions(val permissions: List<String>) : UiEvent()
     data class LaunchIntentSenderRequest(val intentSenderRequest: IntentSenderRequest) : UiEvent()
+    data class ScrollListToPosition(val position: Int) : UiEvent()
     object OpenAppSettings : UiEvent()
 
 }

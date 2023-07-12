@@ -5,6 +5,7 @@ plugins {
     id 'dagger.hilt.android.plugin'
     id 'com.google.gms.google-services'
     id 'org.jetbrains.kotlin.plugin.serialization'
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
@@ -15,8 +16,8 @@ android {
         applicationId "com.prayercompanion.prayercompanionandroid"
         minSdk 26
         targetSdk 33
-        versionCode 4
-        versionName "1.1.0"
+        versionCode 5
+        versionName "1.2.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -47,7 +48,8 @@ android {
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
             manifestPlaceholders = [
-                    app_name: "Debug prayer companion"
+                    app_icon: "@mipmap/ic_launcher_debug",
+                    app_icon_round: "@mipmap/ic_launcher_debug_round"
             ]
 
             signingConfig android.signingConfigs.debug
@@ -60,7 +62,8 @@ android {
             // lets revisit and make sure to set correct rules before enabling it again
             minifyEnabled false
             manifestPlaceholders = [
-                    app_name: "@string/app_name"
+                    app_icon: "@mipmap/ic_launcher",
+                    app_icon_round: "@mipmap/ic_launcher_round"
             ]
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -79,7 +82,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.4.6'
+        kotlinCompilerExtensionVersion "$compose_compiler_version"
     }
     packagingOptions {
         resources {
@@ -89,7 +92,7 @@ android {
 }
 
 dependencies {
-    def appcompat_version = "1.6.1"
+    def appcompat_version = "1.7.0-alpha02"
 
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation "androidx.appcompat:appcompat:$appcompat_version"
@@ -100,7 +103,7 @@ dependencies {
     implementation "androidx.compose.ui:ui:$compose_ui_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_ui_version"
     implementation "androidx.compose.material:material:$compose_ui_version"
-    implementation "androidx.navigation:navigation-compose:2.6.0-rc02"
+    implementation "androidx.navigation:navigation-compose:2.7.0-beta01"
     implementation 'com.google.android.gms:play-services-location:21.0.1'
     implementation "com.github.skydoves:whatif:1.1.2"
 
@@ -119,7 +122,7 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:2.9.0"
     implementation 'com.google.code.gson:gson:2.10.1'
 
-    def room_version = "2.5.1"
+    def room_version = "2.5.2"
     implementation "androidx.room:room-ktx:$room_version"
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
@@ -128,6 +131,7 @@ dependencies {
     implementation 'com.squareup.logcat:logcat:0.1'
     implementation platform('com.google.firebase:firebase-bom:31.5.0')
     implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.android.gms:play-services-auth:20.5.0'
     implementation 'com.google.firebase:firebase-auth-ktx:22.0.0'
 

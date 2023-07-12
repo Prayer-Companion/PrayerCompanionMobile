@@ -25,21 +25,28 @@ class DataStoresRepo @Inject constructor(
 
 @Serializable
 data class AppPreferences(
+    val isSignedIn: Boolean,
     val location: Location?,
     val address: Address?,
     val hasSkippedNotificationPermission: Boolean,
     val deniedLocationPermissionsCount: Int,
     val deniedNotificationPermissionsCount: Int,
+    /** The default app language should be arabic, so we set it to Arabic the first time only */
+    val hasSetArabicLanguageFirstTime: Boolean,
+    val isPauseMediaPreferencesEnabled: Boolean,
 )
 
 object AppPreferencesSerializer : Serializer<AppPreferences> {
     override val defaultValue: AppPreferences
         get() = AppPreferences(
+            isSignedIn = false,
             location = null,
             address = null,
             hasSkippedNotificationPermission = false,
             deniedLocationPermissionsCount = 0,
             deniedNotificationPermissionsCount = 0,
+            hasSetArabicLanguageFirstTime = false,
+            isPauseMediaPreferencesEnabled = true,
         )
 
     override suspend fun readFrom(input: InputStream): AppPreferences {

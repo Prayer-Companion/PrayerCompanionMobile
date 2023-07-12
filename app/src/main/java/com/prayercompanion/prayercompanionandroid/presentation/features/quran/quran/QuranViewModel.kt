@@ -36,6 +36,8 @@ class QuranViewModel @Inject constructor(
     private val markQuranSectionAsRead: MarkQuranSectionAsRead
 ) : ViewModel() {
 
+    private var hasChaptersBeenSorted = false
+    private var chaptersOrder = listOf<Int>()
     var state: QuranState by mutableStateOf(QuranState())
         private set
     private val _uiEventsChannel = Channel<UiEvent>()
@@ -44,10 +46,26 @@ class QuranViewModel @Inject constructor(
     init {
         viewModelScope.launch(Dispatchers.IO) {
             launch {
-                val quranResult = getFullQuranWithMemorized.call()
-                quranResult.onSuccess { quranChapters ->
-                    state.quranChapters = quranChapters
-                }
+                getFullQuranWithMemorized.call()
+                    .collectLatest { quranResult ->
+                        quranResult.onSuccess { quranChapters ->
+                            withContext(Dispatchers.Main) {
+                                if (hasChaptersBeenSorted.not()) {
+                                    state.quranChapters = quranChapters.sortedBy { it.id }
+                                        .sortedByDescending { it.isMemorized }
+                                        .also {
+                                            chaptersOrder = it.map { chapter ->
+                                                chapter.id
+                                            }
+                                        }
+                                    hasChaptersBeenSorted = true
+                                } else {
+                                    state.quranChapters = quranChapters
+                                        .sortedBy { a -> chaptersOrder.indexOfFirst { it == a.id } }
+                                }
+                            }
+                        }
+                    }
             }
             launch {
                 getNextQuranReadingSectionsFlow.call().collectLatest { sections ->
@@ -82,64 +100,47 @@ class QuranViewModel @Inject constructor(
             QuranEvent.OnLoadQuranSectionsClicked -> onLoadQuranSectionsClicked()
             QuranEvent.OnNextSectionClicked -> onNextSectionClicked()
             QuranEvent.OnViewFullClicked -> onViewFullClicked()
+            QuranEvent.OnStart -> onStart()
         }
+    }
+
+    private fun onStart() {
+        if (hasChaptersBeenSorted) {
+            state.quranChapters = state.quranChapters.sortedBy { it.id }
+                .sortedByDescending { it.isMemorized }
+                .also {
+                    chaptersOrder = it.map { chapter ->
+                        chapter.id
+                    }
+                }
+        }
+        sendUiEvent(UiEvent.ScrollListToPosition(0))
     }
 
     private fun addMemorizedChapterAyat(chapterId: Int, fromVerse: Int, toVerse: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            val result = addMemorizedChapterAyat.call(chapterId, fromVerse, toVerse)
-
-            result.onSuccess {
-                val quranChapters = state.quranChapters.toMutableList()
-                val index = quranChapters.indexOfFirst { it.id == chapterId }
-                quranChapters[index] = quranChapters[index].copy(
-                    isMemorized = true,
-                    memorizedFrom = fromVerse,
-                    memorizedTo = toVerse
-                )
-
-                state.quranChapters = quranChapters
-            }.onFailure {
-                sendUiEvent(UiEvent.ShowErrorSnackBar(UiText.DynamicString(it.toString())))
-            }
+            addMemorizedChapterAyat.call(chapterId, fromVerse, toVerse)
+                .onFailure {
+                    sendUiEvent(UiEvent.ShowErrorSnackBar(UiText.DynamicString(it.toString())))
+                }
         }
     }
 
     private fun editMemorizedChapterAyat(chapterId: Int, fromVerse: Int, toVerse: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            val result = editMemorizedChapterAyat.call(chapterId, fromVerse, toVerse)
-
-            result.onSuccess {
-                withContext(Dispatchers.Main) {
-                    val quranChapters = state.quranChapters.toMutableList()
-                    val index = quranChapters.indexOfFirst { it.id == chapterId }
-                    quranChapters[index] = quranChapters[index].copy(
-                        isMemorized = true,
-                        memorizedFrom = fromVerse,
-                        memorizedTo = toVerse
-                    )
-
-                    state.quranChapters = quranChapters
+            editMemorizedChapterAyat.call(chapterId, fromVerse, toVerse)
+                .onFailure {
+                    sendUiEvent(UiEvent.ShowErrorSnackBar(UiText.DynamicString(it.toString())))
                 }
-            }.onFailure {
-                sendUiEvent(UiEvent.ShowErrorSnackBar(UiText.DynamicString(it.toString())))
-            }
         }
     }
 
     private fun removeMemorizedChapterAyat(chapterId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            val result = removeMemorizedChapterAyat.call(chapterId)
-
-            result.onSuccess {
-                val quranChapters = state.quranChapters.toMutableList()
-                val index = quranChapters.indexOfFirst { it.id == chapterId }
-                quranChapters[index] = quranChapters[index].copy(isMemorized = false)
-
-                state.quranChapters = quranChapters
-            }.onFailure {
-                sendUiEvent(UiEvent.ShowErrorSnackBar(UiText.DynamicString(it.toString())))
-            }
+            removeMemorizedChapterAyat.call(chapterId)
+                .onFailure {
+                    sendUiEvent(UiEvent.ShowErrorSnackBar(UiText.DynamicString(it.toString())))
+                }
         }
     }
 
@@ -168,7 +169,7 @@ class QuranViewModel @Inject constructor(
     }
 
     private fun onSearchQueryChanged(query: String) {
-        state.searchQuery = query
+        state.searchQuery = query.trim()
     }
 
     private fun sendUiEvent(uiEvent: UiEvent) {

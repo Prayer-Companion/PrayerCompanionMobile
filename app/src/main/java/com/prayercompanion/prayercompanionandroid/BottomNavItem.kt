@@ -11,7 +11,8 @@ enum class BottomNavItem(
 ) {
     Qibla(Route.Qibla.name, R.string.qibla_tab, R.drawable.ic_qibla),
     Home(Route.Home.name, R.string.home_tab, R.drawable.ic_mosque),
-    Quran(Route.Quran.name, R.string.quran_tab, R.drawable.ic_quran);
+    Quran(Route.Quran.name, R.string.quran_tab, R.drawable.ic_quran),
+    Settings(Route.Settings.name, R.string.settings_tab, R.drawable.ic_settings);
 
     companion object {
 
@@ -19,7 +20,8 @@ enum class BottomNavItem(
             return listOf(
                 Quran,
                 Home,
-                Qibla
+                Qibla,
+                Settings
             )
         }
     }

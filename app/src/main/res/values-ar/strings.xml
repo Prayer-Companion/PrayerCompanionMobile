@@ -10,7 +10,6 @@
     <string name="isha">العشاء</string>
 
     <string name="status">الحالة</string>
-    <string name="remaining_time_value">%02d:%02d:%02d</string>
     <string name="remaining_time">الوقت المتبقي حتى صلاة %1$s</string>
 
     <string name="error_something_went_wrong">نأسف, يبدوا ان هنالك مشكلة ما</string>
@@ -18,9 +17,10 @@
     <string name="home_tab">الرئيسية</string>
     <string name="qibla_tab">القبلة</string>
     <string name="quran_tab">القرآن</string>
+    <string name="settings_tab">الإعدادات</string>
 
-    <string name="jamaah_prayer_status">جماعة</string>
-    <string name="on_time_prayer_status">على الوقت</string>
+    <string name="jamaah_prayer_status">في المسجد</string>
+    <string name="on_time_prayer_status">في وقتها</string>
     <string name="after_half_time_prayer_status">بعد نصف الوقت</string>
     <string name="late_prayer_status">متاخر</string>
     <string name="missed_prayer_status">فاتت</string>
@@ -64,7 +64,6 @@
     <string name="edit_aya_from">من</string>
     <string name="edit_aya_to">الى</string>
 
-    <string name="quran_reading_section">سورة %1$s (%2$d-%3$s):\n {%4$s}</string>
     <string name="first_quran_reading_section">في الركعة الاولى</string>
     <string name="second_quran_reading_section">في الركعة الثانية</string>
     <string name="show_full_quran_reading_sections">إظهار الكل</string>
@@ -76,4 +75,13 @@
     <string name="ok">حسنا</string>
     <string name="skip">تخطي</string>
 
+    <!-- Settings screen -->
+    <string name="settings_title">الإعدادات</string>
+    <string name="settings_items_language">اللغة</string>
+    <string name="settings_items_language_options_arabic">العربية</string>
+    <string name="settings_items_language_options_english">English</string>
+    <string name="settings_items_preferences">التفضيلات</string>
+    <string name="settings_items_preferences_pauseMedia">ايقاف الوسائط الصوتية عند نداء الاذان</string>
+    <string name="settings_items_signOut">تسجيل الخروج</string>
+    <string name="last_7_days_status_overview">الأيام السبعة الماضية</string>
 </resources>

@@ -27,6 +27,7 @@ fun Throwable.printStackTraceInDebug() {
     }
 }
 
+@Suppress("DEPRECATION", "UNCHECKED_CAST")
 fun <T : Serializable?> Intent.getSerializable(key: String, m_class: Class<T>): T {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
         this.getSerializableExtra(key, m_class)!!

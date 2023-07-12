@@ -4,10 +4,14 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 object PresentationConsts {
-    val DateFormatter: DateTimeFormatter = DateTimeFormatter
-        .ofPattern("dd/MM/yyyy", Locale.ENGLISH)
+    val DateFormatter: DateTimeFormatter
+        get() = DateTimeFormatter
+            .ofPattern("dd/MM/yyyy", Locale.getDefault())
     val TimeFormatter: DateTimeFormatter
         get() = DateTimeFormatter
-            .ofPattern("hh:mm a", Locale.ENGLISH)
-            .withLocale(Locale.getDefault())
+            .ofPattern("hh:mm a", Locale.getDefault())
+
+    val CounterTimeFormatter: DateTimeFormatter
+        get() = DateTimeFormatter
+            .ofPattern("HH:mm:ss", Locale.getDefault())
 }

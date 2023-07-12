@@ -5,15 +5,21 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.prayercompanion.prayercompanionandroid.data.preferences.DataStoresRepo
 import com.prayercompanion.prayercompanionandroid.data.utils.Consts
 import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class AuthenticationHelper @Inject constructor(
-    private val googleSignInClient: GoogleSignInClient
+    private val googleSignInClient: GoogleSignInClient,
+    dataStoresRepo: DataStoresRepo,
 ) {
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val appPreferences by lazy { dataStoresRepo.appPreferencesDataStore }
 
     fun signInWithGoogle(
         token: String,
@@ -53,6 +59,11 @@ class AuthenticationHelper @Inject constructor(
                 ?.addOnSuccessListener {
                     Consts.userToken = it.token
                 }
+            CoroutineScope(Dispatchers.Default).launch {
+                appPreferences.updateData {
+                    it.copy(isSignedIn = true)
+                }
+            }
             onSuccess()
         } else {
             signOut()

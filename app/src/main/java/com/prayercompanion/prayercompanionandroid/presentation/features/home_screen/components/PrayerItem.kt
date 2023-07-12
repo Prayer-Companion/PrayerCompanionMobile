@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,12 +28,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.models.getColorOrDefault
 import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.prayercompanionandroid.presentation.utils.PresentationConsts
+import com.prayercompanion.prayercompanionandroid.presentation.utils.compose.MeasureUnconstrainedViewWidth
 
 @Preview(locale = "ar")
 @Composable
@@ -43,9 +46,6 @@ fun PrayerItem(
     onStatusSelected: (PrayerStatus, PrayerInfo) -> Unit = { _, _ -> }
 ) = PrayerCompanionAndroidTheme {
     val spacing = LocalSpacing.current
-    var isStatusSelectorExpanded by remember {
-        mutableStateOf(false)
-    }
 
     Row(
         modifier = modifier
@@ -66,11 +66,21 @@ fun PrayerItem(
                 .padding(start = spacing.spaceMedium),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = name,
-                style = MaterialTheme.typography.h2,
-                color = MaterialTheme.colors.onPrimary
-            )
+            MeasureUnconstrainedViewWidth(
+                viewToMeasure = {
+                    Text(
+                        text = stringResource(id = R.string.maghrib),
+                        style = MaterialTheme.typography.h2
+                    )
+                }
+            ) {
+                Text(
+                    modifier = Modifier.defaultMinSize(minWidth = it),
+                    text = name,
+                    style = MaterialTheme.typography.h2,
+                    color = MaterialTheme.colors.onPrimary
+                )
+            }
             Box(modifier = Modifier.fillMaxSize()) {
                 Text(
                     modifier = Modifier
@@ -81,31 +91,49 @@ fun PrayerItem(
                 )
             }
         }
-        Row(
-            modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth(0.30f)
-                .background(
-                    color = prayerInfo.status.getColorOrDefault(),
-                    shape = RoundedCornerShape(
-                        topEnd = 15.dp,
-                        bottomEnd = 15.dp
-                    )
-                ),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly
+        PrayerItemState(
+            prayerInfo.status,
+            prayerInfo.isStateSelectable
         ) {
-            val status = prayerInfo.status
-            if (status != null) {
-                Text(
-                    text = stringResource(id = status.nameId),
-                    color = MaterialTheme.colors.onPrimary,
-                    style = MaterialTheme.typography.button,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.weight(2.5f),
-                )
-            }
+            onStatusSelected(it, prayerInfo)
+        }
+    }
+}
 
+@Composable
+private fun PrayerItemState(
+    status: PrayerStatus?,
+    isStateSelectable: Boolean,
+    onStatusSelected: (PrayerStatus) -> Unit
+) {
+    var isStatusSelectorExpanded by remember {
+        mutableStateOf(false)
+    }
+
+    Row(
+        modifier = Modifier
+            .fillMaxHeight()
+            .fillMaxWidth(0.30f)
+            .background(
+                color = status.getColorOrDefault(),
+                shape = RoundedCornerShape(
+                    topEnd = 15.dp,
+                    bottomEnd = 15.dp
+                )
+            ),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        if (status != null) {
+            Text(
+                text = stringResource(id = status.nameId),
+                color = MaterialTheme.colors.onPrimary,
+                style = MaterialTheme.typography.button,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.weight(2.5f),
+            )
+        }
+        if (isStateSelectable) {
             Icon(
                 modifier = Modifier
                     .weight(1f)
@@ -116,16 +144,16 @@ fun PrayerItem(
                 contentDescription = "",
                 tint = MaterialTheme.colors.onPrimary
             )
-            PrayerStatusDropDownMenu(
-                expanded = isStatusSelectorExpanded,
-                onItemSelected = {
-                    onStatusSelected(it, prayerInfo)
-                    isStatusSelectorExpanded = false
-                },
-                onDismissRequest = {
-                    isStatusSelectorExpanded = !isStatusSelectorExpanded
-                }
-            )
         }
+        PrayerStatusDropDownMenu(
+            expanded = isStatusSelectorExpanded,
+            onItemSelected = {
+                onStatusSelected(it)
+                isStatusSelectorExpanded = false
+            },
+            onDismissRequest = {
+                isStatusSelectorExpanded = !isStatusSelectorExpanded
+            }
+        )
     }
 }

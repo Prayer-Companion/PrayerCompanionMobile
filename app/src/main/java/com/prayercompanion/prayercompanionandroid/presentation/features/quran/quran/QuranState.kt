@@ -11,5 +11,6 @@ class QuranState {
     var sections: PrayerQuranReadingSections? by mutableStateOf(null)
     var searchQuery: String by mutableStateOf("")
     val filteredQuranChapters: List<QuranChapter> get() = quranChapters.filter { searchQuery in it.name }
+    val hasAnyMemorizedChapters get() = quranChapters.any { it.isMemorized }
 
 }

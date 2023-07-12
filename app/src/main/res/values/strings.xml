@@ -10,19 +10,19 @@
     <string name="isha">Isha</string>
 
     <string name="status">Status</string>
-    <string name="remaining_time_value">%02d:%02d:%02d</string>
-    <string name="remaining_time">Remaining Time</string>
+    <string name="remaining_time">Remaining time till %1$s prayer</string>
 
     <string name="home_tab">Home</string>
     <string name="qibla_tab">Qibla</string>
     <string name="quran_tab">Quran</string>
+    <string name="settings_tab">Settings</string>
 
     <string name="missed_prayer_status">Missed</string>
     <string name="on_time_prayer_status">On Time</string>
     <string name="after_half_time_prayer_status">After half time</string>
     <string name="qadaa_prayer_status">Qadaa</string>
     <string name="late_prayer_status">Late</string>
-    <string name="jamaah_prayer_status">Jamaah</string>
+    <string name="jamaah_prayer_status">In The Mosque</string>
     <string name="or">Or</string>
     <string name="continue_with_google">Continue with Google</string>
     <string name="continue_as_guest">Continue as a Guest</string>
@@ -59,7 +59,8 @@
 
     <string name="edit_aya_from">From</string>
     <string name="edit_aya_to">To</string>
-    <string name="quran_reading_section">سورة %1$s (%2$d-%3$s):\n {%4$s}</string>
+    <string name="quran_reading_section_chapter_name" translatable="false">سورة %1$s (%2$d-%3$s):</string>
+    <string name="quran_reading_section" translatable="false">{%1$s}</string>
     <string name="first_quran_reading_section">First section</string>
     <string name="second_quran_reading_section">Second section</string>
     <string name="show_full_quran_reading_sections">Show all</string>
@@ -69,9 +70,19 @@
     <!-- General -->
     <string name="ok">OK</string>
 
+    <!-- Settings screen -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_items_language">Language</string>
+    <string name="settings_items_language_options_arabic">العربية</string>
+    <string name="settings_items_language_options_english">English</string>
+    <string name="settings_items_preferences">Preferences</string>
+    <string name="settings_items_preferences_pauseMedia">Pause background media on Athan time</string>
+    <string name="settings_items_signOut">Sign out</string>
+
     <!--  Errors  -->
     <string name="error_something_went_wrong">Sorry Something went wrong</string>
     <string name="current_prayer">Current Prayer</string>
     <string name="skip">Skip</string>
+    <string name="last_7_days_status_overview">Last 7 days</string>
 
 </resources>

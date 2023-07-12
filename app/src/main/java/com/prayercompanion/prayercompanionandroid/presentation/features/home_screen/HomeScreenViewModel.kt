@@ -10,10 +10,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.common.api.ResolvableApiException
 import com.prayercompanion.prayercompanionandroid.R
+import com.prayercompanion.prayercompanionandroid.data.utils.Consts
 import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.models.RemainingDuration
+import com.prayercompanion.prayercompanionandroid.domain.repositories.QuranRepository
+import com.prayercompanion.prayercompanionandroid.domain.usecases.UpdateAuthToken
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetCurrentPrayer
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetDayPrayers
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetLastWeekStatusesOverView
@@ -25,6 +28,7 @@ import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
 import com.prayercompanion.prayercompanionandroid.presentation.utils.toUiText
 import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
@@ -48,13 +52,15 @@ class HomeScreenViewModel @Inject constructor(
     private val getNextPrayer: GetNextPrayer,
     private val updatePrayerStatus: UpdatePrayerStatus,
     private val getLastWeekStatusesOverView: GetLastWeekStatusesOverView,
-    private val locationManager: AppLocationManager
+    private val locationManager: AppLocationManager,
+    private val quranRepository: QuranRepository,
+    private val updateAuthToken: UpdateAuthToken
 ) : ViewModel() {
 
     private var loadSelectedDatePrayersJob: Job? = null
+    private var lastForegroundTime = 0L
     private val _uiEvents = Channel<UiEvent>()
     val uiEvents = _uiEvents.receiveAsFlow()
-
     var state: HomeScreenState by mutableStateOf(HomeScreenState())
         private set
     var durationUntilNextPrayer by mutableStateOf(RemainingDuration(0, 0, 0))
@@ -102,6 +108,13 @@ class HomeScreenViewModel @Inject constructor(
             }
         }
 
+        fun loadStartingData() {
+            CoroutineScope(Dispatchers.IO).launch {
+                quranRepository.loadMemorizedChapters()
+            }
+        }
+
+        loadStartingData()
         viewModelScope.launch(Dispatchers.IO) {
             loadInitialDayPrayers()
             awaitAll(
@@ -140,14 +153,40 @@ class HomeScreenViewModel @Inject constructor(
             }
     }
 
+    fun onStart() {
+        val currentTime = System.currentTimeMillis()
+        val durationSinceLastForegroundTime = currentTime - lastForegroundTime
+
+        val lastAuthTokenUpdateTime = Consts.userTokenUpdateTime
+        val durationSinceLastUpdate = Duration
+            .between(LocalDateTime.now(), lastAuthTokenUpdateTime ?: LocalDateTime.now())
+            .toMillis()
+
+        if (
+            lastAuthTokenUpdateTime == null ||
+            durationSinceLastUpdate > Consts.TOKEN_UPDATE_THRESHOLD_TIME_MS
+        ) {
+            updateAuthToken.call(
+                forceRefresh = true,
+                onSuccess = {
+                    updateSelectedDate(LocalDate.now())
+                }
+            )
+        } else if (durationSinceLastForegroundTime > DURATION_AFTER_FOREGROUND_THRESHOLD_REFRESH_MS) {
+            updateSelectedDate(LocalDate.now())
+        }
+    }
+
+    fun onPause() {
+        lastForegroundTime = System.currentTimeMillis()
+    }
+
     fun onPreviousDayButtonClicked() {
-        state = state.copy(selectedDate = state.selectedDate.minusDays(1))
-        loadSelectedDatePrayers()
+        updateSelectedDate(state.selectedDate.minusDays(1))
     }
 
     fun onNextDayButtonClicked() {
-        state = state.copy(selectedDate = state.selectedDate.plusDays(1))
-        loadSelectedDatePrayers()
+        updateSelectedDate(state.selectedDate.plusDays(1))
     }
 
     fun onStatusSelected(prayerStatus: PrayerStatus, prayerInfo: PrayerInfo) {
@@ -168,6 +207,11 @@ class HomeScreenViewModel @Inject constructor(
                 loadSelectedDatePrayers(true)
             }
         }
+    }
+
+    private fun updateSelectedDate(date: LocalDate) {
+        state = state.copy(selectedDate = date)
+        loadSelectedDatePrayers()
     }
 
     private fun loadSelectedDatePrayers(forceUpdate: Boolean = false) {
@@ -234,5 +278,9 @@ class HomeScreenViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.Main) {
             _uiEvents.send(event)
         }
+    }
+
+    companion object {
+        private const val DURATION_AFTER_FOREGROUND_THRESHOLD_REFRESH_MS = 5 * 60 * 1000 //5 min
     }
 }

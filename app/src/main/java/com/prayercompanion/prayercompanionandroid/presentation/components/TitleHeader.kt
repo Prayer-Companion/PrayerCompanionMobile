@@ -16,11 +16,10 @@ import androidx.compose.ui.unit.dp
 import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 
-@Preview
 @Composable
 fun TitleHeader(
     modifier: Modifier = Modifier,
-    title: String = "Memorized Ayat"
+    title: String
 ) = PrayerCompanionAndroidTheme {
 
     val spacing = LocalSpacing.current
@@ -42,4 +41,10 @@ fun TitleHeader(
             color = MaterialTheme.colors.onPrimary,
         )
     }
+}
+
+@Preview
+@Composable
+fun TitleHeaderPreview() {
+    TitleHeader(title = "Memorized Ayat")
 }

@@ -36,12 +36,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
 import com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.components.HomeHeader
 import com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.components.PrayerItem
 import com.prayercompanion.prayercompanionandroid.presentation.theme.AppBackground
 import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
 import com.prayercompanion.prayercompanionandroid.presentation.utils.PresentationConsts
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
+import com.prayercompanion.prayercompanionandroid.presentation.utils.compose.OnLifecycleEvent
 
 @Composable
 fun HomeScreen(
@@ -58,6 +60,18 @@ fun HomeScreen(
         }
     )
 
+    OnLifecycleEvent { _, event ->
+        when (event) {
+            Lifecycle.Event.ON_START -> {
+                viewModel.onStart()
+            }
+            Lifecycle.Event.ON_PAUSE -> {
+                viewModel.onPause()
+            }
+            else -> Unit
+        }
+    }
+
     LaunchedEffect(key1 = true) {
         viewModel.uiEvents.collect {
             when (it) {
@@ -66,9 +80,11 @@ fun HomeScreen(
                         .snackbarHostState
                         .showSnackbar(it.errorMessage.asString(context))
                 }
+
                 is UiEvent.LaunchIntentSenderRequest -> {
                     locationSettingsLauncher.launch(it.intentSenderRequest)
                 }
+
                 else -> Unit
             }
         }
@@ -84,8 +100,7 @@ fun HomeScreen(
         ) {
             HomeHeader(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.4f),
+                    .fillMaxWidth(),
                 currentPrayer = viewModel.state.currentPrayer,
                 nextPrayer = viewModel.state.nextPrayer,
                 durationUntilNextPrayer = viewModel.durationUntilNextPrayer,
