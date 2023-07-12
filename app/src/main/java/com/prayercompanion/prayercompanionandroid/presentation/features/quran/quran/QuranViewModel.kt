@@ -169,7 +169,7 @@ class QuranViewModel @Inject constructor(
     }
 
     private fun onSearchQueryChanged(query: String) {
-        state.searchQuery = query
+        state.searchQuery = query.trim()
     }
 
     private fun sendUiEvent(uiEvent: UiEvent) {

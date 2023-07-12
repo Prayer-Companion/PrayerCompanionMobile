@@ -36,6 +36,7 @@ fun QuranSection(
     modifier: Modifier = Modifier,
     title: String,
     section: PrayerQuranReadingSection,
+    numberOfLines: Int = Int.MAX_VALUE
 ) {
     val spacing = LocalSpacing.current
     Column(
@@ -80,7 +81,8 @@ fun QuranSection(
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.h3,
                     color = MaterialTheme.colors.onPrimary,
-                    lineHeight = 30.sp
+                    lineHeight = 30.sp,
+                    maxLines = numberOfLines
                 )
             }
         }
@@ -104,6 +106,7 @@ private fun QuranSectionPreview() = PrayerCompanionAndroidTheme {
     ) {
         QuranSection(
             title = stringResource(id = R.string.first_quran_reading_section),
+            numberOfLines = 1,
             section = PrayerQuranReadingSection(
                 sectionId = 0,
                 chapterId = 0,
