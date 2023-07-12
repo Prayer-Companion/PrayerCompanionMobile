@@ -1,5 +1,6 @@
 package com.prayercompanion.prayercompanionandroid.presentation.features.settings
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,15 +9,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Switch
+import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,12 +53,10 @@ fun SettingsScreen(
                 title = stringResource(id = R.string.settings_title)
             )
             Spacer(modifier = Modifier.height(spacing.spaceLarge))
-            Column(modifier = Modifier.padding(horizontal = spacing.spaceLarge)) {
-                Text(
-                    text = stringResource(id = R.string.settings_items_language),
-                    style = MaterialTheme.typography.subtitle2,
-                    color = MaterialTheme.colors.primary
-                )
+            SettingsSection(
+                modifier = Modifier.padding(horizontal = spacing.spaceLarge),
+                title = stringResource(id = R.string.settings_items_language)
+            ) {
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                     LanguageSelector(
                         modifier = Modifier.fillMaxWidth(),
@@ -62,6 +66,20 @@ fun SettingsScreen(
                         }
                     )
                 }
+            }
+            Spacer(modifier = Modifier.height(spacing.spaceMedium))
+            SettingsSection(
+                modifier = Modifier.padding(horizontal = spacing.spaceLarge),
+                title = stringResource(id = R.string.settings_items_preferences)
+            ) {
+                SettingsToggle(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = stringResource(id = R.string.settings_items_preferences_pauseMedia),
+                    isChecked = state.isPauseMediaPreferencesEnabled,
+                    onCheckedChange = {
+                        onEvent(SettingsEvent.OnPauseMediaCheckedChange(it))
+                    },
+                )
             }
         }
     }
@@ -113,7 +131,66 @@ private fun LanguageSelector(
     }
 }
 
-@Preview(locale = "ar", showSystemUi = true)
+@Composable
+private fun SettingsToggle(
+    modifier: Modifier = Modifier,
+    text: String,
+    isChecked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    val spacing = LocalSpacing.current
+
+    Row(
+        modifier = modifier
+            .background(
+                color = MaterialTheme.colors.primary,
+                shape = RoundedCornerShape(15.dp)
+            )
+            .padding(horizontal = spacing.spaceMedium),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            modifier = Modifier.weight(1f),
+            text = text,
+            style = MaterialTheme.typography.subtitle2,
+            color = MaterialTheme.colors.onPrimary
+        )
+        Spacer(modifier = Modifier.width(spacing.spaceExtraSmall))
+        Switch(
+            modifier = Modifier.scale(1.05f),
+            checked = isChecked,
+            onCheckedChange = {
+                onCheckedChange(it)
+            },
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = MaterialTheme.colors.onPrimary,
+                checkedTrackColor = MaterialTheme.colors.primaryVariant,
+                checkedTrackAlpha = 1f
+            ),
+        )
+    }
+}
+
+@Composable
+private fun SettingsSection(
+    modifier: Modifier = Modifier,
+    title: String,
+    content: @Composable () -> Unit
+) {
+    val spacing = LocalSpacing.current
+
+    Column(modifier = modifier) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.subtitle2,
+            color = MaterialTheme.colors.primary
+        )
+        Spacer(modifier = Modifier.height(spacing.spaceExtraSmall))
+        content()
+    }
+}
+
+@Preview(locale = "en", showSystemUi = true)
 @Composable
 private fun SettingsScreenPreview() = PrayerCompanionAndroidTheme {
     SettingsScreen(SettingsState()) {}

@@ -20,7 +20,6 @@ class MediaController @Inject constructor(
         .build()
 
     fun pauseMedia() {
-
         audioManager.requestAudioFocus(focusRequest)
         audioManager.abandonAudioFocusRequest(focusRequest)
     }

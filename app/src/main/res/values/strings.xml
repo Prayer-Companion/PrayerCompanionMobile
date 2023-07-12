@@ -75,6 +75,8 @@
     <string name="settings_items_language">Language</string>
     <string name="settings_items_language_options_arabic">العربية</string>
     <string name="settings_items_language_options_english">English</string>
+    <string name="settings_items_preferences">Preferences</string>
+    <string name="settings_items_preferences_pauseMedia">Pause Background Media On Athan Call</string>
     <string name="settings_items_signOut">Sign out</string>
 
     <!--  Errors  -->
