@@ -134,7 +134,7 @@ fun HomeHeader(
                 }
                 Spacer(modifier = Modifier.height(spacing.spaceMedium))
                 Text(
-                    text = "الأيام السبعة الماضية",
+                    text = stringResource(id = R.string.last_7_days_status_overview),
                     style = MaterialTheme.typography.subtitle2,
                     color = Color.White
                 )
