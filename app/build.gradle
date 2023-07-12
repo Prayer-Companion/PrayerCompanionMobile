@@ -5,6 +5,7 @@ plugins {
     id 'dagger.hilt.android.plugin'
     id 'com.google.gms.google-services'
     id 'org.jetbrains.kotlin.plugin.serialization'
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
@@ -130,6 +131,7 @@ dependencies {
     implementation 'com.squareup.logcat:logcat:0.1'
     implementation platform('com.google.firebase:firebase-bom:31.5.0')
     implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.android.gms:play-services-auth:20.5.0'
     implementation 'com.google.firebase:firebase-auth-ktx:22.0.0'
 
