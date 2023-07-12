@@ -76,7 +76,7 @@
     <string name="settings_items_language_options_arabic">العربية</string>
     <string name="settings_items_language_options_english">English</string>
     <string name="settings_items_preferences">Preferences</string>
-    <string name="settings_items_preferences_pauseMedia">Pause background media on Athan time</string>
+    <string name="settings_items_preferences_pauseMedia">Pause background multimedia on Athan time</string>
     <string name="settings_items_signOut">Sign out</string>
 
     <!--  Errors  -->

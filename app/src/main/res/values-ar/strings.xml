@@ -81,7 +81,7 @@
     <string name="settings_items_language_options_arabic">العربية</string>
     <string name="settings_items_language_options_english">English</string>
     <string name="settings_items_preferences">التفضيلات</string>
-    <string name="settings_items_preferences_pauseMedia">ايقاف الوسائط الصوتية عند نداء الاذان</string>
+    <string name="settings_items_preferences_pauseMedia">ايقاف الوسائط المتعددة عند نداء الاذان</string>
     <string name="settings_items_signOut">تسجيل الخروج</string>
     <string name="last_7_days_status_overview">الأيام السبعة الماضية</string>
 </resources>
