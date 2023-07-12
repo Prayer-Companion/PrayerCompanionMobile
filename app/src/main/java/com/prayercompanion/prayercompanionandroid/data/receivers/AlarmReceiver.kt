@@ -3,6 +3,7 @@ package com.prayercompanion.prayercompanionandroid.data.receivers
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.prayercompanion.prayercompanionandroid.domain.utils.MediaController
 import com.prayercompanion.prayercompanionandroid.data.utils.PrayersNotificationsService
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerNotificationItem
 import com.prayercompanion.prayercompanionandroid.getSerializable
@@ -15,6 +16,9 @@ class AlarmReceiver : BroadcastReceiver() {
 
     @Inject
     lateinit var prayersNotificationsService: PrayersNotificationsService
+    @Inject
+    lateinit var mediaController: MediaController
+
 
     override fun onReceive(context: Context?, intent: Intent?) {
         val item = intent?.getSerializable(
@@ -24,7 +28,7 @@ class AlarmReceiver : BroadcastReceiver() {
             Exception("Notification item wasn't received").printStackTraceInDebug()
             return
         }
-
+        mediaController.pauseMedia()
         prayersNotificationsService.showNotification(item)
     }
     companion object {
