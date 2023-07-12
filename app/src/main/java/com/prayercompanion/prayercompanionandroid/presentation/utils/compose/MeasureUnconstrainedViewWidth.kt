@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.presentation.utils
+package com.prayercompanion.prayercompanionandroid.presentation.utils.compose
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

@@ -7,6 +7,7 @@ import com.prayercompanion.prayercompanionandroid.presentation.utils.Authenticat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 class UpdateAuthToken @Inject constructor(
@@ -39,6 +40,7 @@ class UpdateAuthToken @Inject constructor(
         updateIsSignedIn(true)
         user.getIdToken(forceRefresh)
             .addOnSuccessListener {
+                Consts.userTokenUpdateTime = LocalDateTime.now()
                 Consts.userToken = it.token
                 onSuccess()
             }.addOnFailureListener { exception ->

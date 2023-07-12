@@ -30,7 +30,7 @@ import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.models.RemainingDuration
 import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
-import com.prayercompanion.prayercompanionandroid.presentation.utils.MeasureUnconstrainedViewWidth
+import com.prayercompanion.prayercompanionandroid.presentation.utils.compose.MeasureUnconstrainedViewWidth
 import java.util.SortedMap
 
 @Preview(name = "en", locale = "en")

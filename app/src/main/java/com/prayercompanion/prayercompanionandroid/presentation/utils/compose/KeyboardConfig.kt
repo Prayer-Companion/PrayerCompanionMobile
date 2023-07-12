@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.presentation.utils
+package com.prayercompanion.prayercompanionandroid.presentation.utils.compose
 
 import android.graphics.Rect
 import android.view.ViewTreeObserver

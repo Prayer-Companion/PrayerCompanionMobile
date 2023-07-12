@@ -44,9 +44,9 @@ import com.prayercompanion.prayercompanionandroid.presentation.features.quran.co
 import com.prayercompanion.prayercompanionandroid.presentation.theme.AppBackground
 import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
-import com.prayercompanion.prayercompanionandroid.presentation.utils.KeyboardConfig
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
-import com.prayercompanion.prayercompanionandroid.presentation.utils.keyboardAsState
+import com.prayercompanion.prayercompanionandroid.presentation.utils.compose.KeyboardConfig
+import com.prayercompanion.prayercompanionandroid.presentation.utils.compose.keyboardAsState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 

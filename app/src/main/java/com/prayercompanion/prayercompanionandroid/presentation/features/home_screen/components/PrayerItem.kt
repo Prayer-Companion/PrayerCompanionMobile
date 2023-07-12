@@ -34,8 +34,8 @@ import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.models.getColorOrDefault
 import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
-import com.prayercompanion.prayercompanionandroid.presentation.utils.MeasureUnconstrainedViewWidth
 import com.prayercompanion.prayercompanionandroid.presentation.utils.PresentationConsts
+import com.prayercompanion.prayercompanionandroid.presentation.utils.compose.MeasureUnconstrainedViewWidth
 
 @Preview(locale = "ar")
 @Composable
