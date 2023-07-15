@@ -15,13 +15,13 @@ import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.models.RemainingDuration
-import com.prayercompanion.prayercompanionandroid.domain.repositories.QuranRepository
 import com.prayercompanion.prayercompanionandroid.domain.usecases.UpdateAuthToken
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetCurrentPrayer
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetDayPrayers
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetLastWeekStatusesOverView
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetNextPrayer
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.UpdatePrayerStatus
+import com.prayercompanion.prayercompanionandroid.domain.usecases.quran.LoadAndSaveQuranMemorizedChapters
 import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
@@ -53,7 +53,7 @@ class HomeScreenViewModel @Inject constructor(
     private val updatePrayerStatus: UpdatePrayerStatus,
     private val getLastWeekStatusesOverView: GetLastWeekStatusesOverView,
     private val locationManager: AppLocationManager,
-    private val quranRepository: QuranRepository,
+    private val loadAndSaveQuranMemorizedChapters: LoadAndSaveQuranMemorizedChapters,
     private val updateAuthToken: UpdateAuthToken
 ) : ViewModel() {
 
@@ -110,7 +110,7 @@ class HomeScreenViewModel @Inject constructor(
 
         fun loadStartingData() {
             CoroutineScope(Dispatchers.IO).launch {
-                quranRepository.loadMemorizedChapters()
+                loadAndSaveQuranMemorizedChapters.call()
             }
         }
 

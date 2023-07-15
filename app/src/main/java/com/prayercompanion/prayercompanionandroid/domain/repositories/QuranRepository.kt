@@ -22,5 +22,5 @@ interface QuranRepository {
     suspend fun getNextQuranReadingSections(): Flow<PrayerQuranReadingSections?>
     suspend fun markQuranSectionAsRead(quranReadingSections: PrayerQuranReadingSections)
     suspend fun loadAndSaveQuranReadingSections(): Result<Unit>
-    suspend fun loadMemorizedChapters()
+    suspend fun loadAndSaveMemorizedChapters()
 }

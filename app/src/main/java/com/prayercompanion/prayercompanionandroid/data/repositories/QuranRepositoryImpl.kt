@@ -28,7 +28,7 @@ class QuranRepositoryImpl @Inject constructor(
 
     private val quranChapters = assetsReader.quran.map { it.toQuranChapters() }
 
-    override suspend fun loadMemorizedChapters() {
+    override suspend fun loadAndSaveMemorizedChapters() {
         try {
             val chapters = api.getMemorizedChapterVerses()
             val entities = chapters.map {
