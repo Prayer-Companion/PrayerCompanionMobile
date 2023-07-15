@@ -19,8 +19,7 @@ class GetCurrentPrayer @Inject constructor(
     @OptIn(ExperimentalStdlibApi::class)
     suspend fun call(): Result<PrayerInfo> {
         val location = appLocationManager.getLastKnownLocation()
-
-        val address = appLocationManager.getAddress()
+        val address = appLocationManager.getAddressByLocation(location)
 
         val currentDate = LocalDate.now(clock)
         val currentTime = LocalTime.now(clock)

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Geocoder
 import android.os.Build
+import androidx.annotation.RequiresApi
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
@@ -27,7 +28,7 @@ import kotlin.coroutines.suspendCoroutine
 
 interface AppLocationManager {
     suspend fun getLastKnownLocation(): Location?
-    suspend fun getAddress(): Address?
+    suspend fun getAddressByLocation(location: Location?): Address?
     fun checkLocationService(): Task<LocationSettingsResponse>
     fun getRequestLocationUpdates(onLocationRetrieved: (Location) -> Unit)
 }
@@ -67,48 +68,60 @@ class AppLocationManagerImpl @Inject constructor(
         return location
     }
 
-    @Suppress("DEPRECATION")
-    override suspend fun getAddress(): Address? {
-        val lastSavedAddress = dataStoresRepo.appPreferencesDataStore.data.firstOrNull()?.address
-
-        val location = getLastKnownLocation() ?: return lastSavedAddress
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private suspend fun getAddress(location: Location): Address? {
         val gcd = Geocoder(context, Locale.ENGLISH)
-
-        val address: Address? = suspendCoroutine {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                gcd.getFromLocation(
-                    /* latitude = */ location.latitude,
-                    /* longitude = */ location.longitude,
-                    /* maxResults = */ 1,
-                    /* listener = */ object : Geocoder.GeocodeListener {
-                        override fun onGeocode(addresses: MutableList<android.location.Address>) {
-                            if (addresses.isNotEmpty()) {
-                                val address = addresses.first()
-                                it.resume(Address(address.countryCode, address.locality))
-                            } else {
-                                it.resume(null)
-                            }
-                        }
-
-                        override fun onError(errorMessage: String?) {
-                            super.onError(errorMessage)
-                            logcat { errorMessage.toString() }
+        return suspendCoroutine {
+            gcd.getFromLocation(
+                location.latitude,
+                location.longitude,
+                /* maxResults = */ 1,
+                object : Geocoder.GeocodeListener {
+                    override fun onGeocode(addresses: MutableList<android.location.Address>) {
+                        if (addresses.isNotEmpty()) {
+                            val address = addresses.first()
+                            it.resume(Address(address.countryCode, address.locality))
+                        } else {
                             it.resume(null)
                         }
                     }
-                )
 
-            } else {
-                val addresses =
-                    gcd.getFromLocation(location.latitude, location.longitude, 1) ?: emptyList()
-                if (addresses.isNotEmpty()) {
-                    val address = addresses.first()
-                    it.resume(Address(address.countryCode, address.locality))
-                } else {
-                    it.resume(null)
+                    override fun onError(errorMessage: String?) {
+                        super.onError(errorMessage)
+                        logcat { errorMessage.toString() }
+                        it.resume(null)
+                    }
                 }
-            }
+            )
+        }
 
+    }
+
+    @Suppress("DEPRECATION")
+    private fun getAddressLegacy(location: Location): Address? {
+        val gcd = Geocoder(context, Locale.ENGLISH)
+
+        val addresses = gcd.getFromLocation(
+            location.latitude,
+            location.longitude,
+            /* maxResults = */ 1
+        ) ?: emptyList()
+
+        val address = addresses
+            .takeIf { it.isNotEmpty() }
+            ?.first() ?: return null
+
+        return Address(address.countryCode, address.locality)
+    }
+
+    override suspend fun getAddressByLocation(location: Location?): Address? {
+        if (location == null)
+            return null
+
+        val address: Address? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            getAddress(location)
+        } else {
+            getAddressLegacy(location)
         }
 
         if (address != null) {
@@ -117,7 +130,7 @@ class AppLocationManagerImpl @Inject constructor(
             }
         }
 
-        return address ?: lastSavedAddress
+        return address
     }
 
     override fun checkLocationService(): Task<LocationSettingsResponse> {

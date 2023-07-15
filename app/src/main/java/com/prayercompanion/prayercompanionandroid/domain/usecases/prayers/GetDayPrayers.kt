@@ -15,7 +15,7 @@ class GetDayPrayers @Inject constructor(
         forceUpdate: Boolean
     ): Result<DayPrayersInfo> {
         val location = appLocationManager.getLastKnownLocation()
-        val address = appLocationManager.getAddress()
+        val address = appLocationManager.getAddressByLocation(location)
 
         return prayersRepository.getDayPrayers(location, address, date, forceUpdate)
     }

@@ -11,7 +11,7 @@ internal class FakeAppLocationManager : AppLocationManager {
         longitude = 35.930359,
     )
 
-    override suspend fun getAddress(): Address = Address(
+    override suspend fun getAddressByLocation(location: Location?): Address = Address(
         countryCode = "Jo", locality = "Amman"
     )
 

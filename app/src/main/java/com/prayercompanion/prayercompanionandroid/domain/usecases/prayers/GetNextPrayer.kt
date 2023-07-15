@@ -14,7 +14,7 @@ class GetNextPrayer @Inject constructor(
 
     suspend fun call(prayerInfo: PrayerInfo): Result<PrayerInfo> {
         val location = appLocationManager.getLastKnownLocation()
-        val address = appLocationManager.getAddress()
+        val address = appLocationManager.getAddressByLocation(location)
 
         var nextPrayer = prayerInfo.prayer.next()
         var date: LocalDate = prayerInfo.date
