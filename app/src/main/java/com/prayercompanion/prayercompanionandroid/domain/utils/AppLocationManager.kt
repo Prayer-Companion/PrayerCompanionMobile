@@ -80,7 +80,14 @@ class AppLocationManagerImpl @Inject constructor(
                     override fun onGeocode(addresses: MutableList<android.location.Address>) {
                         if (addresses.isNotEmpty()) {
                             val address = addresses.first()
-                            it.resume(Address(address.countryCode, address.locality))
+                            val locality = address.locality
+                            val countryCode = address.countryCode
+
+                            if (locality != null && countryCode != null) {
+                                it.resume(Address(countryCode, locality))
+                            } else {
+                                it.resume(null)
+                            }
                         } else {
                             it.resume(null)
                         }
