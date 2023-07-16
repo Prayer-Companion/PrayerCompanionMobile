@@ -98,11 +98,12 @@ fun HomeScreen(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
+            val (currentPrayer, nextPrayer) = viewModel.state.currentAndNextPrayer
             HomeHeader(
                 modifier = Modifier
                     .fillMaxWidth(),
-                currentPrayer = viewModel.state.currentPrayer,
-                nextPrayer = viewModel.state.nextPrayer,
+                currentPrayer = currentPrayer,
+                nextPrayer = nextPrayer,
                 durationUntilNextPrayer = viewModel.durationUntilNextPrayer,
                 onStatusSelected = viewModel::onStatusSelected,
                 statusesCounts = viewModel.state.lastWeekStatuses
