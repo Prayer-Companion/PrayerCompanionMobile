@@ -136,11 +136,11 @@ class HomeScreenViewModel @Inject constructor(
             updateAuthToken.call(
                 forceRefresh = true,
                 onSuccess = {
-                    updateSelectedDate(LocalDate.now())
+                    loadDailyPrayersCombo()
                 }
             )
         } else if (durationSinceLastForegroundTime > DURATION_AFTER_FOREGROUND_THRESHOLD_REFRESH_MS) {
-            updateSelectedDate(LocalDate.now())
+            loadDailyPrayersCombo()
         }
     }
 
