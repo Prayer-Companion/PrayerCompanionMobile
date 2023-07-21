@@ -5,7 +5,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import androidx.core.app.NotificationCompat
 import com.prayercompanion.prayercompanionandroid.MainActivity
 import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerNotificationItem
@@ -39,6 +38,7 @@ class PrayersNotificationsService @Inject constructor(
             .setContentTitle(title)
             .setContentIntent(activityPendingInject)
             .setOngoing(item.isOngoing)
+            .setFlag(Notification.FLAG_AUTO_CANCEL, true)
             .build()
 
         val notificationId = item.hashCode()
@@ -48,11 +48,21 @@ class PrayersNotificationsService @Inject constructor(
     }
 
     fun showTestNotification(title: String, content: String = "") {
-        val notification = NotificationCompat
+        val activityIntent = Intent(context, MainActivity::class.java)
+        val activityPendingInject = PendingIntent.getActivity(
+            context,
+            REQUEST_CODE,
+            activityIntent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val notification = Notification
             .Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_app_logo)
             .setContentTitle(title)
+            .setContentIntent(activityPendingInject)
             .setContentText(content)
+            .setFlag(Notification.FLAG_AUTO_CANCEL, true)
             .build()
 
         val notificationId = (title + content).hashCode()
