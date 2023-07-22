@@ -1,5 +1,6 @@
 package com.prayercompanion.prayercompanionandroid.presentation.features.home_screen
 
+import com.prayercompanion.prayercompanionandroid.domain.models.DailyPrayersCombo
 import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
@@ -7,15 +8,21 @@ import java.time.LocalDate
 import java.util.SortedMap
 
 data class HomeScreenState(
-    val currentPrayer: PrayerInfo = PrayerInfo.Default,
-    val nextPrayer: PrayerInfo = PrayerInfo.Default,
+    val dailyPrayersCombo: DailyPrayersCombo = DailyPrayersCombo(
+        DayPrayersInfo.Default,
+        DayPrayersInfo.Default,
+        DayPrayersInfo.Default
+    ),
     val selectedDayPrayersInfo: DayPrayersInfo = DayPrayersInfo.Default,
     val selectedDate: LocalDate = LocalDate.now(),
     val lastWeekStatuses: SortedMap<PrayerStatus, Int> = sortedMapOf()
 ) {
-
+    val currentAndNextPrayer get() = dailyPrayersCombo.currentAndNextPrayer
 
     fun updateStatus(prayerInfo: PrayerInfo, prayerStatus: PrayerStatus): HomeScreenState {
+        val currentPrayer = currentAndNextPrayer.first
+        val nextPrayer = currentAndNextPrayer.second
+
         if (prayerInfo.date == selectedDate) {
             selectedDayPrayersInfo.updateStatus(prayerInfo.prayer, prayerStatus)
         }
