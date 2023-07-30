@@ -17,6 +17,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -141,6 +142,14 @@ private fun PrayerItemState(
                         isStatusSelectorExpanded = !isStatusSelectorExpanded
                     },
                 imageVector = Icons.Default.ArrowDropDown,
+                contentDescription = "",
+                tint = MaterialTheme.colors.onPrimary
+            )
+        } else {
+            Icon(
+                modifier = Modifier
+                    .weight(1f),
+                imageVector = Icons.Default.Remove,
                 contentDescription = "",
                 tint = MaterialTheme.colors.onPrimary
             )

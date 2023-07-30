@@ -26,7 +26,7 @@ class AndroidPrayersAlarmScheduler @Inject constructor(
     override suspend fun scheduleTodayPrayersNotifications() {
         val now = LocalDateTime.now()
         getDayPrayers
-            .call(now.toLocalDate(), false)
+            .call(now.toLocalDate())
             .getOrElse {
                 it.printStackTraceInDebug()
                 return

@@ -219,7 +219,9 @@ class MainActivity : AppCompatActivity() {
                             // Restore state when re-selecting a previously selected item
                             restoreState = true
                         }
-                    }
+                    },
+                    selectedContentColor = MaterialTheme.colors.onPrimary,
+                    unselectedContentColor = MaterialTheme.colors.secondary
                 )
             }
         }
