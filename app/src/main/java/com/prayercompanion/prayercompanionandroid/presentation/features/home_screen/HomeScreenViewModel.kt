@@ -10,13 +10,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.common.api.ResolvableApiException
 import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.data.utils.Consts
 import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.models.RemainingDuration
-import com.prayercompanion.prayercompanionandroid.domain.usecases.IsConnectedToInternet
-import com.prayercompanion.prayercompanionandroid.domain.usecases.UpdateAuthToken
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetDailyPrayersCombo
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetDayPrayers
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetLastWeekStatusesOverView
@@ -52,10 +49,8 @@ class HomeScreenViewModel @Inject constructor(
     private val updatePrayerStatus: UpdatePrayerStatus,
     private val getLastWeekStatusesOverView: GetLastWeekStatusesOverView,
     private val locationManager: AppLocationManager,
-    private val updateAuthToken: UpdateAuthToken,
     private val loadAndSaveQuranMemorizedChapters: LoadAndSaveQuranMemorizedChapters,
     private val getDailyPrayersCombo: GetDailyPrayersCombo,
-    private val isConnectedToInternet: IsConnectedToInternet
 ) : ViewModel() {
 
     private var loadDailyPrayersComboJob: Job? = null
@@ -119,29 +114,7 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     fun onStart() {
-        val currentTime = System.currentTimeMillis()
-        val durationSinceLastForegroundTime = currentTime - lastForegroundTime
-
-        val hasInternet = isConnectedToInternet.call()
-        val lastAuthTokenUpdateTime = Consts.userTokenUpdateTime
-        val durationSinceLastUpdate = Duration
-            .between(LocalDateTime.now(), lastAuthTokenUpdateTime ?: LocalDateTime.now())
-            .toMillis()
-
-        if (
-            hasInternet &&
-            (lastAuthTokenUpdateTime == null ||
-                durationSinceLastUpdate > Consts.TOKEN_UPDATE_THRESHOLD_TIME_MS)
-        ) {
-            updateAuthToken.call(
-                forceRefresh = true,
-                onSuccess = {
-                    loadDailyPrayersCombo()
-                }
-            )
-        } else if (durationSinceLastForegroundTime > DURATION_AFTER_FOREGROUND_THRESHOLD_REFRESH_MS) {
-            loadDailyPrayersCombo()
-        }
+        loadDailyPrayersCombo()
     }
 
     fun onPause() {
@@ -261,9 +234,5 @@ class HomeScreenViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.Main) {
             _uiEvents.send(event)
         }
-    }
-
-    companion object {
-        private const val DURATION_AFTER_FOREGROUND_THRESHOLD_REFRESH_MS = 5 * 60 * 1000 //5 min
     }
 }

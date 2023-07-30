@@ -2,6 +2,8 @@ package com.prayercompanion.prayercompanionandroid.data.di
 
 import android.content.Context
 import androidx.room.Room
+import com.google.android.gms.tasks.Tasks
+import com.google.firebase.auth.FirebaseAuth
 import com.prayercompanion.prayercompanionandroid.BuildConfig
 import com.prayercompanion.prayercompanionandroid.data.local.db.PrayerCompanionDatabase
 import com.prayercompanion.prayercompanionandroid.data.local.db.daos.MemorizedQuranChapterDao
@@ -11,10 +13,8 @@ import com.prayercompanion.prayercompanionandroid.data.remote.PrayerCompanionApi
 import com.prayercompanion.prayercompanionandroid.data.repositories.PrayersRepositoryImpl
 import com.prayercompanion.prayercompanionandroid.data.repositories.QuranRepositoryImpl
 import com.prayercompanion.prayercompanionandroid.data.utils.AndroidPrayersAlarmScheduler
-import com.prayercompanion.prayercompanionandroid.data.utils.Consts
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
 import com.prayercompanion.prayercompanionandroid.domain.repositories.QuranRepository
-import com.prayercompanion.prayercompanionandroid.domain.usecases.UpdateAuthToken
 import com.prayercompanion.prayercompanionandroid.domain.utils.PrayersAlarmScheduler
 import dagger.Module
 import dagger.Provides
@@ -22,6 +22,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import okhttp3.Protocol
+import okhttp3.Response
+import okhttp3.ResponseBody.Companion.toResponseBody
 import okhttp3.internal.http.HTTP_UNAUTHORIZED
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -36,7 +39,7 @@ class DataModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(updateAuthToken: UpdateAuthToken): OkHttpClient {
+    fun provideOkHttpClient(): OkHttpClient {
 
         val logger = HttpLoggingInterceptor()
         logger.setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -45,21 +48,32 @@ class DataModule {
 
         builder.addInterceptor { chain ->
             val request = chain.request()
-            val new = request.newBuilder()
-                .addHeader("Authorization", "Bearer ${Consts.userToken}")
-                .build()
-            chain.proceed(new)
-        }
 
-        builder.addInterceptor { chain ->
-            val request = chain.request()
-            val response = chain.proceed(request)
+            val task = FirebaseAuth
+                .getInstance()
+                .currentUser
+                ?.getIdToken(false)
 
-            if (response.code == HTTP_UNAUTHORIZED) {
-                updateAuthToken.call(true)
+            if (task != null) {
+                val result = Tasks.await(task)
+                val token = result.token
+
+                if (token != null) {
+                    val new = request.newBuilder()
+                        .addHeader("Authorization", "Bearer $token")
+                        .build()
+
+                    return@addInterceptor chain.proceed(new)
+                }
             }
 
-            response
+            Response.Builder()
+                .code(HTTP_UNAUTHORIZED)
+                .body("".toResponseBody(null)) // Whatever body
+                .protocol(Protocol.HTTP_2)
+                .message("Couldn't fetch firebase auth token")
+                .request(chain.request())
+                .build()
         }
 
         if (BuildConfig.DEBUG) {
