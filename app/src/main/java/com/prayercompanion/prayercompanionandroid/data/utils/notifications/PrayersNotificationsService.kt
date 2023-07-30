@@ -1,12 +1,15 @@
-package com.prayercompanion.prayercompanionandroid.data.utils
+package com.prayercompanion.prayercompanionandroid.data.utils.notifications
 
 import android.app.Notification
+import android.app.Notification.Action
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Icon
 import com.prayercompanion.prayercompanionandroid.MainActivity
 import com.prayercompanion.prayercompanionandroid.R
+import com.prayercompanion.prayercompanionandroid.data.receivers.PrayerNotificationActionReceiver
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerNotificationItem
 import dagger.hilt.android.qualifiers.ApplicationContext
 import logcat.logcat
@@ -22,12 +25,28 @@ class PrayersNotificationsService @Inject constructor(
 
     fun showNotification(item: PrayerNotificationItem) {
         val activityIntent = Intent(context, MainActivity::class.java)
+
         val activityPendingInject = PendingIntent.getActivity(
             context,
             REQUEST_CODE,
             activityIntent,
             PendingIntent.FLAG_IMMUTABLE
         )
+
+        val actionIntent = Intent(context, PrayerNotificationActionReceiver::class.java).apply {
+            putExtra(PrayerNotificationActionReceiver.EXTRA_PRAYER_INFO, item.prayerInfo)
+            putExtra(PrayerNotificationActionReceiver.EXTRA_PRAYER_NOTIFICATION_ACTION, PrayerNotificationAction.Prayed)
+        }
+
+        val actionPendingInject = PendingIntent.getBroadcast(
+            context,
+            REQUEST_CODE,
+            actionIntent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+
+        //todo notification: add translation
+        val action = Action.Builder(Icon.createWithResource(context, R.drawable.ic_app_logo), "click here", actionPendingInject).build()
 
         val prayerName = context.getString(item.prayerInfo.prayer.nameId)
         val title = context.getString(R.string.prayer_notification_title, prayerName)
@@ -38,7 +57,8 @@ class PrayersNotificationsService @Inject constructor(
             .setContentTitle(title)
             .setContentIntent(activityPendingInject)
             .setOngoing(item.isOngoing)
-            .setFlag(Notification.FLAG_AUTO_CANCEL, true)
+            .setAutoCancel(true)
+            .addAction(action)
             .build()
 
         val notificationId = item.hashCode()
@@ -62,7 +82,7 @@ class PrayersNotificationsService @Inject constructor(
             .setContentTitle(title)
             .setContentIntent(activityPendingInject)
             .setContentText(content)
-            .setFlag(Notification.FLAG_AUTO_CANCEL, true)
+            .setAutoCancel(true)
             .build()
 
         val notificationId = (title + content).hashCode()

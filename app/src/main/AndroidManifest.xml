@@ -55,6 +55,7 @@
         </service>
 
         <receiver android:name=".data.receivers.AlarmReceiver" />
+        <receiver android:name=".data.receivers.PrayerNotificationActionReceiver" />
 
         <service
             android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"

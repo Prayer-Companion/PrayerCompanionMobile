@@ -3,7 +3,7 @@ package com.prayercompanion.prayercompanionandroid.data.receivers
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.prayercompanion.prayercompanionandroid.data.utils.PrayersNotificationsService
+import com.prayercompanion.prayercompanionandroid.data.utils.notifications.PrayersNotificationsService
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerNotificationItem
 import com.prayercompanion.prayercompanionandroid.domain.usecases.settings.GetIsPauseMediaEnabled
 import com.prayercompanion.prayercompanionandroid.domain.utils.MediaController
