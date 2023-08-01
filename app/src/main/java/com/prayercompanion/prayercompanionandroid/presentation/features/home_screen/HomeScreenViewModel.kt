@@ -10,8 +10,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.common.api.ResolvableApiException
 import com.prayercompanion.prayercompanionandroid.R
+import com.prayercompanion.prayercompanionandroid.data.utils.notifications.PrayersNotificationsService
 import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
+import com.prayercompanion.prayercompanionandroid.domain.models.PrayerNotificationItem
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.models.RemainingDuration
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetDailyPrayersCombo
@@ -38,9 +40,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import logcat.asLog
 import logcat.logcat
-import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -51,6 +53,7 @@ class HomeScreenViewModel @Inject constructor(
     private val locationManager: AppLocationManager,
     private val loadAndSaveQuranMemorizedChapters: LoadAndSaveQuranMemorizedChapters,
     private val getDailyPrayersCombo: GetDailyPrayersCombo,
+    private val notificationsService: PrayersNotificationsService,
 ) : ViewModel() {
 
     private var loadDailyPrayersComboJob: Job? = null
@@ -126,7 +129,13 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     fun onNextDayButtonClicked() {
-        updateSelectedDate(state.selectedDate.plusDays(1))
+        notificationsService.showNotification(
+            PrayerNotificationItem(
+                state.currentAndNextPrayer.first,
+                false
+            )
+        )
+//        updateSelectedDate(state.selectedDate.plusDays(1))
     }
 
     fun onStatusSelected(prayerStatus: PrayerStatus, prayerInfo: PrayerInfo) {
@@ -203,9 +212,8 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     private fun startDurationCountDown() {
-        val durationInMillis = Duration
+        val durationInMillis = ChronoUnit.MILLIS
             .between(LocalDateTime.now(), state.currentAndNextPrayer.second.dateTime)
-            .toMillis()
 
         if (durationInMillis <= 0) return
 

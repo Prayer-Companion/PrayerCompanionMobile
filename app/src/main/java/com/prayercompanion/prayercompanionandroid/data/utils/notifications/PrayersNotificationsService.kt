@@ -11,6 +11,7 @@ import com.prayercompanion.prayercompanionandroid.MainActivity
 import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.prayercompanionandroid.data.receivers.PrayerNotificationActionReceiver
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerNotificationItem
+import com.prayercompanion.prayercompanionandroid.presentation.utils.PresentationConsts
 import dagger.hilt.android.qualifiers.ApplicationContext
 import logcat.logcat
 import javax.inject.Inject
@@ -24,32 +25,43 @@ class PrayersNotificationsService @Inject constructor(
         context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     fun showNotification(item: PrayerNotificationItem) {
-        val activityIntent = Intent(context, MainActivity::class.java)
+        val activityPendingInject = run {
+            val activityIntent = Intent(context, MainActivity::class.java)
 
-        val activityPendingInject = PendingIntent.getActivity(
-            context,
-            REQUEST_CODE,
-            activityIntent,
-            PendingIntent.FLAG_IMMUTABLE
-        )
-
-        val actionIntent = Intent(context, PrayerNotificationActionReceiver::class.java).apply {
-            putExtra(PrayerNotificationActionReceiver.EXTRA_PRAYER_INFO, item.prayerInfo)
-            putExtra(PrayerNotificationActionReceiver.EXTRA_PRAYER_NOTIFICATION_ACTION, PrayerNotificationAction.Prayed)
+            PendingIntent.getActivity(
+                context,
+                REQUEST_CODE,
+                activityIntent,
+                PendingIntent.FLAG_IMMUTABLE
+            )
         }
 
-        val actionPendingInject = PendingIntent.getBroadcast(
-            context,
-            REQUEST_CODE,
-            actionIntent,
-            PendingIntent.FLAG_IMMUTABLE
-        )
+        val actionPendingInject = run {
 
-        //todo notification: add translation
-        val action = Action.Builder(Icon.createWithResource(context, R.drawable.ic_app_logo), "click here", actionPendingInject).build()
+            val actionIntent = Intent(context, PrayerNotificationActionReceiver::class.java).apply {
+                putExtra(PrayerNotificationActionReceiver.EXTRA_PRAYER_INFO, item.prayerInfo)
+                putExtra(
+                    PrayerNotificationActionReceiver.EXTRA_PRAYER_NOTIFICATION_ACTION,
+                    PrayerNotificationAction.Prayed
+                )
+            }
+
+            PendingIntent.getBroadcast(
+                context,
+                REQUEST_CODE,
+                actionIntent,
+                PendingIntent.FLAG_IMMUTABLE
+            )
+        }
 
         val prayerName = context.getString(item.prayerInfo.prayer.nameId)
-        val title = context.getString(R.string.prayer_notification_title, prayerName)
+        val prayerTime = PresentationConsts.TimeFormatter.format(item.prayerInfo.time)
+        val title = context.getString(R.string.prayer_notification_title, prayerName, prayerTime)
+
+        val actionIcon = Icon.createWithResource(context, R.drawable.ic_app_logo)
+        val actionTitle = context.getString(R.string.notification_action_prayedNow)
+
+        val prayedNowAction = Action.Builder(actionIcon, actionTitle, actionPendingInject).build()
 
         val notification = Notification
             .Builder(context, CHANNEL_ID)
@@ -58,7 +70,7 @@ class PrayersNotificationsService @Inject constructor(
             .setContentIntent(activityPendingInject)
             .setOngoing(item.isOngoing)
             .setAutoCancel(true)
-            .addAction(action)
+            .addAction(prayedNowAction)
             .build()
 
         val notificationId = item.hashCode()

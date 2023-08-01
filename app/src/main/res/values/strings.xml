@@ -40,7 +40,7 @@
 
     <string name="prayer_reminders_channel_name">Prayers Reminders</string>
     <string name="prayer_reminders_channel_description">Daily Prayers Reminders</string> <!-- change to a more useful description-->
-    <string name="prayer_notification_title">It\'s time for the %1$s prayer</string>
+    <string name="prayer_notification_title">It\'s time for the %1$s prayer %2$s</string>
 
     <string name="sensor_accuracy_high">mobile sensor accuracy is high</string>
     <string name="sensor_accuracy_medium">mobile sensor accuracy is medium</string>
@@ -84,5 +84,6 @@
     <string name="current_prayer">Current Prayer</string>
     <string name="skip">Skip</string>
     <string name="last_7_days_status_overview">Last 7 days</string>
+    <string name="notification_action_prayedNow">Prayed</string>
 
 </resources>

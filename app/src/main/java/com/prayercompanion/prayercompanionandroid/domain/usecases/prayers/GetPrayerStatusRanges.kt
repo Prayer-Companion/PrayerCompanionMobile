@@ -43,7 +43,10 @@ class GetPrayerStatusRanges @Inject constructor(
         location: Location?,
         address: Address?
     ): Map<PrayerStatus, OpenEndRange<LocalDateTime>>? {
-        prayersRepository.getPrayer(nextPrayer, prayerInfo.date, location, address)
+        val todayPrayers = prayersRepository.getDayPrayers(location, address, prayerInfo.date)
+
+        todayPrayers
+            .map { it.get(nextPrayer) }
             .onSuccess { nextPrayerInfo ->
                 val fullTimeMinutes = ChronoUnit.MINUTES
                     .between(prayerInfo.dateTime, nextPrayerInfo.dateTime)
@@ -78,12 +81,17 @@ class GetPrayerStatusRanges @Inject constructor(
         location: Location?,
         address: Address?,
     ): Map<PrayerStatus, OpenEndRange<LocalDateTime>>? {
+        val todayPrayers = prayersRepository.getDayPrayers(location, address, prayerInfo.date)
+        val nextDayPrayers = prayersRepository.getDayPrayers(location, address, prayerInfo.date.plusDays(1))
+
         val ishaDateTime = prayerInfo.dateTime
-        val maghribDateTime = prayersRepository
-            .getPrayer(Prayer.MAGHRIB, prayerInfo.date, location, address)
-            .getOrNull()?.dateTime ?: return null
-        val fajr = prayersRepository
-            .getPrayer(Prayer.FAJR, prayerInfo.date.plusDays(1), location, address)
+        val maghribDateTime =
+            todayPrayers
+                .map { it.get(Prayer.MAGHRIB) }
+                .getOrNull()?.dateTime ?: return null
+
+        val fajr = nextDayPrayers
+            .map { it.get(Prayer.FAJR) }
             .getOrNull() ?: return null
 
         // The night in islam is the time between Maghrib and Fajr

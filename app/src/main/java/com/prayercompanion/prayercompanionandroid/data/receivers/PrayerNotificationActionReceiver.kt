@@ -39,8 +39,6 @@ class PrayerNotificationActionReceiver : BroadcastReceiver() {
                 withContext(Dispatchers.Main) {
                     context?.showToast(context.getString(status.nameId))
                 }
-
-                //todo notification: close notification center
             }
         }
     }
