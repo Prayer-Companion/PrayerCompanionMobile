@@ -10,9 +10,12 @@ import android.graphics.drawable.Icon
 import com.prayercompanion.prayercompanionandroid.MainActivity
 import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.prayercompanionandroid.data.receivers.PrayerNotificationActionReceiver
+import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerNotificationItem
+import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.presentation.utils.PresentationConsts
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.delay
 import logcat.logcat
 import javax.inject.Inject
 
@@ -25,6 +28,8 @@ class PrayersNotificationsService @Inject constructor(
         context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     fun showNotification(item: PrayerNotificationItem) {
+        val notificationId = item.hashCode()
+
         val activityPendingInject = run {
             val activityIntent = Intent(context, MainActivity::class.java)
 
@@ -39,6 +44,7 @@ class PrayersNotificationsService @Inject constructor(
         val actionPendingInject = run {
 
             val actionIntent = Intent(context, PrayerNotificationActionReceiver::class.java).apply {
+                putExtra(PrayerNotificationActionReceiver.EXTRA_NOTIFICATION_ID, notificationId)
                 putExtra(PrayerNotificationActionReceiver.EXTRA_PRAYER_INFO, item.prayerInfo)
                 putExtra(
                     PrayerNotificationActionReceiver.EXTRA_PRAYER_NOTIFICATION_ACTION,
@@ -73,10 +79,30 @@ class PrayersNotificationsService @Inject constructor(
             .addAction(prayedNowAction)
             .build()
 
-        val notificationId = item.hashCode()
 
         logcat { "Notified: $item" }
         notificationManager.notify(notificationId, notification)
+    }
+
+    suspend fun showNotificationSelectedStatus(
+        notificationId: Int,
+        prayerInfo: PrayerInfo,
+        status: PrayerStatus
+    ) {
+        val prayerName = context.getString(prayerInfo.prayer.nameId)
+        val statusName = context.getString(status.nameId)
+
+        val notificationTitle = context.getString(R.string.notification_action_response_statusUpdate, prayerName, statusName)
+        val notification = Notification
+            .Builder(context, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_app_logo)
+            .setContentTitle(notificationTitle)
+            .setAutoCancel(true)
+            .build()
+
+        notificationManager.notify(notificationId, notification)
+        delay(2000)
+        notificationManager.cancel(notificationId)
     }
 
     fun showTestNotification(title: String, content: String = "") {

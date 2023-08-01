@@ -84,5 +84,7 @@
     <string name="settings_items_preferences_pauseMedia">ايقاف الوسائط المتعددة عند نداء الاذان</string>
     <string name="settings_items_signOut">تسجيل الخروج</string>
     <string name="last_7_days_status_overview">الأيام السبعة الماضية</string>
+
     <string name="notification_action_prayedNow">أديتُ الصلاة</string>
+    <string name="notification_action_response_statusUpdate">تم تسجيل حالة صلاة %1$s: %2$s</string>
 </resources>

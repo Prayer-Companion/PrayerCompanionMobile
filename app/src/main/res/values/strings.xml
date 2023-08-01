@@ -84,6 +84,9 @@
     <string name="current_prayer">Current Prayer</string>
     <string name="skip">Skip</string>
     <string name="last_7_days_status_overview">Last 7 days</string>
+
+    <!-- Notifications -->
     <string name="notification_action_prayedNow">Prayed</string>
+    <string name="notification_action_response_statusUpdate">%1$s Prayer status was recorded: %2$s</string>
 
 </resources>

@@ -10,10 +10,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.common.api.ResolvableApiException
 import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.data.utils.notifications.PrayersNotificationsService
 import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
-import com.prayercompanion.prayercompanionandroid.domain.models.PrayerNotificationItem
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.models.RemainingDuration
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetDailyPrayersCombo
@@ -52,8 +50,7 @@ class HomeScreenViewModel @Inject constructor(
     private val getLastWeekStatusesOverView: GetLastWeekStatusesOverView,
     private val locationManager: AppLocationManager,
     private val loadAndSaveQuranMemorizedChapters: LoadAndSaveQuranMemorizedChapters,
-    private val getDailyPrayersCombo: GetDailyPrayersCombo,
-    private val notificationsService: PrayersNotificationsService,
+    private val getDailyPrayersCombo: GetDailyPrayersCombo
 ) : ViewModel() {
 
     private var loadDailyPrayersComboJob: Job? = null
@@ -129,13 +126,7 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     fun onNextDayButtonClicked() {
-        notificationsService.showNotification(
-            PrayerNotificationItem(
-                state.currentAndNextPrayer.first,
-                false
-            )
-        )
-//        updateSelectedDate(state.selectedDate.plusDays(1))
+        updateSelectedDate(state.selectedDate.plusDays(1))
     }
 
     fun onStatusSelected(prayerStatus: PrayerStatus, prayerInfo: PrayerInfo) {
