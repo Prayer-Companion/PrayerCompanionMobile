@@ -7,6 +7,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Icon
+import androidx.core.text.HtmlCompat
 import com.prayercompanion.prayercompanionandroid.MainActivity
 import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.prayercompanionandroid.data.receivers.PrayerNotificationActionReceiver
@@ -90,11 +91,18 @@ class PrayersNotificationsService @Inject constructor(
         val prayerName = context.getString(prayerInfo.prayer.nameId)
         val statusName = context.getString(status.nameId)
 
-        val notificationTitle = context.getString(R.string.notification_action_response_statusUpdate, prayerName, statusName)
+        val notificationTitle = context.getString(
+            R.string.notification_action_response_statusUpdate,
+            prayerName,
+            "<b>$statusName</b>"
+        )
+
         val notification = Notification
             .Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_app_logo)
-            .setContentTitle(notificationTitle)
+            .setContentTitle(
+                HtmlCompat.fromHtml(notificationTitle, HtmlCompat.FROM_HTML_MODE_LEGACY)
+            )
             .setAutoCancel(true)
             .build()
 
