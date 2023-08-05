@@ -101,7 +101,7 @@ class PrayersNotificationsService @Inject constructor(
             .build()
 
         notificationManager.notify(notificationId, notification)
-        delay(2000)
+        delay(3000)
         notificationManager.cancel(notificationId)
     }
 

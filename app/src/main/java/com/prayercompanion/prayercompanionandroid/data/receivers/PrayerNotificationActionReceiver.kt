@@ -8,7 +8,6 @@ import com.prayercompanion.prayercompanionandroid.data.utils.notifications.Praye
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.SetPrayerStatusByDateTime
 import com.prayercompanion.prayercompanionandroid.getSerializable
-import com.prayercompanion.prayercompanionandroid.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -46,7 +45,6 @@ class PrayerNotificationActionReceiver : BroadcastReceiver() {
 
                 withContext(Dispatchers.Main) {
                     prayersNotificationsService.showNotificationSelectedStatus(notificationId, prayerInfo, status)
-                    context?.showToast(context.getString(status.nameId))
                 }
             }
         }
