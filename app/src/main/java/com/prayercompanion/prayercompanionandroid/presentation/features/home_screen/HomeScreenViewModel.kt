@@ -79,6 +79,7 @@ class HomeScreenViewModel @Inject constructor(
                         getLastWeekStatusesOverView.call()
                             .collectLatest { statuses ->
                                 withContext(Dispatchers.Main) {
+                                    statuses.remove(PrayerStatus.None)
                                     state = state.copy(lastWeekStatuses = statuses)
                                 }
                             }

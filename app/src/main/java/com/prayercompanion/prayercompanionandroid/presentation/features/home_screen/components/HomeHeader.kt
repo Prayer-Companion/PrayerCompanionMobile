@@ -94,12 +94,14 @@ fun HomeHeader(
                         style = MaterialTheme.typography.h1,
                         color = MaterialTheme.colors.onPrimary
                     )
-                    PrayerStatusPicker(
-                        modifier = Modifier.width(120.dp),
-                        onStatusSelected = {
-                            onStatusSelected(it, currentPrayer)
-                        }
-                    )
+                    if (currentPrayer.isStateSelectable) {
+                        PrayerStatusPicker(
+                            modifier = Modifier.width(120.dp),
+                            onStatusSelected = {
+                                onStatusSelected(it, currentPrayer)
+                            }
+                        )
+                    }
                 }
                 Row {
                     MeasureUnconstrainedViewWidth(

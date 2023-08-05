@@ -17,12 +17,14 @@
     <string name="quran_tab">Quran</string>
     <string name="settings_tab">Settings</string>
 
-    <string name="missed_prayer_status">Missed</string>
+    <string name="jamaah_prayer_status">In The Mosque</string>
     <string name="on_time_prayer_status">On Time</string>
     <string name="after_half_time_prayer_status">After half time</string>
-    <string name="qadaa_prayer_status">Qadaa</string>
     <string name="late_prayer_status">Late</string>
-    <string name="jamaah_prayer_status">In The Mosque</string>
+    <string name="missed_prayer_status">Missed</string>
+    <string name="qadaa_prayer_status">Qadaa</string>
+    <string name="none_prayer_status">None</string>
+
     <string name="or">Or</string>
     <string name="continue_with_google">Continue with Google</string>
     <string name="continue_as_guest">Continue as a Guest</string>

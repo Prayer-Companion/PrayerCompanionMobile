@@ -166,7 +166,8 @@ class PrayersRepositoryImpl @Inject constructor(
             PrayerStatus.Late -> "late"
             PrayerStatus.Qadaa -> "missed"
             PrayerStatus.Missed -> "qadaa"
-            else -> "none"
+            PrayerStatus.None -> "none"
+            null -> "none"
         }
     }
 

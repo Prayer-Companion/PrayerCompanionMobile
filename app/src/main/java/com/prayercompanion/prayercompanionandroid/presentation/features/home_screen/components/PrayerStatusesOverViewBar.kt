@@ -72,7 +72,7 @@ private fun PrayerStatusesOverViewBarPreview() {
         statusesCounts = sortedMapOf(
             PrayerStatus.Jamaah to 8,
             PrayerStatus.OnTime to 5,
-//            PrayerStatus.AfterHalfTime to 5,
+            PrayerStatus.AfterHalfTime to 5,
             PrayerStatus.Late to 4,
             PrayerStatus.Qadaa to 4,
             PrayerStatus.Missed to 15,
