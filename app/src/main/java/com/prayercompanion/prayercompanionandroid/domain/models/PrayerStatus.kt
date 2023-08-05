@@ -39,6 +39,10 @@ enum class PrayerStatus(
     Missed(
         R.string.missed_prayer_status,
         PrayerStatusMissedColor
+    ),
+    None(
+        R.string.none_prayer_status,
+        PrayerStatusNotSetColor
     )
 }
 

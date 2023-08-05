@@ -92,18 +92,37 @@ fun PrayerItem(
                 )
             }
         }
-        PrayerItemState(
-            prayerInfo.status,
-            prayerInfo.isStateSelectable
-        ) {
-            onStatusSelected(it, prayerInfo)
+        if (prayerInfo.isStateSelectable) {
+            PrayerItemState(
+                Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth(0.30f),
+                prayerInfo.status,
+                prayerInfo.isStateSelectionEnabled
+            ) {
+                onStatusSelected(it, prayerInfo)
+            }
+        } else {
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth(0.30f)
+                    .background(
+                        color = MaterialTheme.colors.primary,
+                        shape = RoundedCornerShape(
+                            topEnd = 15.dp,
+                            bottomEnd = 15.dp
+                        )
+                    )
+            )
         }
     }
 }
 
 @Composable
 private fun PrayerItemState(
-    status: PrayerStatus?,
+    modifier: Modifier = Modifier,
+    status: PrayerStatus,
     isStateSelectable: Boolean,
     onStatusSelected: (PrayerStatus) -> Unit
 ) {
@@ -112,9 +131,7 @@ private fun PrayerItemState(
     }
 
     Row(
-        modifier = Modifier
-            .fillMaxHeight()
-            .fillMaxWidth(0.30f)
+        modifier = modifier
             .background(
                 color = status.getColorOrDefault(),
                 shape = RoundedCornerShape(
@@ -125,7 +142,7 @@ private fun PrayerItemState(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        if (status != null) {
+        if (status != PrayerStatus.None) {
             Text(
                 text = stringResource(id = status.nameId),
                 color = MaterialTheme.colors.onPrimary,

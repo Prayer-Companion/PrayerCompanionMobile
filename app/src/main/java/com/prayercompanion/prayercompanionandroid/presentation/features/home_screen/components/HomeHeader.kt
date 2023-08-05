@@ -97,24 +97,27 @@ fun HomeHeader(
                         style = MaterialTheme.typography.h1,
                         color = MaterialTheme.colors.onPrimary
                     )
-                    Button(
-                        onClick = { onPrayedNowClicked() },
-                        shape = RoundedCornerShape(10.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = MaterialTheme.colors.primaryVariant
-                        ),
-                        contentPadding = PaddingValues(
-                            vertical = 3.dp,
-                            horizontal = 24.dp,
-                        )
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.notification_action_prayedNow),
-                            style = MaterialTheme.typography.button,
-                            color = MaterialTheme.colors.onPrimary
-                        )
+                    if (currentPrayer.isStateSelectable) {
+                        Button(
+                            onClick = { onPrayedNowClicked() },
+                            shape = RoundedCornerShape(10.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = MaterialTheme.colors.primaryVariant
+                            ),
+                            contentPadding = PaddingValues(
+                                vertical = 3.dp,
+                                horizontal = 24.dp,
+                            )
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.notification_action_prayedNow),
+                                style = MaterialTheme.typography.button,
+                                color = MaterialTheme.colors.onPrimary
+                            )
+                        }
                     }
                 }
+
                 Row {
                     MeasureUnconstrainedViewWidth(
                         modifier = Modifier
