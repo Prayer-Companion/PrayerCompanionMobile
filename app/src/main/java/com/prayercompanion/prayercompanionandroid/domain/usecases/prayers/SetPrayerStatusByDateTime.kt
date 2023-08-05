@@ -14,16 +14,15 @@ class SetPrayerStatusByDateTime
 ) {
 
     @ExperimentalStdlibApi
-    suspend fun call(prayerInfo: PrayerInfo, dateTime: LocalDateTime): PrayerStatus {
+    suspend fun call(prayerInfo: PrayerInfo, dateTime: LocalDateTime): Result<PrayerStatus> {
         val ranges = getPrayerStatusRanges.call(prayerInfo)
 
         val status: PrayerStatus = ranges?.firstNotNullOfOrNull {
             if (dateTime in it.value) it.key else null
         } ?: PrayerStatus.Qadaa
 
-        prayersRepository.updatePrayerStatus(prayerInfo, status)
-
-        return status
+        return prayersRepository.updatePrayerStatus(prayerInfo, status)
+            .map { status }
     }
 
 }

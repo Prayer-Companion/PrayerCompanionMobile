@@ -20,6 +20,8 @@ import com.prayercompanion.prayercompanionandroid.domain.utils.LocationMissingEx
 import com.prayercompanion.prayercompanionandroid.domain.utils.UnknownException
 import com.skydoves.whatif.whatIfNotNull
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -105,6 +107,33 @@ class PrayersRepositoryImpl @Inject constructor(
         return Result.failure(UnknownException)
     }
 
+    override suspend fun getDayPrayersFlow(
+        location: Location?,
+        address: Address?,
+        dayDate: LocalDate
+    ): Flow<Result<DayPrayersInfo>> {
+
+        val savedDayPrayers = getDayPrayersFromDB(dayDate)
+
+        if (savedDayPrayers == null) {
+            // if we couldn't get from the day prayers from DB,
+            // then we load the month from backend and then query our local DB again
+
+            val yearMonth = YearMonth.from(dayDate)
+
+            if (location == null) {
+                return flowOf(Result.failure(LocationMissingException))
+            }
+
+            loadAndSaveMonthlyPrayers(yearMonth, location, address)
+                .onFailure {
+                    return flowOf(Result.failure(it))
+                }
+        }
+
+        return getDayPrayersFromDBFlow(dayDate)
+    }
+
     override suspend fun updatePrayerStatus(
         prayerInfo: PrayerInfo,
         prayerStatus: PrayerStatus
@@ -137,6 +166,24 @@ class PrayersRepositoryImpl @Inject constructor(
         endDateTime: LocalDateTime
     ): Flow<List<PrayerStatus?>> {
         return dao.getPrayersStatusesByDate(startDateTime, endDateTime)
+    }
+
+    private fun getDayPrayersFromDBFlow(
+        dayDate: LocalDate
+    ): Flow<Result<DayPrayersInfo>> {
+        val savedPrayers = dao.getPrayersFlow(
+            startDateTime = dayDate.atStartOfDay(),
+            endDateTime = dayDate.atTime(LocalTime.MAX)
+        )
+
+        return savedPrayers.map {
+            val info = it.takeIf { it.isNotEmpty() }?.toDayPrayerInfo()
+            if (info == null) {
+                Result.failure(UnknownException)
+            } else {
+                Result.success(info)
+            }
+        }
     }
 
     private fun insertMonthPrayers(

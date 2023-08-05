@@ -16,7 +16,6 @@ import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.presentation.utils.PresentationConsts
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
-import logcat.logcat
 import javax.inject.Inject
 
 class PrayersNotificationsService @Inject constructor(
@@ -35,7 +34,7 @@ class PrayersNotificationsService @Inject constructor(
 
             PendingIntent.getActivity(
                 context,
-                REQUEST_CODE,
+                notificationId + "contentIntent".hashCode(),
                 activityIntent,
                 PendingIntent.FLAG_IMMUTABLE
             )
@@ -54,7 +53,7 @@ class PrayersNotificationsService @Inject constructor(
 
             PendingIntent.getBroadcast(
                 context,
-                REQUEST_CODE,
+                notificationId + "actionIntent".hashCode(),
                 actionIntent,
                 PendingIntent.FLAG_IMMUTABLE
             )
@@ -80,7 +79,6 @@ class PrayersNotificationsService @Inject constructor(
             .build()
 
 
-        logcat { "Notified: $item" }
         notificationManager.notify(notificationId, notification)
     }
 

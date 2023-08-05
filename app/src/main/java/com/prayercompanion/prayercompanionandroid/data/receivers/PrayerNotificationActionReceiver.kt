@@ -41,11 +41,17 @@ class PrayerNotificationActionReceiver : BroadcastReceiver() {
 
         if (actionType == PrayerNotificationAction.Prayed) {
             CoroutineScope(SupervisorJob()).launch(Dispatchers.IO) {
-                val status = setPrayerStatusByDateTime.call(prayerInfo, LocalDateTime.now())
-
-                withContext(Dispatchers.Main) {
-                    prayersNotificationsService.showNotificationSelectedStatus(notificationId, prayerInfo, status)
-                }
+                setPrayerStatusByDateTime.call(prayerInfo, LocalDateTime.now())
+                    //Todo handle onFailure by showing some error message
+                    .onSuccess { status ->
+                        withContext(Dispatchers.Main) {
+                            prayersNotificationsService.showNotificationSelectedStatus(
+                                notificationId = notificationId,
+                                prayerInfo = prayerInfo,
+                                status = status
+                            )
+                        }
+                    }
             }
         }
     }

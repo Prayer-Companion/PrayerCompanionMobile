@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
@@ -12,6 +13,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -41,7 +44,7 @@ fun HomeHeader(
     currentPrayer: PrayerInfo = PrayerInfo.Default,
     nextPrayer: PrayerInfo = PrayerInfo.Default,
     durationUntilNextPrayer: RemainingDuration = RemainingDuration(0, 0, 0),
-    onStatusSelected: (PrayerStatus, PrayerInfo) -> Unit = { _, _ -> },
+    onPrayedNowClicked: () -> Unit = { },
     statusesCounts: SortedMap<PrayerStatus, Int> = sortedMapOf()
 ) = PrayerCompanionAndroidTheme {
 
@@ -94,12 +97,23 @@ fun HomeHeader(
                         style = MaterialTheme.typography.h1,
                         color = MaterialTheme.colors.onPrimary
                     )
-                    PrayerStatusPicker(
-                        modifier = Modifier.width(120.dp),
-                        onStatusSelected = {
-                            onStatusSelected(it, currentPrayer)
-                        }
-                    )
+                    Button(
+                        onClick = { onPrayedNowClicked() },
+                        shape = RoundedCornerShape(10.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = MaterialTheme.colors.primaryVariant
+                        ),
+                        contentPadding = PaddingValues(
+                            vertical = 3.dp,
+                            horizontal = 24.dp,
+                        )
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.notification_action_prayedNow),
+                            style = MaterialTheme.typography.button,
+                            color = MaterialTheme.colors.onPrimary
+                        )
+                    }
                 }
                 Row {
                     MeasureUnconstrainedViewWidth(
