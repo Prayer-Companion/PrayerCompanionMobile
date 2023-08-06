@@ -37,4 +37,10 @@ interface PrayersRepository {
         location: Location,
         address: Address?
     ): Result<Unit>
+
+    suspend fun getDayPrayersFlow(
+        location: Location?,
+        address: Address?,
+        dayDate: LocalDate
+    ): Flow<Result<DayPrayersInfo>>
 }

@@ -105,7 +105,7 @@ fun HomeScreen(
                 currentPrayer = currentPrayer,
                 nextPrayer = nextPrayer,
                 durationUntilNextPrayer = viewModel.durationUntilNextPrayer,
-                onStatusSelected = viewModel::onStatusSelected,
+                onPrayedNowClicked = viewModel::onPrayedNowClicked,
                 statusesCounts = viewModel.state.lastWeekStatuses
             )
             Spacer(modifier = Modifier.height(spacing.spaceMedium))

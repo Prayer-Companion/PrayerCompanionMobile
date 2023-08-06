@@ -29,7 +29,7 @@ class PrayersFakeRepository : PrayersRepository {
         location: Location?,
         address: Address?
     ): Result<PrayerInfo> {
-        return Result.success(DEFAULT_DAY_PRAYERS_INFO.get(prayer))
+        return Result.success(getFakeDayPrayersInfo(date).get(prayer))
     }
 
     override fun getStatusesByDate(
@@ -47,6 +47,43 @@ class PrayersFakeRepository : PrayersRepository {
     }
 
     companion object {
+        fun getFakeDayPrayersInfo(date: LocalDate): DayPrayersInfo {
+            return DayPrayersInfo(
+                listOf(
+                    PrayerInfo(
+                        prayer = Prayer.FAJR,
+                        dateTime = LocalDateTime.of(date, LocalTime.of(4, 0)),
+                        status = null
+                    ),
+                    PrayerInfo(
+                        prayer = Prayer.DUHA,
+                        dateTime = LocalDateTime.of(date, LocalTime.of(7, 0)),
+                        status = null
+                    ),
+                    PrayerInfo(
+                        prayer = Prayer.DHUHR,
+                        dateTime = LocalDateTime.of(date, LocalTime.of(12, 0)),
+                        status = null
+                    ),
+                    PrayerInfo(
+                        prayer = Prayer.ASR,
+                        dateTime = LocalDateTime.of(date, LocalTime.of(15, 0)),
+                        status = null
+                    ),
+                    PrayerInfo(
+                        prayer = Prayer.MAGHRIB,
+                        dateTime = LocalDateTime.of(date, LocalTime.of(18, 0)),
+                        status = null
+                    ),
+                    PrayerInfo(
+                        prayer = Prayer.ISHA,
+                        dateTime = LocalDateTime.of(date, LocalTime.of(20, 0)),
+                        status = null
+                    )
+                )
+            )
+        }
+
         val DEFAULT_DAY_PRAYERS_INFO = DayPrayersInfo(
             listOf(
                 PrayerInfo(

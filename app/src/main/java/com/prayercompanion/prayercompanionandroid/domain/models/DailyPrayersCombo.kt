@@ -1,5 +1,6 @@
 package com.prayercompanion.prayercompanionandroid.domain.models
 
+import java.time.LocalDate
 import java.time.LocalTime
 
 data class DailyPrayersCombo(
@@ -48,7 +49,16 @@ data class DailyPrayersCombo(
         return if (nextPrayer != null) {
             todayPrayersInfo.get(nextPrayer)
         } else {
-            tomorrowPrayersInfo?.get(Prayer.FAJR) ?: PrayerInfo.Default
+            val today = LocalDate.now()
+            val yesterday = today.minusDays(1)
+
+            // if it is today's Isha then get tomorrow's Fajr
+            // if it is yesterday's Isha then get today's Fajr
+            when (prayerInfo.date) {
+                today -> tomorrowPrayersInfo?.get(Prayer.FAJR)
+                yesterday -> todayPrayersInfo.get(Prayer.FAJR)
+                else -> null
+            } ?: PrayerInfo.Default
         }
     }
 }

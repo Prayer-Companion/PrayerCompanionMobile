@@ -28,11 +28,11 @@ fun Throwable.printStackTraceInDebug() {
 }
 
 @Suppress("DEPRECATION", "UNCHECKED_CAST")
-fun <T : Serializable?> Intent.getSerializable(key: String, m_class: Class<T>): T {
+fun <T : Serializable?> Intent.getSerializable(key: String, m_class: Class<T>): T? {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-        this.getSerializableExtra(key, m_class)!!
+        this.getSerializableExtra(key, m_class)
     else
-        this.getSerializableExtra(key) as T
+        this.getSerializableExtra(key) as T?
 }
 
 fun <T> Result.Companion.failure(message: String): Result<T> {
