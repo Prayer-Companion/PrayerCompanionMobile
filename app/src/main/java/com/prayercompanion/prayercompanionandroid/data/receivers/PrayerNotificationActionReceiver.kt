@@ -26,7 +26,6 @@ class PrayerNotificationActionReceiver : BroadcastReceiver() {
     @Inject
     lateinit var prayersNotificationsService: PrayersNotificationsService
 
-    @OptIn(ExperimentalStdlibApi::class)
     override fun onReceive(context: Context?, intent: Intent?) {
         val prayerInfo = intent
             ?.getSerializable(EXTRA_PRAYER_INFO, PrayerInfo::class.java)

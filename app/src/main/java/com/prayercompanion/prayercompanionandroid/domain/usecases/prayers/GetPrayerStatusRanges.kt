@@ -11,7 +11,6 @@ import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
-@ExperimentalStdlibApi
 class GetPrayerStatusRanges @Inject constructor(
     private val prayersRepository: PrayersRepository,
     private val appLocationManager: AppLocationManager
@@ -56,20 +55,18 @@ class GetPrayerStatusRanges @Inject constructor(
                     PrayerStatus.Late to run {
                         val start = fullTimeMinutes - LATE_REMAINING_TIME_IN_MINUTES
 
-                        prayerTime.plusMinutes(start)
-                            .rangeUntil(prayerTime.plusMinutes(fullTimeMinutes))
+                        prayerTime.plusMinutes(start)..< prayerTime.plusMinutes(fullTimeMinutes)
                     },
                     PrayerStatus.AfterHalfTime to run {
                         val start = (fullTimeMinutes / 2)
                         val end = fullTimeMinutes - LATE_REMAINING_TIME_IN_MINUTES
 
-                        prayerTime.plusMinutes(start)
-                            .rangeUntil(prayerTime.plusMinutes(end))
+                        prayerTime.plusMinutes(start) ..< prayerTime.plusMinutes(end)
                     },
                     PrayerStatus.OnTime to run {
                         val end = fullTimeMinutes / 2
 
-                        prayerTime.rangeUntil(prayerTime.plusMinutes(end))
+                        prayerTime ..< prayerTime.plusMinutes(end)
                     },
                 )
             }
@@ -103,20 +100,20 @@ class GetPrayerStatusRanges @Inject constructor(
             PrayerStatus.Late to run {
                 val start = nightTimeInMinutes / 2
 
-                maghribDateTime.plusMinutes(start).rangeUntil(fajr.dateTime)
+                maghribDateTime.plusMinutes(start) ..< fajr.dateTime
             },
             // Between first third of the night and middle of the night
             PrayerStatus.AfterHalfTime to run {
                 val start = nightTimeInMinutes / 3
                 val end = nightTimeInMinutes / 2
 
-                maghribDateTime.plusMinutes(start).rangeUntil(maghribDateTime.plusMinutes(end))
+                maghribDateTime.plusMinutes(start) ..< maghribDateTime.plusMinutes(end)
             },
             // Before first third of the night
             PrayerStatus.OnTime to run {
                 val firstThirdOfNight = nightTimeInMinutes / 3
 
-                ishaDateTime.rangeUntil(maghribDateTime.plusMinutes(firstThirdOfNight))
+                ishaDateTime ..< maghribDateTime.plusMinutes(firstThirdOfNight)
             },
         )
     }

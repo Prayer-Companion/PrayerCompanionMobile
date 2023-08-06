@@ -17,17 +17,16 @@ data class DailyPrayersCombo(
 
     private val now get() = LocalTime.now()
 
-    @OptIn(ExperimentalStdlibApi::class)
     private val currentPrayer: PrayerInfo
         get() {
             val todayFajr = todayPrayersInfo.get(Prayer.FAJR)
             val todayIsha = todayPrayersInfo.get(Prayer.ISHA)
 
-            if (now in LocalTime.MIN.rangeUntil(todayFajr.time)) {
+            if (now in LocalTime.MIN ..< todayFajr.time) {
                 return yesterdayPrayersInfo?.get(Prayer.ISHA) ?: PrayerInfo.Default
             }
 
-            if (now in todayIsha.time.rangeTo(LocalTime.MAX)) {
+            if (now in todayIsha.time .. LocalTime.MAX) {
                 return todayIsha
             }
 
@@ -35,7 +34,7 @@ data class DailyPrayersCombo(
                 .forEachIndexed { index, prayerInfo ->
                     val prayerTime = prayerInfo.time
                     val nextPrayerTime = todayPrayersInfo.prayers[index + 1].time
-                    if (now in prayerTime.rangeUntil(nextPrayerTime)) {
+                    if (now in prayerTime ..< nextPrayerTime) {
                         return prayerInfo
                     }
                 }

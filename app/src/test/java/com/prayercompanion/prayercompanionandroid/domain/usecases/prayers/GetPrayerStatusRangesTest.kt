@@ -10,10 +10,9 @@ import org.junit.Before
 import org.junit.Test
 import java.time.LocalDate
 
-@OptIn(ExperimentalStdlibApi::class)
 internal class GetPrayerStatusRangesTest {
 
-    lateinit var usecase: GetPrayerStatusRanges
+    private lateinit var usecase: GetPrayerStatusRanges
     private val prayersRepository: PrayersRepository = PrayersFakeRepository()
     private val appLocationManager: AppLocationManager = FakeAppLocationManager()
 
@@ -38,9 +37,9 @@ internal class GetPrayerStatusRangesTest {
             ishaPrayer to usecase.call(ishaPrayer),
         )
 
-        statuses.forEach {
-            println("${it.first.prayer}: ${it.first.time}")
-            it.second?.entries?.reversed()?.forEach {
+        statuses.forEach { status ->
+            println("${status.first.prayer}: ${status.first.time}")
+            status.second?.entries?.reversed()?.forEach {
                 println(
                     "   ${it.key}: ${it.value.start.toLocalTime()} .. ${it.value.endExclusive.toLocalTime()}"
                 )

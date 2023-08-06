@@ -136,7 +136,6 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
-    @OptIn(ExperimentalStdlibApi::class)
     fun onPrayedNowClicked() {
         viewModelScope.launch(Dispatchers.IO) {
             setPrayerStatusByDateTime
