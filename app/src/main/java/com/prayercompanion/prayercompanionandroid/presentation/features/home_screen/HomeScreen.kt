@@ -65,9 +65,11 @@ fun HomeScreen(
             Lifecycle.Event.ON_START -> {
                 viewModel.onStart()
             }
+
             Lifecycle.Event.ON_PAUSE -> {
                 viewModel.onPause()
             }
+
             else -> Unit
         }
     }
@@ -98,7 +100,8 @@ fun HomeScreen(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            val (currentPrayer, nextPrayer) = viewModel.state.currentAndNextPrayer
+            val (currentPrayer, nextPrayer) = viewModel.headerState.currentAndNextPrayer
+            val lastWeekStatuses = viewModel.headerState.lastWeekStatuses
             HomeHeader(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -106,7 +109,7 @@ fun HomeScreen(
                 nextPrayer = nextPrayer,
                 durationUntilNextPrayer = viewModel.durationUntilNextPrayer,
                 onPrayedNowClicked = viewModel::onPrayedNowClicked,
-                statusesCounts = viewModel.state.lastWeekStatuses
+                statusesCounts = lastWeekStatuses
             )
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
             // TODO: add a way to get back to today's date quickly

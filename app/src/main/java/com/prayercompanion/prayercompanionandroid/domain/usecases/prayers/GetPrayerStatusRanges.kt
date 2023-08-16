@@ -3,7 +3,6 @@ package com.prayercompanion.prayercompanionandroid.domain.usecases.prayers
 import com.prayercompanion.prayercompanionandroid.domain.models.Address
 import com.prayercompanion.prayercompanionandroid.domain.models.Location
 import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
-import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
 import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
@@ -16,20 +15,23 @@ class GetPrayerStatusRanges @Inject constructor(
     private val appLocationManager: AppLocationManager
 ) {
 
-    suspend fun call(prayerInfo: PrayerInfo): Map<PrayerStatus, OpenEndRange<LocalDateTime>>? {
+    suspend fun call(
+        prayerDateTime: LocalDateTime,
+        nextPrayer: Prayer?
+    ): Map<PrayerStatus, OpenEndRange<LocalDateTime>>? {
         val location = appLocationManager.getLastKnownLocation()
         val address = appLocationManager.getAddressByLocation(location)
 
-        return prayerInfo.prayer.next()?.let { next ->
+        return if (nextPrayer != null) {
             getRangesForSameDayPrayers(
-                prayerInfo = prayerInfo,
-                nextPrayer = next,
+                prayerDateTime = prayerDateTime,
+                nextPrayer = nextPrayer,
                 location = location,
                 address = address
             )
-        } ?: kotlin.run { // this is Isha and next is Fajr
+        } else {
             getRangeForIsha(
-                prayerInfo = prayerInfo,
+                prayerDateTime = prayerDateTime,
                 location = location,
                 address = address
             )
@@ -37,36 +39,37 @@ class GetPrayerStatusRanges @Inject constructor(
     }
 
     private suspend fun getRangesForSameDayPrayers(
-        prayerInfo: PrayerInfo,
+        prayerDateTime: LocalDateTime,
         nextPrayer: Prayer,
         location: Location?,
         address: Address?
     ): Map<PrayerStatus, OpenEndRange<LocalDateTime>>? {
-        val todayPrayers = prayersRepository.getDayPrayers(location, address, prayerInfo.date)
+        val todayPrayers = prayersRepository.getDayPrayers(location, address, prayerDateTime.toLocalDate())
 
         todayPrayers
             .map { it.get(nextPrayer) }
             .onSuccess { nextPrayerInfo ->
                 val fullTimeMinutes = ChronoUnit.MINUTES
-                    .between(prayerInfo.dateTime, nextPrayerInfo.dateTime)
+                    .between(prayerDateTime, nextPrayerInfo.dateTime)
 
-                val prayerTime = prayerInfo.dateTime
                 return mapOf(
                     PrayerStatus.Late to run {
                         val start = fullTimeMinutes - LATE_REMAINING_TIME_IN_MINUTES
 
-                        prayerTime.plusMinutes(start)..< prayerTime.plusMinutes(fullTimeMinutes)
+                        prayerDateTime.plusMinutes(start)..<prayerDateTime.plusMinutes(
+                            fullTimeMinutes
+                        )
                     },
                     PrayerStatus.AfterHalfTime to run {
                         val start = (fullTimeMinutes / 2)
                         val end = fullTimeMinutes - LATE_REMAINING_TIME_IN_MINUTES
 
-                        prayerTime.plusMinutes(start) ..< prayerTime.plusMinutes(end)
+                        prayerDateTime.plusMinutes(start)..<prayerDateTime.plusMinutes(end)
                     },
                     PrayerStatus.OnTime to run {
                         val end = fullTimeMinutes / 2
 
-                        prayerTime ..< prayerTime.plusMinutes(end)
+                        prayerDateTime..<prayerDateTime.plusMinutes(end)
                     },
                 )
             }
@@ -74,14 +77,15 @@ class GetPrayerStatusRanges @Inject constructor(
     }
 
     private suspend fun getRangeForIsha(
-        prayerInfo: PrayerInfo,
+        prayerDateTime: LocalDateTime,
         location: Location?,
         address: Address?,
     ): Map<PrayerStatus, OpenEndRange<LocalDateTime>>? {
-        val todayPrayers = prayersRepository.getDayPrayers(location, address, prayerInfo.date)
-        val nextDayPrayers = prayersRepository.getDayPrayers(location, address, prayerInfo.date.plusDays(1))
+        val date = prayerDateTime.toLocalDate()
+        val todayPrayers = prayersRepository.getDayPrayers(location, address, date)
+        val nextDayPrayers =
+            prayersRepository.getDayPrayers(location, address, date.plusDays(1))
 
-        val ishaDateTime = prayerInfo.dateTime
         val maghribDateTime =
             todayPrayers
                 .map { it.get(Prayer.MAGHRIB) }
@@ -100,20 +104,20 @@ class GetPrayerStatusRanges @Inject constructor(
             PrayerStatus.Late to run {
                 val start = nightTimeInMinutes / 2
 
-                maghribDateTime.plusMinutes(start) ..< fajr.dateTime
+                maghribDateTime.plusMinutes(start)..<fajr.dateTime
             },
             // Between first third of the night and middle of the night
             PrayerStatus.AfterHalfTime to run {
                 val start = nightTimeInMinutes / 3
                 val end = nightTimeInMinutes / 2
 
-                maghribDateTime.plusMinutes(start) ..< maghribDateTime.plusMinutes(end)
+                maghribDateTime.plusMinutes(start)..<maghribDateTime.plusMinutes(end)
             },
             // Before first third of the night
             PrayerStatus.OnTime to run {
                 val firstThirdOfNight = nightTimeInMinutes / 3
 
-                ishaDateTime ..< maghribDateTime.plusMinutes(firstThirdOfNight)
+                prayerDateTime..<maghribDateTime.plusMinutes(firstThirdOfNight)
             },
         )
     }

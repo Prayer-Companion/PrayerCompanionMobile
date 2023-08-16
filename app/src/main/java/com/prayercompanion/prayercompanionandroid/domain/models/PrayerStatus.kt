@@ -12,40 +12,38 @@ import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerStatu
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerStatusQadaaColor
 
 enum class PrayerStatus(
-    @StringRes
-    val nameId: Int,
     val color: Color
 ) {
-    Jamaah(
-        R.string.jamaah_prayer_status,
-        PrayerStatusJamaahColor
-    ),
-    OnTime(
-        R.string.on_time_prayer_status,
-        PrayerStatusOnTimeColor
-    ),
-    AfterHalfTime(
-        R.string.after_half_time_prayer_status,
-        PrayerStatusAfterHalfTimeColor
-    ),
-    Late(
-        R.string.late_prayer_status,
-        PrayerStatusLateColor
-    ),
-    Qadaa(
-        R.string.qadaa_prayer_status,
-        PrayerStatusQadaaColor
-    ),
-    Missed(
-        R.string.missed_prayer_status,
-        PrayerStatusMissedColor
-    ),
-    None(
-        R.string.none_prayer_status,
-        PrayerStatusNotSetColor
-    )
-}
+    Jamaah(PrayerStatusJamaahColor),
+    OnTime(PrayerStatusOnTimeColor),
+    AfterHalfTime(PrayerStatusAfterHalfTimeColor),
+    Late(PrayerStatusLateColor),
+    Missed(PrayerStatusMissedColor),
+    Qadaa(PrayerStatusQadaaColor),
+    None(PrayerStatusNotSetColor);
 
-fun PrayerStatus?.getColorOrDefault(): Color {
-    return this?.color ?: PrayerStatusNotSetColor
+    @StringRes
+    fun getStatusName(prayer: Prayer): Int {
+        return if (prayer == Prayer.ISHA) {
+            when (this) {
+                Jamaah -> R.string.prayerStatus_in_the_mosque
+                OnTime -> R.string.prayerStatus_onTime
+                AfterHalfTime -> R.string.prayerStatus_isha_late1
+                Late -> R.string.prayerStatus_isha_late2
+                Missed -> R.string.prayerStatus_missed
+                Qadaa -> R.string.prayerStatus_qadaa
+                None -> R.string.prayerStatus_none
+            }
+        } else {
+            when (this) {
+                Jamaah -> R.string.prayerStatus_in_the_mosque
+                OnTime -> R.string.prayerStatus_onTime
+                AfterHalfTime -> R.string.prayerStatus_late1
+                Late -> R.string.prayerStatus_late2
+                Missed -> R.string.prayerStatus_missed
+                Qadaa -> R.string.prayerStatus_qadaa
+                None -> R.string.prayerStatus_none
+            }
+        }
+    }
 }

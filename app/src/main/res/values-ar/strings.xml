@@ -19,13 +19,23 @@
     <string name="quran_tab">القرآن</string>
     <string name="settings_tab">الإعدادات</string>
 
-    <string name="jamaah_prayer_status">في المسجد</string>
-    <string name="on_time_prayer_status">في وقتها</string>
-    <string name="after_half_time_prayer_status">بعد نصف الوقت</string>
-    <string name="late_prayer_status">متاخر</string>
-    <string name="missed_prayer_status">فاتت</string>
-    <string name="qadaa_prayer_status">قضاء</string>
-    <string name="none_prayer_status">غير محدد</string>
+    <!-- Prayer Statuses -->
+    <string name="prayerStatusDialog_title">تحديث الحالة</string>
+    <string name="prayerStatusDialog_explanation">كيفية حساب الفترات</string>
+
+    <string name="prayerStatus_in_the_mosque">في المسجد</string>
+    <string name="prayerStatus_onTime">في وقتها</string>
+
+    <string name="prayerStatus_late1">بعد نصف الوقت</string>
+    <string name="prayerStatus_late2">متاخر</string>
+    <string name="prayerStatus_isha_late1">بعد الثلث الاول من الليل</string>
+    <string name="prayerStatus_isha_late2">بعد منتصف الليل</string>
+
+    <string name="prayerStatus_missed">فاتت</string>
+    <string name="prayerStatus_qadaa">قضاء</string>
+    <string name="prayerStatus_none">غير محدد</string>
+
+
     <string name="or">أو</string>
     <string name="continue_with_google">تسجيل الدخول ب Google</string>
     <string name="continue_as_guest">الاستمرار ك ضيف</string>

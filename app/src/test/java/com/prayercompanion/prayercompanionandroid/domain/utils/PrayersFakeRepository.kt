@@ -53,32 +53,38 @@ class PrayersFakeRepository : PrayersRepository {
                     PrayerInfo(
                         prayer = Prayer.FAJR,
                         dateTime = LocalDateTime.of(date, LocalTime.of(4, 0)),
-                        status = null
+                        selectedStatus = PrayerStatus.None,
+                        statusesWithTimeRanges = emptyList()
                     ),
                     PrayerInfo(
                         prayer = Prayer.DUHA,
                         dateTime = LocalDateTime.of(date, LocalTime.of(7, 0)),
-                        status = null
+                        selectedStatus = PrayerStatus.None,
+                        statusesWithTimeRanges = emptyList()
                     ),
                     PrayerInfo(
                         prayer = Prayer.DHUHR,
                         dateTime = LocalDateTime.of(date, LocalTime.of(12, 0)),
-                        status = null
+                        selectedStatus = PrayerStatus.None,
+                        statusesWithTimeRanges = emptyList()
                     ),
                     PrayerInfo(
                         prayer = Prayer.ASR,
                         dateTime = LocalDateTime.of(date, LocalTime.of(15, 0)),
-                        status = null
+                        selectedStatus = PrayerStatus.None,
+                        statusesWithTimeRanges = emptyList()
                     ),
                     PrayerInfo(
                         prayer = Prayer.MAGHRIB,
                         dateTime = LocalDateTime.of(date, LocalTime.of(18, 0)),
-                        status = null
+                        selectedStatus = PrayerStatus.None,
+                        statusesWithTimeRanges = emptyList()
                     ),
                     PrayerInfo(
                         prayer = Prayer.ISHA,
                         dateTime = LocalDateTime.of(date, LocalTime.of(20, 0)),
-                        status = null
+                        selectedStatus = PrayerStatus.None,
+                        statusesWithTimeRanges = emptyList()
                     )
                 )
             )
@@ -89,32 +95,38 @@ class PrayersFakeRepository : PrayersRepository {
                 PrayerInfo(
                     prayer = Prayer.FAJR,
                     dateTime = LocalDateTime.of(Consts.TODAY_DATE, LocalTime.of(5, 0)),
-                    status = null
+                    selectedStatus = PrayerStatus.None,
+                    statusesWithTimeRanges = emptyList()
                 ),
                 PrayerInfo(
                     prayer = Prayer.DUHA,
                     dateTime = LocalDateTime.of(Consts.TODAY_DATE, LocalTime.of(7, 0)),
-                    status = null
+                    selectedStatus = PrayerStatus.None,
+                    statusesWithTimeRanges = emptyList()
                 ),
                 PrayerInfo(
                     prayer = Prayer.DHUHR,
                     dateTime = LocalDateTime.of(Consts.TODAY_DATE, LocalTime.of(12, 0)),
-                    status = null
+                    selectedStatus = PrayerStatus.None,
+                    statusesWithTimeRanges = emptyList()
                 ),
                 PrayerInfo(
                     prayer = Prayer.ASR,
                     dateTime = LocalDateTime.of(Consts.TODAY_DATE, LocalTime.of(15, 0)),
-                    status = null
+                    selectedStatus = PrayerStatus.None,
+                    statusesWithTimeRanges = emptyList()
                 ),
                 PrayerInfo(
                     prayer = Prayer.MAGHRIB,
                     dateTime = LocalDateTime.of(Consts.TODAY_DATE, LocalTime.of(18, 0)),
-                    status = null
+                    selectedStatus = PrayerStatus.None,
+                    statusesWithTimeRanges = emptyList()
                 ),
                 PrayerInfo(
                     prayer = Prayer.ISHA,
                     dateTime = LocalDateTime.of(Consts.TODAY_DATE, LocalTime.of(20, 0)),
-                    status = null
+                    selectedStatus = PrayerStatus.None,
+                    statusesWithTimeRanges = emptyList()
                 )
             )
         )

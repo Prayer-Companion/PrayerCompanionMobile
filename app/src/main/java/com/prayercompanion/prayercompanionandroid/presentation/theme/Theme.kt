@@ -10,7 +10,7 @@ val White = Color(0xFFFFFFFF)
 
 val PrayerStatusJamaahColor = Color(0xFF34C859)
 val PrayerStatusOnTimeColor = Color(0xFF33984C)
-val PrayerStatusAfterHalfTimeColor = Color(0xFFF3D743)
+val PrayerStatusAfterHalfTimeColor = Color(0xFFF3D243)
 val PrayerStatusLateColor = Color(0xFFFB9905)
 val PrayerStatusMissedColor = Color(0xFFF14F4F)
 val PrayerStatusQadaaColor = Color(0xFF9B5832)

@@ -89,7 +89,7 @@ class PrayersNotificationsService @Inject constructor(
         status: PrayerStatus
     ) {
         val prayerName = context.getString(prayerInfo.prayer.nameId)
-        val statusName = context.getString(status.nameId)
+        val statusName = context.getString(status.getStatusName(prayerInfo.prayer))
 
         val notificationTitle = context.getString(
             R.string.notification_action_response_statusUpdate,

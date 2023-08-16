@@ -11,7 +11,8 @@ fun List<PrayerInfoEntity>.toDayPrayerInfo(): DayPrayersInfo {
             PrayerInfo(
                 prayer = it.prayer,
                 dateTime = it.dateTime,
-                status = it.status ?: PrayerStatus.None
+                selectedStatus = it.status ?: PrayerStatus.None,
+                statusesWithTimeRanges = emptyList()
             )
         }
     )

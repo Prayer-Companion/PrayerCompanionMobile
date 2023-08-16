@@ -30,9 +30,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.prayercompanion.prayercompanionandroid.R
+import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
-import com.prayercompanion.prayercompanionandroid.domain.models.getColorOrDefault
+import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatusWithTimeRange
 import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.prayercompanionandroid.presentation.utils.PresentationConsts
@@ -43,7 +44,7 @@ import com.prayercompanion.prayercompanionandroid.presentation.utils.compose.Mea
 fun PrayerItem(
     modifier: Modifier = Modifier,
     name: String = "العصر",
-    prayerInfo: PrayerInfo = PrayerInfo.Default.copy(status = PrayerStatus.Jamaah),
+    prayerInfo: PrayerInfo = PrayerInfo.Default.copy(selectedStatus = PrayerStatus.Jamaah),
     onStatusSelected: (PrayerStatus, PrayerInfo) -> Unit = { _, _ -> }
 ) = PrayerCompanionAndroidTheme {
     val spacing = LocalSpacing.current
@@ -94,11 +95,13 @@ fun PrayerItem(
         }
         if (prayerInfo.isStateSelectable) {
             PrayerItemState(
-                Modifier
+                modifier = Modifier
                     .fillMaxHeight()
                     .fillMaxWidth(0.30f),
-                prayerInfo.status,
-                prayerInfo.isStateSelectionEnabled
+                status = prayerInfo.selectedStatus,
+                prayer = prayerInfo.prayer,
+                isStateSelectable = prayerInfo.isStateSelectionEnabled,
+                statusesWithTimeRanges = prayerInfo.statusesWithTimeRanges
             ) {
                 onStatusSelected(it, prayerInfo)
             }
@@ -122,18 +125,20 @@ fun PrayerItem(
 @Composable
 private fun PrayerItemState(
     modifier: Modifier = Modifier,
+    prayer: Prayer,
     status: PrayerStatus,
     isStateSelectable: Boolean,
+    statusesWithTimeRanges: List<PrayerStatusWithTimeRange>,
     onStatusSelected: (PrayerStatus) -> Unit
 ) {
-    var isStatusSelectorExpanded by remember {
+    var isStatusPickerDialogShown by remember {
         mutableStateOf(false)
     }
 
     Row(
         modifier = modifier
             .background(
-                color = status.getColorOrDefault(),
+                color = status.color,
                 shape = RoundedCornerShape(
                     topEnd = 15.dp,
                     bottomEnd = 15.dp
@@ -144,7 +149,7 @@ private fun PrayerItemState(
     ) {
         if (status != PrayerStatus.None) {
             Text(
-                text = stringResource(id = status.nameId),
+                text = stringResource(id = status.getStatusName(prayer = prayer)),
                 color = MaterialTheme.colors.onPrimary,
                 style = MaterialTheme.typography.button,
                 textAlign = TextAlign.Center,
@@ -156,7 +161,7 @@ private fun PrayerItemState(
                 modifier = Modifier
                     .weight(1f)
                     .clickable {
-                        isStatusSelectorExpanded = !isStatusSelectorExpanded
+                        isStatusPickerDialogShown = !isStatusPickerDialogShown
                     },
                 imageVector = Icons.Default.ArrowDropDown,
                 contentDescription = "",
@@ -171,15 +176,18 @@ private fun PrayerItemState(
                 tint = MaterialTheme.colors.onPrimary
             )
         }
-        PrayerStatusDropDownMenu(
-            expanded = isStatusSelectorExpanded,
-            onItemSelected = {
-                onStatusSelected(it)
-                isStatusSelectorExpanded = false
-            },
-            onDismissRequest = {
-                isStatusSelectorExpanded = !isStatusSelectorExpanded
-            }
-        )
+
+        if (isStatusPickerDialogShown) {
+            StatusPickerDialog(
+                statusesWithTimeRanges = statusesWithTimeRanges,
+                onItemSelected = {
+                    onStatusSelected(it)
+                    isStatusPickerDialogShown = false
+                },
+                onDismissRequest = {
+                    isStatusPickerDialogShown = !isStatusPickerDialogShown
+                }
+            )
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.prayercompanion.prayercompanionandroid.domain.repositories
 
+import com.prayercompanion.prayercompanionandroid.data.local.db.entities.PrayerInfoEntity
 import com.prayercompanion.prayercompanionandroid.domain.models.Address
 import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.Location
@@ -42,5 +43,5 @@ interface PrayersRepository {
         location: Location?,
         address: Address?,
         dayDate: LocalDate
-    ): Flow<Result<DayPrayersInfo>>
+    ): Flow<Result<List<PrayerInfoEntity>>>
 }

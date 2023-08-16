@@ -15,7 +15,7 @@ import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.models.RemainingDuration
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetDailyPrayersCombo
-import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetDayPrayers
+import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetDayPrayersFlow
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetLastWeekStatusesOverView
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.SetPrayerStatusByDateTime
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.UpdatePrayerStatus
@@ -45,7 +45,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
-    private val getDayPrayers: GetDayPrayers,
+    private val getDayPrayersFlow: GetDayPrayersFlow,
     private val updatePrayerStatus: UpdatePrayerStatus,
     private val getLastWeekStatusesOverView: GetLastWeekStatusesOverView,
     private val locationManager: AppLocationManager,
@@ -61,6 +61,8 @@ class HomeScreenViewModel @Inject constructor(
 
     private val _uiEvents = Channel<UiEvent>()
     val uiEvents = _uiEvents.receiveAsFlow()
+    var headerState: HomeScreenHeaderState by mutableStateOf(HomeScreenHeaderState())
+        private set
     var state: HomeScreenState by mutableStateOf(HomeScreenState())
         private set
     var durationUntilNextPrayer by mutableStateOf(RemainingDuration(0, 0, 0))
@@ -79,7 +81,7 @@ class HomeScreenViewModel @Inject constructor(
                     .collectLatest { statuses ->
                         withContext(Dispatchers.Main) {
                             statuses.remove(PrayerStatus.None)
-                            state = state.copy(lastWeekStatuses = statuses)
+                            headerState = headerState.copy(lastWeekStatuses = statuses)
                         }
                     }
             }
@@ -139,7 +141,7 @@ class HomeScreenViewModel @Inject constructor(
     fun onPrayedNowClicked() {
         viewModelScope.launch(Dispatchers.IO) {
             setPrayerStatusByDateTime
-                .call(state.currentAndNextPrayer.first, LocalDateTime.now())
+                .call(headerState.currentAndNextPrayer.first, LocalDateTime.now())
                 .onFailure {
                     it.printStackTraceInDebug()
                     sendErrorEvent(R.string.error_something_went_wrong.toUiText())
@@ -173,8 +175,8 @@ class HomeScreenViewModel @Inject constructor(
                 }
                 .collectLatest {
                     withContext(Dispatchers.Main) {
-                        if (state.selectedDate == LocalDate.now()) {
-                            state = state.copy(dailyPrayersCombo = it)
+                        if (state.selectedDate == headerState.todayDate) {
+                            headerState = headerState.copy(dailyPrayersCombo = it)
                         }
                         startDurationCountDown()
                     }
@@ -194,7 +196,7 @@ class HomeScreenViewModel @Inject constructor(
 
         val selectedDate = state.selectedDate
         loadSelectedDatePrayersJob = viewModelScope.launch(Dispatchers.IO) {
-            getDayPrayers.callFlow(selectedDate)
+            getDayPrayersFlow.call(selectedDate)
                 .collectLatest {
                     it.onSuccess { dateDayPrayers ->
                         withContext(Dispatchers.Main) {
@@ -212,7 +214,7 @@ class HomeScreenViewModel @Inject constructor(
 
     private fun startDurationCountDown() {
         val durationInMillis = ChronoUnit.MILLIS
-            .between(LocalDateTime.now(), state.currentAndNextPrayer.second.dateTime)
+            .between(LocalDateTime.now(), headerState.currentAndNextPrayer.second.dateTime)
 
         if (durationInMillis <= 0) return
 

@@ -18,42 +18,44 @@ data class DayPrayersInfo constructor(
         return prayers.find { it.prayer == prayer } ?: throw Exception("prayer not found")
     }
 
-    fun updateStatus(prayer: Prayer, prayerStatus: PrayerStatus) {
-        get(prayer).status = prayerStatus
-    }
-
     companion object {
         val Default = DayPrayersInfo(
             listOf(
                 PrayerInfo(
                     prayer = Prayer.FAJR,
                     dateTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0)),
-                    status = PrayerStatus.None
+                    selectedStatus = PrayerStatus.None,
+                    statusesWithTimeRanges = emptyList()
                 ),
                 PrayerInfo(
                     prayer = Prayer.DUHA,
                     dateTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0)),
-                    status = PrayerStatus.None
+                    selectedStatus = PrayerStatus.None,
+                    statusesWithTimeRanges = emptyList()
                 ),
                 PrayerInfo(
                     prayer = Prayer.DHUHR,
                     dateTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0)),
-                    status = PrayerStatus.None
+                    selectedStatus = PrayerStatus.None,
+                    statusesWithTimeRanges = emptyList()
                 ),
                 PrayerInfo(
                     prayer = Prayer.ASR,
                     dateTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0)),
-                    status = PrayerStatus.None
+                    selectedStatus = PrayerStatus.None,
+                    statusesWithTimeRanges = emptyList()
                 ),
                 PrayerInfo(
                     prayer = Prayer.MAGHRIB,
                     dateTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0)),
-                    status = PrayerStatus.None
+                    selectedStatus = PrayerStatus.None,
+                    statusesWithTimeRanges = emptyList()
                 ),
                 PrayerInfo(
                     prayer = Prayer.ISHA,
                     dateTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0)),
-                    status = PrayerStatus.None
+                    selectedStatus = PrayerStatus.None,
+                    statusesWithTimeRanges = emptyList()
                 )
             )
         )

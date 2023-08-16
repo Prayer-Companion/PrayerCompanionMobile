@@ -111,7 +111,7 @@ class PrayersRepositoryImpl @Inject constructor(
         location: Location?,
         address: Address?,
         dayDate: LocalDate
-    ): Flow<Result<DayPrayersInfo>> {
+    ): Flow<Result<List<PrayerInfoEntity>>> {
 
         val savedDayPrayers = getDayPrayersFromDB(dayDate)
 
@@ -170,14 +170,14 @@ class PrayersRepositoryImpl @Inject constructor(
 
     private fun getDayPrayersFromDBFlow(
         dayDate: LocalDate
-    ): Flow<Result<DayPrayersInfo>> {
+    ): Flow<Result<List<PrayerInfoEntity>>> {
         val savedPrayers = dao.getPrayersFlow(
             startDateTime = dayDate.atStartOfDay(),
             endDateTime = dayDate.atTime(LocalTime.MAX)
         )
 
         return savedPrayers.map {
-            val info = it.takeIf { it.isNotEmpty() }?.toDayPrayerInfo()
+            val info = it.takeIf { it.isNotEmpty() }
             if (info == null) {
                 Result.failure(UnknownException)
             } else {

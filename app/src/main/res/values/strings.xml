@@ -17,13 +17,22 @@
     <string name="quran_tab">Quran</string>
     <string name="settings_tab">Settings</string>
 
-    <string name="jamaah_prayer_status">In The Mosque</string>
-    <string name="on_time_prayer_status">On Time</string>
-    <string name="after_half_time_prayer_status">After half time</string>
-    <string name="late_prayer_status">Late</string>
-    <string name="missed_prayer_status">Missed</string>
-    <string name="qadaa_prayer_status">Qadaa</string>
-    <string name="none_prayer_status">None</string>
+    <!-- Prayer Statuses -->
+    <string name="prayerStatusDialog_title">Update Status</string>
+    <string name="prayerStatusDialog_explanation">More info on\nhow was the periods calculated</string>
+
+    <string name="prayerStatus_in_the_mosque">In The Mosque</string>
+    <string name="prayerStatus_onTime">On Time</string>
+
+    <string name="prayerStatus_late1">After half time</string>
+    <string name="prayerStatus_late2">Late</string>
+    <string name="prayerStatus_isha_late1">After First Third of the night</string>
+    <string name="prayerStatus_isha_late2">After midnight</string>
+
+    <string name="prayerStatus_missed">Missed</string>
+    <string name="prayerStatus_qadaa">Qadaa</string>
+    <string name="prayerStatus_none">None</string>
+
 
     <string name="or">Or</string>
     <string name="continue_with_google">Continue with Google</string>

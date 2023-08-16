@@ -13,7 +13,7 @@ class SetPrayerStatusByDateTime
 ) {
 
     suspend fun call(prayerInfo: PrayerInfo, dateTime: LocalDateTime): Result<PrayerStatus> {
-        val ranges = getPrayerStatusRanges.call(prayerInfo)
+        val ranges = getPrayerStatusRanges.call(prayerInfo.dateTime, prayerInfo.prayer.next())
 
         val status: PrayerStatus = ranges?.firstNotNullOfOrNull {
             if (dateTime in it.value) it.key else null
