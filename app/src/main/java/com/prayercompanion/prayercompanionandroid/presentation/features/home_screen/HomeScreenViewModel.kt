@@ -56,6 +56,8 @@ class HomeScreenViewModel @Inject constructor(
 
     private var loadDailyPrayersComboJob: Job? = null
     private var loadSelectedDatePrayersJob: Job? = null
+    private var weeklyStatusJob: Job? = null
+
     private var countDownTimer: CountDownTimer? = null
     private var lastForegroundTime = System.currentTimeMillis()
 
@@ -72,18 +74,6 @@ class HomeScreenViewModel @Inject constructor(
         fun loadQuranData() {
             viewModelScope.launch(Dispatchers.IO) {
                 loadAndSaveQuranMemorizedChapters.call()
-            }
-        }
-
-        fun loadStatusesOverView() {
-            viewModelScope.launch(Dispatchers.IO) {
-                getLastWeekStatusesOverView.call()
-                    .collectLatest { statuses ->
-                        withContext(Dispatchers.Main) {
-                            statuses.remove(PrayerStatus.None)
-                            headerState = headerState.copy(lastWeekStatuses = statuses)
-                        }
-                    }
             }
         }
 
@@ -158,6 +148,19 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
+    private fun loadStatusesOverView() {
+        weeklyStatusJob?.cancel()
+        weeklyStatusJob = viewModelScope.launch(Dispatchers.IO) {
+            getLastWeekStatusesOverView.call()
+                .collectLatest { statuses ->
+                    withContext(Dispatchers.Main) {
+                        statuses.remove(PrayerStatus.None)
+                        headerState = headerState.copy(lastWeekStatuses = statuses)
+                    }
+                }
+        }
+    }
+
     private fun loadDailyPrayersCombo() {
         if (loadDailyPrayersComboJob?.isActive == true) {
             loadDailyPrayersComboJob?.cancel()
@@ -229,6 +232,7 @@ class HomeScreenViewModel @Inject constructor(
 
             override fun onFinish() {
                 startDurationCountDown()
+                loadStatusesOverView()
             }
         }.start()
     }
