@@ -21,7 +21,7 @@
 
     <!-- Prayer Statuses -->
     <string name="prayerStatusDialog_title">تحديث الحالة</string>
-    <string name="prayerStatusDialog_explanation">كيفية حساب الفترات</string>
+    <string name="prayerStatusDialog_explanation">كيف تم حساب فترات صلاة العشاء</string>
 
     <string name="prayerStatus_in_the_mosque">في المسجد</string>
     <string name="prayerStatus_onTime">في وقتها</string>

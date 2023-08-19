@@ -19,7 +19,7 @@
 
     <!-- Prayer Statuses -->
     <string name="prayerStatusDialog_title">Update Status</string>
-    <string name="prayerStatusDialog_explanation">More info on\nhow was the periods calculated</string>
+    <string name="prayerStatusDialog_explanation">More info on\nhow was Isha periods calculated</string>
 
     <string name="prayerStatus_in_the_mosque">In The Mosque</string>
     <string name="prayerStatus_onTime">On Time</string>

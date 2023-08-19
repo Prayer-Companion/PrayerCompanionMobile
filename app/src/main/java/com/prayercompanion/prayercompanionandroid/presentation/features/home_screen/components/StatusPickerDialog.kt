@@ -1,5 +1,7 @@
 package com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.components
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -38,14 +41,16 @@ import com.prayercompanion.prayercompanionandroid.presentation.utils.Presentatio
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
 import java.time.LocalDateTime
 
+
 @Composable
 fun StatusPickerDialog(
     statusesWithTimeRanges: List<PrayerStatusWithTimeRange>,
     onItemSelected: (PrayerStatus) -> Unit,
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit,
+    showExplanation: Boolean
 ) = PrayerCompanionAndroidTheme {
     val spacing = LocalSpacing.current
-
+    val context = LocalContext.current
     Dialog(
         onDismissRequest = onDismissRequest
     ) {
@@ -73,29 +78,38 @@ fun StatusPickerDialog(
                         color = Color.Black.copy(alpha = 0.5f)
                     )
                 }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(color = MaterialTheme.colors.secondary)
-                        .padding(10.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        modifier = Modifier.clickable { TODO() },
-                        text = stringResource(id = R.string.prayerStatusDialog_explanation),
-                        style = MaterialTheme.typography.subtitle2,
-                        color = MaterialTheme.colors.onSecondary,
-                        textAlign = TextAlign.Center,
-                        textDecoration = TextDecoration.Underline
-                    )
-                    Spacer(modifier = Modifier.width(spacing.spaceExtraSmall))
-                    Icon(
-                        modifier = Modifier.size(18.dp),
-                        imageVector = Icons.Outlined.Info,
-                        tint = MaterialTheme.colors.onSecondary,
-                        contentDescription = "Info",
-                    )
+                if (showExplanation) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(color = MaterialTheme.colors.secondary)
+                            .padding(10.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) Run@{
+                        Text(
+                            modifier = Modifier.clickable {
+                                val browserIntent = Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("https://prayer-companion.com/public/isha_prayer_periods_calculations.html")
+                                )
+                                context.startActivity(browserIntent)
+                            },
+                            text = stringResource(id = R.string.prayerStatusDialog_explanation),
+                            style = MaterialTheme.typography.subtitle2,
+                            color = MaterialTheme.colors.onSecondary,
+                            textAlign = TextAlign.Center,
+                            textDecoration = TextDecoration.Underline
+                        )
+                        Spacer(modifier = Modifier.width(spacing.spaceExtraSmall))
+                        Icon(
+                            modifier = Modifier.size(18.dp),
+                            imageVector = Icons.Outlined.Info,
+                            tint = MaterialTheme.colors.onSecondary,
+                            contentDescription = "Info",
+                        )
+
+                    }
                 }
             }
         }
@@ -165,6 +179,7 @@ private fun PrayerStatusDialogPreview() = PrayerCompanionAndroidTheme {
             )
         ),
         onItemSelected = {},
-        onDismissRequest = {}
+        onDismissRequest = {},
+        showExplanation = true
     )
 }

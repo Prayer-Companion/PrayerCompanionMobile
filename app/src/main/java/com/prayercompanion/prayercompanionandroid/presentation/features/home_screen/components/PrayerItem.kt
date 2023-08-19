@@ -186,7 +186,8 @@ private fun PrayerItemState(
                 },
                 onDismissRequest = {
                     isStatusPickerDialogShown = !isStatusPickerDialogShown
-                }
+                },
+                showExplanation = prayer == Prayer.ISHA
             )
         }
     }
