@@ -151,7 +151,7 @@ fun HomeHeader(
                 }
                 Spacer(modifier = Modifier.height(spacing.spaceMedium))
                 Text(
-                    text = stringResource(id = R.string.last_7_days_status_overview),
+                    text = stringResource(id = R.string.status_overview),
                     style = MaterialTheme.typography.subtitle2,
                     color = Color.White
                 )

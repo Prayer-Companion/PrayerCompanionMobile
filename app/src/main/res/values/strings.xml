@@ -94,7 +94,7 @@
     <string name="error_something_went_wrong">Sorry Something went wrong</string>
     <string name="current_prayer">Current Prayer</string>
     <string name="skip">Skip</string>
-    <string name="last_7_days_status_overview">Last 7 days</string>
+    <string name="status_overview">Last 3 days</string>
 
     <!-- Notifications -->
     <string name="notification_action_prayedNow">Prayed Now</string>

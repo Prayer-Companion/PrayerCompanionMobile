@@ -21,7 +21,7 @@ data class HomeScreenHeaderState(
         DayPrayersInfo.Default,
         DayPrayersInfo.Default
     ),
-    val lastWeekStatuses: SortedMap<PrayerStatus, Int> = sortedMapOf()
+    val statusesOverview: SortedMap<PrayerStatus, Int> = sortedMapOf()
 ) {
     val currentAndNextPrayer get() = dailyPrayersCombo.currentAndNextPrayer
 }

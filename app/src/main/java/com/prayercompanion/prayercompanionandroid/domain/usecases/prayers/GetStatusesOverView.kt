@@ -8,13 +8,13 @@ import java.time.LocalDateTime
 import java.util.SortedMap
 import javax.inject.Inject
 
-class GetLastWeekStatusesOverView @Inject constructor(
+class GetStatusesOverView @Inject constructor(
     private val repository: PrayersRepository
 ) {
 
     fun call(): Flow<SortedMap<PrayerStatus, Int>> {
         val now = LocalDateTime.now()
-        val startDateTime = now.minusDays(6)
+        val startDateTime = now.minusDays(2)
 
         return repository.getStatusesByDate(startDateTime, now)
             .map { it ->

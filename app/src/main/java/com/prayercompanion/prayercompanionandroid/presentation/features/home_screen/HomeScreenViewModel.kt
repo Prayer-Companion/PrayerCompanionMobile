@@ -17,7 +17,7 @@ import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.models.RemainingDuration
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetDailyPrayersCombo
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetDayPrayersFlow
-import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetLastWeekStatusesOverView
+import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetStatusesOverView
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.SetPrayerStatusByDateTime
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.UpdatePrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.usecases.quran.LoadAndSaveQuranMemorizedChapters
@@ -49,7 +49,7 @@ import javax.inject.Inject
 class HomeScreenViewModel @Inject constructor(
     private val getDayPrayersFlow: GetDayPrayersFlow,
     private val updatePrayerStatus: UpdatePrayerStatus,
-    private val getLastWeekStatusesOverView: GetLastWeekStatusesOverView,
+    private val getStatusesOverView: GetStatusesOverView,
     private val locationManager: AppLocationManager,
     private val loadAndSaveQuranMemorizedChapters: LoadAndSaveQuranMemorizedChapters,
     private val getDailyPrayersCombo: GetDailyPrayersCombo,
@@ -61,7 +61,7 @@ class HomeScreenViewModel @Inject constructor(
 
     private var loadDailyPrayersComboJob: Job? = null
     private var loadSelectedDatePrayersJob: Job? = null
-    private var weeklyStatusJob: Job? = null
+    private var statusesOverviewJob: Job? = null
 
     private var countDownTimer: CountDownTimer? = null
     private var lastForegroundTime = System.currentTimeMillis()
@@ -163,13 +163,13 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     private fun loadStatusesOverView() {
-        weeklyStatusJob?.cancel()
-        weeklyStatusJob = viewModelScope.launch(Dispatchers.IO) {
-            getLastWeekStatusesOverView.call()
+        statusesOverviewJob?.cancel()
+        statusesOverviewJob = viewModelScope.launch(Dispatchers.IO) {
+            getStatusesOverView.call()
                 .collectLatest { statuses ->
                     withContext(Dispatchers.Main) {
                         statuses.remove(PrayerStatus.None)
-                        headerState = headerState.copy(lastWeekStatuses = statuses)
+                        headerState = headerState.copy(statusesOverview = statuses)
                     }
                 }
         }
