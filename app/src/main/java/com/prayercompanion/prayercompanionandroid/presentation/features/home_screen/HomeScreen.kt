@@ -37,6 +37,9 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
+import com.google.android.play.core.review.ReviewManagerFactory
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.prayercompanion.prayercompanionandroid.BuildConfig
 import com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.components.HomeHeader
 import com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.components.PrayerItem
 import com.prayercompanion.prayercompanionandroid.presentation.theme.AppBackground
@@ -44,11 +47,13 @@ import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacin
 import com.prayercompanion.prayercompanionandroid.presentation.utils.PresentationConsts
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.compose.OnLifecycleEvent
+import com.prayercompanion.prayercompanionandroid.showToast
 
 @Composable
 fun HomeScreen(
     viewModel: HomeScreenViewModel = hiltViewModel(),
-    scaffoldState: ScaffoldState
+    scaffoldState: ScaffoldState,
+    activity: Activity
 ) {
     val spacing = LocalSpacing.current
     val context = LocalContext.current
@@ -85,6 +90,35 @@ fun HomeScreen(
 
                 is UiEvent.LaunchIntentSenderRequest -> {
                     locationSettingsLauncher.launch(it.intentSenderRequest)
+                }
+
+                is UiEvent.ShowRateTheAppPopup -> {
+                    val manager = ReviewManagerFactory.create(context)
+                    val request = manager.requestReviewFlow()
+                    request.addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            val reviewInfo = task.result
+                            manager.launchReviewFlow(activity, reviewInfo)
+                                .addOnSuccessListener {
+                                    if (BuildConfig.DEBUG) {
+                                        context.showToast("In app review shown")
+                                    }
+                                }
+                                .addOnFailureListener {
+                                    if (BuildConfig.DEBUG) {
+                                        context.showToast("launchReviewFlow failed")
+                                    }
+                                    FirebaseCrashlytics.getInstance().recordException(it)
+                                }
+                        } else {
+                            if (BuildConfig.DEBUG) {
+                                context.showToast("requestReviewFlow failed")
+                            }
+                            task.exception?.let {
+                                FirebaseCrashlytics.getInstance().recordException(it)
+                            }
+                        }
+                    }
                 }
 
                 else -> Unit

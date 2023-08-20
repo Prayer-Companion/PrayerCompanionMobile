@@ -151,6 +151,8 @@ dependencies {
 
     implementation "androidx.compose.material:material-icons-extended:$compose_ui_version"
 
+    implementation 'com.google.android.play:review:2.0.1'
+    implementation 'com.google.android.play:review-ktx:2.0.1'
 //    ------------------------------------------------
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_ui_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_ui_version"

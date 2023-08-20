@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.common.api.ResolvableApiException
 import com.prayercompanion.prayercompanionandroid.R
+import com.prayercompanion.prayercompanionandroid.data.preferences.DataStoresRepo
 import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
@@ -32,6 +33,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -51,8 +53,11 @@ class HomeScreenViewModel @Inject constructor(
     private val locationManager: AppLocationManager,
     private val loadAndSaveQuranMemorizedChapters: LoadAndSaveQuranMemorizedChapters,
     private val getDailyPrayersCombo: GetDailyPrayersCombo,
-    private val setPrayerStatusByDateTime: SetPrayerStatusByDateTime
+    private val setPrayerStatusByDateTime: SetPrayerStatusByDateTime,
+    dataStoresRepo: DataStoresRepo
 ) : ViewModel() {
+
+    private val appPreferences = dataStoresRepo.appPreferencesDataStore
 
     private var loadDailyPrayersComboJob: Job? = null
     private var loadSelectedDatePrayersJob: Job? = null
@@ -120,11 +125,20 @@ class HomeScreenViewModel @Inject constructor(
 
     fun onStatusSelected(prayerStatus: PrayerStatus, prayerInfo: PrayerInfo) {
         viewModelScope.launch(Dispatchers.IO) {
-            updatePrayerStatus.call(prayerInfo, prayerStatus).onFailure {
-                it.printStackTraceInDebug()
-                sendErrorEvent(R.string.error_something_went_wrong.toUiText())
-                return@launch
-            }
+            updatePrayerStatus.call(prayerInfo, prayerStatus)
+                .onSuccess {
+                    if (appPreferences.data.first().hasShownRateTheAppPopup.not()) {
+                        sendEvent(UiEvent.ShowRateTheAppPopup)
+                        appPreferences.updateData {
+                            it.copy(hasShownRateTheAppPopup = true)
+                        }
+                    }
+                }
+                .onFailure {
+                    it.printStackTraceInDebug()
+                    sendErrorEvent(R.string.error_something_went_wrong.toUiText())
+                    return@launch
+                }
         }
     }
 

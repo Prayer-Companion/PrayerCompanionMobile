@@ -131,7 +131,10 @@ class MainActivity : AppCompatActivity() {
                             )
                         }
                         composable(Route.Home.routeName) {
-                            HomeScreen(scaffoldState = scaffoldState)
+                            HomeScreen(
+                                scaffoldState = scaffoldState,
+                                activity = this@MainActivity
+                            )
                         }
                         composable(Route.Qibla.routeName) {
                             val viewModel: QiblaViewModel = hiltViewModel()
