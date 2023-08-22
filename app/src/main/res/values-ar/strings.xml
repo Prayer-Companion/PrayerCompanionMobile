@@ -93,9 +93,17 @@
     <string name="settings_items_language_options_english">English</string>
     <string name="settings_items_preferences">التفضيلات</string>
     <string name="settings_items_preferences_pauseMedia">ايقاف الوسائط المتعددة عند نداء الاذان</string>
+    <string name="settings_items_feedback_title">شاركنا رأيك</string>
+    <string name="settings_items_feedback_prompt">طلب ميزات جديدة,\n الابلاغ عن مشكلة,\n او مجرد مشاركتنا رأيك…\n رأيك يهمنا!</string>
     <string name="settings_items_signOut">تسجيل الخروج</string>
-    <string name="status_overview">الأيام الثلاثة الماضية</string>
 
+    <string name="status_overview">الأيام الثلاثة الماضية</string>
     <string name="notification_action_prayedNow">أديتُ الصلاة</string>
     <string name="notification_action_response_statusUpdate">تم تسجيل حالة صلاة %1$s: %2$s</string>
+
+    <!-- Feedback dialog -->
+    <string name="feedbackDialog_title">شاركنا رأيك</string>
+    <string name="feedbackDialog_messageHint">رأيك يهمنا!</string>
+    <string name="feedbackDialog_action_send">أرسل</string>
+    <string name="feedbackDialog_action_cancel">إلغاء</string>
 </resources>

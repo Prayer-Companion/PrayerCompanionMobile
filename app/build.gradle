@@ -32,6 +32,8 @@ android {
             }
         }
         buildConfigField "String", "PRAYER_COMPANION_API_BASE_URL", "${PrayerCompanionApiBaseUrl}"
+        buildConfigField "long", "DOORBELL_ID", "${DoorbellId}"
+        buildConfigField "String", "DOORBELL_PRIVATE_KEY", "${DoorbellPrivateKey}"
     }
     signingConfigs {
         release {
@@ -153,6 +155,7 @@ dependencies {
 
     implementation 'com.google.android.play:review:2.0.1'
     implementation 'com.google.android.play:review-ktx:2.0.1'
+    implementation 'io.doorbell:android-sdk:0.4.7@aar'
 //    ------------------------------------------------
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_ui_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_ui_version"

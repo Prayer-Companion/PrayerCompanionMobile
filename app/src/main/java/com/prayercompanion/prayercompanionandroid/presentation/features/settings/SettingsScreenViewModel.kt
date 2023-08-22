@@ -10,7 +10,11 @@ import com.prayercompanion.prayercompanionandroid.domain.usecases.GetAppLanguage
 import com.prayercompanion.prayercompanionandroid.domain.usecases.SetAppLanguage
 import com.prayercompanion.prayercompanionandroid.domain.usecases.settings.GetIsPauseMediaEnabled
 import com.prayercompanion.prayercompanionandroid.domain.usecases.settings.SetPauseMediaEnabled
+import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,6 +26,8 @@ class SettingsScreenViewModel @Inject constructor(
     private val getIsPauseMediaEnabled: GetIsPauseMediaEnabled,
 ) : ViewModel() {
 
+    private val _uiEvents = Channel<UiEvent>()
+    val uiEvents = _uiEvents.receiveAsFlow()
     var state by mutableStateOf(SettingsState())
         private set
 
@@ -30,6 +36,7 @@ class SettingsScreenViewModel @Inject constructor(
             is SettingsEvent.OnStart -> onStart()
             is SettingsEvent.OnLanguageSelected -> onLanguageSelected(event.language)
             is SettingsEvent.OnPauseMediaCheckedChange -> onPauseMediaCheckedChange(event.checked)
+            is SettingsEvent.OnFeedbackBoxClicked -> sendEvent(UiEvent.ShowFeedbackDialog)
         }
     }
 
@@ -53,6 +60,12 @@ class SettingsScreenViewModel @Inject constructor(
         viewModelScope.launch {
             setPauseMediaEnabled.call(checked)
             state = state.copy(isPauseMediaPreferencesEnabled = checked)
+        }
+    }
+
+    private fun sendEvent(event: UiEvent) {
+        viewModelScope.launch(Dispatchers.Main) {
+            _uiEvents.send(event)
         }
     }
 }

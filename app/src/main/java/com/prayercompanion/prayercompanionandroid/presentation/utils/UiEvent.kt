@@ -11,5 +11,5 @@ sealed class UiEvent {
     data class ScrollListToPosition(val position: Int) : UiEvent()
     data object OpenAppSettings : UiEvent()
     data object ShowRateTheAppPopup : UiEvent()
-
+    data object ShowFeedbackDialog : UiEvent()
 }

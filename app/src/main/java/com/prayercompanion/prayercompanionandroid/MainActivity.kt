@@ -40,6 +40,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.prayercompanion.prayercompanionandroid.domain.models.quran.PrayerQuranReadingSections
+import com.prayercompanion.prayercompanionandroid.domain.utils.FeedbackUtils
 import com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.HomeScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.permissions.PermissionsRequestScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.permissions.PermissionsRequestViewModel
@@ -65,6 +66,9 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var googleSignInClient: GoogleSignInClient
+
+    @Inject
+    lateinit var feedbackUtils: FeedbackUtils
 
     @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -173,9 +177,12 @@ class MainActivity : AppCompatActivity() {
                         composable(Route.Settings.routeName) {
                             val viewModel: SettingsScreenViewModel = hiltViewModel()
                             SettingsScreen(
-                                viewModel.state,
-                                viewModel::onEvent
-                            )
+                                state = viewModel.state,
+                                onEvent = viewModel::onEvent,
+                                uiEvents = viewModel.uiEvents
+                            ) {
+                                feedbackUtils.showFeedbackDialog()
+                            }
                         }
                     }
                 }

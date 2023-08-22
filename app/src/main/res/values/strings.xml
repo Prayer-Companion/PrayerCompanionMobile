@@ -88,16 +88,25 @@
     <string name="settings_items_language_options_english">English</string>
     <string name="settings_items_preferences">Preferences</string>
     <string name="settings_items_preferences_pauseMedia">Pause background multimedia on Athan time</string>
+    <string name="settings_items_feedback_title">Share your feedback</string>
+    <string name="settings_items_feedback_prompt">Feature request,\n bug report,\n or just your opinion…\n We would love to hear from you!</string>
     <string name="settings_items_signOut">Sign out</string>
 
     <!--  Errors  -->
     <string name="error_something_went_wrong">Sorry Something went wrong</string>
     <string name="current_prayer">Current Prayer</string>
     <string name="skip">Skip</string>
+
     <string name="status_overview">Last 3 days</string>
 
     <!-- Notifications -->
     <string name="notification_action_prayedNow">Prayed Now</string>
     <string name="notification_action_response_statusUpdate">%1$s Prayer status was recorded: %2$s</string>
+
+    <!-- Feedback dialog -->
+    <string name="feedbackDialog_title">Share your feedback</string>
+    <string name="feedbackDialog_messageHint">We would love to hear from you!</string>
+    <string name="feedbackDialog_action_send">Send</string>
+    <string name="feedbackDialog_action_cancel">Cancel</string>
 
 </resources>
