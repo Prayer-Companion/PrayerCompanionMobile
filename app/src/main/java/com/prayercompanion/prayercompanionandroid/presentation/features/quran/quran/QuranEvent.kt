@@ -1,7 +1,7 @@
 package com.prayercompanion.prayercompanionandroid.presentation.features.quran.quran
 
 sealed class QuranEvent {
-    object OnStart: QuranEvent()
+    data object OnStart: QuranEvent()
     data class OnChapterSelected(
         val chapterId: Int,
         val fromVerse: Int,
@@ -16,8 +16,8 @@ sealed class QuranEvent {
 
     data class OnChapterDeselected(val chapterId: Int) : QuranEvent()
     data class OnSearchQueryChanged(val query: String) : QuranEvent()
-    object OnLoadQuranSectionsClicked : QuranEvent()
-    object OnNextSectionClicked : QuranEvent()
-    object OnViewFullClicked : QuranEvent()
+    data object OnLoadQuranSectionsClicked : QuranEvent()
+    data object OnNextSectionClicked : QuranEvent()
+    data object OnViewFullClicked : QuranEvent()
 
 }
