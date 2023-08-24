@@ -1,6 +1,8 @@
 package com.prayercompanion.prayercompanionandroid.presentation.features.home_screen
 
 import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.ScaffoldState
@@ -88,6 +90,13 @@ fun HomeScreen(
                     }
                 }
 
+                is UiEvent.OpenWebUrl -> {
+                    val browserIntent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(it.url)
+                    )
+                    context.startActivity(browserIntent)
+                }
                 else -> Unit
             }
         }
@@ -105,6 +114,8 @@ fun HomeScreen(
         onPrayedNowClicked = viewModel::onPrayedNowClicked,
         onPreviousDayButtonClicked = viewModel::onPreviousDayButtonClicked,
         onNextDayButtonClicked = viewModel::onNextDayButtonClicked,
-        onStatusSelected = viewModel::onStatusSelected
+        onStatusSelected = viewModel::onStatusSelected,
+        onStatusOverviewBarClicked = viewModel::onStatusOverviewBarClicked,
+        onIshaStatusesPeriodsExplanationClicked = viewModel::onIshaStatusesPeriodsExplanationClicked
     )
 }

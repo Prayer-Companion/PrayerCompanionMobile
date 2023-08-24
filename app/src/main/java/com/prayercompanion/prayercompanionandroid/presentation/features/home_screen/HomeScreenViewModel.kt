@@ -9,8 +9,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.common.api.ResolvableApiException
+import com.prayercompanion.prayercompanionandroid.BuildConfig
 import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.prayercompanionandroid.data.preferences.DataStoresRepo
+import com.prayercompanion.prayercompanionandroid.data.utils.Tracker
 import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
@@ -54,6 +56,7 @@ class HomeScreenViewModel @Inject constructor(
     private val loadAndSaveQuranMemorizedChapters: LoadAndSaveQuranMemorizedChapters,
     private val getDailyPrayersCombo: GetDailyPrayersCombo,
     private val setPrayerStatusByDateTime: SetPrayerStatusByDateTime,
+    private val tracker: Tracker,
     dataStoresRepo: DataStoresRepo
 ) : ViewModel() {
 
@@ -116,14 +119,17 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     fun onPreviousDayButtonClicked() {
+        tracker.trackButtonClicked(Tracker.TrackedButtons.VIEW_PREVIOUS_DAY_PRAYERS)
         updateSelectedDate(state.selectedDate.minusDays(1))
     }
 
     fun onNextDayButtonClicked() {
+        tracker.trackButtonClicked(Tracker.TrackedButtons.VIEW_NEXT_DAY_PRAYERS)
         updateSelectedDate(state.selectedDate.plusDays(1))
     }
 
     fun onStatusSelected(prayerStatus: PrayerStatus, prayerInfo: PrayerInfo) {
+        tracker.trackStatusSelect()
         viewModelScope.launch(Dispatchers.IO) {
             updatePrayerStatus.call(prayerInfo, prayerStatus)
                 .onSuccess {
@@ -142,7 +148,17 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
+    fun onIshaStatusesPeriodsExplanationClicked() {
+        tracker.trackButtonClicked(Tracker.TrackedButtons.ISHA_STATUSES_PERIOD_EXPLANATION)
+        sendEvent(UiEvent.OpenWebUrl(BuildConfig.ISHA_STATUSES_PERIODS_EXPLANATION_URL))
+    }
+
+    fun onStatusOverviewBarClicked() {
+        tracker.trackButtonClicked(Tracker.TrackedButtons.STATUS_OVER_VIEW_BAR)
+    }
+
     fun onPrayedNowClicked() {
+        tracker.trackButtonClicked(Tracker.TrackedButtons.HOME_PRAYED_NOW)
         viewModelScope.launch(Dispatchers.IO) {
             setPrayerStatusByDateTime
                 .call(headerState.currentAndNextPrayer.first, LocalDateTime.now())

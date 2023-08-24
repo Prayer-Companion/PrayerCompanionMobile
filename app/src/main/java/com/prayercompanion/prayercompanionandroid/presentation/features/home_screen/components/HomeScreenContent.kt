@@ -50,9 +50,11 @@ fun HomeScreenContent(
     selectedDate: LocalDate,
     selectedDayPrayersInfo: DayPrayersInfo,
     onPrayedNowClicked: () -> Unit,
+    onStatusOverviewBarClicked: () -> Unit,
     onPreviousDayButtonClicked: () -> Unit,
     onNextDayButtonClicked: () -> Unit,
-    onStatusSelected: (PrayerStatus, PrayerInfo) -> Unit = { _, _ -> }
+    onStatusSelected: (PrayerStatus, PrayerInfo) -> Unit = { _, _ -> },
+    onIshaStatusesPeriodsExplanationClicked: () -> Unit = { }
 ) {
     val spacing = LocalSpacing.current
     Box {
@@ -69,8 +71,9 @@ fun HomeScreenContent(
                 currentPrayer = currentPrayerInfo,
                 nextPrayer = nextPrayerInfo,
                 durationUntilNextPrayer = durationUntilNextPrayer,
+                statusesCounts = statusesOverview,
                 onPrayedNowClicked = onPrayedNowClicked,
-                statusesCounts = statusesOverview
+                onStatusOverviewBarClicked = onStatusOverviewBarClicked
             )
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
             // TODO: add a way to get back to today's date quickly
@@ -127,7 +130,8 @@ fun HomeScreenContent(
                         name = stringResource(id = it.prayer.nameId),
                         modifier = Modifier.fillMaxWidth(),
                         prayerInfo = it,
-                        onStatusSelected = onStatusSelected
+                        onStatusSelected = onStatusSelected,
+                        onIshaStatusesPeriodsExplanationClicked = onIshaStatusesPeriodsExplanationClicked
                     )
                     Spacer(modifier = Modifier.height(spacing.spaceSmall))
                 }
@@ -149,6 +153,8 @@ private fun HomeScreenContentPreview() = PrayerCompanionAndroidTheme {
         onPrayedNowClicked = {},
         onPreviousDayButtonClicked = {},
         onNextDayButtonClicked = {},
-        onStatusSelected = { _, _ ->  }
+        onStatusSelected = { _, _ ->  },
+        onStatusOverviewBarClicked = {},
+        onIshaStatusesPeriodsExplanationClicked = {}
     )
 }

@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.prayercompanion.prayercompanionandroid.data.utils.Tracker
 import com.prayercompanion.prayercompanionandroid.domain.usecases.quran.AddMemorizedChapterAyat
 import com.prayercompanion.prayercompanionandroid.domain.usecases.quran.EditMemorizedChapterAyat
 import com.prayercompanion.prayercompanionandroid.domain.usecases.quran.GetFullQuranWithMemorized
@@ -33,7 +34,8 @@ class QuranViewModel @Inject constructor(
     private val removeMemorizedChapterAyat: RemoveMemorizedChapterAyat,
     private val getNextQuranReadingSectionsFlow: GetNextQuranReadingSections,
     private val loadQuranReadingSuggestions: LoadQuranReadingSuggestions,
-    private val markQuranSectionAsRead: MarkQuranSectionAsRead
+    private val markQuranSectionAsRead: MarkQuranSectionAsRead,
+    private val tracker: Tracker
 ) : ViewModel() {
 
     private var hasChaptersBeenSorted = false
@@ -118,6 +120,7 @@ class QuranViewModel @Inject constructor(
     }
 
     private fun addMemorizedChapterAyat(chapterId: Int, fromVerse: Int, toVerse: Int) {
+        tracker.trackQuranChapterAdd()
         viewModelScope.launch(Dispatchers.IO) {
             addMemorizedChapterAyat.call(chapterId, fromVerse, toVerse)
                 .onFailure {
@@ -136,6 +139,7 @@ class QuranViewModel @Inject constructor(
     }
 
     private fun removeMemorizedChapterAyat(chapterId: Int) {
+        tracker.trackQuranChapterRemove()
         viewModelScope.launch(Dispatchers.IO) {
             removeMemorizedChapterAyat.call(chapterId)
                 .onFailure {
@@ -151,6 +155,7 @@ class QuranViewModel @Inject constructor(
     }
 
     private fun onNextSectionClicked() {
+        tracker.trackButtonClicked(Tracker.TrackedButtons.NEXT_QURAN_READING_SECTION)
         state.sections?.let { sections ->
             viewModelScope.launch(Dispatchers.IO) {
                 markQuranSectionAsRead.call(sections)
@@ -159,6 +164,7 @@ class QuranViewModel @Inject constructor(
     }
 
     private fun onViewFullClicked() {
+        tracker.trackButtonClicked(Tracker.TrackedButtons.VIEW_FULL_QURAN_READING_SECTION)
         val sections = state.sections ?: return
         sendUiEvent(
             UiEvent.Navigate(

@@ -1,6 +1,7 @@
 package com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,8 +45,9 @@ fun HomeHeader(
     currentPrayer: PrayerInfo = PrayerInfo.Default,
     nextPrayer: PrayerInfo = PrayerInfo.Default,
     durationUntilNextPrayer: RemainingDuration = RemainingDuration(0, 0, 0),
+    statusesCounts: SortedMap<PrayerStatus, Int> = sortedMapOf(),
     onPrayedNowClicked: () -> Unit = { },
-    statusesCounts: SortedMap<PrayerStatus, Int> = sortedMapOf()
+    onStatusOverviewBarClicked: () -> Unit = { }
 ) = PrayerCompanionAndroidTheme {
 
     val spacing = LocalSpacing.current
@@ -159,7 +161,8 @@ fun HomeHeader(
                 PrayerStatusesOverViewBar(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(42.dp),
+                        .height(42.dp)
+                        .clickable { onStatusOverviewBarClicked() },
                     statusesCounts = statusesCounts
                 )
             }

@@ -67,6 +67,8 @@
                 android:value="true" />
         </service>
 
+        <meta-data android:name="google_analytics_automatic_screen_reporting_enabled" android:value="false" />
+
     </application>
 
 </manifest>

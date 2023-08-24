@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.prayercompanion.prayercompanionandroid.data.utils.Tracker
 import com.prayercompanion.prayercompanionandroid.domain.models.AppLanguage
 import com.prayercompanion.prayercompanionandroid.domain.usecases.GetAppLanguage
 import com.prayercompanion.prayercompanionandroid.domain.usecases.SetAppLanguage
@@ -24,6 +25,7 @@ class SettingsScreenViewModel @Inject constructor(
     private val getAppLanguage: GetAppLanguage,
     private val setPauseMediaEnabled: SetPauseMediaEnabled,
     private val getIsPauseMediaEnabled: GetIsPauseMediaEnabled,
+    private val tracker: Tracker
 ) : ViewModel() {
 
     private val _uiEvents = Channel<UiEvent>()
@@ -57,6 +59,11 @@ class SettingsScreenViewModel @Inject constructor(
     }
 
     private fun onPauseMediaCheckedChange(checked: Boolean) {
+        if (checked) {
+            tracker.trackButtonClicked(Tracker.TrackedButtons.ENABLE_STOP_MEDIA_ON_PRAYER_CALL)
+        } else {
+            tracker.trackButtonClicked(Tracker.TrackedButtons.DISABLE_STOP_MEDIA_ON_PRAYER_CALL)
+        }
         viewModelScope.launch {
             setPauseMediaEnabled.call(checked)
             state = state.copy(isPauseMediaPreferencesEnabled = checked)

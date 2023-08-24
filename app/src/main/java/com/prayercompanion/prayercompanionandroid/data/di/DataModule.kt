@@ -3,6 +3,7 @@ package com.prayercompanion.prayercompanionandroid.data.di
 import android.content.Context
 import androidx.room.Room
 import com.google.android.gms.tasks.Tasks
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.prayercompanion.prayercompanionandroid.BuildConfig
 import com.prayercompanion.prayercompanionandroid.data.local.db.PrayerCompanionDatabase
@@ -139,4 +140,9 @@ class DataModule {
         return prayerCompanionDatabase.memorizedQuranChapterDao()
     }
 
+    @Provides
+    @Singleton
+    internal fun provideFirebaseAnalytics(@ApplicationContext context: Context): FirebaseAnalytics {
+        return FirebaseAnalytics.getInstance(context)
+    }
 }

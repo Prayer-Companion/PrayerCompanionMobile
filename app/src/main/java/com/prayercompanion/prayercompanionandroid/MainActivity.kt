@@ -39,6 +39,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.prayercompanion.prayercompanionandroid.data.utils.Tracker
 import com.prayercompanion.prayercompanionandroid.domain.models.quran.PrayerQuranReadingSections
 import com.prayercompanion.prayercompanionandroid.domain.utils.FeedbackUtils
 import com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.HomeScreen
@@ -70,6 +71,9 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var feedbackUtils: FeedbackUtils
 
+    @Inject
+    lateinit var tracker: Tracker
+
     @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,6 +92,7 @@ class MainActivity : AppCompatActivity() {
                 navController.addOnDestinationChangedListener { _, destination, _ ->
                     val route = Route.fromStringRoute(destination.route)
                     shouldShowBottomNavigationBar = route.bottomNavBar
+                    tracker.trackScreenView(route, this::class.simpleName.toString())
                 }
 
                 Scaffold(

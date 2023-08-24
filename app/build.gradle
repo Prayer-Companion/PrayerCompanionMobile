@@ -32,6 +32,7 @@ android {
             }
         }
         buildConfigField "String", "PRAYER_COMPANION_API_BASE_URL", "${PrayerCompanionApiBaseUrl}"
+        buildConfigField "String", "ISHA_STATUSES_PERIODS_EXPLANATION_URL", "${IshaStatusesPeriodsExplanationUrl}"
         buildConfigField "long", "DOORBELL_ID", "${DoorbellId}"
         buildConfigField "String", "DOORBELL_PRIVATE_KEY", "${DoorbellPrivateKey}"
     }

@@ -1,7 +1,5 @@
 package com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.components
 
-import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -45,12 +42,12 @@ import java.time.LocalDateTime
 @Composable
 fun StatusPickerDialog(
     statusesWithTimeRanges: List<PrayerStatusWithTimeRange>,
+    showExplanation: Boolean,
     onItemSelected: (PrayerStatus) -> Unit,
-    onDismissRequest: () -> Unit,
-    showExplanation: Boolean
+    onIshaStatusesPeriodsExplanationClicked: () -> Unit,
+    onDismissRequest: () -> Unit
 ) = PrayerCompanionAndroidTheme {
     val spacing = LocalSpacing.current
-    val context = LocalContext.current
     Dialog(
         onDismissRequest = onDismissRequest
     ) {
@@ -89,11 +86,7 @@ fun StatusPickerDialog(
                     ) Run@{
                         Text(
                             modifier = Modifier.clickable {
-                                val browserIntent = Intent(
-                                    Intent.ACTION_VIEW,
-                                    Uri.parse("https://prayer-companion.com/public/isha_prayer_periods_calculations.html")
-                                )
-                                context.startActivity(browserIntent)
+                                onIshaStatusesPeriodsExplanationClicked()
                             },
                             text = stringResource(id = R.string.prayerStatusDialog_explanation),
                             style = MaterialTheme.typography.subtitle2,
@@ -180,6 +173,7 @@ private fun PrayerStatusDialogPreview() = PrayerCompanionAndroidTheme {
         ),
         onItemSelected = {},
         onDismissRequest = {},
+        onIshaStatusesPeriodsExplanationClicked = {},
         showExplanation = true
     )
 }

@@ -45,7 +45,8 @@ fun PrayerItem(
     modifier: Modifier = Modifier,
     name: String = "العصر",
     prayerInfo: PrayerInfo = PrayerInfo.Default.copy(selectedStatus = PrayerStatus.Jamaah),
-    onStatusSelected: (PrayerStatus, PrayerInfo) -> Unit = { _, _ -> }
+    onStatusSelected: (PrayerStatus, PrayerInfo) -> Unit = { _, _ -> },
+    onIshaStatusesPeriodsExplanationClicked: () -> Unit = { }
 ) = PrayerCompanionAndroidTheme {
     val spacing = LocalSpacing.current
 
@@ -101,10 +102,14 @@ fun PrayerItem(
                 status = prayerInfo.selectedStatus,
                 prayer = prayerInfo.prayer,
                 isStateSelectable = prayerInfo.isStateSelectionEnabled,
-                statusesWithTimeRanges = prayerInfo.statusesWithTimeRanges
-            ) {
-                onStatusSelected(it, prayerInfo)
-            }
+                statusesWithTimeRanges = prayerInfo.statusesWithTimeRanges,
+                onIshaStatusesPeriodsExplanationClicked = {
+                    onIshaStatusesPeriodsExplanationClicked()
+                },
+                onStatusSelected = {
+                    onStatusSelected(it, prayerInfo)
+                }
+            )
         } else {
             Box(
                 modifier = Modifier
@@ -129,7 +134,8 @@ private fun PrayerItemState(
     status: PrayerStatus,
     isStateSelectable: Boolean,
     statusesWithTimeRanges: List<PrayerStatusWithTimeRange>,
-    onStatusSelected: (PrayerStatus) -> Unit
+    onStatusSelected: (PrayerStatus) -> Unit,
+    onIshaStatusesPeriodsExplanationClicked: () -> Unit
 ) {
     var isStatusPickerDialogShown by remember {
         mutableStateOf(false)
@@ -180,14 +186,17 @@ private fun PrayerItemState(
         if (isStatusPickerDialogShown) {
             StatusPickerDialog(
                 statusesWithTimeRanges = statusesWithTimeRanges,
+                showExplanation = prayer == Prayer.ISHA,
                 onItemSelected = {
                     onStatusSelected(it)
                     isStatusPickerDialogShown = false
                 },
+                onIshaStatusesPeriodsExplanationClicked = {
+                    onIshaStatusesPeriodsExplanationClicked()
+                },
                 onDismissRequest = {
                     isStatusPickerDialogShown = !isStatusPickerDialogShown
-                },
-                showExplanation = prayer == Prayer.ISHA
+                }
             )
         }
     }
