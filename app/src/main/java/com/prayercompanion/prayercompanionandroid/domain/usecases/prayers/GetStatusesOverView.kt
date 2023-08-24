@@ -14,7 +14,7 @@ class GetStatusesOverView @Inject constructor(
 
     fun call(): Flow<SortedMap<PrayerStatus, Int>> {
         val now = LocalDateTime.now()
-        val startDateTime = now.minusDays(2)
+        val startDateTime = now.minusDays(3)
 
         return repository.getStatusesByDate(startDateTime, now)
             .map { it ->
