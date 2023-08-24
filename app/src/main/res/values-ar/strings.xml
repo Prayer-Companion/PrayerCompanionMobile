@@ -3,7 +3,7 @@
     <string name="app_name">رفيق الصلاة</string>
 
     <string name="fajr">الفجر</string>
-    <string name="duha">الشروق</string>
+    <string name="sunrise">الشروق</string>
     <string name="dhuhr">الظهر</string>
     <string name="asr">العصر</string>
     <string name="maghrib">المغرب</string>

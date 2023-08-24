@@ -17,9 +17,9 @@ fun responsesToPrayerInfoEntity(
         LocalDate.parse(dayPrayerResponse.date, Consts.DateFormatter),
         LocalTime.parse(dayPrayerResponse.fajrTime.uppercase(), Consts.TimeFormatter)
     )
-    val duhaDateTime = LocalDateTime.of(
+    val sunriseDateTime = LocalDateTime.of(
         LocalDate.parse(dayPrayerResponse.date, Consts.DateFormatter),
-        LocalTime.parse(dayPrayerResponse.duhaTime.uppercase(), Consts.TimeFormatter),
+        LocalTime.parse(dayPrayerResponse.sunriseTime.uppercase(), Consts.TimeFormatter),
     )
     val dhuhrDateTime = LocalDateTime.of(
         LocalDate.parse(dayPrayerResponse.date, Consts.DateFormatter),
@@ -47,8 +47,8 @@ fun responsesToPrayerInfoEntity(
         ),
         PrayerInfoEntity(
             prayer = Prayer.DUHA,
-            dateTime = duhaDateTime,
-            status = responseStatusToStatus(dayStatuses?.duha)
+            dateTime = sunriseDateTime,
+            status = responseStatusToStatus(dayStatuses?.sunrise)
         ),
         PrayerInfoEntity(
             prayer = Prayer.DHUHR,

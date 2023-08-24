@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import com.prayercompanion.prayercompanionandroid.data.receivers.AlarmReceiver
+import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerNotificationItem
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetDayPrayers
 import com.prayercompanion.prayercompanionandroid.domain.utils.PrayersAlarmScheduler
@@ -32,7 +33,7 @@ class AndroidPrayersAlarmScheduler @Inject constructor(
                 return
             }
             .prayers.forEach {
-                if (it.dateTime >= now) {
+                if (it.prayer != Prayer.DUHA && it.dateTime >= now) {
                     val notification = PrayerNotificationItem(prayerInfo = it, isOngoing = false)
                     schedulePrayerNotification(notification)
                 }

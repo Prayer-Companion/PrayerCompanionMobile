@@ -17,7 +17,7 @@ data class DayPrayerResponse(
      * Prayer time in 24h format (HH:mm)
      * */
     @SerializedName("sunrise")
-    val duhaTime: String,
+    val sunriseTime: String,
     /**
      * Prayer time in 24h format (HH:mm)
      * */

@@ -8,7 +8,7 @@ data class DayPrayerStatusResponse(
     @SerializedName("fajr")
     val fajr: String = "none",
     @SerializedName("sunrise")
-    val duha: String = "none",
+    val sunrise: String = "none",
     @SerializedName("dhuhr")
     val dhuhr: String = "none",
     @SerializedName("asr")
