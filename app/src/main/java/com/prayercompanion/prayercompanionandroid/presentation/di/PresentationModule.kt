@@ -23,7 +23,7 @@ class PresentationModule {
         val activity = context as Activity
         return Doorbell(
             activity,
-            BuildConfig.DOORBELL_ID,
+            BuildConfig.DOORBELL_ID.toLong(),
             BuildConfig.DOORBELL_PRIVATE_KEY,
         )
     }

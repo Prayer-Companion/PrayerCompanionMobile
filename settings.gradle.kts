@@ -3,8 +3,6 @@ pluginManagement {
         google()
         mavenCentral()
         gradlePluginPortal()
-        //noinspection JcenterRepositoryObsolete
-        jcenter()
     }
 }
 dependencyResolutionManagement {
@@ -17,4 +15,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "PrayerCompanionAndroid"
-include ':app'
+include(":app")
