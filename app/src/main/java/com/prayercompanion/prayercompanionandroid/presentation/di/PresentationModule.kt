@@ -1,10 +1,10 @@
-package com.prayercompanion.prayercompanionandroid.domain.di
+package com.prayercompanion.prayercompanionandroid.presentation.di
 
 import android.app.Activity
 import android.content.Context
 import com.prayercompanion.prayercompanionandroid.BuildConfig
-import com.prayercompanion.prayercompanionandroid.domain.utils.FeedbackUtils
-import com.prayercompanion.prayercompanionandroid.domain.utils.FeedbackUtilsImpl
+import com.prayercompanion.prayercompanionandroid.presentation.utils.FeedbackUtils
+import com.prayercompanion.prayercompanionandroid.presentation.utils.FeedbackUtilsImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,7 +15,7 @@ import io.doorbell.android.Doorbell
 
 @Module
 @InstallIn(ActivityComponent::class)
-class DomainModuleActivityScope {
+class PresentationModule {
 
     @Provides
     @ActivityScoped

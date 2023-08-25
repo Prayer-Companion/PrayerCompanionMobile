@@ -8,8 +8,9 @@ import androidx.lifecycle.viewModelScope
 import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.prayercompanionandroid.data.preferences.AppPreferences
 import com.prayercompanion.prayercompanionandroid.data.preferences.DataStoresRepo
-import com.prayercompanion.prayercompanionandroid.data.utils.Tracker
 import com.prayercompanion.prayercompanionandroid.domain.utils.PermissionsManager
+import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.TrackedButtons
+import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.Tracker
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
@@ -113,7 +114,7 @@ class PermissionsRequestViewModel @Inject constructor(
     }
 
     private fun onSkipNotificationPermission() {
-        tracker.trackButtonClicked(Tracker.TrackedButtons.NOTIFICATION_PERMISSION_SKIP)
+        tracker.trackButtonClicked(TrackedButtons.NOTIFICATION_PERMISSION_SKIP)
         goToHomeScreen()
         viewModelScope.launch {
             dataStoresRepo.appPreferencesDataStore.updateData {

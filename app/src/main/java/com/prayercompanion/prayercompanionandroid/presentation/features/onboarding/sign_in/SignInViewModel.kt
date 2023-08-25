@@ -8,10 +8,11 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.tasks.Task
 import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.data.utils.Tracker
 import com.prayercompanion.prayercompanionandroid.domain.usecases.AccountSignIn
+import com.prayercompanion.prayercompanionandroid.domain.utils.AuthenticationHelper
+import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.TrackedButtons
+import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.Tracker
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
-import com.prayercompanion.prayercompanionandroid.presentation.utils.AuthenticationHelper
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
 import com.prayercompanion.prayercompanionandroid.presentation.utils.toUiText
@@ -71,7 +72,7 @@ class SignInViewModel @Inject constructor(
     }
 
     private fun onSignInWithGoogleClicked() {
-        tracker.trackButtonClicked(Tracker.TrackedButtons.GOOGLE_SIGN_IN)
+        tracker.trackButtonClicked(TrackedButtons.GOOGLE_SIGN_IN)
         sendEvent(UiEvent.LaunchSignInWithGoogle)
     }
 

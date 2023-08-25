@@ -3,11 +3,12 @@ package com.prayercompanion.prayercompanionandroid.data.receivers
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.prayercompanion.prayercompanionandroid.data.utils.Tracker
 import com.prayercompanion.prayercompanionandroid.data.utils.notifications.PrayerNotificationAction
 import com.prayercompanion.prayercompanionandroid.data.utils.notifications.PrayersNotificationsService
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.SetPrayerStatusByDateTime
+import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.TrackedButtons
+import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.Tracker
 import com.prayercompanion.prayercompanionandroid.getSerializable
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -43,7 +44,7 @@ class PrayerNotificationActionReceiver : BroadcastReceiver() {
         )
 
         if (actionType == PrayerNotificationAction.Prayed) {
-            tracker.trackButtonClicked(Tracker.TrackedButtons.NOTIFICATION_PRAYED_NOW)
+            tracker.trackButtonClicked(TrackedButtons.NOTIFICATION_PRAYED_NOW)
             CoroutineScope(SupervisorJob()).launch(Dispatchers.IO) {
                 setPrayerStatusByDateTime.call(prayerInfo, LocalDateTime.now())
                     //Todo handle onFailure by showing some error message

@@ -14,9 +14,13 @@ import com.prayercompanion.prayercompanionandroid.data.remote.PrayerCompanionApi
 import com.prayercompanion.prayercompanionandroid.data.repositories.PrayersRepositoryImpl
 import com.prayercompanion.prayercompanionandroid.data.repositories.QuranRepositoryImpl
 import com.prayercompanion.prayercompanionandroid.data.utils.AndroidPrayersAlarmScheduler
+import com.prayercompanion.prayercompanionandroid.data.utils.AuthenticationHelperImpl
+import com.prayercompanion.prayercompanionandroid.data.utils.TrackerImpl
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
 import com.prayercompanion.prayercompanionandroid.domain.repositories.QuranRepository
+import com.prayercompanion.prayercompanionandroid.domain.utils.AuthenticationHelper
 import com.prayercompanion.prayercompanionandroid.domain.utils.PrayersAlarmScheduler
+import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.Tracker
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -145,4 +149,12 @@ class DataModule {
     internal fun provideFirebaseAnalytics(@ApplicationContext context: Context): FirebaseAnalytics {
         return FirebaseAnalytics.getInstance(context)
     }
+
+    @Provides
+    @Singleton
+    internal fun provideAuthenticationHelper(usecase: AuthenticationHelperImpl): AuthenticationHelper = usecase
+
+    @Provides
+    @Singleton
+    internal fun provideTracker(usecase: TrackerImpl): Tracker = usecase
 }

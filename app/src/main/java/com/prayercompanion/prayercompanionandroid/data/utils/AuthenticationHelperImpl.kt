@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.presentation.utils
+package com.prayercompanion.prayercompanionandroid.data.utils
 
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.tasks.Task
@@ -6,21 +6,22 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.prayercompanion.prayercompanionandroid.data.preferences.DataStoresRepo
+import com.prayercompanion.prayercompanionandroid.domain.utils.AuthenticationHelper
 import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class AuthenticationHelper @Inject constructor(
+class AuthenticationHelperImpl @Inject constructor(
     private val googleSignInClient: GoogleSignInClient,
     dataStoresRepo: DataStoresRepo,
-) {
+): AuthenticationHelper {
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val appPreferences by lazy { dataStoresRepo.appPreferencesDataStore }
 
-    fun signInWithGoogle(
+    override fun signInWithGoogle(
         token: String,
         onSuccess: () -> Unit,
         onFailure: (Exception) -> Unit
@@ -32,7 +33,7 @@ class AuthenticationHelper @Inject constructor(
             }
     }
 
-    fun signInAnonymously(
+    override fun signInAnonymously(
         onSuccess: () -> Unit,
         onFailure: (Exception) -> Unit
     ) {

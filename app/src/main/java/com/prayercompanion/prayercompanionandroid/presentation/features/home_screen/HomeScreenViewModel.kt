@@ -12,7 +12,6 @@ import com.google.android.gms.common.api.ResolvableApiException
 import com.prayercompanion.prayercompanionandroid.BuildConfig
 import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.prayercompanionandroid.data.preferences.DataStoresRepo
-import com.prayercompanion.prayercompanionandroid.data.utils.Tracker
 import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
@@ -24,6 +23,8 @@ import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.SetPra
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.UpdatePrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.usecases.quran.LoadAndSaveQuranMemorizedChapters
 import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
+import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.TrackedButtons
+import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.Tracker
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
 import com.prayercompanion.prayercompanionandroid.presentation.utils.toUiText
@@ -119,12 +120,12 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     fun onPreviousDayButtonClicked() {
-        tracker.trackButtonClicked(Tracker.TrackedButtons.VIEW_PREVIOUS_DAY_PRAYERS)
+        tracker.trackButtonClicked(TrackedButtons.VIEW_PREVIOUS_DAY_PRAYERS)
         updateSelectedDate(state.selectedDate.minusDays(1))
     }
 
     fun onNextDayButtonClicked() {
-        tracker.trackButtonClicked(Tracker.TrackedButtons.VIEW_NEXT_DAY_PRAYERS)
+        tracker.trackButtonClicked(TrackedButtons.VIEW_NEXT_DAY_PRAYERS)
         updateSelectedDate(state.selectedDate.plusDays(1))
     }
 
@@ -149,16 +150,16 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     fun onIshaStatusesPeriodsExplanationClicked() {
-        tracker.trackButtonClicked(Tracker.TrackedButtons.ISHA_STATUSES_PERIOD_EXPLANATION)
+        tracker.trackButtonClicked(TrackedButtons.ISHA_STATUSES_PERIOD_EXPLANATION)
         sendEvent(UiEvent.OpenWebUrl(BuildConfig.ISHA_STATUSES_PERIODS_EXPLANATION_URL))
     }
 
     fun onStatusOverviewBarClicked() {
-        tracker.trackButtonClicked(Tracker.TrackedButtons.STATUS_OVER_VIEW_BAR)
+        tracker.trackButtonClicked(TrackedButtons.STATUS_OVER_VIEW_BAR)
     }
 
     fun onPrayedNowClicked() {
-        tracker.trackButtonClicked(Tracker.TrackedButtons.HOME_PRAYED_NOW)
+        tracker.trackButtonClicked(TrackedButtons.HOME_PRAYED_NOW)
         viewModelScope.launch(Dispatchers.IO) {
             setPrayerStatusByDateTime
                 .call(headerState.currentAndNextPrayer.first, LocalDateTime.now())

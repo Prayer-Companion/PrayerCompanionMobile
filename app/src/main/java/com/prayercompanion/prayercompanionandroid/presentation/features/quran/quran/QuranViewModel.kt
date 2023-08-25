@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.prayercompanion.prayercompanionandroid.data.utils.Tracker
 import com.prayercompanion.prayercompanionandroid.domain.usecases.quran.AddMemorizedChapterAyat
 import com.prayercompanion.prayercompanionandroid.domain.usecases.quran.EditMemorizedChapterAyat
 import com.prayercompanion.prayercompanionandroid.domain.usecases.quran.GetFullQuranWithMemorized
@@ -13,6 +12,8 @@ import com.prayercompanion.prayercompanionandroid.domain.usecases.quran.GetNextQ
 import com.prayercompanion.prayercompanionandroid.domain.usecases.quran.LoadQuranReadingSuggestions
 import com.prayercompanion.prayercompanionandroid.domain.usecases.quran.MarkQuranSectionAsRead
 import com.prayercompanion.prayercompanionandroid.domain.usecases.quran.RemoveMemorizedChapterAyat
+import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.TrackedButtons
+import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.Tracker
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
@@ -155,7 +156,7 @@ class QuranViewModel @Inject constructor(
     }
 
     private fun onNextSectionClicked() {
-        tracker.trackButtonClicked(Tracker.TrackedButtons.NEXT_QURAN_READING_SECTION)
+        tracker.trackButtonClicked(TrackedButtons.NEXT_QURAN_READING_SECTION)
         state.sections?.let { sections ->
             viewModelScope.launch(Dispatchers.IO) {
                 markQuranSectionAsRead.call(sections)
@@ -164,7 +165,7 @@ class QuranViewModel @Inject constructor(
     }
 
     private fun onViewFullClicked() {
-        tracker.trackButtonClicked(Tracker.TrackedButtons.VIEW_FULL_QURAN_READING_SECTION)
+        tracker.trackButtonClicked(TrackedButtons.VIEW_FULL_QURAN_READING_SECTION)
         val sections = state.sections ?: return
         sendUiEvent(
             UiEvent.Navigate(

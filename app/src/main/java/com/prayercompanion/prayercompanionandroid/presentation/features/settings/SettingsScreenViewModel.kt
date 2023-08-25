@@ -5,12 +5,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.prayercompanion.prayercompanionandroid.data.utils.Tracker
 import com.prayercompanion.prayercompanionandroid.domain.models.AppLanguage
 import com.prayercompanion.prayercompanionandroid.domain.usecases.GetAppLanguage
 import com.prayercompanion.prayercompanionandroid.domain.usecases.SetAppLanguage
 import com.prayercompanion.prayercompanionandroid.domain.usecases.settings.GetIsPauseMediaEnabled
 import com.prayercompanion.prayercompanionandroid.domain.usecases.settings.SetPauseMediaEnabled
+import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.TrackedButtons
+import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.Tracker
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -60,9 +61,9 @@ class SettingsScreenViewModel @Inject constructor(
 
     private fun onPauseMediaCheckedChange(checked: Boolean) {
         if (checked) {
-            tracker.trackButtonClicked(Tracker.TrackedButtons.ENABLE_STOP_MEDIA_ON_PRAYER_CALL)
+            tracker.trackButtonClicked(TrackedButtons.ENABLE_STOP_MEDIA_ON_PRAYER_CALL)
         } else {
-            tracker.trackButtonClicked(Tracker.TrackedButtons.DISABLE_STOP_MEDIA_ON_PRAYER_CALL)
+            tracker.trackButtonClicked(TrackedButtons.DISABLE_STOP_MEDIA_ON_PRAYER_CALL)
         }
         viewModelScope.launch {
             setPauseMediaEnabled.call(checked)

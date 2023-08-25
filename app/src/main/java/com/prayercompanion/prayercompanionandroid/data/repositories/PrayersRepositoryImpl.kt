@@ -16,8 +16,8 @@ import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
-import com.prayercompanion.prayercompanionandroid.domain.utils.LocationMissingException
-import com.prayercompanion.prayercompanionandroid.domain.utils.UnknownException
+import com.prayercompanion.prayercompanionandroid.domain.utils.exceptions.LocationMissingException
+import com.prayercompanion.prayercompanionandroid.domain.utils.exceptions.UnknownException
 import com.skydoves.whatif.whatIfNotNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf

@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.domain.utils
+package com.prayercompanion.prayercompanionandroid.presentation.utils
 
 import android.content.Context
 import android.os.Build

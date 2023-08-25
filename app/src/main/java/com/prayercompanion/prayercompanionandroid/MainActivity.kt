@@ -39,9 +39,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.prayercompanion.prayercompanionandroid.data.utils.Tracker
 import com.prayercompanion.prayercompanionandroid.domain.models.quran.PrayerQuranReadingSections
-import com.prayercompanion.prayercompanionandroid.domain.utils.FeedbackUtils
+import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.Tracker
 import com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.HomeScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.permissions.PermissionsRequestScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.permissions.PermissionsRequestViewModel
@@ -57,6 +56,7 @@ import com.prayercompanion.prayercompanionandroid.presentation.features.settings
 import com.prayercompanion.prayercompanionandroid.presentation.features.settings.SettingsScreenViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
+import com.prayercompanion.prayercompanionandroid.presentation.utils.FeedbackUtils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
