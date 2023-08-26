@@ -131,13 +131,7 @@ dependencies {
     kapt("androidx.hilt:hilt-compiler:1.0.0")
 
     val okHttpVersion = "5.0.0-alpha.11"
-    implementation("com.squareup.okhttp3:okhttp:$okHttpVersion")
     implementation("com.squareup.okhttp3:logging-interceptor:$okHttpVersion")
-
-    val retrofitVersion = "2.9.0"
-    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.google.code.gson:gson:2.10.1")
 
     val roomVersion = "2.5.2"
     implementation("androidx.room:room-ktx:$roomVersion")
@@ -171,16 +165,19 @@ dependencies {
     implementation("com.google.android.play:review:2.0.1")
     implementation("com.google.android.play:review-ktx:2.0.1")
     implementation("io.doorbell:android-sdk:0.4.7@aar")
+
+    val ktorVersion = "2.3.3"
+
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
+    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+    implementation("io.ktor:ktor-serialization-gson:$ktorVersion")
 //    ------------------------------------------------
     debugImplementation("androidx.compose.ui:ui-tooling:$composeUiVersion")
     debugImplementation("androidx.compose.ui:ui-test-manifest:$composeUiVersion")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("androidx.room:room-testing:$roomVersion")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeUiVersion")
-
     testImplementation("io.mockk:mockk:1.10.0")
     testImplementation("junit:junit:4.13.2")
     testImplementation("androidx.test.ext:junit:1.1.5")
@@ -190,8 +187,11 @@ dependencies {
     testImplementation("com.squareup.okhttp3:mockwebserver:4.9.3")
     testImplementation("androidx.compose.ui:ui-test-junit4:$composeUiVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.8.20")
-    androidTestImplementation("androidx.work:work-testing:$workManagerVersion")
 
+    androidTestImplementation("androidx.work:work-testing:$workManagerVersion")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeUiVersion")
     androidTestImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")

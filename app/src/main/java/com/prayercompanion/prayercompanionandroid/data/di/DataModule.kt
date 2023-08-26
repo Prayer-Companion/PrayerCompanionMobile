@@ -26,15 +26,16 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import okhttp3.OkHttpClient
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.serialization.gson.gson
 import okhttp3.Protocol
 import okhttp3.Response
 import okhttp3.ResponseBody.Companion.toResponseBody
 import okhttp3.internal.http.HTTP_UNAUTHORIZED
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 import javax.inject.Singleton
 
 @Module
@@ -44,58 +45,66 @@ class DataModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideHttpClient(): HttpClient {
 
         val logger = HttpLoggingInterceptor()
         logger.setLevel(HttpLoggingInterceptor.Level.BODY)
+        return HttpClient(OkHttp) {
+            // throw  for non-2xx responses
+            expectSuccess = true
 
-        val builder = OkHttpClient.Builder()
+            engine {
+                addInterceptor { chain ->
+                    val request = chain.request()
 
-        builder.addInterceptor { chain ->
-            val request = chain.request()
+                    val task = FirebaseAuth
+                        .getInstance()
+                        .currentUser
+                        ?.getIdToken(false)
 
-            val task = FirebaseAuth
-                .getInstance()
-                .currentUser
-                ?.getIdToken(false)
+                    if (task != null) {
+                        val token = runCatching {
+                            val result = Tasks.await(task)
+                            result.token
+                        }.getOrNull()
 
-            if (task != null) {
-                val result = Tasks.await(task)
-                val token = result.token
+                        if (token != null) {
+                            val new = request.newBuilder()
+                                .addHeader("Authorization", "Bearer $token")
+                                .build()
 
-                if (token != null) {
-                    val new = request.newBuilder()
-                        .addHeader("Authorization", "Bearer $token")
+                            return@addInterceptor chain.proceed(new)
+                        }
+                    }
+
+                    Response.Builder()
+                        .code(HTTP_UNAUTHORIZED)
+                        .body("".toResponseBody(null)) // Whatever body
+                        .protocol(Protocol.HTTP_2)
+                        .message("Couldn't fetch firebase auth token")
+                        .request(chain.request())
                         .build()
-
-                    return@addInterceptor chain.proceed(new)
+                }
+                if (BuildConfig.DEBUG) {
+                    addInterceptor(logger)
                 }
             }
 
-            Response.Builder()
-                .code(HTTP_UNAUTHORIZED)
-                .body("".toResponseBody(null)) // Whatever body
-                .protocol(Protocol.HTTP_2)
-                .message("Couldn't fetch firebase auth token")
-                .request(chain.request())
-                .build()
-        }
+            // set default request parameters
+            defaultRequest {
+                url(BuildConfig.PRAYER_COMPANION_API_BASE_URL)
+            }
 
-        if (BuildConfig.DEBUG) {
-            builder.addInterceptor(logger)
+            install(ContentNegotiation) {
+                gson()
+            }
         }
-        return builder.build()
     }
 
     @Provides
     @Singleton
-    fun providePrayerCompanionApi(client: OkHttpClient): PrayerCompanionApi {
-        return Retrofit.Builder()
-            .baseUrl(BuildConfig.PRAYER_COMPANION_API_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(client)
-            .build()
-            .create()
+    fun providePrayerCompanionApi(client: HttpClient): PrayerCompanionApi {
+        return PrayerCompanionApi(client)
     }
 
     @Provides
@@ -152,7 +161,8 @@ class DataModule {
 
     @Provides
     @Singleton
-    internal fun provideAuthenticationHelper(usecase: AuthenticationHelperImpl): AuthenticationHelper = usecase
+    internal fun provideAuthenticationHelper(usecase: AuthenticationHelperImpl): AuthenticationHelper =
+        usecase
 
     @Provides
     @Singleton

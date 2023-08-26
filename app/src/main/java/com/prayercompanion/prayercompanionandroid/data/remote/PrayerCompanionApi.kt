@@ -4,86 +4,84 @@ import com.prayercompanion.prayercompanionandroid.data.remote.dto.DayPrayerRespo
 import com.prayercompanion.prayercompanionandroid.data.remote.dto.DayPrayerStatusResponse
 import com.prayercompanion.prayercompanionandroid.data.remote.dto.MemorizedChapterVersesResponse
 import com.prayercompanion.prayercompanionandroid.data.remote.dto.QuranReadingSectionResponse
-import retrofit2.http.DELETE
-import retrofit2.http.GET
-import retrofit2.http.PUT
-import retrofit2.http.Query
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.delete
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
+import io.ktor.client.request.put
+import javax.inject.Inject
 
-interface PrayerCompanionApi {
-
-    /**
-     * @param timeZone: current location's time zone
-     * @param latitude: current location's latitude
-     * @param longitude: current location's longitude
-     * @param countryCode: current location's countryCode
-     * @param cityName: current location's cityName
-     * @param monthOfYear: the month of year we want data for (MM/yyyy)
-     *
-     * if country code and city name are null then it will
-     * default to the lat and long values to get prayer times
-     * */
-    @GET("v1/prayerTimes")
+class PrayerCompanionApi @Inject constructor(
+    private val client: HttpClient
+) {
     suspend fun getPrayers(
-        @Query("timeZone") timeZone: String,
-        @Query("latitude") latitude: String,
-        @Query("longitude") longitude: String,
-        @Query("countryCode") countryCode: String?,
-        @Query("cityName") cityName: String?,
-        @Query("monthOfYear") monthOfYear: String,
-    ): List<DayPrayerResponse>
+        timeZone: String,
+        latitude: String,
+        longitude: String,
+        countryCode: String?,
+        cityName: String?,
+        monthOfYear: String
+    ): List<DayPrayerResponse> {
+        return client.get("v1/prayerTimes") {
+            parameter("timeZone", timeZone)
+            parameter("latitude", latitude)
+            parameter("longitude", longitude)
+            parameter("countryCode", countryCode)
+            parameter("cityName", cityName)
+            parameter("monthOfYear", monthOfYear)
+        }.body()
+    }
 
-    @PUT("v1/user/signIn")
-    suspend fun signIn()
+    suspend fun signIn() {
+        client.put("v1/user/signIn")
+    }
 
-    /**
-     * @param prayerDate: prayer date to updated (dd/MM/yyyy)
-     * @param prayerName: prayer name
-     * @param prayerStatus: new prayer status [Jamaah, OnTime, Late, Qadaa, Missed, NotSet]
-     * */
-    @PUT("v1/user/prayerStatus")
     suspend fun updatePrayerStatus(
-        @Query("date") prayerDate: String,
-        @Query("prayerName") prayerName: String,
-        @Query("prayerStatus") prayerStatus: String
-    )
+        prayerDate: String,
+        prayerName: String,
+        prayerStatus: String
+    ) {
+        client.put("v1/user/prayerStatus") {
+            parameter("date", prayerDate)
+            parameter("prayerName", prayerName)
+            parameter("prayerStatus", prayerStatus)
+        }
+    }
 
-    /**
-     * @param startDate: starting date inclusive (dd/MM/yyyy)
-     * @param endDate: ending date inclusive (dd/MM/yyyy)
-     * */
-    @GET("v1/user/prayerStatuses")
     suspend fun getPrayerStatuses(
-        @Query("startDate") startDate: String,
-        @Query("endDate") endDate: String
-    ): List<DayPrayerStatusResponse>
+        startDate: String,
+        endDate: String
+    ): List<DayPrayerStatusResponse> {
+        return client.get("v1/user/prayerStatuses") {
+            parameter("startDate", startDate)
+            parameter("endDate", endDate)
+        }.body()
+    }
 
-    /**
-     * Get all memorized Chapters Verses
-     * */
-    @GET("v1/user/memorizedSurahAyat")
-    suspend fun getMemorizedChapterVerses(): List<MemorizedChapterVersesResponse>
+    suspend fun getMemorizedChapterVerses(): List<MemorizedChapterVersesResponse> {
+        return client.get("v1/user/memorizedSurahAyat").body()
+    }
 
-    /**
-     * Insert or update a Chapter Verses for the user
-     * @param startVerse: starting aya index inclusive
-     * @param endVerse: ending aya index inclusive
-     * */
-    @PUT("v1/user/memorizedSurahAyat")
     suspend fun addOrUpdateMemorizedChapterVerses(
-        @Query("surahId") chapterId: Int,
-        @Query("startAya") startVerse: Int,
-        @Query("endAya") endVerse: Int
-    )
+        chapterId: Int,
+        startVerse: Int,
+        endVerse: Int
+    ) {
+        client.put("v1/user/memorizedSurahAyat") {
+            parameter("surahId", chapterId)
+            parameter("startAya", startVerse)
+            parameter("endAya", endVerse)
+        }
+    }
 
-    /**
-     * Delete a Chapter Verses from the user memorized collection
-     * */
-    @DELETE("v1/user/memorizedSurahAyat")
-    suspend fun deleteMemorizedChapterVerses(
-        @Query("surahId") chapterId: Int
-    )
+    suspend fun deleteMemorizedChapterVerses(chapterId: Int) {
+        client.delete("v1/user/memorizedSurahAyat") {
+            parameter("surahId", chapterId)
+        }
+    }
 
-    @GET("v1/user/quranReadingSections")
-    suspend fun getQuranReadingSections(): List<QuranReadingSectionResponse>
-
+    suspend fun getQuranReadingSections(): List<QuranReadingSectionResponse> {
+        return client.get("v1/user/quranReadingSections").body()
+    }
 }
