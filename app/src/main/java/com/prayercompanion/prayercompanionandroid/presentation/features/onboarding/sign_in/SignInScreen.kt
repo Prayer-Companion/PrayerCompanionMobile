@@ -76,6 +76,7 @@ fun SignInScreen(
                 }
 
                 is UiEvent.ShowErrorSnackBar -> context.showToast(it.errorMessage.asString(context))
+                is UiEvent.LaunchSignInWithGoogle -> signInWithGoogleLauncher.launch(googleSignInClient?.signInIntent)
                 else -> Unit
             }
         }
@@ -132,7 +133,7 @@ fun SignInScreen(
                 colors = ButtonDefaults.buttonColors(MaterialTheme.colors.onPrimary),
                 shape = RoundedCornerShape(50.dp),
                 onClick = {
-                    signInWithGoogleLauncher.launch(googleSignInClient?.signInIntent)
+                    onEvent(SignInEvents.OnSignInWithGoogleClicked)
                 }) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically

@@ -11,6 +11,7 @@ import com.prayercompanion.prayercompanionandroid.domain.models.quran.PrayerQura
 import com.prayercompanion.prayercompanionandroid.domain.models.quran.PrayerQuranReadingSections
 import com.prayercompanion.prayercompanionandroid.domain.models.quran.QuranChapter
 import com.prayercompanion.prayercompanionandroid.domain.repositories.QuranRepository
+import com.prayercompanion.prayercompanionandroid.domain.usecases.IsConnectedToInternet
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
@@ -23,12 +24,16 @@ class QuranRepositoryImpl @Inject constructor(
     assetsReader: AssetsReader,
     private val api: PrayerCompanionApi,
     private val readingSectionDao: QuranReadingSectionsDao,
-    private val memorizedChaptersDao: MemorizedQuranChapterDao
+    private val memorizedChaptersDao: MemorizedQuranChapterDao,
+    private val isConnectedToInternet: IsConnectedToInternet
 ) : QuranRepository {
 
     private val quranChapters = assetsReader.quran.map { it.toQuranChapters() }
 
-    override suspend fun loadMemorizedChapters() {
+    override suspend fun loadAndSaveMemorizedChapters() {
+        if (isConnectedToInternet.call().not())
+            return
+
         try {
             val chapters = api.getMemorizedChapterVerses()
             val entities = chapters.map {

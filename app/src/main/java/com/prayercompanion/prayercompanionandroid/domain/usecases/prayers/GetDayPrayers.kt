@@ -11,12 +11,12 @@ class GetDayPrayers @Inject constructor(
     private val appLocationManager: AppLocationManager
 ) {
     suspend fun call(
-        date: LocalDate,
-        forceUpdate: Boolean
+        date: LocalDate
     ): Result<DayPrayersInfo> {
         val location = appLocationManager.getLastKnownLocation()
-        val address = appLocationManager.getAddress()
+        val address = appLocationManager.getAddressByLocation(location)
 
-        return prayersRepository.getDayPrayers(location, address, date, forceUpdate)
+        return prayersRepository.getDayPrayers(location, address, date)
     }
+
 }

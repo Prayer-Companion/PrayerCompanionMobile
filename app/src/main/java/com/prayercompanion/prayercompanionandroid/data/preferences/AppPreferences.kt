@@ -34,6 +34,7 @@ data class AppPreferences(
     /** The default app language should be arabic, so we set it to Arabic the first time only */
     val hasSetArabicLanguageFirstTime: Boolean,
     val isPauseMediaPreferencesEnabled: Boolean,
+    val hasShownRateTheAppPopup: Boolean
 )
 
 object AppPreferencesSerializer : Serializer<AppPreferences> {
@@ -47,6 +48,7 @@ object AppPreferencesSerializer : Serializer<AppPreferences> {
             deniedNotificationPermissionsCount = 0,
             hasSetArabicLanguageFirstTime = false,
             isPauseMediaPreferencesEnabled = true,
+            hasShownRateTheAppPopup = false
         )
 
     override suspend fun readFrom(input: InputStream): AppPreferences {

@@ -9,133 +9,86 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.common.api.ResolvableApiException
+import com.prayercompanion.prayercompanionandroid.BuildConfig
 import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.data.utils.Consts
+import com.prayercompanion.prayercompanionandroid.data.preferences.DataStoresRepo
 import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.models.RemainingDuration
-import com.prayercompanion.prayercompanionandroid.domain.repositories.QuranRepository
-import com.prayercompanion.prayercompanionandroid.domain.usecases.UpdateAuthToken
-import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetCurrentPrayer
-import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetDayPrayers
-import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetLastWeekStatusesOverView
-import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetNextPrayer
+import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetDailyPrayersCombo
+import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetDayPrayersFlow
+import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetStatusesOverView
+import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.SetPrayerStatusByDateTime
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.UpdatePrayerStatus
+import com.prayercompanion.prayercompanionandroid.domain.usecases.quran.LoadAndSaveQuranMemorizedChapters
 import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
+import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.TrackedButtons
+import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.Tracker
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
 import com.prayercompanion.prayercompanionandroid.presentation.utils.toUiText
 import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.cancellable
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import logcat.asLog
 import logcat.logcat
-import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
-    private val getDayPrayers: GetDayPrayers,
-    private val getCurrentPrayer: GetCurrentPrayer,
-    private val getNextPrayer: GetNextPrayer,
+    private val getDayPrayersFlow: GetDayPrayersFlow,
     private val updatePrayerStatus: UpdatePrayerStatus,
-    private val getLastWeekStatusesOverView: GetLastWeekStatusesOverView,
+    private val getStatusesOverView: GetStatusesOverView,
     private val locationManager: AppLocationManager,
-    private val quranRepository: QuranRepository,
-    private val updateAuthToken: UpdateAuthToken
+    private val loadAndSaveQuranMemorizedChapters: LoadAndSaveQuranMemorizedChapters,
+    private val getDailyPrayersCombo: GetDailyPrayersCombo,
+    private val setPrayerStatusByDateTime: SetPrayerStatusByDateTime,
+    private val tracker: Tracker,
+    dataStoresRepo: DataStoresRepo
 ) : ViewModel() {
 
+    private val appPreferences = dataStoresRepo.appPreferencesDataStore
+
+    private var loadDailyPrayersComboJob: Job? = null
     private var loadSelectedDatePrayersJob: Job? = null
-    private var lastForegroundTime = 0L
+    private var statusesOverviewJob: Job? = null
+
+    private var countDownTimer: CountDownTimer? = null
+    private var lastForegroundTime = System.currentTimeMillis()
+
     private val _uiEvents = Channel<UiEvent>()
     val uiEvents = _uiEvents.receiveAsFlow()
+    var headerState: HomeScreenHeaderState by mutableStateOf(HomeScreenHeaderState())
+        private set
     var state: HomeScreenState by mutableStateOf(HomeScreenState())
         private set
     var durationUntilNextPrayer by mutableStateOf(RemainingDuration(0, 0, 0))
         private set
 
     init {
-        suspend fun loadCurrentAndNextPrayers() {
-            suspend fun updateState(
-                currentPrayer: PrayerInfo = state.currentPrayer,
-                nextPrayer: PrayerInfo = state.nextPrayer
-            ) = withContext(Dispatchers.Main) {
-                state = state.copy(currentPrayer = currentPrayer, nextPrayer = nextPrayer)
-            }
-
-            val currentPrayerInfo = getCurrentPrayer.call().getOrElse {
-                it.printStackTraceInDebug()
-                sendErrorEvent(R.string.error_something_went_wrong.toUiText())
-                return
-            }
-
-            updateState(currentPrayer = currentPrayerInfo)
-
-            val nextPrayerInfo = getNextPrayer.call(currentPrayerInfo).getOrElse {
-                it.printStackTraceInDebug()
-                sendErrorEvent(R.string.error_something_went_wrong.toUiText())
-                return
-            }
-            updateState(nextPrayer = nextPrayerInfo)
-            withContext(Dispatchers.Main) { startDurationCountDown() }
-        }
-
-        suspend fun loadInitialDayPrayers() {
-            withContext(Dispatchers.IO) {
-                val dateDayPrayers = getDayPrayers.call(LocalDate.now(), true).getOrElse {
-                    withContext(Dispatchers.Main) {
-                        state = state.copy(selectedDayPrayersInfo = DayPrayersInfo.Default)
-                        sendEvent(UiEvent.ShowErrorSnackBar(UiText.DynamicString(it.message.toString())))
-                    }
-                    return@withContext
-                }
-                withContext(Dispatchers.Main) {
-                    state = state.copy(selectedDayPrayersInfo = dateDayPrayers)
-                }
-
+        fun loadQuranData() {
+            viewModelScope.launch(Dispatchers.IO) {
+                loadAndSaveQuranMemorizedChapters.call()
             }
         }
 
-        fun loadStartingData() {
-            CoroutineScope(Dispatchers.IO).launch {
-                quranRepository.loadMemorizedChapters()
-            }
-        }
-
-        loadStartingData()
-        viewModelScope.launch(Dispatchers.IO) {
-            loadInitialDayPrayers()
-            awaitAll(
-                async {
-                    loadCurrentAndNextPrayers()
-                },
-                async {
-                    getLastWeekStatusesOverView.call()
-                        .collectLatest { statuses ->
-                            withContext(Dispatchers.Main) {
-                                state = state.copy(lastWeekStatuses = statuses)
-                            }
-                        }
-                }
-            )
-
-        }
-
-        val locationServiceTask = locationManager.checkLocationService()
-        locationServiceTask
-            .addOnFailureListener { exception ->
+        fun checkLocationService() {
+            val locationServiceTask = locationManager.checkLocationService()
+            locationServiceTask.addOnFailureListener { exception ->
                 if (exception is ResolvableApiException) {
                     // Location settings are not satisfied, but this can be fixed
                     // by showing the user a dialog.
@@ -145,36 +98,21 @@ class HomeScreenViewModel @Inject constructor(
                             .build()
 
                         sendEvent(UiEvent.LaunchIntentSenderRequest(intentSenderRequest))
-
                     } catch (sendEx: IntentSender.SendIntentException) {
                         logcat { sendEx.asLog() }
                     }
                 }
             }
+        }
+
+        loadQuranData()
+        loadDailyPrayersCombo()
+        loadStatusesOverView()
+        checkLocationService()
     }
 
     fun onStart() {
-        val currentTime = System.currentTimeMillis()
-        val durationSinceLastForegroundTime = currentTime - lastForegroundTime
-
-        val lastAuthTokenUpdateTime = Consts.userTokenUpdateTime
-        val durationSinceLastUpdate = Duration
-            .between(LocalDateTime.now(), lastAuthTokenUpdateTime ?: LocalDateTime.now())
-            .toMillis()
-
-        if (
-            lastAuthTokenUpdateTime == null ||
-            durationSinceLastUpdate > Consts.TOKEN_UPDATE_THRESHOLD_TIME_MS
-        ) {
-            updateAuthToken.call(
-                forceRefresh = true,
-                onSuccess = {
-                    updateSelectedDate(LocalDate.now())
-                }
-            )
-        } else if (durationSinceLastForegroundTime > DURATION_AFTER_FOREGROUND_THRESHOLD_REFRESH_MS) {
-            updateSelectedDate(LocalDate.now())
-        }
+        loadDailyPrayersCombo()
     }
 
     fun onPause() {
@@ -182,30 +120,101 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     fun onPreviousDayButtonClicked() {
+        tracker.trackButtonClicked(TrackedButtons.VIEW_PREVIOUS_DAY_PRAYERS)
         updateSelectedDate(state.selectedDate.minusDays(1))
     }
 
     fun onNextDayButtonClicked() {
+        tracker.trackButtonClicked(TrackedButtons.VIEW_NEXT_DAY_PRAYERS)
         updateSelectedDate(state.selectedDate.plusDays(1))
     }
 
     fun onStatusSelected(prayerStatus: PrayerStatus, prayerInfo: PrayerInfo) {
+        tracker.trackStatusSelect()
         viewModelScope.launch(Dispatchers.IO) {
-            updatePrayerStatus.call(prayerInfo, prayerStatus).onFailure {
-                it.printStackTraceInDebug()
-                sendErrorEvent(R.string.error_something_went_wrong.toUiText())
-                return@launch
-            }
+            updatePrayerStatus.call(prayerInfo, prayerStatus)
+                .onSuccess {
+                    if (appPreferences.data.first().hasShownRateTheAppPopup.not()) {
+                        sendEvent(UiEvent.ShowRateTheAppPopup)
+                        appPreferences.updateData {
+                            it.copy(hasShownRateTheAppPopup = true)
+                        }
+                    }
+                }
+                .onFailure {
+                    it.printStackTraceInDebug()
+                    sendErrorEvent(R.string.error_something_went_wrong.toUiText())
+                    return@launch
+                }
+        }
+    }
 
-            state = state.updateStatus(prayerInfo, prayerStatus)
+    fun onIshaStatusesPeriodsExplanationClicked() {
+        tracker.trackButtonClicked(TrackedButtons.ISHA_STATUSES_PERIOD_EXPLANATION)
+        sendEvent(UiEvent.OpenWebUrl(BuildConfig.ISHA_STATUSES_PERIODS_EXPLANATION_URL))
+    }
+
+    fun onStatusOverviewBarClicked() {
+        tracker.trackButtonClicked(TrackedButtons.STATUS_OVER_VIEW_BAR)
+    }
+
+    fun onPrayedNowClicked() {
+        tracker.trackButtonClicked(TrackedButtons.HOME_PRAYED_NOW)
+        viewModelScope.launch(Dispatchers.IO) {
+            setPrayerStatusByDateTime
+                .call(headerState.currentAndNextPrayer.first, LocalDateTime.now())
+                .onFailure {
+                    it.printStackTraceInDebug()
+                    sendErrorEvent(R.string.error_something_went_wrong.toUiText())
+                    return@launch
+                }
         }
     }
 
     fun onLocationSettingsResult(result: Boolean) {
         if (result) {
             locationManager.getRequestLocationUpdates {
-                loadSelectedDatePrayers(true)
+                loadDailyPrayersCombo()
             }
+        }
+    }
+
+    private fun loadStatusesOverView() {
+        statusesOverviewJob?.cancel()
+        statusesOverviewJob = viewModelScope.launch(Dispatchers.IO) {
+            getStatusesOverView.call()
+                .collectLatest { statuses ->
+                    withContext(Dispatchers.Main) {
+                        statuses.remove(PrayerStatus.None)
+                        headerState = headerState.copy(statusesOverview = statuses)
+                    }
+                }
+        }
+    }
+
+    private fun loadDailyPrayersCombo() {
+        if (loadDailyPrayersComboJob?.isActive == true) {
+            loadDailyPrayersComboJob?.cancel()
+        }
+
+        loadDailyPrayersComboJob = viewModelScope.launch(Dispatchers.IO) {
+            getDailyPrayersCombo.call()
+                .cancellable()
+                .catch {
+                    sendErrorEvent(UiText.DynamicString(it.message.toString()))
+                    logcat { it.asLog() }
+                }
+                .onCompletion {
+                    loadSelectedDatePrayers()
+                }
+                .collectLatest {
+                    withContext(Dispatchers.Main) {
+                        if (state.selectedDate == headerState.todayDate) {
+                            headerState = headerState.copy(dailyPrayersCombo = it)
+                        }
+                        startDurationCountDown()
+                    }
+                }
         }
     }
 
@@ -214,36 +223,38 @@ class HomeScreenViewModel @Inject constructor(
         loadSelectedDatePrayers()
     }
 
-    private fun loadSelectedDatePrayers(forceUpdate: Boolean = false) {
-        // TODO: should we block the Ui while loading instead of canceling and reloading again?
+    private fun loadSelectedDatePrayers() {
         if (loadSelectedDatePrayersJob?.isActive == true) {
             loadSelectedDatePrayersJob?.cancel()
         }
 
         val selectedDate = state.selectedDate
         loadSelectedDatePrayersJob = viewModelScope.launch(Dispatchers.IO) {
-            getDayPrayers.call(selectedDate, forceUpdate)
-                .onSuccess { dateDayPrayers ->
-                    withContext(Dispatchers.Main) {
-                        state = state.copy(selectedDayPrayersInfo = dateDayPrayers)
-                    }
-                }
-                .onFailure {
-                    withContext(Dispatchers.Main) {
-                        state = state.copy(selectedDayPrayersInfo = DayPrayersInfo.Default)
-                        sendEvent(UiEvent.ShowErrorSnackBar(UiText.DynamicString(it.message.toString())))
+            getDayPrayersFlow.call(selectedDate)
+                .collectLatest {
+                    it.onSuccess { dateDayPrayers ->
+                        withContext(Dispatchers.Main) {
+                            state = state.copy(selectedDayPrayersInfo = dateDayPrayers)
+                        }
+                    }.onFailure {
+                        withContext(Dispatchers.Main) {
+                            state = state.copy(selectedDayPrayersInfo = DayPrayersInfo.Default)
+                            sendErrorEvent(UiText.DynamicString(it.message.toString()))
+                        }
                     }
                 }
         }
     }
 
     private fun startDurationCountDown() {
-        val durationInMillis = Duration
-            .between(LocalDateTime.now(), state.nextPrayer.dateTime)
-            .toMillis()
+        val durationInMillis = ChronoUnit.MILLIS
+            .between(LocalDateTime.now(), headerState.currentAndNextPrayer.second.dateTime)
+
+        if (durationInMillis <= 0) return
 
         durationUntilNextPrayer = RemainingDuration.fromMilliSeconds(durationInMillis)
-        object : CountDownTimer(durationInMillis, 1000) {
+        countDownTimer?.cancel()
+        countDownTimer = object : CountDownTimer(durationInMillis, 1000) {
 
             override fun onTick(millisUntilFinished: Long) {
                 durationUntilNextPrayer =
@@ -251,21 +262,10 @@ class HomeScreenViewModel @Inject constructor(
             }
 
             override fun onFinish() {
-                moveToNextPrayer()
+                startDurationCountDown()
+                loadStatusesOverView()
             }
         }.start()
-    }
-
-    private fun moveToNextPrayer() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val nextPrayer = getNextPrayer.call(state.nextPrayer).getOrElse {
-                it.printStackTraceInDebug()
-                sendErrorEvent(R.string.error_something_went_wrong.toUiText())
-                return@launch
-            }
-            state = state.copy(currentPrayer = state.nextPrayer, nextPrayer = nextPrayer)
-            withContext(Dispatchers.Main) { startDurationCountDown() }
-        }
     }
 
     private fun sendErrorEvent(message: UiText) {
@@ -278,9 +278,5 @@ class HomeScreenViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.Main) {
             _uiEvents.send(event)
         }
-    }
-
-    companion object {
-        private const val DURATION_AFTER_FOREGROUND_THRESHOLD_REFRESH_MS = 5 * 60 * 1000 //5 min
     }
 }

@@ -5,7 +5,7 @@ import com.prayercompanion.prayercompanionandroid.R
 
 enum class Prayer(@StringRes val nameId: Int) {
     FAJR(R.string.fajr),
-    DUHA(R.string.duha),
+    DUHA(R.string.sunrise), //DB entity name is currently duha have to do a migration schema
     DHUHR(R.string.dhuhr),
     ASR(R.string.asr),
     MAGHRIB(R.string.maghrib),

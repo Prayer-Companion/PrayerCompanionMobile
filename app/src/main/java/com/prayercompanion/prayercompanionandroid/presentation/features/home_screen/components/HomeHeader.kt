@@ -1,9 +1,11 @@
 package com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
@@ -12,6 +14,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -41,8 +45,9 @@ fun HomeHeader(
     currentPrayer: PrayerInfo = PrayerInfo.Default,
     nextPrayer: PrayerInfo = PrayerInfo.Default,
     durationUntilNextPrayer: RemainingDuration = RemainingDuration(0, 0, 0),
-    onStatusSelected: (PrayerStatus, PrayerInfo) -> Unit = { _, _ -> },
-    statusesCounts: SortedMap<PrayerStatus, Int> = sortedMapOf()
+    statusesCounts: SortedMap<PrayerStatus, Int> = sortedMapOf(),
+    onPrayedNowClicked: () -> Unit = { },
+    onStatusOverviewBarClicked: () -> Unit = { }
 ) = PrayerCompanionAndroidTheme {
 
     val spacing = LocalSpacing.current
@@ -94,13 +99,27 @@ fun HomeHeader(
                         style = MaterialTheme.typography.h1,
                         color = MaterialTheme.colors.onPrimary
                     )
-                    PrayerStatusPicker(
-                        modifier = Modifier.width(120.dp),
-                        onStatusSelected = {
-                            onStatusSelected(it, currentPrayer)
+                    if (currentPrayer.isStateSelectable) {
+                        Button(
+                            onClick = { onPrayedNowClicked() },
+                            shape = RoundedCornerShape(10.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = MaterialTheme.colors.primaryVariant
+                            ),
+                            contentPadding = PaddingValues(
+                                vertical = 3.dp,
+                                horizontal = 24.dp,
+                            )
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.notification_action_prayedNow),
+                                style = MaterialTheme.typography.button,
+                                color = MaterialTheme.colors.onPrimary
+                            )
                         }
-                    )
+                    }
                 }
+
                 Row {
                     MeasureUnconstrainedViewWidth(
                         modifier = Modifier
@@ -134,7 +153,7 @@ fun HomeHeader(
                 }
                 Spacer(modifier = Modifier.height(spacing.spaceMedium))
                 Text(
-                    text = stringResource(id = R.string.last_7_days_status_overview),
+                    text = stringResource(id = R.string.status_overview),
                     style = MaterialTheme.typography.subtitle2,
                     color = Color.White
                 )
@@ -142,7 +161,8 @@ fun HomeHeader(
                 PrayerStatusesOverViewBar(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(42.dp),
+                        .height(42.dp)
+                        .clickable { onStatusOverviewBarClicked() },
                     statusesCounts = statusesCounts
                 )
             }

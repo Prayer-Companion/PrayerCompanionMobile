@@ -4,11 +4,9 @@ import com.prayercompanion.prayercompanionandroid.atEndOfDay
 import com.prayercompanion.prayercompanionandroid.data.local.db.daos.PrayersInfoDao
 import com.prayercompanion.prayercompanionandroid.data.local.db.entities.PrayerInfoEntity
 import com.prayercompanion.prayercompanionandroid.data.local.db.mappers.toDayPrayerInfo
-import com.prayercompanion.prayercompanionandroid.data.local.db.mappers.toPrayerInfo
 import com.prayercompanion.prayercompanionandroid.data.remote.PrayerCompanionApi
 import com.prayercompanion.prayercompanionandroid.data.remote.dto.DayPrayerResponse
 import com.prayercompanion.prayercompanionandroid.data.remote.dto.DayPrayerStatusResponse
-import com.prayercompanion.prayercompanionandroid.data.remote.mappers.responsesToDayPrayerInfo
 import com.prayercompanion.prayercompanionandroid.data.remote.mappers.responsesToPrayerInfoEntity
 import com.prayercompanion.prayercompanionandroid.data.utils.Consts
 import com.prayercompanion.prayercompanionandroid.domain.models.Address
@@ -18,11 +16,12 @@ import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
-import com.prayercompanion.prayercompanionandroid.domain.usecases.IsConnectedToInternet
-import com.prayercompanion.prayercompanionandroid.failure
-import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
+import com.prayercompanion.prayercompanionandroid.domain.utils.exceptions.LocationMissingException
+import com.prayercompanion.prayercompanionandroid.domain.utils.exceptions.UnknownException
 import com.skydoves.whatif.whatIfNotNull
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -32,79 +31,107 @@ import javax.inject.Inject
 
 class PrayersRepositoryImpl @Inject constructor(
     private val prayerCompanionApi: PrayerCompanionApi,
-    private val dao: PrayersInfoDao,
-    private val isConnectedToInternet: IsConnectedToInternet
+    private val dao: PrayersInfoDao
 ) : PrayersRepository {
 
-    override suspend fun getDayPrayers(
-        location: Location?,
-        address: Address?,
-        dayDate: LocalDate,
-        forceUpdate: Boolean
-    ): Result<DayPrayersInfo> {
+    override suspend fun loadAndSaveMonthlyPrayers(
+        yearMonth: YearMonth,
+        location: Location,
+        address: Address?
+    ): Result<Unit> {
         return try {
-            if (forceUpdate.not() || location == null || isConnectedToInternet.call().not()) {
-                val savedPrayers = dao.getPrayers(
-                    startDateTime = dayDate.atStartOfDay(),
-                    endDateTime = dayDate.atTime(LocalTime.MAX)
-                )
-
-                if (savedPrayers.isNotEmpty()) {
-                    val dayPrayersInfo = savedPrayers.toDayPrayerInfo()
-                    return Result.success(dayPrayersInfo)
-                }
-            }
-
-            if (location == null) {
-                return Result.failure("Failed to get day prayers: Location is null")
-            }
-
-            val yearMonth = YearMonth.from(dayDate)
-            val (prayersResponse, statusesResponse) = loadMonthPrayers(yearMonth, location, address)
-
-            val dayPrayer = dayPrayerResponseAndStatusResponseToDayPrayerInfo(
-                dayDate,
-                prayersResponse,
-                statusesResponse
+            val prayersResponse = prayerCompanionApi.getPrayers(
+                timeZone = TimeZone.getDefault().id,
+                latitude = location.latitude.toString(),
+                longitude = location.longitude.toString(),
+                countryCode = address?.countryCode,
+                cityName = address?.locality,
+                monthOfYear = Consts.MonthYearFormatter.format(yearMonth)
             )
 
-            Result.success(dayPrayer)
+            val startOfMonth = yearMonth.atDay(1)
+            val endOfMonth = yearMonth.atEndOfMonth()
+
+            val statusesResponse = prayerCompanionApi.getPrayerStatuses(
+                startDate = Consts.DateFormatter.format(startOfMonth),
+                endDate = Consts.DateFormatter.format(endOfMonth)
+            )
+            insertMonthPrayers(startOfMonth, endOfMonth, prayersResponse, statusesResponse)
+
+            Result.success(Unit)
         } catch (e: Exception) {
-            e.printStackTraceInDebug()
             Result.failure(e)
         }
     }
 
-    override suspend fun getPrayer(
-        prayer: Prayer,
-        date: LocalDate,
+    override suspend fun getDayPrayersFromDB(
+        dayDate: LocalDate
+    ): DayPrayersInfo? {
+        val savedPrayers = dao.getPrayers(
+            startDateTime = dayDate.atStartOfDay(),
+            endDateTime = dayDate.atTime(LocalTime.MAX)
+        )
+
+        return savedPrayers.takeIf { it.isNotEmpty() }?.toDayPrayerInfo()
+    }
+
+    override suspend fun getDayPrayers(
         location: Location?,
-        address: Address?
-    ): Result<PrayerInfo> {
-        val prayerInfo = dao.getPrayer(prayer, date)?.toPrayerInfo()
-        return if (prayerInfo != null) {
-            Result.success(prayerInfo)
-        } else {
+        address: Address?,
+        dayDate: LocalDate
+    ): Result<DayPrayersInfo> {
+        getDayPrayersFromDB(dayDate)
+            .whatIfNotNull {
+                return Result.success(it)
+            }
+
+        // if we couldn't get from the day prayers from DB,
+        // then we load the month from backend and then query our local DB again
+
+        val yearMonth = YearMonth.from(dayDate)
+
+        if (location == null) {
+            return Result.failure(LocationMissingException)
+        }
+
+        loadAndSaveMonthlyPrayers(yearMonth, location, address)
+            .onFailure {
+                return Result.failure(it)
+            }
+
+        getDayPrayersFromDB(dayDate)
+            .whatIfNotNull {
+                return Result.success(it)
+            }
+
+        return Result.failure(UnknownException)
+    }
+
+    override suspend fun getDayPrayersFlow(
+        location: Location?,
+        address: Address?,
+        dayDate: LocalDate
+    ): Flow<Result<List<PrayerInfoEntity>>> {
+
+        val savedDayPrayers = getDayPrayersFromDB(dayDate)
+
+        if (savedDayPrayers == null) {
+            // if we couldn't get from the day prayers from DB,
+            // then we load the month from backend and then query our local DB again
+
+            val yearMonth = YearMonth.from(dayDate)
 
             if (location == null) {
-                return Result.failure("Failed to get prayer: Location is null")
+                return flowOf(Result.failure(LocationMissingException))
             }
 
-            val yearMonth = YearMonth.from(date)
-            val (prayersResponse, statusesResponse) = loadMonthPrayers(yearMonth, location, address)
-
-            try {
-                val dayPrayers = dayPrayerResponseAndStatusResponseToDayPrayerInfo(
-                    date,
-                    prayersResponse,
-                    statusesResponse
-                )
-
-                Result.success(dayPrayers.get(prayer))
-            } catch (e: Exception) {
-                Result.failure("Prayer Doesn't Exist")
-            }
+            loadAndSaveMonthlyPrayers(yearMonth, location, address)
+                .onFailure {
+                    return flowOf(Result.failure(it))
+                }
         }
+
+        return getDayPrayersFromDBFlow(dayDate)
     }
 
     override suspend fun updatePrayerStatus(
@@ -141,53 +168,22 @@ class PrayersRepositoryImpl @Inject constructor(
         return dao.getPrayersStatusesByDate(startDateTime, endDateTime)
     }
 
-    private suspend fun loadMonthPrayers(
-        yearMonth: YearMonth,
-        location: Location,
-        address: Address?
-    ): Pair<List<DayPrayerResponse>, List<DayPrayerStatusResponse>> {
-        val startOfMonth = yearMonth.atDay(1)
-        val endOfMonth = yearMonth.atEndOfMonth()
-
-        val prayersResponse = prayerCompanionApi.getPrayers(
-            timeZone = TimeZone.getDefault().id,
-            latitude = location.latitude.toString(),
-            longitude = location.longitude.toString(),
-            countryCode = address?.countryCode,
-            cityName = address?.locality,
-            monthOfYear = Consts.MonthYearFormatter.format(yearMonth)
+    private fun getDayPrayersFromDBFlow(
+        dayDate: LocalDate
+    ): Flow<Result<List<PrayerInfoEntity>>> {
+        val savedPrayers = dao.getPrayersFlow(
+            startDateTime = dayDate.atStartOfDay(),
+            endDateTime = dayDate.atTime(LocalTime.MAX)
         )
 
-        val statusesResponse = prayerCompanionApi.getPrayerStatuses(
-            startDate = Consts.DateFormatter.format(startOfMonth),
-            endDate = Consts.DateFormatter.format(endOfMonth)
-        )
-
-        insertMonthPrayers(startOfMonth, endOfMonth, prayersResponse, statusesResponse)
-
-        return prayersResponse to statusesResponse
-    }
-
-    private fun dayPrayerResponseAndStatusResponseToDayPrayerInfo(
-        dayDate: LocalDate,
-        prayersResponse: List<DayPrayerResponse>,
-        statusesResponse: List<DayPrayerStatusResponse>
-    ): DayPrayersInfo {
-
-        prayersResponse
-            .find { it.date == dayDate.format(Consts.DateFormatter) }
-            .whatIfNotNull { dayPrayers ->
-
-                val dayStatus = statusesResponse
-                    .find { it.date == dayDate.format(Consts.DateFormatter) }
-
-                return responsesToDayPrayerInfo(dayPrayers, dayStatus)
+        return savedPrayers.map {
+            val info = it.takeIf { it.isNotEmpty() }
+            if (info == null) {
+                Result.failure(UnknownException)
+            } else {
+                Result.success(info)
             }
-
-        throw Exception(
-            "Response from BE doesn't have the required date ${dayDate.format(Consts.MonthYearFormatter)}"
-        )
-
+        }
     }
 
     private fun insertMonthPrayers(
@@ -196,13 +192,6 @@ class PrayersRepositoryImpl @Inject constructor(
         prayersResponse: List<DayPrayerResponse>,
         statusesResponse: List<DayPrayerStatusResponse>
     ) {
-        var currentDate = startOfMonth
-        val dates = mutableListOf<LocalDate>()
-        while (!currentDate.isAfter(endOfMonth)) {
-            dates.add(currentDate)
-            currentDate = currentDate.plusDays(1)
-        }
-
         val prayersWithStatuses: List<PrayerInfoEntity> = prayersResponse.flatMap { dayPrayers ->
             val dayStatuses = statusesResponse.find { status -> status.date == dayPrayers.date }
             responsesToPrayerInfoEntity(dayPrayers, dayStatuses)
@@ -224,7 +213,8 @@ class PrayersRepositoryImpl @Inject constructor(
             PrayerStatus.Late -> "late"
             PrayerStatus.Qadaa -> "missed"
             PrayerStatus.Missed -> "qadaa"
-            else -> "none"
+            PrayerStatus.None -> "none"
+            null -> "none"
         }
     }
 

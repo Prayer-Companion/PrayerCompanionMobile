@@ -9,5 +9,6 @@ sealed class SignInEvents {
         val task: Task<GoogleSignInAccount>
     ) : SignInEvents()
 
-    object OnSignInAnonymously : SignInEvents()
+    data object OnSignInWithGoogleClicked : SignInEvents()
+    data object OnSignInAnonymously : SignInEvents()
 }

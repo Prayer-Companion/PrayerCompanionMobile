@@ -21,6 +21,9 @@ interface PrayersInfoDao {
     @Query("SELECT * FROM PrayersInfo WHERE dateTime >= :startDateTime and dateTime <= :endDateTime")
     fun getPrayers(startDateTime: LocalDateTime, endDateTime: LocalDateTime): List<PrayerInfoEntity>
 
+    @Query("SELECT * FROM PrayersInfo WHERE dateTime >= :startDateTime and dateTime <= :endDateTime")
+    fun getPrayersFlow(startDateTime: LocalDateTime, endDateTime: LocalDateTime): Flow<List<PrayerInfoEntity>>
+
     @Query("SELECT * FROM PrayersInfo WHERE prayer = :prayer AND dateTime >= :startOfDay and dateTime <= :endOfDay")
     fun getPrayer(
         prayer: Prayer,

@@ -9,6 +9,8 @@ import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.prayercompanionandroid.data.preferences.AppPreferences
 import com.prayercompanion.prayercompanionandroid.data.preferences.DataStoresRepo
 import com.prayercompanion.prayercompanionandroid.domain.utils.PermissionsManager
+import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.TrackedButtons
+import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.Tracker
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
@@ -22,7 +24,8 @@ import javax.inject.Inject
 @HiltViewModel
 class PermissionsRequestViewModel @Inject constructor(
     private val permissionsManager: PermissionsManager,
-    private val dataStoresRepo: DataStoresRepo
+    private val dataStoresRepo: DataStoresRepo,
+    private val tracker: Tracker
 ) : ViewModel() {
 
     private val _uiEvents = Channel<UiEvent>()
@@ -68,7 +71,9 @@ class PermissionsRequestViewModel @Inject constructor(
             when (currentState) {
                 State.Location -> {
                     //if either approximate or precise permission were granted then we can proceed
-                    if (permissions.any { it.value }) {
+                    val granted = permissions.any { it.value }
+                    tracker.trackLocationPermissionResult(granted)
+                    if (granted) {
                         if (permissionsManager.isPushNotificationAllowed) {
                             goToHomeScreen()
                         } else {
@@ -88,7 +93,9 @@ class PermissionsRequestViewModel @Inject constructor(
                 }
 
                 State.Notification -> {
-                    if (permissions.all { it.value }) {
+                    val granted = permissions.all { it.value }
+                    tracker.trackNotificationPermissionResult(granted)
+                    if (granted) {
                         goToHomeScreen()
                     } else {
                         uiState = uiState
@@ -107,6 +114,7 @@ class PermissionsRequestViewModel @Inject constructor(
     }
 
     private fun onSkipNotificationPermission() {
+        tracker.trackButtonClicked(TrackedButtons.NOTIFICATION_PERMISSION_SKIP)
         goToHomeScreen()
         viewModelScope.launch {
             dataStoresRepo.appPreferencesDataStore.updateData {

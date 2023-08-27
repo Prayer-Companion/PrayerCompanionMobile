@@ -9,8 +9,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.tasks.Task
 import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.prayercompanionandroid.domain.usecases.AccountSignIn
+import com.prayercompanion.prayercompanionandroid.domain.utils.AuthenticationHelper
+import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.TrackedButtons
+import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.Tracker
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
-import com.prayercompanion.prayercompanionandroid.presentation.utils.AuthenticationHelper
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
 import com.prayercompanion.prayercompanionandroid.presentation.utils.toUiText
@@ -26,7 +28,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SignInViewModel @Inject constructor(
     private val authenticationHelper: AuthenticationHelper,
-    private val accountSignIn: AccountSignIn
+    private val accountSignIn: AccountSignIn,
+    private val tracker: Tracker
 ) : ViewModel() {
 
     private val _uiEventsChannel = Channel<UiEvent>()
@@ -40,6 +43,8 @@ class SignInViewModel @Inject constructor(
                 event.result,
                 event.task
             )
+
+            is SignInEvents.OnSignInWithGoogleClicked -> onSignInWithGoogleClicked()
 
             is SignInEvents.OnSignInAnonymously -> onSignInAnonymouslyClicked()
         }
@@ -66,6 +71,11 @@ class SignInViewModel @Inject constructor(
         }
     }
 
+    private fun onSignInWithGoogleClicked() {
+        tracker.trackButtonClicked(TrackedButtons.GOOGLE_SIGN_IN)
+        sendEvent(UiEvent.LaunchSignInWithGoogle)
+    }
+
     private fun onSignInAnonymouslyClicked() {
         authenticationHelper.signInAnonymously(
             onSuccess = ::onSignInSuccess,
@@ -75,6 +85,7 @@ class SignInViewModel @Inject constructor(
 
     private fun onSignInSuccess() {
         isLoading = false
+        tracker.trackLogin()
         viewModelScope.launch(Dispatchers.IO) {
             val signInResult = accountSignIn.call()
             signInResult.onSuccess {

@@ -3,7 +3,7 @@
     <string name="app_name">Prayer Companion</string>
 
     <string name="fajr">Fajr</string>
-    <string name="duha">Sunrise</string>
+    <string name="sunrise">Sunrise</string>
     <string name="dhuhr">Dhuhr</string>
     <string name="asr">Asr</string>
     <string name="maghrib">Maghrib</string>
@@ -17,12 +17,23 @@
     <string name="quran_tab">Quran</string>
     <string name="settings_tab">Settings</string>
 
-    <string name="missed_prayer_status">Missed</string>
-    <string name="on_time_prayer_status">On Time</string>
-    <string name="after_half_time_prayer_status">After half time</string>
-    <string name="qadaa_prayer_status">Qadaa</string>
-    <string name="late_prayer_status">Late</string>
-    <string name="jamaah_prayer_status">In The Mosque</string>
+    <!-- Prayer Statuses -->
+    <string name="prayerStatusDialog_title">Update Status</string>
+    <string name="prayerStatusDialog_explanation">More info on\nhow was Isha periods calculated</string>
+
+    <string name="prayerStatus_in_the_mosque">In The Mosque</string>
+    <string name="prayerStatus_onTime">On Time</string>
+
+    <string name="prayerStatus_late1">After half time</string>
+    <string name="prayerStatus_late2">Late</string>
+    <string name="prayerStatus_isha_late1">After First Third of the night</string>
+    <string name="prayerStatus_isha_late2">After midnight</string>
+
+    <string name="prayerStatus_missed">Missed</string>
+    <string name="prayerStatus_qadaa">Qadaa</string>
+    <string name="prayerStatus_none">None</string>
+
+
     <string name="or">Or</string>
     <string name="continue_with_google">Continue with Google</string>
     <string name="continue_as_guest">Continue as a Guest</string>
@@ -40,7 +51,7 @@
 
     <string name="prayer_reminders_channel_name">Prayers Reminders</string>
     <string name="prayer_reminders_channel_description">Daily Prayers Reminders</string> <!-- change to a more useful description-->
-    <string name="prayer_notification_title">It\'s time for the %1$s prayer</string>
+    <string name="prayer_notification_title">It\'s time for the %1$s prayer %2$s</string>
 
     <string name="sensor_accuracy_high">mobile sensor accuracy is high</string>
     <string name="sensor_accuracy_medium">mobile sensor accuracy is medium</string>
@@ -76,13 +87,26 @@
     <string name="settings_items_language_options_arabic">العربية</string>
     <string name="settings_items_language_options_english">English</string>
     <string name="settings_items_preferences">Preferences</string>
-    <string name="settings_items_preferences_pauseMedia">Pause background media on Athan time</string>
+    <string name="settings_items_preferences_pauseMedia">Pause background multimedia on Athan time</string>
+    <string name="settings_items_feedback_title">Share your feedback</string>
+    <string name="settings_items_feedback_prompt">Feature request,\n bug report,\n or just your opinion…\n We would love to hear from you!</string>
     <string name="settings_items_signOut">Sign out</string>
 
     <!--  Errors  -->
     <string name="error_something_went_wrong">Sorry Something went wrong</string>
     <string name="current_prayer">Current Prayer</string>
     <string name="skip">Skip</string>
-    <string name="last_7_days_status_overview">Last 7 days</string>
+
+    <string name="status_overview">Last 3 days</string>
+
+    <!-- Notifications -->
+    <string name="notification_action_prayedNow">Prayed Now</string>
+    <string name="notification_action_response_statusUpdate">%1$s Prayer status was recorded: %2$s</string>
+
+    <!-- Feedback dialog -->
+    <string name="feedbackDialog_title">Share your feedback</string>
+    <string name="feedbackDialog_messageHint">We would love to hear from you!</string>
+    <string name="feedbackDialog_action_send">Send</string>
+    <string name="feedbackDialog_action_cancel">Cancel</string>
 
 </resources>

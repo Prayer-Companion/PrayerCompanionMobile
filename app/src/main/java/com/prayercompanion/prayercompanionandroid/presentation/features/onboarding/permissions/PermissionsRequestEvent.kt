@@ -2,6 +2,6 @@ package com.prayercompanion.prayercompanionandroid.presentation.features.onboard
 
 sealed class PermissionsRequestEvent {
     data class OnPermissionResult(val permissions: Map<String, Boolean>) : PermissionsRequestEvent()
-    object OnSkipNotificationPermission : PermissionsRequestEvent()
-    object OnCTAClicked : PermissionsRequestEvent()
+    data object OnSkipNotificationPermission : PermissionsRequestEvent()
+    data object OnCTAClicked : PermissionsRequestEvent()
 }

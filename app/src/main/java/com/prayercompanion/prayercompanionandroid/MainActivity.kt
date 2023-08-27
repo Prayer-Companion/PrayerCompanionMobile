@@ -40,6 +40,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.prayercompanion.prayercompanionandroid.domain.models.quran.PrayerQuranReadingSections
+import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.Tracker
 import com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.HomeScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.permissions.PermissionsRequestScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.permissions.PermissionsRequestViewModel
@@ -55,6 +56,7 @@ import com.prayercompanion.prayercompanionandroid.presentation.features.settings
 import com.prayercompanion.prayercompanionandroid.presentation.features.settings.SettingsScreenViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
+import com.prayercompanion.prayercompanionandroid.presentation.utils.FeedbackUtils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -65,6 +67,12 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var googleSignInClient: GoogleSignInClient
+
+    @Inject
+    lateinit var feedbackUtils: FeedbackUtils
+
+    @Inject
+    lateinit var tracker: Tracker
 
     @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,6 +92,7 @@ class MainActivity : AppCompatActivity() {
                 navController.addOnDestinationChangedListener { _, destination, _ ->
                     val route = Route.fromStringRoute(destination.route)
                     shouldShowBottomNavigationBar = route.bottomNavBar
+                    tracker.trackScreenView(route, this::class.simpleName.toString())
                 }
 
                 Scaffold(
@@ -131,7 +140,10 @@ class MainActivity : AppCompatActivity() {
                             )
                         }
                         composable(Route.Home.routeName) {
-                            HomeScreen(scaffoldState = scaffoldState)
+                            HomeScreen(
+                                scaffoldState = scaffoldState,
+                                activity = this@MainActivity
+                            )
                         }
                         composable(Route.Qibla.routeName) {
                             val viewModel: QiblaViewModel = hiltViewModel()
@@ -170,9 +182,12 @@ class MainActivity : AppCompatActivity() {
                         composable(Route.Settings.routeName) {
                             val viewModel: SettingsScreenViewModel = hiltViewModel()
                             SettingsScreen(
-                                viewModel.state,
-                                viewModel::onEvent
-                            )
+                                state = viewModel.state,
+                                onEvent = viewModel::onEvent,
+                                uiEvents = viewModel.uiEvents
+                            ) {
+                                feedbackUtils.showFeedbackDialog()
+                            }
                         }
                     }
                 }
@@ -219,7 +234,9 @@ class MainActivity : AppCompatActivity() {
                             // Restore state when re-selecting a previously selected item
                             restoreState = true
                         }
-                    }
+                    },
+                    selectedContentColor = MaterialTheme.colors.onPrimary,
+                    unselectedContentColor = MaterialTheme.colors.secondary
                 )
             }
         }
