@@ -58,14 +58,15 @@ android {
     }
     buildTypes {
         getByName("debug") {
+            signingConfig = android.signingConfigs.getByName("debug")
+
             isDebuggable = true
             isMinifyEnabled = false
+
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
             manifestPlaceholders["app_icon"] = "@mipmap/ic_launcher_debug"
             manifestPlaceholders["app_icon_round"] = "@mipmap/ic_launcher_debug_round"
-
-            signingConfig = android.signingConfigs.getByName("debug")
         }
         getByName("release") {
             signingConfig = signingConfigs.getByName("release")
@@ -158,7 +159,6 @@ dependencies {
     val workManagerVersion = "2.8.1"
     implementation("androidx.work:work-runtime-ktx:$workManagerVersion")
     implementation("androidx.hilt:hilt-work:1.0.0")
-    implementation("org.simpleframework:simple-xml:2.7.1")
 
     implementation("androidx.compose.material:material-icons-extended:$composeUiVersion")
 

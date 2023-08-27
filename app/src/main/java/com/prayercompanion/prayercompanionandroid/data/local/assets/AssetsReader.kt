@@ -1,10 +1,9 @@
 package com.prayercompanion.prayercompanionandroid.data.local.assets
 
 import android.content.Context
-import com.prayercompanion.prayercompanionandroid.data.local.assets.dto.QuranDTO
+import com.prayercompanion.prayercompanionandroid.data.local.assets.dto.quran.QuranDTO
+import com.prayercompanion.prayercompanionandroid.fromJson
 import dagger.hilt.android.qualifiers.ApplicationContext
-import org.simpleframework.xml.core.Persister
-import java.io.InputStream
 import javax.inject.Inject
 
 class AssetsReader @Inject constructor(
@@ -13,11 +12,13 @@ class AssetsReader @Inject constructor(
 ) {
 
     val quran: Result<QuranDTO> by lazy {
-        val i = readAssetFile("quran_data.xml")
+        val i = context.assets.open("quran_data.json")
         i.use { inputStream ->
             try {
-                val xmlString = inputStream.bufferedReader().use { it.readText() }
-                val quranDTO = parseXml(QuranDTO::class.java, xmlString)
+                val jsonQuran = inputStream.bufferedReader().use { it.readText() }
+                val quranDTO = fromJson<QuranDTO>(jsonQuran)
+                    ?: return@use Result.failure(Exception("Parsing Quran failed"))
+
                 val chaptersWithoutFatiha = quranDTO.chapters.toMutableList().also {
                     it.removeFirst()
                 }
@@ -28,14 +29,5 @@ class AssetsReader @Inject constructor(
                 Result.failure(e)
             }
         }
-    }
-
-    private fun <T> parseXml(type: Class<T>, xmlString: String): T {
-        val serializer = Persister()
-        return serializer.read(type, xmlString)
-    }
-
-    private fun readAssetFile(fileName: String): InputStream {
-        return context.assets.open(fileName)
     }
 }

@@ -1,6 +1,6 @@
 package com.prayercompanion.prayercompanionandroid.data.local.assets.mappers
 
-import com.prayercompanion.prayercompanionandroid.data.local.assets.dto.QuranDTO
+import com.prayercompanion.prayercompanionandroid.data.local.assets.dto.quran.QuranDTO
 import com.prayercompanion.prayercompanionandroid.domain.models.quran.QuranChapter
 import com.prayercompanion.prayercompanionandroid.domain.models.quran.QuranVerse
 
@@ -10,7 +10,7 @@ fun QuranDTO.toQuranChapters(): List<QuranChapter> {
             QuranVerse(
                 index = verseDTO.index,
                 text = verseDTO.text,
-                hasBismillah = verseDTO.bismillah.isNotBlank()
+                hasBismillah = verseDTO.bismillah.isNullOrBlank().not()
             )
         }
         QuranChapter(
