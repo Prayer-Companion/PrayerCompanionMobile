@@ -17,7 +17,6 @@ import com.prayercompanion.prayercompanionandroid.data.preferences.DataStoresRep
 import com.prayercompanion.prayercompanionandroid.domain.models.Address
 import com.prayercompanion.prayercompanionandroid.domain.models.Location
 import com.prayercompanion.prayercompanionandroid.domain.models.toAppLocation
-import com.skydoves.whatif.whatIfNotNull
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.firstOrNull
 import logcat.logcat
@@ -60,7 +59,7 @@ class AppLocationManagerImpl @Inject constructor(
                         continuation.resume(null)
                     }
                 }
-        }.whatIfNotNull { location ->
+        }?.also { location ->
             dataStoresRepo.appPreferencesDataStore.updateData {
                 it.copy(location = location)
             }

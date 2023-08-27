@@ -61,26 +61,34 @@ android {
             signingConfig = android.signingConfigs.getByName("debug")
 
             isDebuggable = true
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
 
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
             manifestPlaceholders["app_icon"] = "@mipmap/ic_launcher_debug"
             manifestPlaceholders["app_icon_round"] = "@mipmap/ic_launcher_debug_round"
+
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+            testProguardFiles("test-proguard-rules.pro")
         }
         getByName("release") {
             signingConfig = signingConfigs.getByName("release")
 
             isDebuggable = false
-            // TODO currently proguard is creating a lot of issues
-            // lets revisit and make sure to set correct rules before enabling it again
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+
             manifestPlaceholders["app_icon"] = "@mipmap/ic_launcher"
             manifestPlaceholders["app_icon_round"] = "@mipmap/ic_launcher_round"
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            testProguardFiles("test-proguard-rules.pro")
         }
     }
     compileOptions {
@@ -123,7 +131,6 @@ dependencies {
     implementation("androidx.compose.material:material:$composeUiVersion")
     implementation("androidx.navigation:navigation-compose:2.7.0-beta01")
     implementation("com.google.android.gms:play-services-location:21.0.1")
-    implementation("com.github.skydoves:whatif:1.1.2")
 
     //  Hilt
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0-alpha01")

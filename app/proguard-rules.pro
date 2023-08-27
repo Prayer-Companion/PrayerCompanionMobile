@@ -20,32 +20,19 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--dontwarn org.xmlpull.v1.**
--dontwarn org.kxml2.io.**
--dontwarn android.content.res.**
+
+# Keeping Serializable data models
+-keep class com.prayercompanion.prayercompanionandroid.data.local.db.** { *; }
+-keep class com.prayercompanion.prayercompanionandroid.data.remote.dto.** { *; }
+-keep class com.prayercompanion.prayercompanionandroid.data.local.assets.dto.** { *; }
+-keep class com.prayercompanion.prayercompanionandroid.domain.models.** { *; }
+
 -dontwarn org.slf4j.impl.StaticLoggerBinder
 
--keep class org.xmlpull.** { *; }
--keepclassmembers class org.xmlpull.** { *; }
-
--keep class com.google.firebase.** { *; }
--keep class com.google.android.gms.** { *; }
--dontwarn com.google.firebase.**
--dontwarn com.google.android.gms.**
--keep,allowobfuscation,allowshrinking interface retrofit2.Call
--keep,allowobfuscation,allowshrinking class retrofit2.Response
--keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
--dontwarn org.jetbrains.annotations.**
--keep class kotlin.Metadata { *; }
--keepclassmembers class my.models.package.** {
-  <init>(...);
-  <fields>;
-}
-
--keepattributes *Annotation*
--keepclassmembers,allowobfuscation class * {
-  @com.google.gson.annotations.SerializedName <fields>;
-  @javax.inject.* *;
-  @dagger.* *;
-  <init>();
-}
+-dontwarn java.lang.ClassValue
+-dontwarn java.lang.instrument.UnmodifiableClassException
+-dontwarn okhttp3.internal.Util
+-dontwarn org.junit.jupiter.api.extension.ExtensionContext
+-dontwarn org.junit.jupiter.api.extension.ParameterContext
+-dontwarn org.junit.jupiter.api.extension.ParameterResolver
+-dontwarn org.junit.jupiter.api.extension.TestInstancePostProcessor

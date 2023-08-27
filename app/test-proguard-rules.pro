@@ -1,0 +1,7 @@
+-dontwarn java.lang.ClassValue
+-dontwarn java.lang.instrument.UnmodifiableClassException
+-dontwarn okhttp3.internal.Util
+-dontwarn org.junit.jupiter.api.extension.ExtensionContext
+-dontwarn org.junit.jupiter.api.extension.ParameterContext
+-dontwarn org.junit.jupiter.api.extension.ParameterResolver
+-dontwarn org.junit.jupiter.api.extension.TestInstancePostProcessor

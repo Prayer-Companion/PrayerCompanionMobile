@@ -18,7 +18,6 @@ import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
 import com.prayercompanion.prayercompanionandroid.domain.utils.exceptions.LocationMissingException
 import com.prayercompanion.prayercompanionandroid.domain.utils.exceptions.UnknownException
-import com.skydoves.whatif.whatIfNotNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -81,9 +80,7 @@ class PrayersRepositoryImpl @Inject constructor(
         dayDate: LocalDate
     ): Result<DayPrayersInfo> {
         getDayPrayersFromDB(dayDate)
-            .whatIfNotNull {
-                return Result.success(it)
-            }
+            ?.let { return Result.success(it) }
 
         // if we couldn't get from the day prayers from DB,
         // then we load the month from backend and then query our local DB again
@@ -100,9 +97,7 @@ class PrayersRepositoryImpl @Inject constructor(
             }
 
         getDayPrayersFromDB(dayDate)
-            .whatIfNotNull {
-                return Result.success(it)
-            }
+            ?.let { return Result.success(it) }
 
         return Result.failure(UnknownException)
     }
