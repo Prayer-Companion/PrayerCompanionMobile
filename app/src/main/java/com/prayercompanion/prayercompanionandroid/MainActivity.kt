@@ -177,7 +177,9 @@ class MainActivity : AppCompatActivity() {
                             val sections = fromJson(sectionsJson)
                                 ?: PrayerQuranReadingSections.EMPTY
 
-                            FullPrayerQuranSections(sections)
+                            FullPrayerQuranSections(sections) {
+                                navController.popBackStack()
+                            }
                         }
                         composable(Route.Settings.routeName) {
                             val viewModel: SettingsScreenViewModel = hiltViewModel()

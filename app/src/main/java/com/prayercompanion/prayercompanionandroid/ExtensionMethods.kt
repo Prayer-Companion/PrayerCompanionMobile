@@ -4,6 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.widget.Toast
+import androidx.compose.runtime.Stable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.navigation.NavController
 import androidx.navigation.NavOptionsBuilder
 import com.google.gson.Gson
@@ -28,11 +34,13 @@ fun Throwable.printStackTraceInDebug() {
 }
 
 @Suppress("DEPRECATION", "UNCHECKED_CAST")
-fun <T : Serializable?> Intent.getSerializable(key: String, m_class: Class<T>): T? {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-        this.getSerializableExtra(key, m_class)
-    else
-        this.getSerializableExtra(key) as T?
+fun <T : Serializable?> Intent.getSerializable(key: String, mClass: Class<T>): T? {
+    return runCatching {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            this.getSerializableExtra(key, mClass)
+        else
+            this.getSerializableExtra(key) as T?
+    }.getOrNull()
 }
 
 fun <T> Result.Companion.failure(message: String): Result<T> {
@@ -49,4 +57,12 @@ inline fun <reified T> fromJson(str: String): T? {
 
 inline fun <reified T> toJson(t: T): String {
     return Gson().toJson(t)
+}
+
+@Stable
+fun Modifier.autoMirror(): Modifier = composed {
+    if (LocalLayoutDirection.current == LayoutDirection.Rtl)
+        this.scale(scaleX = -1f, scaleY = 1f)
+    else
+        this
 }
