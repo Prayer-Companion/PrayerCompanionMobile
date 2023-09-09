@@ -112,6 +112,7 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     fun onStart() {
+        state = state.copy(selectedDate = LocalDate.now())
         loadDailyPrayersCombo()
     }
 

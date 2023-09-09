@@ -1,56 +1,43 @@
 package com.prayercompanion.prayercompanionandroid.data.local.db.daos
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Transaction
+import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToList
+import com.prayercompanion.prayercompanionandroid.PrayerCompanionDatabase
 import com.prayercompanion.prayercompanionandroid.atEndOfDay
+import com.prayercompanion.prayercompanionandroid.data.local.db.PrayerCompanionConverters
 import com.prayercompanion.prayercompanionandroid.data.local.db.entities.PrayerInfoEntity
 import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 import java.time.LocalDateTime
+import javax.inject.Inject
 
-@Dao
 interface PrayersInfoDao {
-
-    @Insert
     fun insertAll(prayersInfo: List<PrayerInfoEntity>)
-
-    @Query("SELECT * FROM PrayersInfo WHERE dateTime >= :startDateTime and dateTime <= :endDateTime")
     fun getPrayers(startDateTime: LocalDateTime, endDateTime: LocalDateTime): List<PrayerInfoEntity>
-
-    @Query("SELECT * FROM PrayersInfo WHERE dateTime >= :startDateTime and dateTime <= :endDateTime")
-    fun getPrayersFlow(startDateTime: LocalDateTime, endDateTime: LocalDateTime): Flow<List<PrayerInfoEntity>>
-
-    @Query("SELECT * FROM PrayersInfo WHERE prayer = :prayer AND dateTime >= :startOfDay and dateTime <= :endOfDay")
+    fun getPrayersFlow(
+        startDateTime: LocalDateTime,
+        endDateTime: LocalDateTime
+    ): Flow<List<PrayerInfoEntity>>
     fun getPrayer(
         prayer: Prayer,
         startOfDay: LocalDateTime,
         endOfDay: LocalDateTime
     ): PrayerInfoEntity?
-
-    @Query("SELECT status FROM PrayersInfo WHERE dateTime >= :startDateTime and dateTime <= :endDateTime AND prayer != :excludedPrayer")
     fun getPrayersStatusesByDate(
         startDateTime: LocalDateTime,
         endDateTime: LocalDateTime,
         excludedPrayer: Prayer = Prayer.DUHA
     ): Flow<List<PrayerStatus?>>
-
-    @Query("UPDATE PrayersInfo SET status = :status WHERE dateTime >= :startOfDay and dateTime <= :endOfDay AND prayer = :prayer")
     fun updatePrayerStatus(
         prayer: Prayer,
         startOfDay: LocalDateTime,
         endOfDay: LocalDateTime,
         status: PrayerStatus
     )
-
-    @Query("Delete FROM PrayersInfo where dateTime >= :startDateTime and dateTime <= :endDateTime")
     fun delete(startDateTime: LocalDateTime, endDateTime: LocalDateTime)
-
-
-    @Transaction
     fun deleteOldAndInsertNewTransaction(
         startDateTime: LocalDateTime,
         endDateTime: LocalDateTime,
@@ -59,21 +46,123 @@ interface PrayersInfoDao {
         delete(startDateTime, endDateTime)
         insertAll(prayersInfo)
     }
-
-    fun getPrayer(prayer: Prayer, date: LocalDate): PrayerInfoEntity? {
-        return getPrayer(
-            prayer = prayer,
-            startOfDay = date.atStartOfDay(),
-            endOfDay = date.atEndOfDay()
-        )
-    }
-
     fun updatePrayerStatus(prayer: Prayer, date: LocalDate, status: PrayerStatus) {
         return updatePrayerStatus(
             prayer = prayer,
             startOfDay = date.atStartOfDay(),
             endOfDay = date.atEndOfDay(),
             status = status
+        )
+    }
+}
+
+class PrayersInfoDaoImpl @Inject constructor(
+    db: PrayerCompanionDatabase
+) : PrayersInfoDao {
+
+    private val queries = db.prayersInfoQueries
+    private val converters = PrayerCompanionConverters()
+
+    override fun insertAll(prayersInfo: List<PrayerInfoEntity>) {
+        queries.transaction {
+            afterRollback { throw Exception("Failed to inserting prayers info ") }
+            prayersInfo.forEach {
+                queries.insert(
+                    id = null,
+                    prayer = it.prayer.name,
+                    dateTime = converters.localDateToString(it.dateTime),
+                    status = it.status.name
+                )
+            }
+        }
+    }
+
+    override fun getPrayers(
+        startDateTime: LocalDateTime,
+        endDateTime: LocalDateTime
+    ): List<PrayerInfoEntity> {
+        return queries.getPrayers(
+            startDateTime = converters.localDateToString(startDateTime),
+            endDateTime = converters.localDateToString(endDateTime)
+        ).executeAsList().map {
+            PrayerInfoEntity(
+                id = it.id.toInt(),
+                prayer = Prayer.valueOf(it.prayer),
+                dateTime = converters.stringToLocalDate(it.dateTime),
+                status = it.status?.let { status -> PrayerStatus.valueOf(status) }
+                    ?: PrayerStatus.None
+            )
+        }
+    }
+
+    override fun getPrayersFlow(
+        startDateTime: LocalDateTime,
+        endDateTime: LocalDateTime
+    ): Flow<List<PrayerInfoEntity>> {
+        return queries.getPrayers(
+            startDateTime = converters.localDateToString(startDateTime),
+            endDateTime = converters.localDateToString(endDateTime)
+        ) { id, prayer, dateTime, status ->
+            PrayerInfoEntity(
+                id = id.toInt(),
+                prayer = Prayer.valueOf(prayer),
+                dateTime = converters.stringToLocalDate(dateTime),
+                status = status?.let { PrayerStatus.valueOf(it) } ?: PrayerStatus.None
+            )
+        }.asFlow().mapToList(Dispatchers.IO)
+    }
+
+    override fun getPrayer(
+        prayer: Prayer,
+        startOfDay: LocalDateTime,
+        endOfDay: LocalDateTime
+    ): PrayerInfoEntity? {
+        return queries.getPrayer(
+            prayer = prayer.name,
+            startOfDay = converters.localDateToString(startOfDay),
+            endOfDay = converters.localDateToString(endOfDay)
+        ).executeAsOneOrNull()?.let {
+            PrayerInfoEntity(
+                id = it.id.toInt(),
+                prayer = Prayer.valueOf(it.prayer),
+                dateTime = converters.stringToLocalDate(it.dateTime),
+                status = it.status?.let { status -> PrayerStatus.valueOf(status) } ?: PrayerStatus.None
+            )
+        }
+    }
+
+    override fun getPrayersStatusesByDate(
+        startDateTime: LocalDateTime,
+        endDateTime: LocalDateTime,
+        excludedPrayer: Prayer
+    ): Flow<List<PrayerStatus?>> {
+        return queries.getPrayersStatusesByDate(
+            startDateTime = converters.localDateToString(startDateTime),
+            endDateTime = converters.localDateToString(endDateTime),
+            excludedPrayer = excludedPrayer.name
+        ) { status ->
+            status?.let { PrayerStatus.valueOf(it) } ?: PrayerStatus.None
+        }.asFlow().mapToList(Dispatchers.IO)
+    }
+
+    override fun updatePrayerStatus(
+        prayer: Prayer,
+        startOfDay: LocalDateTime,
+        endOfDay: LocalDateTime,
+        status: PrayerStatus
+    ) {
+        queries.updatePrayerStatus(
+            prayer = prayer.name,
+            startOfDay = converters.localDateToString(startOfDay),
+            endOfDay = converters.localDateToString(endOfDay),
+            status = status.name
+        )
+    }
+
+    override fun delete(startDateTime: LocalDateTime, endDateTime: LocalDateTime) {
+        queries.delete(
+            startDateTime = converters.localDateToString(startDateTime),
+            endDateTime = converters.localDateToString(endDateTime)
         )
     }
 }

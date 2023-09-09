@@ -1,0 +1,21 @@
+CREATE TABLE MemorizedQuranChapter (
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    chapterId INTEGER NOT NULL,
+    memorizedFrom INTEGER NOT NULL,
+    memorizedTo INTEGER NOT NULL
+);
+
+insert:
+INSERT OR REPLACE INTO MemorizedQuranChapter VALUES (:id, :chapterId, :memorizedFrom, :memorizedTo);
+
+deleteAll:
+DELETE FROM MemorizedQuranChapter;
+
+delete:
+DELETE FROM MemorizedQuranChapter WHERE chapterId = :chapterId;
+
+update:
+UPDATE MemorizedQuranChapter SET memorizedFrom=:startVerse, memorizedTo = :endVerse WHERE chapterId = :chapterId;
+
+getAllMemorizedChapters:
+SELECT * FROM MemorizedQuranChapter;
