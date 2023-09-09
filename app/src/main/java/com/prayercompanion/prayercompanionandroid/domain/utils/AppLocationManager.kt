@@ -13,6 +13,7 @@ import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsResponse
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.Task
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.prayercompanion.prayercompanionandroid.data.preferences.DataStoresRepo
 import com.prayercompanion.prayercompanionandroid.domain.models.Address
 import com.prayercompanion.prayercompanionandroid.domain.models.Location
@@ -107,11 +108,17 @@ class AppLocationManagerImpl @Inject constructor(
     private fun getAddressLegacy(location: Location): Address? {
         val gcd = Geocoder(context, Locale.ENGLISH)
 
-        val addresses = gcd.getFromLocation(
-            location.latitude,
-            location.longitude,
-            /* maxResults = */ 1
-        ) ?: emptyList()
+        val addresses = try {
+            gcd.getFromLocation(
+                location.latitude,
+                location.longitude,
+                /* maxResults = */ 1
+            ) ?: emptyList()
+        } catch (e: Exception) {
+            FirebaseCrashlytics.getInstance().recordException(e)
+
+            emptyList()
+        }
 
         val address = addresses
             .takeIf { it.isNotEmpty() }

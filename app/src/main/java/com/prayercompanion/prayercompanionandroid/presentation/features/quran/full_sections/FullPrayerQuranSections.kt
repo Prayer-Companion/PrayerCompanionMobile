@@ -28,7 +28,8 @@ import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompa
 @Preview(locale = "ar")
 @Composable
 fun FullPrayerQuranSections(
-    prayerQuranReadingSections: PrayerQuranReadingSections = PrayerQuranReadingSections.EMPTY
+    prayerQuranReadingSections: PrayerQuranReadingSections = PrayerQuranReadingSections.EMPTY,
+    onBack: () -> Unit = {}
 ) = PrayerCompanionAndroidTheme {
     val spacing = LocalSpacing.current
     AppBackground()
@@ -37,7 +38,10 @@ fun FullPrayerQuranSections(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        TitleHeader(title = stringResource(id = R.string.quran_title))
+        TitleHeader(
+            title = stringResource(id = R.string.quran_title),
+            onBack = onBack
+        )
         Spacer(modifier = Modifier.height(spacing.spaceMedium))
         Box(
             modifier = Modifier
