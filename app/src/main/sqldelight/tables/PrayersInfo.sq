@@ -1,0 +1,24 @@
+CREATE TABLE PrayersInfo (
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    prayer TEXT NOT NULL,
+    dateTime TEXT NOT NULL,
+    status TEXT
+);
+
+insert:
+INSERT INTO PrayersInfo VALUES(:id,:prayer,:dateTime,:status);
+
+getPrayers:
+SELECT * FROM PrayersInfo WHERE dateTime >= :startDateTime AND dateTime <= :endDateTime;
+
+getPrayer:
+SELECT * FROM PrayersInfo WHERE prayer = :prayer AND dateTime >= :startOfDay AND dateTime <= :endOfDay;
+
+getPrayersStatusesByDate:
+SELECT status FROM PrayersInfo WHERE dateTime >= :startDateTime AND dateTime <= :endDateTime AND prayer != :excludedPrayer;
+
+updatePrayerStatus:
+UPDATE PrayersInfo SET status = :status WHERE dateTime >= :startOfDay AND dateTime <= :endOfDay AND prayer = :prayer;
+
+delete:
+DELETE FROM PrayersInfo WHERE dateTime >= :startDateTime AND dateTime <= :endDateTime;

@@ -6,6 +6,7 @@ plugins {
     id("com.google.gms.google-services")
     id("org.jetbrains.kotlin.plugin.serialization")
     id("com.google.firebase.crashlytics")
+    id("app.cash.sqldelight") version "2.0.0"
 }
 android {
     namespace = "com.prayercompanion.prayercompanionandroid"
@@ -27,12 +28,6 @@ android {
         }
 
         resourceConfigurations += listOf("en", "ar")
-
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments["room.schemaLocation"] = "$projectDir/schemas"
-            }
-        }
 
         val prayerCompanionApiBaseUrl: String by project
         val ishaStatusesPeriodsExplanationUrl: String by project
@@ -141,12 +136,6 @@ dependencies {
     val okHttpVersion = "5.0.0-alpha.11"
     implementation("com.squareup.okhttp3:logging-interceptor:$okHttpVersion")
 
-    val roomVersion = "2.5.2"
-    implementation("androidx.room:room-ktx:$roomVersion")
-    implementation("androidx.room:room-runtime:$roomVersion")
-    annotationProcessor("androidx.room:room-compiler:$roomVersion")
-    kapt("androidx.room:room-compiler:$roomVersion")
-
     implementation("com.squareup.logcat:logcat:0.1")
     implementation(platform("com.google.firebase:firebase-bom:31.5.0"))
     implementation("com.google.firebase:firebase-analytics-ktx")
@@ -179,12 +168,13 @@ dependencies {
     implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-gson:$ktorVersion")
+    implementation("app.cash.sqldelight:android-driver:2.0.0")
+    implementation("app.cash.sqldelight:coroutines-extensions:2.0.0")
 //    ------------------------------------------------
     debugImplementation("androidx.compose.ui:ui-tooling:$composeUiVersion")
     debugImplementation("androidx.compose.ui:ui-test-manifest:$composeUiVersion")
 
     testImplementation("junit:junit:4.13.2")
-    testImplementation("androidx.room:room-testing:$roomVersion")
     testImplementation("io.mockk:mockk:1.10.0")
     testImplementation("junit:junit:4.13.2")
     testImplementation("androidx.test.ext:junit:1.1.5")
@@ -210,4 +200,12 @@ dependencies {
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.47")
     androidTestImplementation("androidx.test:runner:1.5.2")
     kaptAndroidTest("com.google.dagger:hilt-compiler:2.47")
+}
+
+sqldelight {
+    databases {
+        create("PrayerCompanionDatabase") {
+            packageName.set("com.prayercompanion.prayercompanionandroid")
+        }
+    }
 }

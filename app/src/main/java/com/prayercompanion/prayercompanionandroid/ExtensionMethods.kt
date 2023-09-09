@@ -66,3 +66,6 @@ fun Modifier.autoMirror(): Modifier = composed {
     else
         this
 }
+
+fun Long.toBoolean() = this != 0L
+fun Boolean.toLong() = if (this) 1L else 0L

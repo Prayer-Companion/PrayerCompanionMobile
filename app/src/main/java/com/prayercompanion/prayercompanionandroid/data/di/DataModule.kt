@@ -1,15 +1,19 @@
 package com.prayercompanion.prayercompanionandroid.data.di
 
 import android.content.Context
-import androidx.room.Room
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.prayercompanion.prayercompanionandroid.BuildConfig
-import com.prayercompanion.prayercompanionandroid.data.local.db.PrayerCompanionDatabase
+import com.prayercompanion.prayercompanionandroid.PrayerCompanionDatabase
 import com.prayercompanion.prayercompanionandroid.data.local.db.daos.MemorizedQuranChapterDao
+import com.prayercompanion.prayercompanionandroid.data.local.db.daos.MemorizedQuranChapterDaoImpl
 import com.prayercompanion.prayercompanionandroid.data.local.db.daos.PrayersInfoDao
+import com.prayercompanion.prayercompanionandroid.data.local.db.daos.PrayersInfoDaoImpl
 import com.prayercompanion.prayercompanionandroid.data.local.db.daos.QuranReadingSectionsDao
+import com.prayercompanion.prayercompanionandroid.data.local.db.daos.QuranReadingSectionsDaoImpl
 import com.prayercompanion.prayercompanionandroid.data.remote.PrayerCompanionApi
 import com.prayercompanion.prayercompanionandroid.data.repositories.PrayersRepositoryImpl
 import com.prayercompanion.prayercompanionandroid.data.repositories.QuranRepositoryImpl
@@ -128,29 +132,26 @@ class DataModule {
     @Provides
     @Singleton
     fun providePrayerCompanionDatabase(@ApplicationContext applicationContext: Context): PrayerCompanionDatabase {
-        return Room
-            .databaseBuilder(
-                applicationContext,
-                PrayerCompanionDatabase::class.java, "prayer-companion"
-            ).build()
+        val driver: SqlDriver = AndroidSqliteDriver(PrayerCompanionDatabase.Schema, applicationContext, "prayer-companion")
+        return PrayerCompanionDatabase(driver)
     }
 
     @Provides
     @Singleton
     fun providePrayersInfoDao(prayerCompanionDatabase: PrayerCompanionDatabase): PrayersInfoDao {
-        return prayerCompanionDatabase.prayersInfoDao()
+        return PrayersInfoDaoImpl(prayerCompanionDatabase)
     }
 
     @Provides
     @Singleton
     fun provideQuranReadingSectionsDao(prayerCompanionDatabase: PrayerCompanionDatabase): QuranReadingSectionsDao {
-        return prayerCompanionDatabase.quranReadingSectionsDao()
+        return QuranReadingSectionsDaoImpl(prayerCompanionDatabase)
     }
 
     @Provides
     @Singleton
     fun provideMemorizedQuranChapterDao(prayerCompanionDatabase: PrayerCompanionDatabase): MemorizedQuranChapterDao {
-        return prayerCompanionDatabase.memorizedQuranChapterDao()
+        return MemorizedQuranChapterDaoImpl(prayerCompanionDatabase)
     }
 
     @Provides

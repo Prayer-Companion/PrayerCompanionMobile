@@ -1,0 +1,19 @@
+CREATE TABLE QuranReadingSections (
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    chapterId INTEGER NOT NULL,
+    startVerse INTEGER NOT NULL,
+    endVerse INTEGER NOT NULL,
+    isRead INTEGER NOT NULL
+);
+
+insert:
+INSERT OR REPLACE INTO QuranReadingSections VALUES (:id, :chapterId,:startVerse,:endVerse,:isRead);
+
+getNextReadingSections:
+SELECT * FROM QuranReadingSections WHERE isRead = 0 ORDER BY id LIMIT 2;
+
+markSectionAsRead:
+UPDATE QuranReadingSections SET isRead = 1 WHERE id IN :ids;
+
+deleteQuranReadingSectionByChapter:
+DELETE FROM QuranReadingSections WHERE chapterId == :chapterId;

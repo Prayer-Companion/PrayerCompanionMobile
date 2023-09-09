@@ -57,7 +57,7 @@ class GetDayPrayersFlow @Inject constructor(
         return PrayerInfo(
             prayer = prayerInfoEntity.prayer,
             dateTime = prayerInfoEntity.dateTime,
-            selectedStatus = prayerInfoEntity.status ?: PrayerStatus.None,
+            selectedStatus = prayerInfoEntity.status,
             statusesWithTimeRanges = statusesWithTimeRanges
         )
     }
