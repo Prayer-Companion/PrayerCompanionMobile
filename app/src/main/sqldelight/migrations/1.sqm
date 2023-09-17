@@ -1,0 +1,6 @@
+CREATE TABLE MemorizedQuranChapter (
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    chapterId INTEGER NOT NULL,
+    memorizedFrom INTEGER NOT NULL,
+    memorizedTo INTEGER NOT NULL
+);

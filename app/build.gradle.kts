@@ -206,6 +206,7 @@ sqldelight {
     databases {
         create("PrayerCompanionDatabase") {
             packageName.set("com.prayercompanion.prayercompanionandroid")
+            schemaOutputDirectory.set(file("src/main/sqldelight/databases"))
         }
     }
 }
