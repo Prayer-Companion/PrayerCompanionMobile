@@ -10,9 +10,8 @@ import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.put
-import javax.inject.Inject
 
-class PrayerCompanionApi @Inject constructor(
+class PrayerCompanionApi constructor(
     private val client: HttpClient
 ) {
     suspend fun getPrayers(

@@ -18,11 +18,9 @@ import com.prayercompanion.prayercompanionandroid.data.preferences.DataStoresRep
 import com.prayercompanion.prayercompanionandroid.domain.models.Address
 import com.prayercompanion.prayercompanionandroid.domain.models.Location
 import com.prayercompanion.prayercompanionandroid.domain.models.toAppLocation
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.firstOrNull
 import logcat.logcat
 import java.util.Locale
-import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -33,8 +31,7 @@ interface AppLocationManager {
     fun getRequestLocationUpdates(onLocationRetrieved: (Location) -> Unit)
 }
 
-class AppLocationManagerImpl @Inject constructor(
-    @ApplicationContext
+class AppLocationManagerImpl constructor(
     private val context: Context,
     private val dataStoresRepo: DataStoresRepo,
     private val permissionsManager: PermissionsManager

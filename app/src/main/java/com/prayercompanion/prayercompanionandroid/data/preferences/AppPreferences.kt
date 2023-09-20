@@ -6,7 +6,6 @@ import com.prayercompanion.prayercompanionandroid.appPreferencesDataStore
 import com.prayercompanion.prayercompanionandroid.domain.models.Address
 import com.prayercompanion.prayercompanionandroid.domain.models.Location
 import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
@@ -14,10 +13,8 @@ import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import java.io.InputStream
 import java.io.OutputStream
-import javax.inject.Inject
 
-class DataStoresRepo @Inject constructor(
-    @ApplicationContext
+class DataStoresRepo constructor(
     private val context: Context
 ) {
     val appPreferencesDataStore get() =  context.appPreferencesDataStore

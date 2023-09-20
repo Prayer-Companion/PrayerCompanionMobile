@@ -10,7 +10,6 @@ import android.hardware.SensorManager.SENSOR_STATUS_ACCURACY_LOW
 import android.hardware.SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM
 import android.hardware.SensorManager.SENSOR_STATUS_NO_CONTACT
 import android.hardware.SensorManager.SENSOR_STATUS_UNRELIABLE
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.ui.graphics.Color
 import com.prayercompanion.prayercompanionandroid.R
@@ -18,11 +17,9 @@ import com.prayercompanion.prayercompanionandroid.presentation.theme.SensorAccur
 import com.prayercompanion.prayercompanionandroid.presentation.theme.SensorAccuracyLow
 import com.prayercompanion.prayercompanionandroid.presentation.theme.SensorAccuracyMedium
 import com.prayercompanion.prayercompanionandroid.presentation.theme.SensorAccuracyNoContact
-import dagger.hilt.android.qualifiers.ApplicationContext
-import javax.inject.Inject
 
-class OrientationSensor @Inject constructor(
-    @ApplicationContext private val context: android.content.Context,
+class OrientationSensor constructor(
+    context: Context,
 ) : SensorEventListener {
     private val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     private var lastAccelerometerReading: FloatArray? = null

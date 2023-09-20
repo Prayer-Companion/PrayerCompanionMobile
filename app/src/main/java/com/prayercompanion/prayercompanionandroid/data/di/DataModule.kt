@@ -1,6 +1,5 @@
 package com.prayercompanion.prayercompanionandroid.data.di
 
-import android.content.Context
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import com.google.android.gms.tasks.Tasks
@@ -8,28 +7,26 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.prayercompanion.prayercompanionandroid.BuildConfig
 import com.prayercompanion.prayercompanionandroid.PrayerCompanionDatabase
+import com.prayercompanion.prayercompanionandroid.data.local.assets.AssetsReader
 import com.prayercompanion.prayercompanionandroid.data.local.db.daos.MemorizedQuranChapterDao
 import com.prayercompanion.prayercompanionandroid.data.local.db.daos.MemorizedQuranChapterDaoImpl
 import com.prayercompanion.prayercompanionandroid.data.local.db.daos.PrayersInfoDao
 import com.prayercompanion.prayercompanionandroid.data.local.db.daos.PrayersInfoDaoImpl
 import com.prayercompanion.prayercompanionandroid.data.local.db.daos.QuranReadingSectionsDao
 import com.prayercompanion.prayercompanionandroid.data.local.db.daos.QuranReadingSectionsDaoImpl
+import com.prayercompanion.prayercompanionandroid.data.preferences.DataStoresRepo
 import com.prayercompanion.prayercompanionandroid.data.remote.PrayerCompanionApi
 import com.prayercompanion.prayercompanionandroid.data.repositories.PrayersRepositoryImpl
 import com.prayercompanion.prayercompanionandroid.data.repositories.QuranRepositoryImpl
 import com.prayercompanion.prayercompanionandroid.data.utils.AndroidPrayersAlarmScheduler
 import com.prayercompanion.prayercompanionandroid.data.utils.AuthenticationHelperImpl
 import com.prayercompanion.prayercompanionandroid.data.utils.TrackerImpl
+import com.prayercompanion.prayercompanionandroid.data.utils.notifications.PrayersNotificationsService
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
 import com.prayercompanion.prayercompanionandroid.domain.repositories.QuranRepository
 import com.prayercompanion.prayercompanionandroid.domain.utils.AuthenticationHelper
 import com.prayercompanion.prayercompanionandroid.domain.utils.PrayersAlarmScheduler
 import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.Tracker
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -40,20 +37,17 @@ import okhttp3.Response
 import okhttp3.ResponseBody.Companion.toResponseBody
 import okhttp3.internal.http.HTTP_UNAUTHORIZED
 import okhttp3.logging.HttpLoggingInterceptor
-import javax.inject.Singleton
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.module
 
-@Module
-@InstallIn(SingletonComponent::class)
-
-class DataModule {
-
-    @Provides
-    @Singleton
-    fun provideHttpClient(): HttpClient {
-
+val dataModule = module {
+    single {
         val logger = HttpLoggingInterceptor()
         logger.setLevel(HttpLoggingInterceptor.Level.BODY)
-        return HttpClient(OkHttp) {
+
+        HttpClient(OkHttp) {
             // throw  for non-2xx responses
             expectSuccess = true
 
@@ -104,68 +98,27 @@ class DataModule {
             }
         }
     }
+    single { FirebaseAnalytics.getInstance(androidContext()) }
+    single<PrayersAlarmScheduler> { AndroidPrayersAlarmScheduler(androidContext(), get()) }
 
-    @Provides
-    @Singleton
-    fun providePrayerCompanionApi(client: HttpClient): PrayerCompanionApi {
-        return PrayerCompanionApi(client)
+    single {
+        val driver: SqlDriver = AndroidSqliteDriver(
+            PrayerCompanionDatabase.Schema,
+            androidContext(),
+            "prayer-companion"
+        )
+        PrayerCompanionDatabase(driver)
     }
 
-    @Provides
-    @Singleton
-    internal fun providePrayersRepository(
-        usecase: PrayersRepositoryImpl
-    ): PrayersRepository = usecase
-
-    @Provides
-    @Singleton
-    internal fun provideQuranRepository(
-        usecase: QuranRepositoryImpl
-    ): QuranRepository = usecase
-
-    @Provides
-    @Singleton
-    internal fun provideAlarmScheduler(
-        util: AndroidPrayersAlarmScheduler
-    ): PrayersAlarmScheduler = util
-
-    @Provides
-    @Singleton
-    fun providePrayerCompanionDatabase(@ApplicationContext applicationContext: Context): PrayerCompanionDatabase {
-        val driver: SqlDriver = AndroidSqliteDriver(PrayerCompanionDatabase.Schema, applicationContext, "prayer-companion")
-        return PrayerCompanionDatabase(driver)
-    }
-
-    @Provides
-    @Singleton
-    fun providePrayersInfoDao(prayerCompanionDatabase: PrayerCompanionDatabase): PrayersInfoDao {
-        return PrayersInfoDaoImpl(prayerCompanionDatabase)
-    }
-
-    @Provides
-    @Singleton
-    fun provideQuranReadingSectionsDao(prayerCompanionDatabase: PrayerCompanionDatabase): QuranReadingSectionsDao {
-        return QuranReadingSectionsDaoImpl(prayerCompanionDatabase)
-    }
-
-    @Provides
-    @Singleton
-    fun provideMemorizedQuranChapterDao(prayerCompanionDatabase: PrayerCompanionDatabase): MemorizedQuranChapterDao {
-        return MemorizedQuranChapterDaoImpl(prayerCompanionDatabase)
-    }
-
-    @Provides
-    @Singleton
-    internal fun provideFirebaseAnalytics(@ApplicationContext context: Context): FirebaseAnalytics {
-        return FirebaseAnalytics.getInstance(context)
-    }
-
-    @Provides
-    @Singleton
-    internal fun provideAuthenticationHelper(usecase: AuthenticationHelperImpl): AuthenticationHelper =
-        usecase
-
-    @Provides
-    @Singleton
-    internal fun provideTracker(usecase: TrackerImpl): Tracker = usecase
+    singleOf(::PrayerCompanionApi)
+    singleOf(::PrayersRepositoryImpl) { bind<PrayersRepository>() }
+    singleOf(::QuranRepositoryImpl) { bind<QuranRepository>() }
+    singleOf(::PrayersInfoDaoImpl) { bind<PrayersInfoDao>() }
+    singleOf(::QuranReadingSectionsDaoImpl) { bind<QuranReadingSectionsDao>() }
+    singleOf(::MemorizedQuranChapterDaoImpl) { bind<MemorizedQuranChapterDao>() }
+    singleOf(::AuthenticationHelperImpl) { bind<AuthenticationHelper>() }
+    singleOf(::TrackerImpl) { bind<Tracker>() }
+    singleOf(::AssetsReader)
+    singleOf(::PrayersNotificationsService)
+    singleOf(::DataStoresRepo)
 }

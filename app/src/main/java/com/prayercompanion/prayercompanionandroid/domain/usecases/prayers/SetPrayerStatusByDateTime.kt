@@ -4,10 +4,9 @@ import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
 import java.time.LocalDateTime
-import javax.inject.Inject
 
 class SetPrayerStatusByDateTime
-@Inject constructor(
+constructor(
     private val prayersRepository: PrayersRepository,
     private val getPrayerStatusRanges: GetPrayerStatusRanges
 ) {

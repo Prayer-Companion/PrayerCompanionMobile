@@ -8,7 +8,6 @@ import com.prayercompanion.prayercompanionandroid.toBoolean
 import com.prayercompanion.prayercompanionandroid.toLong
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
 interface QuranReadingSectionsDao {
     fun insertReadingSections(entities: List<QuranReadingSectionEntity>)
@@ -17,8 +16,7 @@ interface QuranReadingSectionsDao {
     fun deleteQuranReadingSectionByChapter(chapterId: Int)
 }
 
-
-class QuranReadingSectionsDaoImpl @Inject constructor(
+class QuranReadingSectionsDaoImpl constructor(
     db: PrayerCompanionDatabase
 ) : QuranReadingSectionsDao {
 

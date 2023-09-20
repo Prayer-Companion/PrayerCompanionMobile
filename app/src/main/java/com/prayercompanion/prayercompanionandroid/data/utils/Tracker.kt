@@ -6,9 +6,8 @@ import com.prayercompanion.prayercompanionandroid.domain.usecases.GetAppLanguage
 import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.TrackedButtons
 import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.Tracker
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
-import javax.inject.Inject
 
-class TrackerImpl @Inject constructor(
+class TrackerImpl constructor(
     private val firebaseAnalytics: FirebaseAnalytics,
     getAppLanguage: GetAppLanguage
 ): Tracker {

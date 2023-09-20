@@ -8,17 +8,14 @@ import com.prayercompanion.prayercompanionandroid.domain.usecases.IsConnectedToI
 import com.prayercompanion.prayercompanionandroid.domain.utils.PermissionsManager
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import logcat.logcat
-import javax.inject.Inject
 
-@HiltViewModel
-class SplashScreenViewModel @Inject constructor(
+class SplashScreenViewModel constructor(
     private val permissionsManager: PermissionsManager,
     dataStoresRepo: DataStoresRepo,
     isConnectedToInternet: IsConnectedToInternet

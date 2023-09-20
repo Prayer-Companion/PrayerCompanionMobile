@@ -6,9 +6,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.time.LocalDateTime
 import java.util.SortedMap
-import javax.inject.Inject
 
-class GetStatusesOverView @Inject constructor(
+class GetStatusesOverView constructor(
     private val repository: PrayersRepository
 ) {
 

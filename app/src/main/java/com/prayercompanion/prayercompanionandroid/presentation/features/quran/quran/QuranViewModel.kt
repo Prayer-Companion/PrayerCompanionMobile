@@ -18,17 +18,15 @@ import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
 import com.prayercompanion.prayercompanionandroid.toJson
-import dagger.hilt.android.lifecycle.HiltViewModel
+
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
-@HiltViewModel
-class QuranViewModel @Inject constructor(
+class QuranViewModel constructor(
     getFullQuranWithMemorized: GetFullQuranWithMemorized,
     private val addMemorizedChapterAyat: AddMemorizedChapterAyat,
     private val editMemorizedChapterAyat: EditMemorizedChapterAyat,

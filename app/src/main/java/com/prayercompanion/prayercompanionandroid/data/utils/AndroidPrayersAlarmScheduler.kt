@@ -11,13 +11,10 @@ import com.prayercompanion.prayercompanionandroid.domain.models.PrayerNotificati
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetDayPrayers
 import com.prayercompanion.prayercompanionandroid.domain.utils.PrayersAlarmScheduler
 import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
-import dagger.hilt.android.qualifiers.ApplicationContext
 import java.time.LocalDateTime
 import java.time.ZoneId
-import javax.inject.Inject
 
-class AndroidPrayersAlarmScheduler @Inject constructor(
-    @ApplicationContext
+class AndroidPrayersAlarmScheduler constructor(
     private val context: Context,
     private val getDayPrayers: GetDayPrayers
 ) : PrayersAlarmScheduler {

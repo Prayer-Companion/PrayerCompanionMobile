@@ -6,43 +6,48 @@ import android.app.NotificationManager
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
-import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import com.prayercompanion.prayercompanionandroid.data.di.dataModule
 import com.prayercompanion.prayercompanionandroid.data.preferences.AppPreferences
 import com.prayercompanion.prayercompanionandroid.data.preferences.AppPreferencesSerializer
 import com.prayercompanion.prayercompanionandroid.data.utils.notifications.PrayersNotificationsService
+import com.prayercompanion.prayercompanionandroid.domain.di.domainModule
 import com.prayercompanion.prayercompanionandroid.domain.utils.PermissionsManager
 import com.prayercompanion.prayercompanionandroid.domain.utils.ScheduleDailyPrayersWorker
-import dagger.hilt.android.HiltAndroidApp
+import com.prayercompanion.prayercompanionandroid.presentation.di.presentationModule
 import logcat.AndroidLogcatLogger
 import logcat.LogPriority
+import org.koin.android.ext.android.inject
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
 val Context.appPreferencesDataStore: DataStore<AppPreferences> by dataStore(
     "app_preferences1.json",
     AppPreferencesSerializer
 )
 
-@HiltAndroidApp
 class PrayerCompanionApplication : Application(), Configuration.Provider {
 
-    @Inject
-    lateinit var workerFactory: HiltWorkerFactory
-
-    @Inject
-    lateinit var permissionsManager: PermissionsManager
+    private val permissionsManager: PermissionsManager by inject()
 
     override fun getWorkManagerConfiguration() =
         Configuration.Builder()
-            .setWorkerFactory(workerFactory)
             .build()
 
     override fun onCreate() {
         super.onCreate()
+
+        startKoin {
+            androidLogger()
+            androidContext(this@PrayerCompanionApplication)
+            modules(presentationModule, domainModule, dataModule)
+        }
+
         setupNotificationsChannels()
         setupScheduleDailyPrayersWorker()
         AndroidLogcatLogger.installOnDebuggableApp(this, minPriority = LogPriority.VERBOSE)

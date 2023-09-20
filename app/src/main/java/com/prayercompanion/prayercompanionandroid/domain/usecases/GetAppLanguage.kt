@@ -4,9 +4,8 @@ import android.content.res.Resources
 import androidx.appcompat.app.AppCompatDelegate
 import com.prayercompanion.prayercompanionandroid.domain.models.AppLanguage
 import logcat.logcat
-import javax.inject.Inject
 
-class GetAppLanguage @Inject constructor() {
+class GetAppLanguage {
 
     fun call(): AppLanguage {
 

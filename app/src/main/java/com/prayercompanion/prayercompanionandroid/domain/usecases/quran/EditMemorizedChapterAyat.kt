@@ -1,9 +1,8 @@
 package com.prayercompanion.prayercompanionandroid.domain.usecases.quran
 
 import com.prayercompanion.prayercompanionandroid.domain.repositories.QuranRepository
-import javax.inject.Inject
 
-class EditMemorizedChapterAyat @Inject constructor(
+class EditMemorizedChapterAyat constructor(
     private val quranRepository: QuranRepository
 ) {
 

@@ -9,24 +9,17 @@ import com.prayercompanion.prayercompanionandroid.domain.usecases.settings.GetIs
 import com.prayercompanion.prayercompanionandroid.domain.utils.MediaController
 import com.prayercompanion.prayercompanionandroid.getSerializable
 import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-@AndroidEntryPoint
-class AlarmReceiver : BroadcastReceiver() {
+class AlarmReceiver : BroadcastReceiver(), KoinComponent {
 
-    @Inject
-    lateinit var prayersNotificationsService: PrayersNotificationsService
-
-    @Inject
-    lateinit var getIsPauseMediaEnabled: GetIsPauseMediaEnabled
-
-    @Inject
-    lateinit var mediaController: MediaController
-
+    private val prayersNotificationsService: PrayersNotificationsService by inject()
+    private val getIsPauseMediaEnabled: GetIsPauseMediaEnabled by inject()
+    private val mediaController: MediaController by inject()
 
     override fun onReceive(context: Context?, intent: Intent?) {
         val item = intent?.getSerializable(

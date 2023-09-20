@@ -1,8 +1,6 @@
 package com.prayercompanion.prayercompanionandroid.domain.usecases
 
-import javax.inject.Inject
-
-class IsConnectedToInternet @Inject constructor() {
+class IsConnectedToInternet {
 
     /**
      * Pings Prayer-Companion api server to check for internet connection and server availability

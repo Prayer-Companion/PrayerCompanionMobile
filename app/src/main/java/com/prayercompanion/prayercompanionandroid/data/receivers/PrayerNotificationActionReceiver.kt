@@ -10,26 +10,20 @@ import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.SetPra
 import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.TrackedButtons
 import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.Tracker
 import com.prayercompanion.prayercompanionandroid.getSerializable
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.time.LocalDateTime
-import javax.inject.Inject
 
-@AndroidEntryPoint
-class PrayerNotificationActionReceiver : BroadcastReceiver() {
+class PrayerNotificationActionReceiver : BroadcastReceiver(), KoinComponent {
 
-    @Inject
-    lateinit var setPrayerStatusByDateTime: SetPrayerStatusByDateTime
-
-    @Inject
-    lateinit var prayersNotificationsService: PrayersNotificationsService
-
-    @Inject
-    lateinit var tracker: Tracker
+    private val setPrayerStatusByDateTime: SetPrayerStatusByDateTime by inject()
+    private val prayersNotificationsService: PrayersNotificationsService by inject()
+    private val tracker: Tracker by inject()
 
     override fun onReceive(context: Context?, intent: Intent?) {
         val prayerInfo = intent

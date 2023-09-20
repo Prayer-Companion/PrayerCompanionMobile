@@ -9,13 +9,11 @@ import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManage
 import com.prayercompanion.prayercompanionandroid.domain.utils.OrientationSensor
 import com.prayercompanion.prayercompanionandroid.domain.utils.QiblaUtils
 import com.prayercompanion.prayercompanionandroid.domain.utils.SensorAccuracy
-import dagger.hilt.android.lifecycle.HiltViewModel
+
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 import kotlin.math.abs
 
-@HiltViewModel
-class QiblaViewModel @Inject constructor(
+class QiblaViewModel constructor(
     private val appLocationManager: AppLocationManager,
     private val orientationSensor: OrientationSensor,
 ) : ViewModel() {

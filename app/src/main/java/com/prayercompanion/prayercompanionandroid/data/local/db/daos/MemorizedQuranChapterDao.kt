@@ -6,7 +6,6 @@ import com.prayercompanion.prayercompanionandroid.PrayerCompanionDatabase
 import com.prayercompanion.prayercompanionandroid.data.local.db.entities.MemorizedQuranChapterEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
 interface MemorizedQuranChapterDao {
     fun insert(chapters: List<MemorizedQuranChapterEntity>)
@@ -21,7 +20,7 @@ interface MemorizedQuranChapterDao {
     }
 }
 
-class MemorizedQuranChapterDaoImpl @Inject constructor(
+class MemorizedQuranChapterDaoImpl constructor(
     db: PrayerCompanionDatabase
 ) : MemorizedQuranChapterDao {
 

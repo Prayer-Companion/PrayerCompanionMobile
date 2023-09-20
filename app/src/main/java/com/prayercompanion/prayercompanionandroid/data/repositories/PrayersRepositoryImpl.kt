@@ -26,9 +26,8 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.YearMonth
 import java.util.TimeZone
-import javax.inject.Inject
 
-class PrayersRepositoryImpl @Inject constructor(
+class PrayersRepositoryImpl constructor(
     private val prayerCompanionApi: PrayerCompanionApi,
     private val dao: PrayersInfoDao
 ) : PrayersRepository {

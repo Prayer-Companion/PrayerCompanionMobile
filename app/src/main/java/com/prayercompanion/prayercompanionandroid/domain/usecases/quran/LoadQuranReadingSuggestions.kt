@@ -1,10 +1,8 @@
 package com.prayercompanion.prayercompanionandroid.domain.usecases.quran
 
-
 import com.prayercompanion.prayercompanionandroid.domain.repositories.QuranRepository
-import javax.inject.Inject
 
-class LoadQuranReadingSuggestions @Inject constructor(
+class LoadQuranReadingSuggestions constructor(
     private val quranRepository: QuranRepository
 ) {
 

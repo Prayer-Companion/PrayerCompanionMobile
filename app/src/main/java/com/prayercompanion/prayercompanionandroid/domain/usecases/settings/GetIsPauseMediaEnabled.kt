@@ -2,9 +2,8 @@ package com.prayercompanion.prayercompanionandroid.domain.usecases.settings
 
 import com.prayercompanion.prayercompanionandroid.data.preferences.DataStoresRepo
 import kotlinx.coroutines.flow.firstOrNull
-import javax.inject.Inject
 
-class GetIsPauseMediaEnabled @Inject constructor(
+class GetIsPauseMediaEnabled constructor(
     private val dataStoresRepo: DataStoresRepo
 ) {
 

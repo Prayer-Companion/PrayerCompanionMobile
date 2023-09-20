@@ -29,7 +29,7 @@ import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
 import com.prayercompanion.prayercompanionandroid.presentation.utils.toUiText
 import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
-import dagger.hilt.android.lifecycle.HiltViewModel
+
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -46,10 +46,8 @@ import logcat.logcat
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
-import javax.inject.Inject
 
-@HiltViewModel
-class HomeScreenViewModel @Inject constructor(
+class HomeScreenViewModel constructor(
     private val getDayPrayersFlow: GetDayPrayersFlow,
     private val updatePrayerStatus: UpdatePrayerStatus,
     private val getStatusesOverView: GetStatusesOverView,

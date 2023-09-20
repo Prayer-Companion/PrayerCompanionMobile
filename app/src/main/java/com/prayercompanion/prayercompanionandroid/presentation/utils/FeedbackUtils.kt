@@ -6,18 +6,15 @@ import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import com.google.firebase.auth.FirebaseAuth
 import com.prayercompanion.prayercompanionandroid.R
-import dagger.hilt.android.qualifiers.ActivityContext
 import io.doorbell.android.Doorbell
 import kotlinx.coroutines.delay
-import javax.inject.Inject
 
 
 interface FeedbackUtils {
     suspend fun showFeedbackDialog()
 }
 
-class FeedbackUtilsImpl @Inject constructor(
-    @ActivityContext
+class FeedbackUtilsImpl constructor(
     private val context: Context,
     private val doorbell: Doorbell
 ) : FeedbackUtils {

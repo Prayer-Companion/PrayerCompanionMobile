@@ -13,7 +13,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 import java.time.LocalDateTime
-import javax.inject.Inject
 
 interface PrayersInfoDao {
     fun insertAll(prayersInfo: List<PrayerInfoEntity>)
@@ -62,7 +61,7 @@ interface PrayersInfoDao {
     }
 }
 
-class PrayersInfoDaoImpl @Inject constructor(
+class PrayersInfoDaoImpl constructor(
     db: PrayerCompanionDatabase
 ) : PrayersInfoDao {
 

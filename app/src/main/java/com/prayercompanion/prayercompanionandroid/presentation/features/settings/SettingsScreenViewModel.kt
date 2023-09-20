@@ -13,15 +13,12 @@ import com.prayercompanion.prayercompanionandroid.domain.usecases.settings.SetPa
 import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.TrackedButtons
 import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.Tracker
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class SettingsScreenViewModel @Inject constructor(
+class SettingsScreenViewModel constructor(
     private val setAppLanguage: SetAppLanguage,
     private val getAppLanguage: GetAppLanguage,
     private val setPauseMediaEnabled: SetPauseMediaEnabled,

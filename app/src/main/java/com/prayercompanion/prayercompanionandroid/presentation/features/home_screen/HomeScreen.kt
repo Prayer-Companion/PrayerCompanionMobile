@@ -9,7 +9,6 @@ import androidx.compose.material.ScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -21,7 +20,7 @@ import com.prayercompanion.prayercompanionandroid.showToast
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeScreenViewModel = hiltViewModel(),
+    viewModel: HomeScreenViewModel,
     scaffoldState: ScaffoldState,
     activity: Activity
 ) {

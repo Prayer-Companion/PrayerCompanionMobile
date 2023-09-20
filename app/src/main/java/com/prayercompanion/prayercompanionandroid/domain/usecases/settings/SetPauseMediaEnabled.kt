@@ -2,9 +2,8 @@ package com.prayercompanion.prayercompanionandroid.domain.usecases.settings
 
 
 import com.prayercompanion.prayercompanionandroid.data.preferences.DataStoresRepo
-import javax.inject.Inject
 
-class SetPauseMediaEnabled @Inject constructor(
+class SetPauseMediaEnabled constructor(
     private val dataStoresRepo: DataStoresRepo
 ) {
 

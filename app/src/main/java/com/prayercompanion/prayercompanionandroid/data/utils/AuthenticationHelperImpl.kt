@@ -11,9 +11,8 @@ import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class AuthenticationHelperImpl @Inject constructor(
+class AuthenticationHelperImpl constructor(
     private val googleSignInClient: GoogleSignInClient,
     dataStoresRepo: DataStoresRepo,
 ): AuthenticationHelper {

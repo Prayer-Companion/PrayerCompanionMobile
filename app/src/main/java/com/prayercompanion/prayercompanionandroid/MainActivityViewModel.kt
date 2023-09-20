@@ -5,13 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.prayercompanion.prayercompanionandroid.data.preferences.DataStoresRepo
 import com.prayercompanion.prayercompanionandroid.domain.models.AppLanguage
 import com.prayercompanion.prayercompanionandroid.domain.usecases.SetAppLanguage
-import dagger.hilt.android.lifecycle.HiltViewModel
+
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class MainActivityViewModel @Inject constructor(
+class MainActivityViewModel constructor(
     private val setAppLanguage: SetAppLanguage,
     private val dataStoresRepo: DataStoresRepo
 ) : ViewModel() {

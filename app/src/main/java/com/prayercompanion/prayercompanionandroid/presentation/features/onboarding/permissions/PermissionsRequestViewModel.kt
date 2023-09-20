@@ -14,15 +14,13 @@ import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.Tracker
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
-import dagger.hilt.android.lifecycle.HiltViewModel
+
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class PermissionsRequestViewModel @Inject constructor(
+class PermissionsRequestViewModel constructor(
     private val permissionsManager: PermissionsManager,
     private val dataStoresRepo: DataStoresRepo,
     private val tracker: Tracker

@@ -8,9 +8,8 @@ import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRep
 import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
-import javax.inject.Inject
 
-class GetPrayerStatusRanges @Inject constructor(
+class GetPrayerStatusRanges constructor(
     private val prayersRepository: PrayersRepository,
     private val appLocationManager: AppLocationManager
 ) {

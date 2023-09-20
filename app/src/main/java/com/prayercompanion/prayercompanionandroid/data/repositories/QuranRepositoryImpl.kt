@@ -18,9 +18,8 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import logcat.asLog
 import logcat.logcat
-import javax.inject.Inject
 
-class QuranRepositoryImpl @Inject constructor(
+class QuranRepositoryImpl constructor(
     assetsReader: AssetsReader,
     private val api: PrayerCompanionApi,
     private val readingSectionDao: QuranReadingSectionsDao,

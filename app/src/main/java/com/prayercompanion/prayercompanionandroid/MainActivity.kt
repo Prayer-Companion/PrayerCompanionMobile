@@ -4,7 +4,6 @@ import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -29,7 +28,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavType
@@ -47,6 +45,7 @@ import com.prayercompanion.prayercompanionandroid.presentation.features.onboardi
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.sign_in.SignInScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.sign_in.SignInViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.splash_screen.SplashScreen
+import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.splash_screen.SplashScreenViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.QiblaScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.QiblaViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.features.quran.full_sections.FullPrayerQuranSections
@@ -57,22 +56,16 @@ import com.prayercompanion.prayercompanionandroid.presentation.features.settings
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.prayercompanionandroid.presentation.utils.FeedbackUtils
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.getViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private val viewModel: MainActivityViewModel by viewModels()
-
-    @Inject
-    lateinit var googleSignInClient: GoogleSignInClient
-
-    @Inject
-    lateinit var feedbackUtils: FeedbackUtils
-
-    @Inject
-    lateinit var tracker: Tracker
+    private val viewModel: MainActivityViewModel by viewModel()
+    private val googleSignInClient: GoogleSignInClient by inject()
+    private val feedbackUtils: FeedbackUtils by inject()
+    private val tracker: Tracker by inject()
 
     @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -118,10 +111,14 @@ class MainActivity : AppCompatActivity() {
                         startDestination = Route.SplashScreen.routeName,
                     ) {
                         composable(Route.SplashScreen.routeName) {
-                            SplashScreen(navController::navigate)
+                            val viewModel: SplashScreenViewModel = getViewModel()
+                            SplashScreen(
+                                uiEvents = viewModel.uiEvents,
+                                navigate = navController::navigate
+                            )
                         }
                         composable(Route.SignIn.routeName) {
-                            val viewModel: SignInViewModel = hiltViewModel()
+                            val viewModel: SignInViewModel = getViewModel()
                             SignInScreen(
                                 navigate = navController::navigate,
                                 googleSignInClient = googleSignInClient,
@@ -131,7 +128,7 @@ class MainActivity : AppCompatActivity() {
                             )
                         }
                         composable(Route.PermissionsRequests.routeName) {
-                            val viewModel: PermissionsRequestViewModel = hiltViewModel()
+                            val viewModel: PermissionsRequestViewModel = getViewModel()
                             PermissionsRequestScreen(
                                 navigate = navController::navigate,
                                 uiState = viewModel.uiState,
@@ -141,12 +138,13 @@ class MainActivity : AppCompatActivity() {
                         }
                         composable(Route.Home.routeName) {
                             HomeScreen(
+                                viewModel = getViewModel(),
                                 scaffoldState = scaffoldState,
                                 activity = this@MainActivity
                             )
                         }
                         composable(Route.Qibla.routeName) {
-                            val viewModel: QiblaViewModel = hiltViewModel()
+                            val viewModel: QiblaViewModel = getViewModel()
                             QiblaScreen(
                                 onEvent = viewModel::onEvent,
                                 sensorAccuracy = viewModel.sensorAccuracy,
@@ -154,7 +152,7 @@ class MainActivity : AppCompatActivity() {
                             )
                         }
                         composable(Route.Quran.routeName) {
-                            val viewModel: QuranViewModel = hiltViewModel()
+                            val viewModel: QuranViewModel = getViewModel()
                             QuranScreen(
                                 navigate = navController::navigate,
                                 state = viewModel.state,
@@ -182,7 +180,7 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
                         composable(Route.Settings.routeName) {
-                            val viewModel: SettingsScreenViewModel = hiltViewModel()
+                            val viewModel: SettingsScreenViewModel = getViewModel()
                             SettingsScreen(
                                 state = viewModel.state,
                                 onEvent = viewModel::onEvent,

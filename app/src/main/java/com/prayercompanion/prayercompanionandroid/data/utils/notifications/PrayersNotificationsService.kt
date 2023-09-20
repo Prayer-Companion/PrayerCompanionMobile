@@ -15,12 +15,9 @@ import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerNotificationItem
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.presentation.utils.PresentationConsts
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
-import javax.inject.Inject
 
-class PrayersNotificationsService @Inject constructor(
-    @ApplicationContext
+class PrayersNotificationsService constructor(
     private val context: Context
 ) {
 

@@ -2,7 +2,6 @@ plugins {
     id("kotlin-kapt")
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("dagger.hilt.android.plugin")
     id("com.google.gms.google-services")
     id("org.jetbrains.kotlin.plugin.serialization")
     id("com.google.firebase.crashlytics")
@@ -127,11 +126,12 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.0-beta01")
     implementation("com.google.android.gms:play-services-location:21.0.1")
 
-    //  Hilt
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0-alpha01")
-    implementation("com.google.dagger:hilt-android:2.47")
-    kapt("com.google.dagger:hilt-compiler:2.47")
-    kapt("androidx.hilt:hilt-compiler:1.0.0")
+    val koinAndroidVersion = "3.5.0"
+    implementation("io.insert-koin:koin-android:$koinAndroidVersion")
+
+    val workManagerVersion = "2.8.1"
+    implementation("androidx.work:work-runtime-ktx:$workManagerVersion")
+    implementation("io.insert-koin:koin-androidx-workmanager:$koinAndroidVersion")
 
     val okHttpVersion = "5.0.0-alpha.11"
     implementation("com.squareup.okhttp3:logging-interceptor:$okHttpVersion")
@@ -151,10 +151,6 @@ dependencies {
     //GIF support
     implementation("io.coil-kt:coil-compose:2.4.0")
     implementation("io.coil-kt:coil-gif:2.4.0")
-
-    val workManagerVersion = "2.8.1"
-    implementation("androidx.work:work-runtime-ktx:$workManagerVersion")
-    implementation("androidx.hilt:hilt-work:1.0.0")
 
     implementation("androidx.compose.material:material-icons-extended:$composeUiVersion")
 
@@ -197,9 +193,7 @@ dependencies {
     androidTestImplementation("com.squareup.okhttp3:mockwebserver:4.9.3")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeUiVersion")
     androidTestImplementation("io.mockk:mockk-android:1.10.0")
-    androidTestImplementation("com.google.dagger:hilt-android-testing:2.47")
     androidTestImplementation("androidx.test:runner:1.5.2")
-    kaptAndroidTest("com.google.dagger:hilt-compiler:2.47")
 }
 
 sqldelight {

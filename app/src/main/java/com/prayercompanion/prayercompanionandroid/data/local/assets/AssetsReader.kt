@@ -4,11 +4,8 @@ import android.content.Context
 import com.prayercompanion.prayercompanionandroid.data.local.assets.dto.quran.QuranDTO
 import com.prayercompanion.prayercompanionandroid.failure
 import com.prayercompanion.prayercompanionandroid.fromJson
-import dagger.hilt.android.qualifiers.ApplicationContext
-import javax.inject.Inject
 
-class AssetsReader @Inject constructor(
-    @ApplicationContext
+class AssetsReader constructor(
     private val context: Context
 ) {
 

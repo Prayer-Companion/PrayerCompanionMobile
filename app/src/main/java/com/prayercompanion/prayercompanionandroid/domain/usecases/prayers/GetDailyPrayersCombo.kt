@@ -10,9 +10,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.time.LocalDate
 import java.time.YearMonth
-import javax.inject.Inject
 
-class GetDailyPrayersCombo @Inject constructor(
+class GetDailyPrayersCombo constructor(
     private val appLocationManager: AppLocationManager,
     private val prayersRepository: PrayersRepository,
     private val isConnectedToInternet: IsConnectedToInternet

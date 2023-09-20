@@ -16,17 +16,14 @@ import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
 import com.prayercompanion.prayercompanionandroid.presentation.utils.toUiText
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import logcat.asLog
 import logcat.logcat
-import javax.inject.Inject
 
-@HiltViewModel
-class SignInViewModel @Inject constructor(
+class SignInViewModel constructor(
     private val authenticationHelper: AuthenticationHelper,
     private val accountSignIn: AccountSignIn,
     private val tracker: Tracker
