@@ -2,7 +2,7 @@ package com.prayercompanion.prayercompanionandroid.domain.usecases
 
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
-import com.prayercompanion.prayercompanionandroid.domain.models.AppLanguage
+import com.prayercompanion.shared.domain.models.AppLanguage
 
 class SetAppLanguage {
 

@@ -1,7 +1,6 @@
 package com.prayercompanion.prayercompanionandroid.data.di
 
 import app.cash.sqldelight.db.SqlDriver
-import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
@@ -27,6 +26,7 @@ import com.prayercompanion.prayercompanionandroid.domain.repositories.QuranRepos
 import com.prayercompanion.prayercompanionandroid.domain.utils.AuthenticationHelper
 import com.prayercompanion.prayercompanionandroid.domain.utils.PrayersAlarmScheduler
 import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.Tracker
+import com.prayercompanion.shared.SQLDelightDriverFactory
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -102,11 +102,7 @@ val dataModule = module {
     single<PrayersAlarmScheduler> { AndroidPrayersAlarmScheduler(androidContext(), get()) }
 
     single {
-        val driver: SqlDriver = AndroidSqliteDriver(
-            PrayerCompanionDatabase.Schema,
-            androidContext(),
-            "prayer-companion"
-        )
+        val driver: SqlDriver = SQLDelightDriverFactory(androidContext()).createDriver()
         PrayerCompanionDatabase(driver)
     }
 

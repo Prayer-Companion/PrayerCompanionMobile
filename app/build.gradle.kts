@@ -1,25 +1,39 @@
+import com.prayercompanion.shared.gradle.ProjectConfig
+
 plugins {
-    id("kotlin-kapt")
+    kotlin("multiplatform")
     id("com.android.application")
-    id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
     id("org.jetbrains.kotlin.plugin.serialization")
     id("com.google.firebase.crashlytics")
-    id("app.cash.sqldelight") version "2.0.0"
 }
+
+kotlin {
+    androidTarget()
+    sourceSets {
+        val androidMain by getting {
+            dependencies {
+                implementation(project(":shared"))
+            }
+        }
+    }
+}
+
 android {
-    namespace = "com.prayercompanion.prayercompanionandroid"
-    compileSdk = 33
+    namespace = ProjectConfig.appId
+    compileSdk = ProjectConfig.compileSdk
+
+    sourceSets["main"].manifest.srcFile("src/main/AndroidManifest.xml")
 
     val composeCompilerVersion: String by project
     val composeUiVersion: String by project
 
     defaultConfig {
-        applicationId = "com.prayercompanion.prayercompanionandroid"
-        minSdk = 26
-        targetSdk = 33
-        versionCode = 7
-        versionName = "1.3.1"
+        applicationId = ProjectConfig.appId
+        minSdk = ProjectConfig.minSdk
+        targetSdk = ProjectConfig.targetSdk
+        versionCode = ProjectConfig.versionCode
+        versionName = ProjectConfig.versionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -89,11 +103,11 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+    kotlin {
+        jvmToolchain(17)
+    }
     testOptions {
         unitTests.isReturnDefaultValues = true
-    }
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
     }
     buildFeatures {
         compose = true
@@ -164,7 +178,6 @@ dependencies {
     implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-gson:$ktorVersion")
-    implementation("app.cash.sqldelight:android-driver:2.0.0")
     implementation("app.cash.sqldelight:coroutines-extensions:2.0.0")
 //    ------------------------------------------------
     debugImplementation("androidx.compose.ui:ui-tooling:$composeUiVersion")
@@ -194,13 +207,4 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeUiVersion")
     androidTestImplementation("io.mockk:mockk-android:1.10.0")
     androidTestImplementation("androidx.test:runner:1.5.2")
-}
-
-sqldelight {
-    databases {
-        create("PrayerCompanionDatabase") {
-            packageName.set("com.prayercompanion.prayercompanionandroid")
-            schemaOutputDirectory.set(file("src/main/sqldelight/databases"))
-        }
-    }
 }
