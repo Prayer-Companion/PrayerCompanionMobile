@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		47369BF12ABC86FC00198035 /* shared in Resources */ = {isa = PBXBuildFile; fileRef = 47369BF02ABC86FC00198035 /* shared */; };
 		473CF1352ABBF69F0040713A /* PrayerCompanionIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473CF1342ABBF69F0040713A /* PrayerCompanionIOSApp.swift */; };
 		473CF1372ABBF69F0040713A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473CF1362ABBF69F0040713A /* ContentView.swift */; };
 		473CF1392ABBF6A00040713A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 473CF1382ABBF6A00040713A /* Assets.xcassets */; };
@@ -14,6 +15,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		47369BF02ABC86FC00198035 /* shared */ = {isa = PBXFileReference; lastKnownFileType = folder; name = shared; path = ../shared; sourceTree = "<group>"; };
 		473CF1312ABBF69F0040713A /* PrayerCompanionIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PrayerCompanionIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		473CF1342ABBF69F0040713A /* PrayerCompanionIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerCompanionIOSApp.swift; sourceTree = "<group>"; };
 		473CF1362ABBF69F0040713A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -36,6 +38,7 @@
 		473CF1282ABBF69F0040713A = {
 			isa = PBXGroup;
 			children = (
+				47369BF02ABC86FC00198035 /* shared */,
 				473CF1332ABBF69F0040713A /* PrayerCompanionIOS */,
 				473CF1322ABBF69F0040713A /* Products */,
 			);
@@ -129,6 +132,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				473CF13D2ABBF6A00040713A /* Preview Assets.xcassets in Resources */,
+				47369BF12ABC86FC00198035 /* shared in Resources */,
 				473CF1392ABBF6A00040713A /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

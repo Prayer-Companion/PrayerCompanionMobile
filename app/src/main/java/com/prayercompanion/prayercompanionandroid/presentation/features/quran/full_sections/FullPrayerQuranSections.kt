@@ -18,12 +18,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.domain.models.quran.PrayerQuranReadingSections
 import com.prayercompanion.prayercompanionandroid.presentation.components.TitleHeader
 import com.prayercompanion.prayercompanionandroid.presentation.features.quran.components.QuranSection
 import com.prayercompanion.prayercompanionandroid.presentation.theme.AppBackground
 import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
+import com.prayercompanion.shared.domain.models.quran.PrayerQuranReadingSections
 
 @Preview(locale = "ar")
 @Composable

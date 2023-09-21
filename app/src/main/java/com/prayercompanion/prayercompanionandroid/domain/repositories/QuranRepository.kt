@@ -1,7 +1,7 @@
 package com.prayercompanion.prayercompanionandroid.domain.repositories
 
-import com.prayercompanion.prayercompanionandroid.domain.models.quran.PrayerQuranReadingSections
-import com.prayercompanion.prayercompanionandroid.domain.models.quran.QuranChapter
+import com.prayercompanion.shared.domain.models.quran.PrayerQuranReadingSections
+import com.prayercompanion.shared.domain.models.quran.QuranChapter
 import kotlinx.coroutines.flow.Flow
 
 interface QuranRepository {

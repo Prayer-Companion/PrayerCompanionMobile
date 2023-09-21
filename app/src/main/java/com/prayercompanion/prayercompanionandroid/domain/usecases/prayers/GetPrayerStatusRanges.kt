@@ -1,11 +1,11 @@
 package com.prayercompanion.prayercompanionandroid.domain.usecases.prayers
 
-import com.prayercompanion.prayercompanionandroid.domain.models.Address
 import com.prayercompanion.prayercompanionandroid.domain.models.Location
 import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
 import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
+import com.prayercompanion.shared.domain.models.Address
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 

@@ -1,8 +1,8 @@
 package com.prayercompanion.prayercompanionandroid.domain.usecases.quran
 
 
-import com.prayercompanion.prayercompanionandroid.domain.models.quran.PrayerQuranReadingSections
 import com.prayercompanion.prayercompanionandroid.domain.repositories.QuranRepository
+import com.prayercompanion.shared.domain.models.quran.PrayerQuranReadingSections
 
 class MarkQuranSectionAsRead constructor(
     private val repo: QuranRepository

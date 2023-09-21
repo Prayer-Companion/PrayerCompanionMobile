@@ -9,7 +9,6 @@ import com.prayercompanion.prayercompanionandroid.data.remote.dto.DayPrayerRespo
 import com.prayercompanion.prayercompanionandroid.data.remote.dto.DayPrayerStatusResponse
 import com.prayercompanion.prayercompanionandroid.data.remote.mappers.responsesToPrayerInfoEntity
 import com.prayercompanion.prayercompanionandroid.data.utils.Consts
-import com.prayercompanion.prayercompanionandroid.domain.models.Address
 import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.Location
 import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
@@ -18,6 +17,7 @@ import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
 import com.prayercompanion.prayercompanionandroid.domain.utils.exceptions.LocationMissingException
 import com.prayercompanion.prayercompanionandroid.domain.utils.exceptions.UnknownException
+import com.prayercompanion.shared.domain.models.Address
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map

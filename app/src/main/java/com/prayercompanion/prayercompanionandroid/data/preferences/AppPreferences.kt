@@ -3,9 +3,9 @@ package com.prayercompanion.prayercompanionandroid.data.preferences
 import android.content.Context
 import androidx.datastore.core.Serializer
 import com.prayercompanion.prayercompanionandroid.appPreferencesDataStore
-import com.prayercompanion.prayercompanionandroid.domain.models.Address
 import com.prayercompanion.prayercompanionandroid.domain.models.Location
 import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
+import com.prayercompanion.shared.domain.models.Address
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable

@@ -26,10 +26,10 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.domain.models.quran.PrayerQuranReadingSection
-import com.prayercompanion.prayercompanionandroid.domain.models.quran.QuranVerse
 import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
+import com.prayercompanion.shared.domain.models.quran.PrayerQuranReadingSection
+import com.prayercompanion.shared.domain.models.quran.QuranVerse
 
 @Composable
 fun QuranSection(

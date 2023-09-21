@@ -7,11 +7,11 @@ import com.prayercompanion.prayercompanionandroid.data.local.db.daos.QuranReadin
 import com.prayercompanion.prayercompanionandroid.data.local.db.entities.MemorizedQuranChapterEntity
 import com.prayercompanion.prayercompanionandroid.data.local.db.entities.QuranReadingSectionEntity
 import com.prayercompanion.prayercompanionandroid.data.remote.PrayerCompanionApi
-import com.prayercompanion.prayercompanionandroid.domain.models.quran.PrayerQuranReadingSection
-import com.prayercompanion.prayercompanionandroid.domain.models.quran.PrayerQuranReadingSections
-import com.prayercompanion.prayercompanionandroid.domain.models.quran.QuranChapter
 import com.prayercompanion.prayercompanionandroid.domain.repositories.QuranRepository
 import com.prayercompanion.prayercompanionandroid.domain.usecases.IsConnectedToInternet
+import com.prayercompanion.shared.domain.models.quran.PrayerQuranReadingSection
+import com.prayercompanion.shared.domain.models.quran.PrayerQuranReadingSections
+import com.prayercompanion.shared.domain.models.quran.QuranChapter
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf

@@ -3,8 +3,8 @@ package com.prayercompanion.prayercompanionandroid.presentation.features.quran.q
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.prayercompanion.prayercompanionandroid.domain.models.quran.PrayerQuranReadingSections
-import com.prayercompanion.prayercompanionandroid.domain.models.quran.QuranChapter
+import com.prayercompanion.shared.domain.models.quran.PrayerQuranReadingSections
+import com.prayercompanion.shared.domain.models.quran.QuranChapter
 
 class QuranState {
     var quranChapters by mutableStateOf(emptyList<QuranChapter>())

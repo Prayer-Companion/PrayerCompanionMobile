@@ -139,6 +139,7 @@ dependencies {
     implementation("androidx.compose.material:material:$composeUiVersion")
     implementation("androidx.navigation:navigation-compose:2.7.0-beta01")
     implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
 
     val koinAndroidVersion = "3.5.0"
     implementation("io.insert-koin:koin-android:$koinAndroidVersion")

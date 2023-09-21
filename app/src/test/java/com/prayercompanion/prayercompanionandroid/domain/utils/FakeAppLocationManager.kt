@@ -2,8 +2,8 @@ package com.prayercompanion.prayercompanionandroid.domain.utils
 
 import com.google.android.gms.location.LocationSettingsResponse
 import com.google.android.gms.tasks.Task
-import com.prayercompanion.prayercompanionandroid.domain.models.Address
 import com.prayercompanion.prayercompanionandroid.domain.models.Location
+import com.prayercompanion.shared.domain.models.Address
 
 internal class FakeAppLocationManager : AppLocationManager {
     override suspend fun getLastKnownLocation(): Location = Location(

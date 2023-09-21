@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.domain.models.quran
+package com.prayercompanion.shared.domain.models.quran
 
 data class QuranVerse(
     val index: Int,

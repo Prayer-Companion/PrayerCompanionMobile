@@ -4,6 +4,7 @@ plugins {
     kotlin("multiplatform")
     id("com.android.library")
     id("app.cash.sqldelight")
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -25,6 +26,8 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation("app.cash.sqldelight:coroutines-extensions:2.0.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
             }
         }
         val androidMain by getting {

@@ -15,9 +15,9 @@ import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.Task
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.prayercompanion.prayercompanionandroid.data.preferences.DataStoresRepo
-import com.prayercompanion.prayercompanionandroid.domain.models.Address
 import com.prayercompanion.prayercompanionandroid.domain.models.Location
 import com.prayercompanion.prayercompanionandroid.domain.models.toAppLocation
+import com.prayercompanion.shared.domain.models.Address
 import kotlinx.coroutines.flow.firstOrNull
 import logcat.logcat
 import java.util.Locale
