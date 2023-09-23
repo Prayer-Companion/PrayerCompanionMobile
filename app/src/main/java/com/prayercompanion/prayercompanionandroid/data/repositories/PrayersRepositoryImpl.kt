@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
-import java.util.TimeZone
+import kotlinx.datetime.TimeZone
 
 class PrayersRepositoryImpl constructor(
     private val prayerCompanionApi: PrayerCompanionApi,
@@ -39,7 +39,7 @@ class PrayersRepositoryImpl constructor(
     ): Result<Unit> {
         return try {
             val prayersResponse = prayerCompanionApi.getPrayers(
-                timeZone = TimeZone.getDefault().id,
+                timeZone = TimeZone.currentSystemDefault().id,
                 latitude = location.latitude.toString(),
                 longitude = location.longitude.toString(),
                 countryCode = address?.countryCode,

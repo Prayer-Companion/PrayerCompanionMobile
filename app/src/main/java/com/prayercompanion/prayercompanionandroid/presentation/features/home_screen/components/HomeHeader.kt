@@ -36,7 +36,6 @@ import com.prayercompanion.prayercompanionandroid.presentation.utils.compose.Mea
 import com.prayercompanion.prayercompanionandroid.presentation.utils.getPrayerNameStringRes
 import com.prayercompanion.shared.domain.models.PrayerInfo
 import com.prayercompanion.shared.domain.models.PrayerStatus
-import java.util.SortedMap
 
 @Preview(name = "en", locale = "en")
 @Preview(name = "ar", locale = "ar")
@@ -46,7 +45,7 @@ fun HomeHeader(
     currentPrayer: PrayerInfo = PrayerInfo.Default,
     nextPrayer: PrayerInfo = PrayerInfo.Default,
     durationUntilNextPrayer: RemainingDuration = RemainingDuration(0, 0, 0),
-    statusesCounts: SortedMap<PrayerStatus, Int> = sortedMapOf(),
+    statusesCounts: List<Pair<PrayerStatus, Int>> = listOf(),
     onPrayedNowClicked: () -> Unit = { },
     onStatusOverviewBarClicked: () -> Unit = { }
 ) = PrayerCompanionAndroidTheme {

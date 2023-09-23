@@ -41,13 +41,12 @@ import com.prayercompanion.shared.domain.models.DayPrayersInfo
 import com.prayercompanion.shared.domain.models.PrayerInfo
 import com.prayercompanion.shared.domain.models.PrayerStatus
 import kotlinx.datetime.LocalDate
-import java.util.SortedMap
 
 @Composable
 fun HomeScreenContent(
     currentPrayerInfo: PrayerInfo,
     nextPrayerInfo: PrayerInfo,
-    statusesOverview: SortedMap<PrayerStatus, Int>,
+    statusesOverview: List<Pair<PrayerStatus, Int>>,
     durationUntilNextPrayer: RemainingDuration,
     selectedDate: LocalDate,
     selectedDayPrayersInfo: DayPrayersInfo,
@@ -148,7 +147,7 @@ private fun HomeScreenContentPreview() = PrayerCompanionAndroidTheme {
     HomeScreenContent(
         currentPrayerInfo = PrayerInfo.Default,
         nextPrayerInfo = PrayerInfo.Default,
-        statusesOverview = sortedMapOf(),
+        statusesOverview = listOf(),
         durationUntilNextPrayer = RemainingDuration(0, 0, 0),
         selectedDate = LocalDate.now(),
         selectedDayPrayersInfo = DayPrayersInfo.Default,

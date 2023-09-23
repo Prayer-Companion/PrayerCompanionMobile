@@ -5,7 +5,6 @@ import com.prayercompanion.shared.domain.models.DailyPrayersCombo
 import com.prayercompanion.shared.domain.models.DayPrayersInfo
 import com.prayercompanion.shared.domain.models.PrayerStatus
 import kotlinx.datetime.LocalDate
-import java.util.SortedMap
 
 data class HomeScreenState(
     val selectedDayPrayersInfo: DayPrayersInfo = DayPrayersInfo.Default,
@@ -22,7 +21,7 @@ data class HomeScreenHeaderState(
         DayPrayersInfo.Default,
         DayPrayersInfo.Default
     ),
-    val statusesOverview: SortedMap<PrayerStatus, Int> = sortedMapOf()
+    val statusesOverview: List<Pair<PrayerStatus, Int>> = listOf()
 ) {
     val currentAndNextPrayer get() = dailyPrayersCombo.currentAndNextPrayer
 }

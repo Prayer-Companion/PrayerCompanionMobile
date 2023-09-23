@@ -15,17 +15,16 @@ import androidx.compose.ui.unit.dp
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.prayercompanionandroid.presentation.utils.getPrayerStatusCorrespondingColor
 import com.prayercompanion.shared.domain.models.PrayerStatus
-import java.util.SortedMap
 
 @Composable
 fun PrayerStatusesOverViewBar(
     modifier: Modifier = Modifier,
-    statusesCounts: SortedMap<PrayerStatus, Int> = sortedMapOf()
+    statusesCounts: List<Pair<PrayerStatus, Int>> = listOf()
 ) = PrayerCompanionAndroidTheme {
     val emptyColor = MaterialTheme.colors.secondary
     Canvas(modifier = modifier) {
         val isLTR = layoutDirection == LayoutDirection.Ltr
-        val totalStatuses = statusesCounts.values.sum().toFloat()
+        val totalStatuses = statusesCounts.sumOf { it.second }.toFloat()
         var accumulatedValue = totalStatuses
 
         if (statusesCounts.isEmpty()) {
@@ -70,7 +69,7 @@ private fun PrayerStatusesOverViewBarPreview() {
         modifier = Modifier
             .fillMaxWidth()
             .height(45.dp),
-        statusesCounts = sortedMapOf(
+        statusesCounts = listOf(
             PrayerStatus.Jamaah to 8,
             PrayerStatus.OnTime to 5,
             PrayerStatus.AfterHalfTime to 5,

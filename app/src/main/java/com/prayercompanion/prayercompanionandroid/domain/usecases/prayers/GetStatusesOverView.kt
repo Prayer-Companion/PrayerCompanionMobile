@@ -8,13 +8,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDateTime
-import java.util.SortedMap
 
 class GetStatusesOverView constructor(
     private val repository: PrayersRepository
 ) {
 
-    fun call(): Flow<SortedMap<PrayerStatus, Int>> {
+    fun call(): Flow<List<Pair<PrayerStatus, Int>>> {
         val now = LocalDateTime.now()
         val startDateTime = now.minus(3 * 24, DateTimeUnit.HOUR)
 
@@ -22,20 +21,16 @@ class GetStatusesOverView constructor(
             .map { it ->
                 val statuses = it.mapNotNull { it }
 
-                val order = listOf(
-                    PrayerStatus.Jamaah,
-                    PrayerStatus.OnTime,
-                    PrayerStatus.AfterHalfTime,
-                    PrayerStatus.Late,
-                    PrayerStatus.Qadaa,
-                    PrayerStatus.Missed
-                )
+                val order = PrayerStatus.values().toList()
 
                 statuses
                     .groupingBy { it }
                     .eachCount()
-                    .toSortedMap { t, t2 ->
-                        order.indexOf(t) - order.indexOf(t2)
+                    .filter { it.key != PrayerStatus.None }
+                    .map {
+                        it.key to it.value
+                    }.sortedWith { t1, t2 ->
+                        order.indexOf(t1.first) - order.indexOf(t2.first)
                     }
             }
     }

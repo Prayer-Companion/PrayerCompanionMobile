@@ -187,7 +187,6 @@ class HomeScreenViewModel constructor(
             getStatusesOverView.call()
                 .collectLatest { statuses ->
                     withContext(Dispatchers.Main) {
-                        statuses.remove(PrayerStatus.None)
                         headerState = headerState.copy(statusesOverview = statuses)
                     }
                 }
