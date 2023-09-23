@@ -8,6 +8,7 @@ import com.prayercompanion.prayercompanionandroid.presentation.features.onboardi
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.sign_in.SignInViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.splash_screen.SplashScreenViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.QiblaViewModel
+import com.prayercompanion.prayercompanionandroid.presentation.features.quran.full_sections.FullPrayerQuranSectionsViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.features.quran.quran.QuranViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.features.settings.SettingsScreenViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.utils.FeedbackUtilsImpl
@@ -34,4 +35,5 @@ val presentationModule = module {
     viewModelOf(::SignInViewModel)
     viewModelOf(::PermissionsRequestViewModel)
     viewModelOf(::HomeScreenViewModel)
+    viewModelOf(::FullPrayerQuranSectionsViewModel)
 }

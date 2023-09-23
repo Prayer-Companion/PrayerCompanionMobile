@@ -5,37 +5,35 @@ import com.prayercompanion.prayercompanionandroid.data.remote.dto.DayPrayerRespo
 import com.prayercompanion.prayercompanionandroid.data.remote.dto.DayPrayerStatusResponse
 import com.prayercompanion.prayercompanionandroid.data.utils.Consts
 import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
+import kotlinx.datetime.LocalDateTime
 
 fun responsesToPrayerInfoEntity(
     dayPrayerResponse: DayPrayerResponse,
     dayStatuses: DayPrayerStatusResponse?
 ): List<PrayerInfoEntity> {
-    val fajrDateTime = LocalDateTime.of(
-        LocalDate.parse(dayPrayerResponse.date, Consts.DateFormatter),
-        LocalTime.parse(dayPrayerResponse.fajrTime.uppercase(), Consts.TimeFormatter)
+    val fajrDateTime = LocalDateTime(
+        Consts.DateFormatter.parseToLocalDate(dayPrayerResponse.date),
+        Consts.TimeFormatter.parseToLocalTime(dayPrayerResponse.fajrTime.uppercase())
     )
-    val sunriseDateTime = LocalDateTime.of(
-        LocalDate.parse(dayPrayerResponse.date, Consts.DateFormatter),
-        LocalTime.parse(dayPrayerResponse.sunriseTime.uppercase(), Consts.TimeFormatter),
+    val sunriseDateTime = LocalDateTime(
+        Consts.DateFormatter.parseToLocalDate(dayPrayerResponse.date),
+        Consts.TimeFormatter.parseToLocalTime(dayPrayerResponse.sunriseTime.uppercase())
     )
-    val dhuhrDateTime = LocalDateTime.of(
-        LocalDate.parse(dayPrayerResponse.date, Consts.DateFormatter),
-        LocalTime.parse(dayPrayerResponse.dhuhrTime.uppercase(), Consts.TimeFormatter),
+    val dhuhrDateTime = LocalDateTime(
+        Consts.DateFormatter.parseToLocalDate(dayPrayerResponse.date),
+        Consts.TimeFormatter.parseToLocalTime(dayPrayerResponse.dhuhrTime.uppercase())
     )
-    val asrDateTime = LocalDateTime.of(
-        LocalDate.parse(dayPrayerResponse.date, Consts.DateFormatter),
-        LocalTime.parse(dayPrayerResponse.asrTime.uppercase(), Consts.TimeFormatter),
+    val asrDateTime = LocalDateTime(
+        Consts.DateFormatter.parseToLocalDate(dayPrayerResponse.date),
+        Consts.TimeFormatter.parseToLocalTime(dayPrayerResponse.asrTime.uppercase())
     )
-    val maghribDateTime = LocalDateTime.of(
-        LocalDate.parse(dayPrayerResponse.date, Consts.DateFormatter),
-        LocalTime.parse(dayPrayerResponse.maghribTime.uppercase(), Consts.TimeFormatter),
+    val maghribDateTime = LocalDateTime(
+        Consts.DateFormatter.parseToLocalDate(dayPrayerResponse.date),
+        Consts.TimeFormatter.parseToLocalTime(dayPrayerResponse.maghribTime.uppercase())
     )
-    val ishaDateTime = LocalDateTime.of(
-        LocalDate.parse(dayPrayerResponse.date, Consts.DateFormatter),
-        LocalTime.parse(dayPrayerResponse.ishaTime.uppercase(), Consts.TimeFormatter),
+    val ishaDateTime = LocalDateTime(
+        Consts.DateFormatter.parseToLocalDate(dayPrayerResponse.date),
+        Consts.TimeFormatter.parseToLocalTime(dayPrayerResponse.ishaTime.uppercase())
     )
 
 

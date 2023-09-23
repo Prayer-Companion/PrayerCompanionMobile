@@ -1,15 +1,19 @@
 package com.prayercompanion.prayercompanionandroid.domain.usecases.prayers
 
+import com.prayercompanion.prayercompanionandroid.domain.extensions.now
 import com.prayercompanion.prayercompanionandroid.domain.models.DailyPrayersCombo
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
 import com.prayercompanion.prayercompanionandroid.domain.usecases.IsConnectedToInternet
 import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
 import com.prayercompanion.prayercompanionandroid.domain.utils.exceptions.LocationMissingException
 import com.prayercompanion.prayercompanionandroid.domain.utils.exceptions.UnknownException
+import com.prayercompanion.shared.domain.models.app.YearMonth
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.time.LocalDate
-import java.time.YearMonth
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
 
 class GetDailyPrayersCombo constructor(
     private val appLocationManager: AppLocationManager,
@@ -61,8 +65,8 @@ class GetDailyPrayersCombo constructor(
 
     private suspend fun getDailyPrayersInfoComboFromDB(): DailyPrayersCombo? {
         val today = LocalDate.now()
-        val yesterday = today.minusDays(1)
-        val tomorrow = today.plusDays(1)
+        val yesterday = today.minus(1, DateTimeUnit.DAY)
+        val tomorrow = today.plus(1, DateTimeUnit.DAY)
 
         val todayPrayersInfo = prayersRepository.getDayPrayersFromDB(today) ?: return null
         val yesterdayPrayersInfo = prayersRepository.getDayPrayersFromDB(yesterday)

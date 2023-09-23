@@ -1,7 +1,12 @@
 package com.prayercompanion.prayercompanionandroid.domain.models
 
-import java.time.LocalDate
-import java.time.LocalTime
+import com.prayercompanion.prayercompanionandroid.domain.extensions.max
+import com.prayercompanion.prayercompanionandroid.domain.extensions.min
+import com.prayercompanion.prayercompanionandroid.domain.extensions.now
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.minus
 
 data class DailyPrayersCombo(
     val todayPrayersInfo: DayPrayersInfo,
@@ -22,11 +27,11 @@ data class DailyPrayersCombo(
             val todayFajr = todayPrayersInfo.get(Prayer.FAJR)
             val todayIsha = todayPrayersInfo.get(Prayer.ISHA)
 
-            if (now in LocalTime.MIN ..< todayFajr.time) {
+            if (now in LocalTime.min() ..< todayFajr.time) {
                 return yesterdayPrayersInfo?.get(Prayer.ISHA) ?: PrayerInfo.Default
             }
 
-            if (now in todayIsha.time .. LocalTime.MAX) {
+            if (now in todayIsha.time .. LocalTime.max()) {
                 return todayIsha
             }
 
@@ -49,7 +54,7 @@ data class DailyPrayersCombo(
             todayPrayersInfo.get(nextPrayer)
         } else {
             val today = LocalDate.now()
-            val yesterday = today.minusDays(1)
+            val yesterday = today.minus(1, DateTimeUnit.DAY)
 
             // if it is today's Isha then get tomorrow's Fajr
             // if it is yesterday's Isha then get today's Fajr

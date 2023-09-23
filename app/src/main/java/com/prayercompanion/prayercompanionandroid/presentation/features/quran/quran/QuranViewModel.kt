@@ -17,7 +17,6 @@ import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.Tracker
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
-import com.prayercompanion.prayercompanionandroid.toJson
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -164,12 +163,8 @@ class QuranViewModel constructor(
 
     private fun onViewFullClicked() {
         tracker.trackButtonClicked(TrackedButtons.VIEW_FULL_QURAN_READING_SECTION)
-        val sections = state.sections ?: return
         sendUiEvent(
-            UiEvent.Navigate(
-                Route.FullQuranSections,
-                listOf(toJson(sections))
-            )
+            UiEvent.Navigate(Route.FullQuranSections)
         )
     }
 

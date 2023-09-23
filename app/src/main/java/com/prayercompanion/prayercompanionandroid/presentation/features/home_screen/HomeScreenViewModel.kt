@@ -12,10 +12,11 @@ import com.google.android.gms.common.api.ResolvableApiException
 import com.prayercompanion.prayercompanionandroid.BuildConfig
 import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.prayercompanionandroid.data.preferences.DataStoresRepo
+import com.prayercompanion.prayercompanionandroid.domain.extensions.instantBetween
+import com.prayercompanion.prayercompanionandroid.domain.extensions.now
 import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
-import com.prayercompanion.prayercompanionandroid.domain.models.RemainingDuration
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetDailyPrayersCombo
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetDayPrayersFlow
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetStatusesOverView
@@ -25,11 +26,11 @@ import com.prayercompanion.prayercompanionandroid.domain.usecases.quran.LoadAndS
 import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
 import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.TrackedButtons
 import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.Tracker
+import com.prayercompanion.prayercompanionandroid.presentation.models.RemainingDuration
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
 import com.prayercompanion.prayercompanionandroid.presentation.utils.toUiText
 import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
-
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -41,11 +42,13 @@ import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
 import logcat.asLog
 import logcat.logcat
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.temporal.ChronoUnit
 
 class HomeScreenViewModel constructor(
     private val getDayPrayersFlow: GetDayPrayersFlow,
@@ -120,12 +123,12 @@ class HomeScreenViewModel constructor(
 
     fun onPreviousDayButtonClicked() {
         tracker.trackButtonClicked(TrackedButtons.VIEW_PREVIOUS_DAY_PRAYERS)
-        updateSelectedDate(state.selectedDate.minusDays(1))
+        updateSelectedDate(state.selectedDate.minus(1, DateTimeUnit.DAY))
     }
 
     fun onNextDayButtonClicked() {
         tracker.trackButtonClicked(TrackedButtons.VIEW_NEXT_DAY_PRAYERS)
-        updateSelectedDate(state.selectedDate.plusDays(1))
+        updateSelectedDate(state.selectedDate.plus(1, DateTimeUnit.DAY))
     }
 
     fun onStatusSelected(prayerStatus: PrayerStatus, prayerInfo: PrayerInfo) {
@@ -246,8 +249,10 @@ class HomeScreenViewModel constructor(
     }
 
     private fun startDurationCountDown() {
-        val durationInMillis = ChronoUnit.MILLIS
-            .between(LocalDateTime.now(), headerState.currentAndNextPrayer.second.dateTime)
+        val durationInMillis = instantBetween(
+            LocalDateTime.now(),
+            headerState.currentAndNextPrayer.second.dateTime
+        ).inWholeMilliseconds
 
         if (durationInMillis <= 0) return
 

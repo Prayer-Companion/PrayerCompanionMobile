@@ -1,6 +1,5 @@
 package com.prayercompanion.prayercompanionandroid.data.repositories
 
-import com.prayercompanion.prayercompanionandroid.atEndOfDay
 import com.prayercompanion.prayercompanionandroid.data.local.db.daos.PrayersInfoDao
 import com.prayercompanion.prayercompanionandroid.data.local.db.entities.PrayerInfoEntity
 import com.prayercompanion.prayercompanionandroid.data.local.db.mappers.toDayPrayerInfo
@@ -9,22 +8,23 @@ import com.prayercompanion.prayercompanionandroid.data.remote.dto.DayPrayerRespo
 import com.prayercompanion.prayercompanionandroid.data.remote.dto.DayPrayerStatusResponse
 import com.prayercompanion.prayercompanionandroid.data.remote.mappers.responsesToPrayerInfoEntity
 import com.prayercompanion.prayercompanionandroid.data.utils.Consts
+import com.prayercompanion.prayercompanionandroid.domain.extensions.atEndOfDay
+import com.prayercompanion.prayercompanionandroid.domain.extensions.atStartOfDay
 import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
-import com.prayercompanion.prayercompanionandroid.domain.models.Location
 import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
 import com.prayercompanion.prayercompanionandroid.domain.utils.exceptions.LocationMissingException
 import com.prayercompanion.prayercompanionandroid.domain.utils.exceptions.UnknownException
-import com.prayercompanion.shared.domain.models.Address
+import com.prayercompanion.shared.domain.models.Location
+import com.prayercompanion.shared.domain.models.app.Address
+import com.prayercompanion.shared.domain.models.app.YearMonth
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.YearMonth
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import java.util.TimeZone
 
 class PrayersRepositoryImpl constructor(
@@ -44,7 +44,7 @@ class PrayersRepositoryImpl constructor(
                 longitude = location.longitude.toString(),
                 countryCode = address?.countryCode,
                 cityName = address?.locality,
-                monthOfYear = Consts.MonthYearFormatter.format(yearMonth)
+                monthOfYear = Consts.MonthYearFormatter.format(yearMonth.atDay(1))
             )
 
             val startOfMonth = yearMonth.atDay(1)
@@ -67,7 +67,7 @@ class PrayersRepositoryImpl constructor(
     ): DayPrayersInfo? {
         val savedPrayers = dao.getPrayers(
             startDateTime = dayDate.atStartOfDay(),
-            endDateTime = dayDate.atTime(LocalTime.MAX)
+            endDateTime = dayDate.atEndOfDay()
         )
 
         return savedPrayers.takeIf { it.isNotEmpty() }?.toDayPrayerInfo()
@@ -167,7 +167,7 @@ class PrayersRepositoryImpl constructor(
     ): Flow<Result<List<PrayerInfoEntity>>> {
         val savedPrayers = dao.getPrayersFlow(
             startDateTime = dayDate.atStartOfDay(),
-            endDateTime = dayDate.atTime(LocalTime.MAX)
+            endDateTime = dayDate.atEndOfDay()
         )
 
         return savedPrayers.map {

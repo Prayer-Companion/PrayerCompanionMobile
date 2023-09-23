@@ -35,7 +35,7 @@ import com.prayercompanion.prayercompanionandroid.presentation.theme.AppBackgrou
 import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
-import com.prayercompanion.shared.domain.models.AppLanguage
+import com.prayercompanion.shared.domain.models.app.AppLanguage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 

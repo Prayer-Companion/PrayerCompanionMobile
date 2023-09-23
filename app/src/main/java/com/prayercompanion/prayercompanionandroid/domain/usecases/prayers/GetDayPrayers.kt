@@ -3,7 +3,7 @@ package com.prayercompanion.prayercompanionandroid.domain.usecases.prayers
 import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
 import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 
 class GetDayPrayers constructor(
     private val prayersRepository: PrayersRepository,

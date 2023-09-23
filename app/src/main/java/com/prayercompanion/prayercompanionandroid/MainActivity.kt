@@ -30,12 +30,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.Tracker
 import com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.HomeScreen
@@ -48,6 +46,7 @@ import com.prayercompanion.prayercompanionandroid.presentation.features.onboardi
 import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.QiblaScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.QiblaViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.features.quran.full_sections.FullPrayerQuranSections
+import com.prayercompanion.prayercompanionandroid.presentation.features.quran.full_sections.FullPrayerQuranSectionsViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.features.quran.quran.QuranScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.quran.quran.QuranViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.features.settings.SettingsScreen
@@ -55,7 +54,6 @@ import com.prayercompanion.prayercompanionandroid.presentation.features.settings
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.prayercompanionandroid.presentation.utils.FeedbackUtils
-import com.prayercompanion.shared.domain.models.quran.PrayerQuranReadingSections
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -165,17 +163,9 @@ class MainActivity : AppCompatActivity() {
                         }
                         composable(
                             route = Route.FullQuranSections.routeName,
-                            arguments = listOf(
-                                navArgument("sections") {
-                                    type = NavType.StringType
-                                }
-                            )
                         ) {
-                            val sectionsJson = it.arguments?.getString("sections") ?: "{}"
-                            val sections = fromJson(sectionsJson)
-                                ?: PrayerQuranReadingSections.EMPTY
-
-                            FullPrayerQuranSections(sections) {
+                            val viewModel: FullPrayerQuranSectionsViewModel = getViewModel()
+                            FullPrayerQuranSections(viewModel.quranReadingSections) {
                                 navController.popBackStack()
                             }
                         }

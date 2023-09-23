@@ -1,13 +1,16 @@
 package com.prayercompanion.prayercompanionandroid.domain.usecases.prayers
 
-import com.prayercompanion.prayercompanionandroid.domain.models.Location
+import com.prayercompanion.prayercompanionandroid.domain.extensions.instantBetween
+import com.prayercompanion.prayercompanionandroid.domain.extensions.plus
 import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
 import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
-import com.prayercompanion.shared.domain.models.Address
-import java.time.LocalDateTime
-import java.time.temporal.ChronoUnit
+import com.prayercompanion.shared.domain.models.Location
+import com.prayercompanion.shared.domain.models.app.Address
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.plus
 
 class GetPrayerStatusRanges constructor(
     private val prayersRepository: PrayersRepository,
@@ -43,32 +46,36 @@ class GetPrayerStatusRanges constructor(
         location: Location?,
         address: Address?
     ): Map<PrayerStatus, OpenEndRange<LocalDateTime>>? {
-        val todayPrayers = prayersRepository.getDayPrayers(location, address, prayerDateTime.toLocalDate())
+        val todayPrayers = prayersRepository.getDayPrayers(location, address, prayerDateTime.date)
 
         todayPrayers
             .map { it.get(nextPrayer) }
             .onSuccess { nextPrayerInfo ->
-                val fullTimeMinutes = ChronoUnit.MINUTES
-                    .between(prayerDateTime, nextPrayerInfo.dateTime)
+
+                val fullTimeMinutes = instantBetween(prayerDateTime, nextPrayerInfo.dateTime).inWholeMinutes
 
                 return mapOf(
                     PrayerStatus.Late to run {
                         val start = fullTimeMinutes - LATE_REMAINING_TIME_IN_MINUTES
+                        val startingDateTime = prayerDateTime
+                            .plus(start, DateTimeUnit.MINUTE)
+                        val endingDateTime = prayerDateTime
+                            .plus(fullTimeMinutes, DateTimeUnit.MINUTE)
 
-                        prayerDateTime.plusMinutes(start)..<prayerDateTime.plusMinutes(
-                            fullTimeMinutes
-                        )
+                        startingDateTime..<endingDateTime
                     },
                     PrayerStatus.AfterHalfTime to run {
                         val start = (fullTimeMinutes / 2)
                         val end = fullTimeMinutes - LATE_REMAINING_TIME_IN_MINUTES
+                        val startingDateTime = prayerDateTime.plus(start, DateTimeUnit.MINUTE)
+                        val endingDateTime = prayerDateTime.plus(end, DateTimeUnit.MINUTE)
 
-                        prayerDateTime.plusMinutes(start)..<prayerDateTime.plusMinutes(end)
+                        startingDateTime..<endingDateTime
                     },
                     PrayerStatus.OnTime to run {
                         val end = fullTimeMinutes / 2
 
-                        prayerDateTime..<prayerDateTime.plusMinutes(end)
+                        prayerDateTime..<prayerDateTime.plus(end, DateTimeUnit.MINUTE)
                     },
                 )
             }
@@ -80,10 +87,10 @@ class GetPrayerStatusRanges constructor(
         location: Location?,
         address: Address?,
     ): Map<PrayerStatus, OpenEndRange<LocalDateTime>>? {
-        val date = prayerDateTime.toLocalDate()
+        val date = prayerDateTime.date
         val todayPrayers = prayersRepository.getDayPrayers(location, address, date)
         val nextDayPrayers =
-            prayersRepository.getDayPrayers(location, address, date.plusDays(1))
+            prayersRepository.getDayPrayers(location, address, date.plus(1, DateTimeUnit.DAY))
 
         val maghribDateTime =
             todayPrayers
@@ -95,28 +102,30 @@ class GetPrayerStatusRanges constructor(
             .getOrNull() ?: return null
 
         // The night in islam is the time between Maghrib and Fajr
-        val nightTimeInMinutes = ChronoUnit.MINUTES
-            .between(maghribDateTime, fajr.dateTime)
+        val nightTimeInMinutes = instantBetween(maghribDateTime, fajr.dateTime).inWholeMinutes
 
         return mapOf(
             // After middle of the night
             PrayerStatus.Late to run {
                 val start = nightTimeInMinutes / 2
 
-                maghribDateTime.plusMinutes(start)..<fajr.dateTime
+                maghribDateTime.plus(start, DateTimeUnit.MINUTE)..<fajr.dateTime
             },
             // Between first third of the night and middle of the night
             PrayerStatus.AfterHalfTime to run {
                 val start = nightTimeInMinutes / 3
                 val end = nightTimeInMinutes / 2
 
-                maghribDateTime.plusMinutes(start)..<maghribDateTime.plusMinutes(end)
+                val startingDateTime = maghribDateTime.plus(start, DateTimeUnit.MINUTE)
+                val endingDateTime = maghribDateTime.plus(end, DateTimeUnit.MINUTE)
+
+                startingDateTime..<endingDateTime
             },
             // Before first third of the night
             PrayerStatus.OnTime to run {
                 val firstThirdOfNight = nightTimeInMinutes / 3
 
-                prayerDateTime..<maghribDateTime.plusMinutes(firstThirdOfNight)
+                prayerDateTime..<maghribDateTime.plus(firstThirdOfNight, DateTimeUnit.MINUTE)
             },
         )
     }

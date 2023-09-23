@@ -88,7 +88,7 @@ fun PrayerItem(
                 Text(
                     modifier = Modifier
                         .align(Alignment.Center),
-                    text = prayerInfo.time.format(PresentationConsts.TimeFormatter),
+                    text = PresentationConsts.TimeFormatter.format(prayerInfo.time),
                     style = MaterialTheme.typography.body1,
                     color = MaterialTheme.colors.onPrimary
                 )

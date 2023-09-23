@@ -1,6 +1,6 @@
 package com.prayercompanion.prayercompanionandroid.presentation.features.settings
 
-import com.prayercompanion.shared.domain.models.AppLanguage
+import com.prayercompanion.shared.domain.models.app.AppLanguage
 
 data class SettingsState(
     val language: AppLanguage = AppLanguage.AR,

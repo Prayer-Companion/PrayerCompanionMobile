@@ -34,11 +34,9 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
-import java.time.Clock
 
 val domainModule = module {
     singleOf(::AppLocationManagerImpl) { bind<AppLocationManager>() }
-    single { Clock.systemDefaultZone() }
     single {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(androidContext().getString(R.string.default_web_client_id))

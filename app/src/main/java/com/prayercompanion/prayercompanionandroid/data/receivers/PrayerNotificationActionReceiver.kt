@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import com.prayercompanion.prayercompanionandroid.data.utils.notifications.PrayerNotificationAction
 import com.prayercompanion.prayercompanionandroid.data.utils.notifications.PrayersNotificationsService
+import com.prayercompanion.prayercompanionandroid.domain.extensions.now
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.SetPrayerStatusByDateTime
 import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.TrackedButtons
@@ -15,9 +16,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.LocalDateTime
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import java.time.LocalDateTime
 
 class PrayerNotificationActionReceiver : BroadcastReceiver(), KoinComponent {
 

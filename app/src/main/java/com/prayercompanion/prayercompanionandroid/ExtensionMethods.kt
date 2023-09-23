@@ -15,9 +15,6 @@ import androidx.navigation.NavOptionsBuilder
 import com.google.gson.Gson
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import java.io.Serializable
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
 
 fun NavController.navigate(event: UiEvent.Navigate, builder: NavOptionsBuilder.() -> Unit = {}) {
     this.navigate(route = event.route.name + event.args.joinToString { "/$it" }, builder)
@@ -45,10 +42,6 @@ fun <T : Serializable?> Intent.getSerializable(key: String, mClass: Class<T>): T
 
 fun <T> Result.Companion.failure(message: String): Result<T> {
     return failure(Exception(message))
-}
-
-fun LocalDate.atEndOfDay(): LocalDateTime {
-    return this.atTime(LocalTime.MAX)
 }
 
 inline fun <reified T> fromJson(str: String): T? {

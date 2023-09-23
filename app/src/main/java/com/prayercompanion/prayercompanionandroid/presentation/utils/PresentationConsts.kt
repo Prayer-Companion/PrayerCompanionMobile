@@ -1,17 +1,17 @@
 package com.prayercompanion.prayercompanionandroid.presentation.utils
 
-import java.time.format.DateTimeFormatter
-import java.util.Locale
+import com.prayercompanion.shared.domain.models.app.Locale
+import com.prayercompanion.shared.domain.utils.LocalDateTimeFormatter
 
 object PresentationConsts {
-    val DateFormatter: DateTimeFormatter
-        get() = DateTimeFormatter
-            .ofPattern("dd/MM/yyyy", Locale.getDefault())
-    val TimeFormatter: DateTimeFormatter
-        get() = DateTimeFormatter
-            .ofPattern("hh:mm a", Locale.getDefault())
+    val DateFormatter: LocalDateTimeFormatter
+        get() = LocalDateTimeFormatter
+            .ofPattern("dd/MM/yyyy", Locale.default())
+    val TimeFormatter: LocalDateTimeFormatter
+        get() = LocalDateTimeFormatter
+            .ofPattern("hh:mm a", Locale.default())
 
-    val CounterTimeFormatter: DateTimeFormatter
-        get() = DateTimeFormatter
-            .ofPattern("HH:mm:ss", Locale.getDefault())
+    val CounterTimeFormatter: LocalDateTimeFormatter
+        get() = LocalDateTimeFormatter
+            .ofPattern("HH:mm:ss", Locale.default())
 }

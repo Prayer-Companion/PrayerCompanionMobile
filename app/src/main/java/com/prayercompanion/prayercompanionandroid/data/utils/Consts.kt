@@ -1,15 +1,15 @@
 package com.prayercompanion.prayercompanionandroid.data.utils
 
-import java.time.format.DateTimeFormatter
-import java.util.Locale
+import com.prayercompanion.shared.domain.models.app.Locale
+import com.prayercompanion.shared.domain.utils.LocalDateTimeFormatter
 
 object Consts {
-    val FullDateTimeFormatter: DateTimeFormatter = DateTimeFormatter
-        .ofPattern("dd/MM/yyyy - HH:mm", Locale.ENGLISH)
-    val MonthYearFormatter: DateTimeFormatter = DateTimeFormatter
-        .ofPattern("MM/yyyy", Locale.ENGLISH)
-    val DateFormatter: DateTimeFormatter = DateTimeFormatter
-        .ofPattern("dd/MM/yyyy", Locale.ENGLISH)
-    val TimeFormatter: DateTimeFormatter = DateTimeFormatter
-        .ofPattern("HH:mm", Locale.ENGLISH)
+    val FullDateTimeFormatter: LocalDateTimeFormatter = LocalDateTimeFormatter
+        .ofPattern("dd/MM/yyyy - HH:mm", Locale.en())
+    val MonthYearFormatter: LocalDateTimeFormatter = LocalDateTimeFormatter
+        .ofPattern("MM/yyyy", Locale.en())
+    val DateFormatter: LocalDateTimeFormatter = LocalDateTimeFormatter
+        .ofPattern("dd/MM/yyyy", Locale.en())
+    val TimeFormatter: LocalDateTimeFormatter = LocalDateTimeFormatter
+        .ofPattern("HH:mm", Locale.en())
 }

@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import kotlinx.serialization.Serializable
 
+@Serializable
 sealed class UiText {
     data class DynamicString(val text: String) : UiText()
     data class StringResource(@StringRes val resId: Int) : UiText()

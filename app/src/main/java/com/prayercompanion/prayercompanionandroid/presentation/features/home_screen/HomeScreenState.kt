@@ -1,9 +1,10 @@
 package com.prayercompanion.prayercompanionandroid.presentation.features.home_screen
 
+import com.prayercompanion.prayercompanionandroid.domain.extensions.now
 import com.prayercompanion.prayercompanionandroid.domain.models.DailyPrayersCombo
 import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 import java.util.SortedMap
 
 data class HomeScreenState(

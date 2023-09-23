@@ -8,7 +8,7 @@ enum class Route(val routeName: String, val bottomNavBar: Boolean = true) {
     Qibla(routeName = "Qibla"),
     Quran(routeName = "Quran"),
     Settings(routeName = "Settings"),
-    FullQuranSections(routeName = "FullQuranSections/{sections}");
+    FullQuranSections(routeName = "FullQuranSections");
 
     companion object {
         fun fromStringRoute(str: String?): Route {

@@ -6,13 +6,15 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import com.prayercompanion.prayercompanionandroid.data.receivers.AlarmReceiver
+import com.prayercompanion.prayercompanionandroid.domain.extensions.now
 import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerNotificationItem
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetDayPrayers
 import com.prayercompanion.prayercompanionandroid.domain.utils.PrayersAlarmScheduler
 import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
-import java.time.LocalDateTime
-import java.time.ZoneId
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
 
 class AndroidPrayersAlarmScheduler constructor(
     private val context: Context,
@@ -24,7 +26,7 @@ class AndroidPrayersAlarmScheduler constructor(
     override suspend fun scheduleTodayPrayersNotifications() {
         val now = LocalDateTime.now()
         getDayPrayers
-            .call(now.toLocalDate())
+            .call(now.date)
             .getOrElse {
                 it.printStackTraceInDebug()
                 return
@@ -44,9 +46,8 @@ class AndroidPrayersAlarmScheduler constructor(
 
         val scheduledTime = run {
             item.prayerInfo.dateTime
-                .atZone(ZoneId.systemDefault())
-                .toInstant()
-                .toEpochMilli()
+                .toInstant(TimeZone.currentSystemDefault())
+                .toEpochMilliseconds()
         }
 
         val intent = Intent(context, AlarmReceiver::class.java).apply {

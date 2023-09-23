@@ -3,7 +3,7 @@ package com.prayercompanion.prayercompanionandroid.domain.usecases.prayers
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
-import java.time.LocalDateTime
+import kotlinx.datetime.LocalDateTime
 
 class SetPrayerStatusByDateTime
 constructor(

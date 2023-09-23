@@ -4,15 +4,16 @@ import app.cash.sqldelight.Query
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import com.prayercompanion.prayercompanionandroid.PrayerCompanionDatabase
-import com.prayercompanion.prayercompanionandroid.atEndOfDay
 import com.prayercompanion.prayercompanionandroid.data.local.db.PrayerCompanionConverters
 import com.prayercompanion.prayercompanionandroid.data.local.db.entities.PrayerInfoEntity
+import com.prayercompanion.prayercompanionandroid.domain.extensions.atEndOfDay
+import com.prayercompanion.prayercompanionandroid.domain.extensions.atStartOfDay
 import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import java.time.LocalDate
-import java.time.LocalDateTime
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 
 interface PrayersInfoDao {
     fun insertAll(prayersInfo: List<PrayerInfoEntity>)

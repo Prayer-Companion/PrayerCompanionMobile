@@ -30,13 +30,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.prayercompanion.prayercompanionandroid.R
+import com.prayercompanion.prayercompanionandroid.domain.extensions.now
+import com.prayercompanion.prayercompanionandroid.domain.extensions.plus
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatusWithTimeRange
 import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.prayercompanionandroid.presentation.utils.PresentationConsts
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
-import java.time.LocalDateTime
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDateTime
 
 
 @Composable
@@ -167,7 +170,7 @@ private fun PrayerStatusDialogPreview() = PrayerCompanionAndroidTheme {
         statusesWithTimeRanges = listOf(
             PrayerStatusWithTimeRange(
                 prayerStatus = PrayerStatus.Jamaah,
-                range = LocalDateTime.now()..<LocalDateTime.now().plusHours(1),
+                range = LocalDateTime.now()..<LocalDateTime.now().plus(1, DateTimeUnit.HOUR),
                 text = UiText.DynamicString("Hi")
             )
         ),

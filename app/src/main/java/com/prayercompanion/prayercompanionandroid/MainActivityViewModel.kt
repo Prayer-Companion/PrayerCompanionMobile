@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.prayercompanion.prayercompanionandroid.data.preferences.DataStoresRepo
 import com.prayercompanion.prayercompanionandroid.domain.usecases.SetAppLanguage
-import com.prayercompanion.shared.domain.models.AppLanguage
+import com.prayercompanion.shared.domain.models.app.AppLanguage
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 

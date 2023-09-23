@@ -1,10 +1,13 @@
 package com.prayercompanion.prayercompanionandroid.domain.usecases.prayers
 
+import com.prayercompanion.prayercompanionandroid.domain.extensions.minus
+import com.prayercompanion.prayercompanionandroid.domain.extensions.now
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import java.time.LocalDateTime
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDateTime
 import java.util.SortedMap
 
 class GetStatusesOverView constructor(
@@ -13,7 +16,7 @@ class GetStatusesOverView constructor(
 
     fun call(): Flow<SortedMap<PrayerStatus, Int>> {
         val now = LocalDateTime.now()
-        val startDateTime = now.minusDays(3)
+        val startDateTime = now.minus(3 * 24, DateTimeUnit.HOUR)
 
         return repository.getStatusesByDate(startDateTime, now)
             .map { it ->

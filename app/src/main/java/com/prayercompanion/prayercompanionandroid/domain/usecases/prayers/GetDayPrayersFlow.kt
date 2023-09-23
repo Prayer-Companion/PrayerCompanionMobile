@@ -10,7 +10,7 @@ import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManage
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 
 class GetDayPrayersFlow constructor(
     private val prayersRepository: PrayersRepository,

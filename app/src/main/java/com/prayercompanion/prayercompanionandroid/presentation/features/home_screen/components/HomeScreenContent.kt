@@ -30,15 +30,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import com.prayercompanion.prayercompanionandroid.domain.extensions.now
 import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
-import com.prayercompanion.prayercompanionandroid.domain.models.RemainingDuration
+import com.prayercompanion.prayercompanionandroid.presentation.models.RemainingDuration
 import com.prayercompanion.prayercompanionandroid.presentation.theme.AppBackground
 import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.prayercompanionandroid.presentation.utils.PresentationConsts
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 import java.util.SortedMap
 
 @Composable
@@ -102,7 +103,7 @@ fun HomeScreenContent(
                             )
                         }
                         Text(
-                            text = selectedDate.format(PresentationConsts.DateFormatter),
+                            text = PresentationConsts.DateFormatter.format(selectedDate),
                             style = MaterialTheme.typography.subtitle2,
                             color = MaterialTheme.colors.onPrimary
                         )

@@ -12,7 +12,7 @@ import com.prayercompanion.prayercompanionandroid.domain.usecases.settings.SetPa
 import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.TrackedButtons
 import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.Tracker
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
-import com.prayercompanion.shared.domain.models.AppLanguage
+import com.prayercompanion.shared.domain.models.app.AppLanguage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow

@@ -1,4 +1,4 @@
-package com.prayercompanion.shared.domain.models
+package com.prayercompanion.shared.domain.models.app
 
 import kotlinx.serialization.Serializable
 
