@@ -14,8 +14,6 @@ import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.prayercompanionandroid.data.preferences.DataStoresRepo
 import com.prayercompanion.prayercompanionandroid.domain.extensions.instantBetween
 import com.prayercompanion.prayercompanionandroid.domain.extensions.now
-import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
-import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetDailyPrayersCombo
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetDayPrayersFlow
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetStatusesOverView
@@ -30,6 +28,8 @@ import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
 import com.prayercompanion.prayercompanionandroid.presentation.utils.toUiText
 import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
+import com.prayercompanion.shared.domain.models.DayPrayersInfo
+import com.prayercompanion.shared.domain.models.PrayerInfo
 import com.prayercompanion.shared.domain.models.PrayerStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

@@ -1,10 +1,10 @@
 package com.prayercompanion.prayercompanionandroid.domain.usecases.prayers
 
 import com.prayercompanion.prayercompanionandroid.data.local.db.entities.PrayerInfoEntity
-import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
-import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
 import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
+import com.prayercompanion.shared.domain.models.DayPrayersInfo
+import com.prayercompanion.shared.domain.models.PrayerInfo
 import com.prayercompanion.shared.domain.models.PrayerStatus
 import com.prayercompanion.shared.domain.models.PrayerStatusWithTimeRange
 import kotlinx.coroutines.flow.Flow

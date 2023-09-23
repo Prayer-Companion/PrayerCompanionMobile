@@ -3,12 +3,12 @@ package com.prayercompanion.prayercompanionandroid.data.receivers
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.prayercompanion.prayercompanionandroid.domain.models.PrayerNotificationItem
 import com.prayercompanion.prayercompanionandroid.domain.usecases.settings.GetIsPauseMediaEnabled
 import com.prayercompanion.prayercompanionandroid.domain.utils.MediaController
 import com.prayercompanion.prayercompanionandroid.fromJson
 import com.prayercompanion.prayercompanionandroid.presentation.utils.notifications.PrayersNotificationsService
 import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
+import com.prayercompanion.shared.domain.models.PrayerNotificationItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch

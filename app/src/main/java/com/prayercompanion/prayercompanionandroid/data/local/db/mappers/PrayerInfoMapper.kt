@@ -1,8 +1,8 @@
 package com.prayercompanion.prayercompanionandroid.data.local.db.mappers
 
 import com.prayercompanion.prayercompanionandroid.data.local.db.entities.PrayerInfoEntity
-import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
-import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
+import com.prayercompanion.shared.domain.models.DayPrayersInfo
+import com.prayercompanion.shared.domain.models.PrayerInfo
 
 fun List<PrayerInfoEntity>.toDayPrayerInfo(): DayPrayersInfo {
     return DayPrayersInfo(

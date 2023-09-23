@@ -4,13 +4,13 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.prayercompanion.prayercompanionandroid.domain.extensions.now
-import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.SetPrayerStatusByDateTime
 import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.TrackedButtons
 import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.Tracker
 import com.prayercompanion.prayercompanionandroid.fromJson
 import com.prayercompanion.prayercompanionandroid.presentation.utils.notifications.PrayerNotificationAction
 import com.prayercompanion.prayercompanionandroid.presentation.utils.notifications.PrayersNotificationsService
+import com.prayercompanion.shared.domain.models.PrayerInfo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

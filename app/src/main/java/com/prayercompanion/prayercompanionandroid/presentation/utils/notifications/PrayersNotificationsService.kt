@@ -11,12 +11,12 @@ import androidx.core.text.HtmlCompat
 import com.prayercompanion.prayercompanionandroid.MainActivity
 import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.prayercompanionandroid.data.receivers.PrayerNotificationActionReceiver
-import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
-import com.prayercompanion.prayercompanionandroid.domain.models.PrayerNotificationItem
 import com.prayercompanion.prayercompanionandroid.presentation.utils.PresentationConsts
 import com.prayercompanion.prayercompanionandroid.presentation.utils.getPrayerNameStringRes
 import com.prayercompanion.prayercompanionandroid.presentation.utils.getPrayerStatusNameStringRes
 import com.prayercompanion.prayercompanionandroid.toJson
+import com.prayercompanion.shared.domain.models.PrayerInfo
+import com.prayercompanion.shared.domain.models.PrayerNotificationItem
 import com.prayercompanion.shared.domain.models.PrayerStatus
 import kotlinx.coroutines.delay
 

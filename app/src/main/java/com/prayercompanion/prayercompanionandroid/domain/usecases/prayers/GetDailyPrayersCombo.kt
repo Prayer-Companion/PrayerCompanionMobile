@@ -1,12 +1,12 @@
 package com.prayercompanion.prayercompanionandroid.domain.usecases.prayers
 
 import com.prayercompanion.prayercompanionandroid.domain.extensions.now
-import com.prayercompanion.prayercompanionandroid.domain.models.DailyPrayersCombo
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
 import com.prayercompanion.prayercompanionandroid.domain.usecases.IsConnectedToInternet
 import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
 import com.prayercompanion.prayercompanionandroid.domain.utils.exceptions.LocationMissingException
 import com.prayercompanion.prayercompanionandroid.domain.utils.exceptions.UnknownException
+import com.prayercompanion.shared.domain.models.DailyPrayersCombo
 import com.prayercompanion.shared.domain.models.app.YearMonth
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

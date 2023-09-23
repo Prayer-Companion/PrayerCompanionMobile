@@ -7,13 +7,13 @@ import android.content.Context
 import android.content.Intent
 import com.prayercompanion.prayercompanionandroid.data.receivers.AlarmReceiver
 import com.prayercompanion.prayercompanionandroid.domain.extensions.now
-import com.prayercompanion.prayercompanionandroid.domain.models.PrayerNotificationItem
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetDayPrayers
 import com.prayercompanion.prayercompanionandroid.domain.utils.PrayersAlarmScheduler
 import com.prayercompanion.prayercompanionandroid.presentation.utils.getPrayerNameStringRes
 import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
 import com.prayercompanion.prayercompanionandroid.toJson
 import com.prayercompanion.shared.domain.models.Prayer
+import com.prayercompanion.shared.domain.models.PrayerNotificationItem
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant

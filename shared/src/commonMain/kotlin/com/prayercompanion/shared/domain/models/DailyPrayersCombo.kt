@@ -1,9 +1,8 @@
-package com.prayercompanion.prayercompanionandroid.domain.models
+package com.prayercompanion.shared.domain.models
 
-import com.prayercompanion.prayercompanionandroid.domain.extensions.max
-import com.prayercompanion.prayercompanionandroid.domain.extensions.min
-import com.prayercompanion.prayercompanionandroid.domain.extensions.now
-import com.prayercompanion.shared.domain.models.Prayer
+import com.prayercompanion.shared.domain.extensions.max
+import com.prayercompanion.shared.domain.extensions.min
+import com.prayercompanion.shared.domain.extensions.now
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime

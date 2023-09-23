@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.domain.models
+package com.prayercompanion.shared.domain.models
 
 data class PrayerNotificationItem(
     val prayerInfo: PrayerInfo,
