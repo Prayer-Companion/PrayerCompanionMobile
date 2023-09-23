@@ -7,15 +7,13 @@ import com.prayercompanion.shared.domain.models.PrayerStatusWithTimeRange
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
-import kotlinx.serialization.Serializable
 
-@Serializable
 data class PrayerInfo(
     val prayer: Prayer,
     val dateTime: LocalDateTime,
     val statusesWithTimeRanges: List<PrayerStatusWithTimeRange>,
     var selectedStatus: PrayerStatus
-): java.io.Serializable {
+) {
     val date: LocalDate get() = dateTime.date
     val time: LocalTime get() = dateTime.time
     val isStateSelectionEnabled get() = LocalDateTime.now() > dateTime

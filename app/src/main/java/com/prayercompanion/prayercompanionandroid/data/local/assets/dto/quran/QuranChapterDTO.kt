@@ -1,12 +1,14 @@
 package com.prayercompanion.prayercompanionandroid.data.local.assets.dto.quran
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class QuranChapterDTO(
-    @SerializedName("_index")
+    @SerialName("_index")
     val index: Int,
-    @SerializedName("_name")
+    @SerialName("_name")
     val name: String,
-    @SerializedName("aya")
+    @SerialName("aya")
     val verses: List<QuranVerseDTO>
 )

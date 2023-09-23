@@ -178,7 +178,7 @@ dependencies {
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
-    implementation("io.ktor:ktor-serialization-gson:$ktorVersion")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
     implementation("app.cash.sqldelight:coroutines-extensions:2.0.0")
 //    ------------------------------------------------
     debugImplementation("androidx.compose.ui:ui-tooling:$composeUiVersion")

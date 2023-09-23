@@ -8,7 +8,7 @@ import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.SetPrayerStatusByDateTime
 import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.TrackedButtons
 import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.Tracker
-import com.prayercompanion.prayercompanionandroid.getSerializable
+import com.prayercompanion.prayercompanionandroid.fromJson
 import com.prayercompanion.prayercompanionandroid.presentation.utils.notifications.PrayerNotificationAction
 import com.prayercompanion.prayercompanionandroid.presentation.utils.notifications.PrayersNotificationsService
 import kotlinx.coroutines.CoroutineScope
@@ -28,15 +28,14 @@ class PrayerNotificationActionReceiver : BroadcastReceiver(), KoinComponent {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         val prayerInfo = intent
-            ?.getSerializable(EXTRA_PRAYER_INFO, PrayerInfo::class.java)
+            ?.getStringExtra(EXTRA_PRAYER_INFO)
+            ?.let { fromJson<PrayerInfo>(it) }
             ?: return
 
         val notificationId = intent.getIntExtra(EXTRA_NOTIFICATION_ID, 0)
 
-        val actionType = intent.getSerializable(
-            EXTRA_PRAYER_NOTIFICATION_ACTION,
-            PrayerNotificationAction::class.java
-        )
+        val actionType = intent.getStringExtra(EXTRA_PRAYER_NOTIFICATION_ACTION)
+            ?.let { runCatching { PrayerNotificationAction.valueOf(it) }.getOrNull() }
 
         if (actionType == PrayerNotificationAction.Prayed) {
             tracker.trackButtonClicked(TrackedButtons.NOTIFICATION_PRAYED_NOW)

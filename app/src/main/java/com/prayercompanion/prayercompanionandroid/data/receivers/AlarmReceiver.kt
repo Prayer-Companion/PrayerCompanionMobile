@@ -6,7 +6,7 @@ import android.content.Intent
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerNotificationItem
 import com.prayercompanion.prayercompanionandroid.domain.usecases.settings.GetIsPauseMediaEnabled
 import com.prayercompanion.prayercompanionandroid.domain.utils.MediaController
-import com.prayercompanion.prayercompanionandroid.getSerializable
+import com.prayercompanion.prayercompanionandroid.fromJson
 import com.prayercompanion.prayercompanionandroid.presentation.utils.notifications.PrayersNotificationsService
 import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
 import kotlinx.coroutines.CoroutineScope
@@ -22,13 +22,15 @@ class AlarmReceiver : BroadcastReceiver(), KoinComponent {
     private val mediaController: MediaController by inject()
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        val item = intent?.getSerializable(
-            EXTRA_PRAYER_NOTIFICATION_ITEM,
-            PrayerNotificationItem::class.java
-        ) ?: kotlin.run {
+        val item = intent?.getStringExtra(
+            EXTRA_PRAYER_NOTIFICATION_ITEM
+        )?.let {
+            fromJson<PrayerNotificationItem>(it)
+        } ?: kotlin.run {
             Exception("Notification item wasn't received").printStackTraceInDebug()
             return
         }
+
         CoroutineScope(SupervisorJob()).launch {
             if (getIsPauseMediaEnabled.call()) {
                 mediaController.pauseMedia()

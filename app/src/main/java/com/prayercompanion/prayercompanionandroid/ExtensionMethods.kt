@@ -1,8 +1,6 @@
 package com.prayercompanion.prayercompanionandroid
 
 import android.content.Context
-import android.content.Intent
-import android.os.Build
 import android.widget.Toast
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
@@ -12,9 +10,9 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.navigation.NavController
 import androidx.navigation.NavOptionsBuilder
-import com.google.gson.Gson
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
-import java.io.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 fun NavController.navigate(event: UiEvent.Navigate, builder: NavOptionsBuilder.() -> Unit = {}) {
     this.navigate(route = event.route.name + event.args.joinToString { "/$it" }, builder)
@@ -30,26 +28,21 @@ fun Throwable.printStackTraceInDebug() {
     }
 }
 
-@Suppress("DEPRECATION", "UNCHECKED_CAST")
-fun <T : Serializable?> Intent.getSerializable(key: String, mClass: Class<T>): T? {
-    return runCatching {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-            this.getSerializableExtra(key, mClass)
-        else
-            this.getSerializableExtra(key) as T?
-    }.getOrNull()
-}
-
 fun <T> Result.Companion.failure(message: String): Result<T> {
     return failure(Exception(message))
 }
 
 inline fun <reified T> fromJson(str: String): T? {
-    return Gson().fromJson(str, T::class.java)
+    return runCatching<T> {
+        Json.decodeFromString(str)
+    }.getOrElse {
+        it.printStackTraceInDebug()
+        null
+    }
 }
 
-inline fun <reified T> toJson(t: T): String {
-    return Gson().toJson(t)
+inline fun <reified T> T.toJson(): String {
+    return Json.encodeToString(this)
 }
 
 @Stable

@@ -1,8 +1,10 @@
 package com.prayercompanion.prayercompanionandroid.data.local.assets.dto.quran
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class QuranDTO(
-    @SerializedName("sura")
+    @SerialName("sura")
     var chapters: List<QuranChapterDTO>
 )

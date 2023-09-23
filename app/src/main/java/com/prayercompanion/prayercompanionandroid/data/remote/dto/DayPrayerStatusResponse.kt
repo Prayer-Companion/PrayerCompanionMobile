@@ -1,20 +1,22 @@
 package com.prayercompanion.prayercompanionandroid.data.remote.dto
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class DayPrayerStatusResponse(
-    @SerializedName("date")
+    @SerialName("date")
     val date: String = "none",
-    @SerializedName("fajr")
+    @SerialName("fajr")
     val fajr: String = "none",
-    @SerializedName("sunrise")
+    @SerialName("sunrise")
     val sunrise: String = "none",
-    @SerializedName("dhuhr")
+    @SerialName("dhuhr")
     val dhuhr: String = "none",
-    @SerializedName("asr")
+    @SerialName("asr")
     val asr: String = "none",
-    @SerializedName("maghrib")
+    @SerialName("maghrib")
     val maghrib: String = "none",
-    @SerializedName("isha")
+    @SerialName("isha")
     val isha: String = "none"
 )

@@ -1,12 +1,14 @@
 package com.prayercompanion.prayercompanionandroid.data.remote.dto
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class MemorizedChapterVersesResponse(
-    @SerializedName("surahId")
+    @SerialName("surahId")
     val chapterId: Int,
-    @SerializedName("startAya")
+    @SerialName("startAya")
     val startVerse: Int,
-    @SerializedName("endAya")
+    @SerialName("endAya")
     val endVerse: Int
 )

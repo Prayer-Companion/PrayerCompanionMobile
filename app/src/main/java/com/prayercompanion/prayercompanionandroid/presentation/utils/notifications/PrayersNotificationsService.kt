@@ -16,6 +16,7 @@ import com.prayercompanion.prayercompanionandroid.domain.models.PrayerNotificati
 import com.prayercompanion.prayercompanionandroid.presentation.utils.PresentationConsts
 import com.prayercompanion.prayercompanionandroid.presentation.utils.getPrayerNameStringRes
 import com.prayercompanion.prayercompanionandroid.presentation.utils.getPrayerStatusNameStringRes
+import com.prayercompanion.prayercompanionandroid.toJson
 import com.prayercompanion.shared.domain.models.PrayerStatus
 import kotlinx.coroutines.delay
 
@@ -44,10 +45,10 @@ class PrayersNotificationsService constructor(
 
             val actionIntent = Intent(context, PrayerNotificationActionReceiver::class.java).apply {
                 putExtra(PrayerNotificationActionReceiver.EXTRA_NOTIFICATION_ID, notificationId)
-                putExtra(PrayerNotificationActionReceiver.EXTRA_PRAYER_INFO, item.prayerInfo)
+                putExtra(PrayerNotificationActionReceiver.EXTRA_PRAYER_INFO, item.prayerInfo.toJson())
                 putExtra(
                     PrayerNotificationActionReceiver.EXTRA_PRAYER_NOTIFICATION_ACTION,
-                    PrayerNotificationAction.Prayed
+                    PrayerNotificationAction.Prayed.name
                 )
             }
 
