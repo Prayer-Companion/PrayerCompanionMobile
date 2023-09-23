@@ -20,12 +20,12 @@ import com.prayercompanion.prayercompanionandroid.data.repositories.QuranReposit
 import com.prayercompanion.prayercompanionandroid.data.utils.AndroidPrayersAlarmScheduler
 import com.prayercompanion.prayercompanionandroid.data.utils.AuthenticationHelperImpl
 import com.prayercompanion.prayercompanionandroid.data.utils.TrackerImpl
-import com.prayercompanion.prayercompanionandroid.data.utils.notifications.PrayersNotificationsService
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
 import com.prayercompanion.prayercompanionandroid.domain.repositories.QuranRepository
 import com.prayercompanion.prayercompanionandroid.domain.utils.AuthenticationHelper
 import com.prayercompanion.prayercompanionandroid.domain.utils.PrayersAlarmScheduler
 import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.Tracker
+import com.prayercompanion.prayercompanionandroid.presentation.utils.notifications.PrayersNotificationsService
 import com.prayercompanion.shared.SQLDelightDriverFactory
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp

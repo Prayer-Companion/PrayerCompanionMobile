@@ -1,6 +1,5 @@
 package com.prayercompanion.prayercompanionandroid.domain.models
 
-import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 
@@ -8,5 +7,5 @@ import kotlinx.serialization.Serializable
 data class PrayerStatusWithTimeRange(
     val prayerStatus: PrayerStatus,
     val range: OpenEndRange<LocalDateTime>?,
-    val text: UiText
+    val prayer: Prayer
 )

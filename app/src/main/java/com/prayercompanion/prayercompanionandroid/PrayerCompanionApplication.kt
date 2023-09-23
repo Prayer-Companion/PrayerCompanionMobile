@@ -13,11 +13,11 @@ import androidx.work.WorkManager
 import com.prayercompanion.prayercompanionandroid.data.di.dataModule
 import com.prayercompanion.prayercompanionandroid.data.preferences.AppPreferences
 import com.prayercompanion.prayercompanionandroid.data.preferences.AppPreferencesSerializer
-import com.prayercompanion.prayercompanionandroid.data.utils.notifications.PrayersNotificationsService
 import com.prayercompanion.prayercompanionandroid.domain.di.domainModule
 import com.prayercompanion.prayercompanionandroid.domain.utils.PermissionsManager
 import com.prayercompanion.prayercompanionandroid.domain.utils.ScheduleDailyPrayersWorker
 import com.prayercompanion.prayercompanionandroid.presentation.di.presentationModule
+import com.prayercompanion.prayercompanionandroid.presentation.utils.notifications.PrayersNotificationsService
 import logcat.AndroidLogcatLogger
 import logcat.LogPriority
 import org.koin.android.ext.android.inject

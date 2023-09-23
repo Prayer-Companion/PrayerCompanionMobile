@@ -32,12 +32,12 @@ import androidx.compose.ui.window.Dialog
 import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.prayercompanionandroid.domain.extensions.now
 import com.prayercompanion.prayercompanionandroid.domain.extensions.plus
+import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatusWithTimeRange
 import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.prayercompanionandroid.presentation.utils.PresentationConsts
-import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDateTime
 
@@ -66,10 +66,10 @@ fun StatusPickerDialog(
                     modifier = Modifier.height(0.5.dp),
                     color = Color.Black.copy(alpha = 0.5f)
                 )
-                statusesWithTimeRanges.forEach { (status, timeRange, text) ->
+                statusesWithTimeRanges.forEach { (status, timeRange, prayer) ->
                     PrayerStatusDialogItem(
                         status = status,
-                        text = text.asString(),
+                        text = stringResource(id = status.getStatusName(prayer)),
                         timeRange = timeRange,
                         onItemSelected = onItemSelected
                     )
@@ -171,7 +171,7 @@ private fun PrayerStatusDialogPreview() = PrayerCompanionAndroidTheme {
             PrayerStatusWithTimeRange(
                 prayerStatus = PrayerStatus.Jamaah,
                 range = LocalDateTime.now()..<LocalDateTime.now().plus(1, DateTimeUnit.HOUR),
-                text = UiText.DynamicString("Hi")
+                prayer = Prayer.DHUHR
             )
         ),
         onItemSelected = {},

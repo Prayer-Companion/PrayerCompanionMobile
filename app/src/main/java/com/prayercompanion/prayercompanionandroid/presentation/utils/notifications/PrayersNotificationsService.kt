@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.data.utils.notifications
+package com.prayercompanion.prayercompanionandroid.presentation.utils.notifications
 
 import android.app.Notification
 import android.app.Notification.Action

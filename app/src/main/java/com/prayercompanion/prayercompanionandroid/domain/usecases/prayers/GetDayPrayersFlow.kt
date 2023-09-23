@@ -7,7 +7,6 @@ import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatusWithTimeRange
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
 import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
-import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalDate
@@ -49,7 +48,7 @@ class GetDayPrayersFlow constructor(
             PrayerStatusWithTimeRange(
                 prayerStatus = it,
                 range = ranges[it],
-                text = UiText.StringResource(it.getStatusName(prayerInfoEntity.prayer))
+                prayer = prayerInfoEntity.prayer
             )
         }
 
