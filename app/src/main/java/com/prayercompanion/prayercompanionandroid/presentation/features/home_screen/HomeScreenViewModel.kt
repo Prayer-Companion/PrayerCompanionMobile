@@ -202,8 +202,8 @@ class HomeScreenViewModel constructor(
             getDailyPrayersCombo.call()
                 .cancellable()
                 .catch {
+                    it.printStackTraceInDebug()
                     sendErrorEvent(UiText.DynamicString(it.message.toString()))
-                    logcat { it.asLog() }
                 }
                 .onCompletion {
                     loadSelectedDatePrayers()
@@ -239,6 +239,7 @@ class HomeScreenViewModel constructor(
                         }
                     }.onFailure {
                         withContext(Dispatchers.Main) {
+                            it.printStackTraceInDebug()
                             state = state.copy(selectedDayPrayersInfo = DayPrayersInfo.Default)
                             sendErrorEvent(UiText.DynamicString(it.message.toString()))
                         }

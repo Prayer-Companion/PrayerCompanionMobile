@@ -52,7 +52,7 @@ actual class LocalDateTimeFormatter private constructor(
     }
 
     actual fun parseToLocalTime(str: String): LocalTime {
-        val isoString = DateTimeFormatter.ISO_DATE.format(
+        val isoString = DateTimeFormatter.ISO_TIME.format(
             DateTimeFormatter.ofPattern(
                 pattern,
                 locale.javaLocale

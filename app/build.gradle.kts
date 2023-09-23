@@ -155,13 +155,13 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:31.5.0"))
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-crashlytics-ktx")
-    implementation("com.google.android.gms:play-services-auth:20.6.0")
-    implementation("com.google.firebase:firebase-auth-ktx:22.1.1")
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
+    implementation("com.google.firebase:firebase-auth-ktx:22.1.2")
 
     //data store
     implementation("androidx.datastore:datastore:1.0.0")
     implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
 
     //GIF support
     implementation("io.coil-kt:coil-compose:2.4.0")
@@ -188,12 +188,12 @@ dependencies {
     testImplementation("io.mockk:mockk:1.10.0")
     testImplementation("junit:junit:4.13.2")
     testImplementation("androidx.test.ext:junit:1.1.5")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     testImplementation("com.google.truth:truth:1.1.3")
     testImplementation("app.cash.turbine:turbine:0.7.0")
     testImplementation("com.squareup.okhttp3:mockwebserver:4.9.3")
     testImplementation("androidx.compose.ui:ui-test-junit4:$composeUiVersion")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.8.20")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.9.0")
 
     androidTestImplementation("androidx.work:work-testing:$workManagerVersion")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
@@ -201,11 +201,11 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeUiVersion")
     androidTestImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     androidTestImplementation("com.google.truth:truth:1.1.3")
     androidTestImplementation("app.cash.turbine:turbine:0.7.0")
     androidTestImplementation("com.squareup.okhttp3:mockwebserver:4.9.3")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeUiVersion")
-    androidTestImplementation("io.mockk:mockk-android:1.10.0")
+    androidTestImplementation("io.mockk:mockk-android:1.12.5")
     androidTestImplementation("androidx.test:runner:1.5.2")
 }
