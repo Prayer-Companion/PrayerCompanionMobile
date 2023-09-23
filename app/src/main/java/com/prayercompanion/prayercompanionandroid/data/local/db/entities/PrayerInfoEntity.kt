@@ -1,7 +1,7 @@
 package com.prayercompanion.prayercompanionandroid.data.local.db.entities
 
-import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
-import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
+import com.prayercompanion.shared.domain.models.Prayer
+import com.prayercompanion.shared.domain.models.PrayerStatus
 import kotlinx.datetime.LocalDateTime
 
 data class PrayerInfoEntity(

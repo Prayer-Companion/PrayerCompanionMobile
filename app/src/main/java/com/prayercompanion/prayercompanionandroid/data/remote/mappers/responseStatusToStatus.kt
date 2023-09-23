@@ -1,6 +1,6 @@
 package com.prayercompanion.prayercompanionandroid.data.remote.mappers
 
-import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
+import com.prayercompanion.shared.domain.models.PrayerStatus
 
 fun responseStatusToStatus(statusStr: String?): PrayerStatus {
     return when (statusStr) {

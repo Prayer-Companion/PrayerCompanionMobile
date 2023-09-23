@@ -12,8 +12,9 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
+import com.prayercompanion.prayercompanionandroid.presentation.utils.getPrayerStatusCorrespondingColor
+import com.prayercompanion.shared.domain.models.PrayerStatus
 import java.util.SortedMap
 
 @Composable
@@ -46,7 +47,7 @@ fun PrayerStatusesOverViewBar(
                 }
 
                 drawRoundRect(
-                    color = key.color,
+                    color = getPrayerStatusCorrespondingColor(key),
                     size = Size(
                         width = componentWidth,
                         height = size.height,

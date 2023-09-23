@@ -8,8 +8,8 @@ import com.prayercompanion.prayercompanionandroid.data.local.db.PrayerCompanionC
 import com.prayercompanion.prayercompanionandroid.data.local.db.entities.PrayerInfoEntity
 import com.prayercompanion.prayercompanionandroid.domain.extensions.atEndOfDay
 import com.prayercompanion.prayercompanionandroid.domain.extensions.atStartOfDay
-import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
-import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
+import com.prayercompanion.shared.domain.models.Prayer
+import com.prayercompanion.shared.domain.models.PrayerStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDate

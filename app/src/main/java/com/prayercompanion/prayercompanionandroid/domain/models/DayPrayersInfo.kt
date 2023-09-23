@@ -1,6 +1,8 @@
 package com.prayercompanion.prayercompanionandroid.domain.models
 
 import com.prayercompanion.prayercompanionandroid.domain.extensions.now
+import com.prayercompanion.shared.domain.models.Prayer
+import com.prayercompanion.shared.domain.models.PrayerStatus
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime

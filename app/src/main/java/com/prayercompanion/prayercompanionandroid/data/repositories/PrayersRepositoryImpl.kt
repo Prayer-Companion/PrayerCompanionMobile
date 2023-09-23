@@ -11,13 +11,13 @@ import com.prayercompanion.prayercompanionandroid.data.utils.Consts
 import com.prayercompanion.prayercompanionandroid.domain.extensions.atEndOfDay
 import com.prayercompanion.prayercompanionandroid.domain.extensions.atStartOfDay
 import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
-import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
-import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
 import com.prayercompanion.prayercompanionandroid.domain.utils.exceptions.LocationMissingException
 import com.prayercompanion.prayercompanionandroid.domain.utils.exceptions.UnknownException
 import com.prayercompanion.shared.domain.models.Location
+import com.prayercompanion.shared.domain.models.Prayer
+import com.prayercompanion.shared.domain.models.PrayerStatus
 import com.prayercompanion.shared.domain.models.app.Address
 import com.prayercompanion.shared.domain.models.app.YearMonth
 import kotlinx.coroutines.flow.Flow

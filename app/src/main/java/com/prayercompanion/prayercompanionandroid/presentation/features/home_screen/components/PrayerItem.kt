@@ -30,14 +30,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
-import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
-import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatusWithTimeRange
 import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.prayercompanionandroid.presentation.utils.PresentationConsts
 import com.prayercompanion.prayercompanionandroid.presentation.utils.compose.MeasureUnconstrainedViewWidth
+import com.prayercompanion.prayercompanionandroid.presentation.utils.getPrayerStatusCorrespondingColor
+import com.prayercompanion.prayercompanionandroid.presentation.utils.getPrayerStatusNameStringRes
+import com.prayercompanion.shared.domain.models.Prayer
+import com.prayercompanion.shared.domain.models.PrayerStatus
+import com.prayercompanion.shared.domain.models.PrayerStatusWithTimeRange
 
 @Preview(locale = "ar")
 @Composable
@@ -144,7 +146,7 @@ private fun PrayerItemState(
     Row(
         modifier = modifier
             .background(
-                color = status.color,
+                color = getPrayerStatusCorrespondingColor(status),
                 shape = RoundedCornerShape(
                     topEnd = 15.dp,
                     bottomEnd = 15.dp
@@ -155,7 +157,7 @@ private fun PrayerItemState(
     ) {
         if (status != PrayerStatus.None) {
             Text(
-                text = stringResource(id = status.getStatusName(prayer = prayer)),
+                text = stringResource(id = getPrayerStatusNameStringRes(status, prayer)),
                 color = MaterialTheme.colors.onPrimary,
                 style = MaterialTheme.typography.button,
                 textAlign = TextAlign.Center,

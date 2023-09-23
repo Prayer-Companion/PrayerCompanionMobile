@@ -4,7 +4,7 @@ import com.prayercompanion.prayercompanionandroid.data.local.db.entities.PrayerI
 import com.prayercompanion.prayercompanionandroid.data.remote.dto.DayPrayerResponse
 import com.prayercompanion.prayercompanionandroid.data.remote.dto.DayPrayerStatusResponse
 import com.prayercompanion.prayercompanionandroid.data.utils.Consts
-import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
+import com.prayercompanion.shared.domain.models.Prayer
 import kotlinx.datetime.LocalDateTime
 
 fun responsesToPrayerInfoEntity(

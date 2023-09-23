@@ -13,8 +13,10 @@ import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.prayercompanionandroid.data.receivers.PrayerNotificationActionReceiver
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerNotificationItem
-import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.presentation.utils.PresentationConsts
+import com.prayercompanion.prayercompanionandroid.presentation.utils.getPrayerNameStringRes
+import com.prayercompanion.prayercompanionandroid.presentation.utils.getPrayerStatusNameStringRes
+import com.prayercompanion.shared.domain.models.PrayerStatus
 import kotlinx.coroutines.delay
 
 class PrayersNotificationsService constructor(
@@ -57,7 +59,7 @@ class PrayersNotificationsService constructor(
             )
         }
 
-        val prayerName = context.getString(item.prayerInfo.prayer.nameId)
+        val prayerName = context.getString(getPrayerNameStringRes(item.prayerInfo.prayer))
         val prayerTime = PresentationConsts.TimeFormatter.format(item.prayerInfo.time)
         val title = context.getString(R.string.prayer_notification_title, prayerName, prayerTime)
 
@@ -85,8 +87,8 @@ class PrayersNotificationsService constructor(
         prayerInfo: PrayerInfo,
         status: PrayerStatus
     ) {
-        val prayerName = context.getString(prayerInfo.prayer.nameId)
-        val statusName = context.getString(status.getStatusName(prayerInfo.prayer))
+        val prayerName = context.getString(getPrayerNameStringRes(prayerInfo.prayer))
+        val statusName = context.getString(getPrayerStatusNameStringRes(status, prayerInfo.prayer))
 
         val notificationTitle = context.getString(
             R.string.notification_action_response_statusUpdate,

@@ -3,8 +3,8 @@ package com.prayercompanion.prayercompanionandroid.domain.repositories
 import com.prayercompanion.prayercompanionandroid.data.local.db.entities.PrayerInfoEntity
 import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
-import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.shared.domain.models.Location
+import com.prayercompanion.shared.domain.models.PrayerStatus
 import com.prayercompanion.shared.domain.models.app.Address
 import com.prayercompanion.shared.domain.models.app.YearMonth
 import kotlinx.coroutines.flow.Flow

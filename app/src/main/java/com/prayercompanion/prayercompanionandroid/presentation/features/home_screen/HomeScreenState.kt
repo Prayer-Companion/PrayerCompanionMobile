@@ -3,7 +3,7 @@ package com.prayercompanion.prayercompanionandroid.presentation.features.home_sc
 import com.prayercompanion.prayercompanionandroid.domain.extensions.now
 import com.prayercompanion.prayercompanionandroid.domain.models.DailyPrayersCombo
 import com.prayercompanion.prayercompanionandroid.domain.models.DayPrayersInfo
-import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
+import com.prayercompanion.shared.domain.models.PrayerStatus
 import kotlinx.datetime.LocalDate
 import java.util.SortedMap
 

@@ -2,11 +2,11 @@ package com.prayercompanion.prayercompanionandroid.domain.usecases.prayers
 
 import com.prayercompanion.prayercompanionandroid.domain.extensions.instantBetween
 import com.prayercompanion.prayercompanionandroid.domain.extensions.plus
-import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
-import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
 import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
 import com.prayercompanion.shared.domain.models.Location
+import com.prayercompanion.shared.domain.models.Prayer
+import com.prayercompanion.shared.domain.models.PrayerStatus
 import com.prayercompanion.shared.domain.models.app.Address
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDateTime

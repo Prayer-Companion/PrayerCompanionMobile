@@ -30,11 +30,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.prayercompanionandroid.domain.models.PrayerInfo
-import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
 import com.prayercompanion.prayercompanionandroid.presentation.models.RemainingDuration
 import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.prayercompanionandroid.presentation.utils.compose.MeasureUnconstrainedViewWidth
+import com.prayercompanion.prayercompanionandroid.presentation.utils.getPrayerNameStringRes
+import com.prayercompanion.shared.domain.models.PrayerStatus
 import java.util.SortedMap
 
 @Preview(name = "en", locale = "en")
@@ -95,7 +96,7 @@ fun HomeHeader(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = stringResource(id = currentPrayer.prayer.nameId),
+                        text = stringResource(id = getPrayerNameStringRes(currentPrayer.prayer)),
                         style = MaterialTheme.typography.h1,
                         color = MaterialTheme.colors.onPrimary
                     )
@@ -145,7 +146,7 @@ fun HomeHeader(
                         modifier = Modifier.alignByBaseline(),
                         text = stringResource(
                             id = R.string.remaining_time,
-                            stringResource(id = nextPrayer.prayer.nameId)
+                            stringResource(id = getPrayerNameStringRes(nextPrayer.prayer))
                         ),
                         style = MaterialTheme.typography.h3,
                         color = MaterialTheme.colors.secondary,

@@ -3,6 +3,7 @@ package com.prayercompanion.prayercompanionandroid.domain.models
 import com.prayercompanion.prayercompanionandroid.domain.extensions.max
 import com.prayercompanion.prayercompanionandroid.domain.extensions.min
 import com.prayercompanion.prayercompanionandroid.domain.extensions.now
+import com.prayercompanion.shared.domain.models.Prayer
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime

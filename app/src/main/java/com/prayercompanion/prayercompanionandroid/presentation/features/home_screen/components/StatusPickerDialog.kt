@@ -32,12 +32,14 @@ import androidx.compose.ui.window.Dialog
 import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.prayercompanionandroid.domain.extensions.now
 import com.prayercompanion.prayercompanionandroid.domain.extensions.plus
-import com.prayercompanion.prayercompanionandroid.domain.models.Prayer
-import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatus
-import com.prayercompanion.prayercompanionandroid.domain.models.PrayerStatusWithTimeRange
 import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.prayercompanionandroid.presentation.utils.PresentationConsts
+import com.prayercompanion.prayercompanionandroid.presentation.utils.getPrayerStatusCorrespondingColor
+import com.prayercompanion.prayercompanionandroid.presentation.utils.getPrayerStatusNameStringRes
+import com.prayercompanion.shared.domain.models.Prayer
+import com.prayercompanion.shared.domain.models.PrayerStatus
+import com.prayercompanion.shared.domain.models.PrayerStatusWithTimeRange
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDateTime
 
@@ -69,7 +71,7 @@ fun StatusPickerDialog(
                 statusesWithTimeRanges.forEach { (status, timeRange, prayer) ->
                     PrayerStatusDialogItem(
                         status = status,
-                        text = stringResource(id = status.getStatusName(prayer)),
+                        text = stringResource(id = getPrayerStatusNameStringRes(status, prayer)),
                         timeRange = timeRange,
                         onItemSelected = onItemSelected
                     )
@@ -147,7 +149,7 @@ private fun PrayerStatusDialogItem(
     ) {
         Text(
             text = text,
-            color = status.color,
+            color = getPrayerStatusCorrespondingColor(status),
             style = MaterialTheme.typography.h2
         )
         if (timeRange != null) {
@@ -156,7 +158,7 @@ private fun PrayerStatusDialogItem(
                 PresentationConsts.TimeFormatter.format(timeRange.endExclusive)
             Text(
                 text = "$start - $end",
-                color = status.color,
+                color = getPrayerStatusCorrespondingColor(status),
                 style = MaterialTheme.typography.subtitle2
             )
         }
