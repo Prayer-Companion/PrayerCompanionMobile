@@ -141,16 +141,12 @@ dependencies {
     implementation("com.google.android.gms:play-services-location:21.0.1")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
 
-//    todo: remove this dependency
     val koinAndroidVersion = "3.5.0"
     implementation("io.insert-koin:koin-android:$koinAndroidVersion")
 
     val workManagerVersion = "2.8.1"
     implementation("androidx.work:work-runtime-ktx:$workManagerVersion")
     implementation("io.insert-koin:koin-androidx-workmanager:$koinAndroidVersion")
-
-    //todo remove this dependency
-    implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.11")
 
     implementation(ProjectDependencies.logcat)
     implementation(platform("com.google.firebase:firebase-bom:31.5.0"))
