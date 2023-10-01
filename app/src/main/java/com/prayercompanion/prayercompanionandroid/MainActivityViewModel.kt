@@ -2,15 +2,20 @@ package com.prayercompanion.prayercompanionandroid
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.prayercompanion.prayercompanionandroid.data.preferences.DataStoresRepo
-import com.prayercompanion.prayercompanionandroid.domain.usecases.SetAppLanguage
+import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
+import com.prayercompanion.shared.data.preferences.DataStoresRepo
 import com.prayercompanion.shared.domain.models.app.AppLanguage
+import com.prayercompanion.shared.domain.usecases.GetAppLanguage
+import com.prayercompanion.shared.domain.usecases.SetAppLanguage
+import com.prayercompanion.shared.domain.utils.tracking.Tracker
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class MainActivityViewModel constructor(
     private val setAppLanguage: SetAppLanguage,
-    private val dataStoresRepo: DataStoresRepo
+    private val getAppLanguage: GetAppLanguage,
+    private val dataStoresRepo: DataStoresRepo,
+    private val tracker: Tracker
 ) : ViewModel() {
     fun onResume() {
         viewModelScope.launch {
@@ -28,6 +33,13 @@ class MainActivityViewModel constructor(
                     )
                 }
             }
+
+            tracker.setAppLanguage(getAppLanguage.call().code)
         }
+    }
+
+    fun onScreenChanged(route: Route) {
+        val screenName = route.routeName.substringBefore("/")
+        tracker.trackScreenView(screenName, this::class.simpleName.toString())
     }
 }

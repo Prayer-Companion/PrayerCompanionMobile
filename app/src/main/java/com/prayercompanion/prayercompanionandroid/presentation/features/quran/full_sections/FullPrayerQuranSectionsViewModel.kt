@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.prayercompanion.prayercompanionandroid.domain.usecases.quran.GetNextQuranReadingSections
 import com.prayercompanion.shared.domain.models.quran.PrayerQuranReadingSections
+import com.prayercompanion.shared.domain.usecases.quran.GetNextQuranReadingSections
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

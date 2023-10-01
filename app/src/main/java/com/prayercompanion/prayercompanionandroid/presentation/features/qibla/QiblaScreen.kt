@@ -32,11 +32,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.domain.utils.SensorAccuracy
 import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.components.QiblaSensorAccuracyDialog
 import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.components.QiblaSensorAccuracyIndicator
 import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
 import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
+import com.prayercompanion.prayercompanionandroid.presentation.utils.SensorAccuracy
 
 @SuppressLint("MissingPermission")
 @Preview(locale = "ar", showSystemUi = true)

@@ -35,7 +35,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.Tracker
 import com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.HomeScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.permissions.PermissionsRequestScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.permissions.PermissionsRequestViewModel
@@ -62,8 +61,7 @@ class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainActivityViewModel by viewModel()
     private val googleSignInClient: GoogleSignInClient by inject()
-    private val feedbackUtils: FeedbackUtils by inject()
-    private val tracker: Tracker by inject()
+    private val feedbackUtils = FeedbackUtils(this)
 
     @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,7 +81,7 @@ class MainActivity : AppCompatActivity() {
                 navController.addOnDestinationChangedListener { _, destination, _ ->
                     val route = Route.fromStringRoute(destination.route)
                     shouldShowBottomNavigationBar = route.bottomNavBar
-                    tracker.trackScreenView(route, this::class.simpleName.toString())
+                    viewModel.onScreenChanged(route)
                 }
 
                 Scaffold(

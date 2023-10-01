@@ -8,14 +8,14 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.tasks.Task
 import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.domain.usecases.AccountSignIn
-import com.prayercompanion.prayercompanionandroid.domain.utils.AuthenticationHelper
-import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.TrackedButtons
-import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.Tracker
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
 import com.prayercompanion.prayercompanionandroid.presentation.utils.toUiText
+import com.prayercompanion.shared.domain.repositories.AuthenticationRepository
+import com.prayercompanion.shared.domain.usecases.AccountSignIn
+import com.prayercompanion.shared.domain.utils.tracking.TrackedButtons
+import com.prayercompanion.shared.domain.utils.tracking.Tracker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -24,7 +24,7 @@ import logcat.asLog
 import logcat.logcat
 
 class SignInViewModel constructor(
-    private val authenticationHelper: AuthenticationHelper,
+    private val authenticationRepository: AuthenticationRepository,
     private val accountSignIn: AccountSignIn,
     private val tracker: Tracker
 ) : ViewModel() {
@@ -56,7 +56,7 @@ class SignInViewModel constructor(
         isLoading = true
         if (task.isSuccessful) {
             val token = task.result.idToken ?: return
-            authenticationHelper.signInWithGoogle(
+            authenticationRepository.signInWithGoogle(
                 token,
                 onSuccess = ::onSignInSuccess,
                 onFailure = ::onSignInFail,
@@ -74,7 +74,7 @@ class SignInViewModel constructor(
     }
 
     private fun onSignInAnonymouslyClicked() {
-        authenticationHelper.signInAnonymously(
+        authenticationRepository.signInAnonymously(
             onSuccess = ::onSignInSuccess,
             onFailure = ::onSignInFail
         )

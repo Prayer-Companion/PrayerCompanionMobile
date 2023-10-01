@@ -2,14 +2,21 @@ package com.prayercompanion.prayercompanionandroid.presentation.features.home_sc
 
 import android.app.Activity
 import android.content.Intent
+import android.content.IntentSender
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.ScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.Lifecycle
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.Priority
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.prayercompanion.prayercompanionandroid.BuildConfig
@@ -17,6 +24,8 @@ import com.prayercompanion.prayercompanionandroid.presentation.features.home_scr
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.compose.OnLifecycleEvent
 import com.prayercompanion.prayercompanionandroid.showToast
+import logcat.asLog
+import logcat.logcat
 
 @Composable
 fun HomeScreen(
@@ -34,9 +43,42 @@ fun HomeScreen(
     )
 
     OnLifecycleEvent { _, event ->
+        fun checkLocationService() {
+            val intervalForLocationUpdateInMillis = 10000L
+
+            val locationRequest = LocationRequest
+                .Builder(Priority.PRIORITY_HIGH_ACCURACY, intervalForLocationUpdateInMillis)
+                .build()
+
+            val locationSettingsRequest = LocationSettingsRequest
+                .Builder()
+                .addLocationRequest(locationRequest)
+                .build()
+
+            val client = LocationServices.getSettingsClient(context)
+
+            client.checkLocationSettings(locationSettingsRequest)
+                .addOnFailureListener { exception ->
+                    if (exception is ResolvableApiException) {
+                        // Location settings are not satisfied, but this can be fixed
+                        // by showing the user a dialog.
+                        try {
+                            val intentSenderRequest = IntentSenderRequest
+                                .Builder(exception.resolution.intentSender)
+                                .build()
+
+                            locationSettingsLauncher.launch(intentSenderRequest)
+                        } catch (sendEx: IntentSender.SendIntentException) {
+                            logcat("HomeScreen") { sendEx.asLog() }
+                        }
+                    }
+                }
+        }
+
         when (event) {
             Lifecycle.Event.ON_START -> {
                 viewModel.onStart()
+                checkLocationService()
             }
 
             Lifecycle.Event.ON_PAUSE -> {
@@ -54,10 +96,6 @@ fun HomeScreen(
                     scaffoldState
                         .snackbarHostState
                         .showSnackbar(it.errorMessage.asString(context))
-                }
-
-                is UiEvent.LaunchIntentSenderRequest -> {
-                    locationSettingsLauncher.launch(it.intentSenderRequest)
                 }
 
                 is UiEvent.ShowRateTheAppPopup -> {
@@ -96,6 +134,7 @@ fun HomeScreen(
                     )
                     context.startActivity(browserIntent)
                 }
+
                 else -> Unit
             }
         }

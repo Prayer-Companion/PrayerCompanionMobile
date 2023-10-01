@@ -10,14 +10,14 @@ import android.graphics.drawable.Icon
 import androidx.core.text.HtmlCompat
 import com.prayercompanion.prayercompanionandroid.MainActivity
 import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.data.receivers.PrayerNotificationActionReceiver
+import com.prayercompanion.prayercompanionandroid.presentation.receivers.PrayerNotificationActionReceiver
 import com.prayercompanion.prayercompanionandroid.presentation.utils.PresentationConsts
 import com.prayercompanion.prayercompanionandroid.presentation.utils.getPrayerNameStringRes
 import com.prayercompanion.prayercompanionandroid.presentation.utils.getPrayerStatusNameStringRes
-import com.prayercompanion.prayercompanionandroid.toJson
 import com.prayercompanion.shared.domain.models.PrayerInfo
 import com.prayercompanion.shared.domain.models.PrayerNotificationItem
 import com.prayercompanion.shared.domain.models.PrayerStatus
+import com.prayercompanion.shared.toJson
 import kotlinx.coroutines.delay
 
 class PrayersNotificationsService constructor(

@@ -1,6 +1,6 @@
 package com.prayercompanion.prayercompanionandroid.presentation.features.home_screen
 
-import com.prayercompanion.prayercompanionandroid.domain.extensions.now
+import com.prayercompanion.shared.domain.extensions.now
 import com.prayercompanion.shared.domain.models.DailyPrayersCombo
 import com.prayercompanion.shared.domain.models.DayPrayersInfo
 import com.prayercompanion.shared.domain.models.PrayerStatus

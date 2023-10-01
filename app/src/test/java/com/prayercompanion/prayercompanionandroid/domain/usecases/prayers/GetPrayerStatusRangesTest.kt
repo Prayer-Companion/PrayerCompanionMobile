@@ -1,11 +1,12 @@
 package com.prayercompanion.prayercompanionandroid.domain.usecases.prayers
 
-import com.prayercompanion.prayercompanionandroid.domain.extensions.now
-import com.prayercompanion.prayercompanionandroid.domain.repositories.PrayersRepository
-import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
 import com.prayercompanion.prayercompanionandroid.domain.utils.FakeAppLocationManager
 import com.prayercompanion.prayercompanionandroid.domain.utils.PrayersFakeRepository
+import com.prayercompanion.shared.domain.extensions.now
 import com.prayercompanion.shared.domain.models.Prayer
+import com.prayercompanion.shared.domain.repositories.PrayersRepository
+import com.prayercompanion.shared.domain.usecases.prayers.GetPrayerStatusRanges
+import com.prayercompanion.shared.domain.utils.AppLocationManager
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime

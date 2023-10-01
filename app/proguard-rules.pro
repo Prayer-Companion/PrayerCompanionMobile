@@ -22,16 +22,15 @@
 
 
 # Keeping Serializable data models
--keep class com.prayercompanion.prayercompanionandroid.data.local.db.** { *; }
--keep class com.prayercompanion.prayercompanionandroid.data.remote.dto.** { *; }
--keep class com.prayercompanion.prayercompanionandroid.data.local.assets.dto.** { *; }
--keep class com.prayercompanion.prayercompanionandroid.domain.models.** { *; }
+-keep class com.prayercompanion.shared.data.local.db.** { *; }
+-keep class com.prayercompanion.shared.data.remote.dto.** { *; }
+-keep class com.prayercompanion.shared.data.local.assets.dto.** { *; }
+-keep class com.prayercompanion.shared.domain.models.** { *; }
 
 -dontwarn org.slf4j.impl.StaticLoggerBinder
 
 -dontwarn java.lang.ClassValue
 -dontwarn java.lang.instrument.UnmodifiableClassException
--dontwarn okhttp3.internal.Util
 -dontwarn org.junit.jupiter.api.extension.ExtensionContext
 -dontwarn org.junit.jupiter.api.extension.ParameterContext
 -dontwarn org.junit.jupiter.api.extension.ParameterResolver

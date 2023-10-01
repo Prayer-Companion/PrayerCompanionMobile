@@ -3,11 +3,11 @@ package com.prayercompanion.prayercompanionandroid.presentation.features.onboard
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
-import com.prayercompanion.prayercompanionandroid.data.preferences.DataStoresRepo
-import com.prayercompanion.prayercompanionandroid.domain.usecases.IsConnectedToInternet
-import com.prayercompanion.prayercompanionandroid.domain.utils.PermissionsManager
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
+import com.prayercompanion.shared.data.preferences.DataStoresRepo
+import com.prayercompanion.shared.domain.usecases.IsConnectedToInternet
+import com.prayercompanion.shared.domain.utils.PermissionsManager
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.firstOrNull

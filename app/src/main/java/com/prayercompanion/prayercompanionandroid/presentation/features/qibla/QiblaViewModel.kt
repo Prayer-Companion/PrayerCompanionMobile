@@ -5,11 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
-import com.prayercompanion.prayercompanionandroid.domain.utils.OrientationSensor
-import com.prayercompanion.prayercompanionandroid.domain.utils.QiblaUtils
-import com.prayercompanion.prayercompanionandroid.domain.utils.SensorAccuracy
-
+import com.prayercompanion.prayercompanionandroid.presentation.utils.OrientationSensor
+import com.prayercompanion.prayercompanionandroid.presentation.utils.SensorAccuracy
+import com.prayercompanion.shared.domain.utils.AppLocationManager
+import com.prayercompanion.shared.domain.utils.QiblaUtils
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 

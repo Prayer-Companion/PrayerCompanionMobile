@@ -1,36 +1,33 @@
 package com.prayercompanion.prayercompanionandroid.presentation.features.home_screen
 
-import android.content.IntentSender
 import android.os.CountDownTimer
-import androidx.activity.result.IntentSenderRequest
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.common.api.ResolvableApiException
 import com.prayercompanion.prayercompanionandroid.BuildConfig
 import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.data.preferences.DataStoresRepo
-import com.prayercompanion.prayercompanionandroid.domain.extensions.instantBetween
-import com.prayercompanion.prayercompanionandroid.domain.extensions.now
-import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetDailyPrayersCombo
-import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetDayPrayersFlow
-import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.GetStatusesOverView
-import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.SetPrayerStatusByDateTime
-import com.prayercompanion.prayercompanionandroid.domain.usecases.prayers.UpdatePrayerStatus
-import com.prayercompanion.prayercompanionandroid.domain.usecases.quran.LoadAndSaveQuranMemorizedChapters
-import com.prayercompanion.prayercompanionandroid.domain.utils.AppLocationManager
-import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.TrackedButtons
-import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.Tracker
 import com.prayercompanion.prayercompanionandroid.presentation.models.RemainingDuration
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
 import com.prayercompanion.prayercompanionandroid.presentation.utils.toUiText
-import com.prayercompanion.prayercompanionandroid.printStackTraceInDebug
+import com.prayercompanion.shared.data.preferences.DataStoresRepo
+import com.prayercompanion.shared.domain.extensions.instantBetween
+import com.prayercompanion.shared.domain.extensions.now
 import com.prayercompanion.shared.domain.models.DayPrayersInfo
 import com.prayercompanion.shared.domain.models.PrayerInfo
 import com.prayercompanion.shared.domain.models.PrayerStatus
+import com.prayercompanion.shared.domain.usecases.prayers.GetDailyPrayersCombo
+import com.prayercompanion.shared.domain.usecases.prayers.GetDayPrayersFlow
+import com.prayercompanion.shared.domain.usecases.prayers.GetStatusesOverView
+import com.prayercompanion.shared.domain.usecases.prayers.SetPrayerStatusByDateTime
+import com.prayercompanion.shared.domain.usecases.prayers.UpdatePrayerStatus
+import com.prayercompanion.shared.domain.usecases.quran.LoadAndSaveQuranMemorizedChapters
+import com.prayercompanion.shared.domain.utils.AppLocationManager
+import com.prayercompanion.shared.domain.utils.tracking.TrackedButtons
+import com.prayercompanion.shared.domain.utils.tracking.Tracker
+import com.prayercompanion.shared.presentation.printStackTraceInDebug
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -47,8 +44,6 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
-import logcat.asLog
-import logcat.logcat
 
 class HomeScreenViewModel constructor(
     private val getDayPrayersFlow: GetDayPrayersFlow,
@@ -87,29 +82,9 @@ class HomeScreenViewModel constructor(
             }
         }
 
-        fun checkLocationService() {
-            val locationServiceTask = locationManager.checkLocationService()
-            locationServiceTask.addOnFailureListener { exception ->
-                if (exception is ResolvableApiException) {
-                    // Location settings are not satisfied, but this can be fixed
-                    // by showing the user a dialog.
-                    try {
-                        val intentSenderRequest = IntentSenderRequest
-                            .Builder(exception.resolution.intentSender)
-                            .build()
-
-                        sendEvent(UiEvent.LaunchIntentSenderRequest(intentSenderRequest))
-                    } catch (sendEx: IntentSender.SendIntentException) {
-                        logcat { sendEx.asLog() }
-                    }
-                }
-            }
-        }
-
         loadQuranData()
         loadDailyPrayersCombo()
         loadStatusesOverView()
-        checkLocationService()
     }
 
     fun onStart() {

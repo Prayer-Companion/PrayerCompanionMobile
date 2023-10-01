@@ -2,8 +2,8 @@ package com.prayercompanion.prayercompanionandroid.presentation.features.onboard
 
 import androidx.annotation.DrawableRes
 import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.domain.utils.PermissionsManager
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
+import com.prayercompanion.shared.domain.utils.PermissionsManager
 
 data class PermissionsRequestUiState(
     @DrawableRes

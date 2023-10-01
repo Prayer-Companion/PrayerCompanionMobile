@@ -1,4 +1,5 @@
 import com.prayercompanion.shared.gradle.ProjectConfig
+import com.prayercompanion.shared.gradle.ProjectDependencies
 
 plugins {
     kotlin("multiplatform")
@@ -42,12 +43,10 @@ android {
 
         resourceConfigurations += listOf("en", "ar")
 
-        val prayerCompanionApiBaseUrl: String by project
         val ishaStatusesPeriodsExplanationUrl: String by project
         val doorbellId: String by project
         val doorbellPrivateKey: String by project
 
-        buildConfigField("String", "PRAYER_COMPANION_API_BASE_URL", prayerCompanionApiBaseUrl)
         buildConfigField(
             "String",
             "ISHA_STATUSES_PERIODS_EXPLANATION_URL",
@@ -138,9 +137,11 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview:$composeUiVersion")
     implementation("androidx.compose.material:material:$composeUiVersion")
     implementation("androidx.navigation:navigation-compose:2.7.0-beta01")
+    // todo: remove this dependency
     implementation("com.google.android.gms:play-services-location:21.0.1")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
 
+//    todo: remove this dependency
     val koinAndroidVersion = "3.5.0"
     implementation("io.insert-koin:koin-android:$koinAndroidVersion")
 
@@ -148,10 +149,10 @@ dependencies {
     implementation("androidx.work:work-runtime-ktx:$workManagerVersion")
     implementation("io.insert-koin:koin-androidx-workmanager:$koinAndroidVersion")
 
-    val okHttpVersion = "5.0.0-alpha.11"
-    implementation("com.squareup.okhttp3:logging-interceptor:$okHttpVersion")
+    //todo remove this dependency
+    implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.11")
 
-    implementation("com.squareup.logcat:logcat:0.1")
+    implementation(ProjectDependencies.logcat)
     implementation(platform("com.google.firebase:firebase-bom:31.5.0"))
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-crashlytics-ktx")
@@ -173,12 +174,6 @@ dependencies {
     implementation("com.google.android.play:review-ktx:2.0.1")
     implementation("io.doorbell:android-sdk:0.4.7@aar")
 
-    val ktorVersion = "2.3.3"
-
-    implementation("io.ktor:ktor-client-core:$ktorVersion")
-    implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
-    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
     implementation("app.cash.sqldelight:coroutines-extensions:2.0.0")
 //    ------------------------------------------------
     debugImplementation("androidx.compose.ui:ui-tooling:$composeUiVersion")

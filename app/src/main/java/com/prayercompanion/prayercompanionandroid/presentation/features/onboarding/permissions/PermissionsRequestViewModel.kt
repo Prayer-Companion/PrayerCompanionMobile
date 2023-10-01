@@ -6,15 +6,14 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.data.preferences.AppPreferences
-import com.prayercompanion.prayercompanionandroid.data.preferences.DataStoresRepo
-import com.prayercompanion.prayercompanionandroid.domain.utils.PermissionsManager
-import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.TrackedButtons
-import com.prayercompanion.prayercompanionandroid.domain.utils.tracking.Tracker
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
-
+import com.prayercompanion.shared.data.preferences.AppPreferences
+import com.prayercompanion.shared.data.preferences.DataStoresRepo
+import com.prayercompanion.shared.domain.utils.PermissionsManager
+import com.prayercompanion.shared.domain.utils.tracking.TrackedButtons
+import com.prayercompanion.shared.domain.utils.tracking.Tracker
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.receiveAsFlow

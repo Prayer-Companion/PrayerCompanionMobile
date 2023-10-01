@@ -4,20 +4,19 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.dataStore
 import androidx.work.Configuration
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.prayercompanion.prayercompanionandroid.data.di.dataModule
-import com.prayercompanion.prayercompanionandroid.data.preferences.AppPreferences
-import com.prayercompanion.prayercompanionandroid.data.preferences.AppPreferencesSerializer
-import com.prayercompanion.prayercompanionandroid.domain.di.domainModule
-import com.prayercompanion.prayercompanionandroid.domain.utils.PermissionsManager
-import com.prayercompanion.prayercompanionandroid.domain.utils.ScheduleDailyPrayersWorker
+import com.prayercompanion.prayercompanionandroid.domain.di.androidDomainModuleX
 import com.prayercompanion.prayercompanionandroid.presentation.di.presentationModule
+import com.prayercompanion.prayercompanionandroid.presentation.utils.ScheduleDailyPrayersWorker
 import com.prayercompanion.prayercompanionandroid.presentation.utils.notifications.PrayersNotificationsService
+import com.prayercompanion.shared.data.di.androidDataModule
+import com.prayercompanion.shared.data.di.dataModule
+import com.prayercompanion.shared.domain.di.androidDomainModule
+import com.prayercompanion.shared.domain.di.domainModule
+import com.prayercompanion.shared.domain.utils.PermissionsManager
 import logcat.AndroidLogcatLogger
 import logcat.LogPriority
 import org.koin.android.ext.android.inject
@@ -25,11 +24,6 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import java.util.concurrent.TimeUnit
-
-val Context.appPreferencesDataStore: DataStore<AppPreferences> by dataStore(
-    "app_preferences1.json",
-    AppPreferencesSerializer
-)
 
 class PrayerCompanionApplication : Application(), Configuration.Provider {
 
@@ -45,7 +39,7 @@ class PrayerCompanionApplication : Application(), Configuration.Provider {
         startKoin {
             androidLogger()
             androidContext(this@PrayerCompanionApplication)
-            modules(presentationModule, domainModule, dataModule)
+            modules(presentationModule, domainModule, androidDomainModuleX, androidDomainModule, dataModule, androidDataModule)
         }
 
         setupNotificationsChannels()
