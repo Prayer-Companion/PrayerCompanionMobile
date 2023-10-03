@@ -3,7 +3,7 @@ package com.prayercompanion.shared.domain.usecases
 import android.content.res.Resources
 import androidx.appcompat.app.AppCompatDelegate
 import com.prayercompanion.shared.domain.models.app.AppLanguage
-import com.prayercompanion.shared.presentation.log
+import com.prayercompanion.shared.presentation.utils.log
 
 actual class GetAppLanguage {
 

@@ -7,6 +7,7 @@ plugins {
     id("com.google.gms.google-services")
     id("org.jetbrains.kotlin.plugin.serialization")
     id("com.google.firebase.crashlytics")
+    id("org.jetbrains.compose")
 }
 
 kotlin {

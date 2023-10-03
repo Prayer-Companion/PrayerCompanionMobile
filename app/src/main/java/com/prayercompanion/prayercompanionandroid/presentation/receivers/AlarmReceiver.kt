@@ -8,7 +8,7 @@ import com.prayercompanion.prayercompanionandroid.presentation.utils.notificatio
 import com.prayercompanion.shared.domain.models.PrayerNotificationItem
 import com.prayercompanion.shared.domain.usecases.settings.GetIsPauseMediaEnabled
 import com.prayercompanion.shared.fromJson
-import com.prayercompanion.shared.presentation.printStackTraceInDebug
+import com.prayercompanion.shared.presentation.utils.printStackTraceInDebug
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch

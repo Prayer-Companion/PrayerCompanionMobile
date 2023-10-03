@@ -15,12 +15,11 @@ import com.prayercompanion.shared.data.preferences.DataStoresRepo
 import com.prayercompanion.shared.domain.extensions.toAppLocation
 import com.prayercompanion.shared.domain.models.Location
 import com.prayercompanion.shared.domain.models.app.Address
-import com.prayercompanion.shared.presentation.log
+import com.prayercompanion.shared.presentation.utils.log
 import kotlinx.coroutines.flow.firstOrNull
 import java.util.Locale
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
-
 
 actual class AppLocationManagerImpl constructor(
     private val context: Context,

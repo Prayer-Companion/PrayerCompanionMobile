@@ -1,6 +1,6 @@
 package com.prayercompanion.shared
 
-import com.prayercompanion.shared.presentation.printStackTraceInDebug
+import com.prayercompanion.shared.presentation.utils.printStackTraceInDebug
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 

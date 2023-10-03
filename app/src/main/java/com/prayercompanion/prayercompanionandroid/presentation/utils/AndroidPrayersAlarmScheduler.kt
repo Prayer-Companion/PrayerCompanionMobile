@@ -11,7 +11,7 @@ import com.prayercompanion.shared.domain.extensions.now
 import com.prayercompanion.shared.domain.models.Prayer
 import com.prayercompanion.shared.domain.models.PrayerNotificationItem
 import com.prayercompanion.shared.domain.usecases.prayers.GetDayPrayers
-import com.prayercompanion.shared.presentation.printStackTraceInDebug
+import com.prayercompanion.shared.presentation.utils.printStackTraceInDebug
 import com.prayercompanion.shared.toJson
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone

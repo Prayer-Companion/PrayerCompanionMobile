@@ -4,6 +4,7 @@ import com.prayercompanion.shared.gradle.ProjectDependencies
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
+    id("org.jetbrains.compose")
     id("app.cash.sqldelight")
     id("org.jetbrains.kotlin.plugin.serialization")
 }
@@ -11,7 +12,6 @@ plugins {
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
     androidTarget()
-
     listOf(
         iosX64(),
         iosArm64(),
@@ -24,6 +24,9 @@ kotlin {
     }
 
     sourceSets {
+        val koinVersion = "3.5.0"
+
+        getByName("androidMain").kotlin.srcDirs("build/generated/moko/androidMain/src")
         val commonMain by getting {
             dependencies {
                 implementation("app.cash.sqldelight:coroutines-extensions:2.0.0")
@@ -32,9 +35,14 @@ kotlin {
                 implementation(ProjectDependencies.ktorClientCore)
                 implementation(ProjectDependencies.ktorClientContentNegotiation)
                 implementation(ProjectDependencies.ktorClientSerialization)
-                val koinAndroidVersion = "3.5.0"
-                implementation("io.insert-koin:koin-android:$koinAndroidVersion")
-                implementation("org.lighthousegames:logging:1.3.0")
+                implementation("io.insert-koin:koin-core:$koinVersion")
+
+                //compose
+                implementation(compose.runtime)
+                implementation(compose.foundation)
+                implementation(compose.material)
+                @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+                implementation(compose.components.resources)
             }
         }
         val androidMain by getting {
@@ -42,6 +50,7 @@ kotlin {
                 api("androidx.activity:activity-compose:1.7.2")
                 api("androidx.appcompat:appcompat:1.6.1")
                 api("androidx.core:core-ktx:1.10.1")
+
                 implementation("app.cash.sqldelight:android-driver:2.0.0")
                 implementation("androidx.datastore:datastore:1.0.0")
 
@@ -56,6 +65,10 @@ kotlin {
                 implementation(ProjectDependencies.ktorClientContentNegotiation)
                 implementation(ProjectDependencies.ktorClientSerialization)
                 implementation(ProjectDependencies.logcat)
+                implementation("io.insert-koin:koin-android:$koinVersion")
+
+                implementation(compose.preview)
+                implementation(compose.uiTooling)
             }
         }
         val iosX64Main by getting

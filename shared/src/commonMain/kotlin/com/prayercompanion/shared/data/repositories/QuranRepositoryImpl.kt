@@ -12,7 +12,7 @@ import com.prayercompanion.shared.domain.models.quran.PrayerQuranReadingSections
 import com.prayercompanion.shared.domain.models.quran.QuranChapter
 import com.prayercompanion.shared.domain.repositories.QuranRepository
 import com.prayercompanion.shared.domain.usecases.IsConnectedToInternet
-import com.prayercompanion.shared.presentation.printStackTraceInDebug
+import com.prayercompanion.shared.presentation.utils.printStackTraceInDebug
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf

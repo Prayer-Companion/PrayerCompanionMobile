@@ -27,7 +27,7 @@ import com.prayercompanion.shared.domain.usecases.quran.LoadAndSaveQuranMemorize
 import com.prayercompanion.shared.domain.utils.AppLocationManager
 import com.prayercompanion.shared.domain.utils.tracking.TrackedButtons
 import com.prayercompanion.shared.domain.utils.tracking.Tracker
-import com.prayercompanion.shared.presentation.printStackTraceInDebug
+import com.prayercompanion.shared.presentation.utils.printStackTraceInDebug
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel

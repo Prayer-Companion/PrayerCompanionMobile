@@ -5,21 +5,22 @@
 //  Created by Raed Ghazal on 21/09/2023.
 //
 
+import UIKit
 import SwiftUI
 import shared
 
+struct ComposeView: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> UIViewController {
+        Main_iosKt.MainViewController()
+    }
+
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
+}
+
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text(Greeting().greet() + " " + AppLanguage.ar.name)
-        }
-        .padding()
+        ComposeView()
+                .ignoresSafeArea(.keyboard) // Compose has own keyboard handler
     }
 }
 
-#Preview {
-    ContentView()
-}

@@ -1,4 +1,4 @@
-package com.prayercompanion.shared.presentation
+package com.prayercompanion.shared.presentation.utils
 
 import com.prayercompanion.shared.BuildConfig
 import logcat.logcat
