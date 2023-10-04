@@ -26,7 +26,6 @@ kotlin {
     sourceSets {
         val koinVersion = "3.5.0"
 
-        getByName("androidMain").kotlin.srcDirs("build/generated/moko/androidMain/src")
         val commonMain by getting {
             dependencies {
                 implementation("app.cash.sqldelight:coroutines-extensions:2.0.0")
@@ -69,6 +68,7 @@ kotlin {
 
                 implementation(compose.preview)
                 implementation(compose.uiTooling)
+                implementation(compose.ui)
             }
         }
         val iosX64Main by getting

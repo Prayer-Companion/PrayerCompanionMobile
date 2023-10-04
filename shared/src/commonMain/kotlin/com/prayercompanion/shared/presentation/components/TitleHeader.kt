@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.presentation.components
+package com.prayercompanion.shared.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
@@ -14,11 +14,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.prayercompanion.prayercompanionandroid.autoMirror
-import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
-import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
+import com.prayercompanion.shared.presentation.theme.LocalSpacing
+import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
+import com.prayercompanion.shared.presentation.utils.autoMirror
 
 @Composable
 fun TitleHeader(
@@ -55,10 +54,4 @@ fun TitleHeader(
             color = MaterialTheme.colors.onPrimary,
         )
     }
-}
-
-@Preview
-@Composable
-fun TitleHeaderPreview() {
-    TitleHeader(title = "Memorized Ayat")
 }

@@ -1,15 +1,8 @@
-package com.prayercompanion.prayercompanionandroid.presentation.theme
+package com.prayercompanion.shared.presentation.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.prayercompanion.prayercompanionandroid.R
-
-val BoldFontFamily = FontFamily(Font(R.font.bold))
-val RegularFontFamily = FontFamily(Font(R.font.regular, weight = FontWeight.W400))
 
 // Set of Material typography styles to start with
 val SmallTextStyle = TextStyle(

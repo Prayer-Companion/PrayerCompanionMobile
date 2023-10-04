@@ -12,9 +12,9 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.prayercompanionandroid.presentation.utils.getPrayerStatusCorrespondingColor
 import com.prayercompanion.shared.domain.models.PrayerStatus
+import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
 
 @Composable
 fun PrayerStatusesOverViewBar(

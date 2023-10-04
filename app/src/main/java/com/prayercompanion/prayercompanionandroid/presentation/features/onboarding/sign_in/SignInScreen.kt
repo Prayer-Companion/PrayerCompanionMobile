@@ -38,10 +38,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
-import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
-import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
-import com.prayercompanion.prayercompanionandroid.showToast
+import com.prayercompanion.prayercompanionandroid.presentation.utils.showToast
+import com.prayercompanion.shared.presentation.theme.LocalSpacing
+import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 

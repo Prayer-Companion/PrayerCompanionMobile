@@ -42,9 +42,9 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavOptionsBuilder
 import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
-import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
-import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
+import com.prayercompanion.shared.presentation.theme.LocalSpacing
+import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 

@@ -23,7 +23,7 @@ import com.prayercompanion.prayercompanionandroid.BuildConfig
 import com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.components.HomeScreenContent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.compose.OnLifecycleEvent
-import com.prayercompanion.prayercompanionandroid.showToast
+import com.prayercompanion.prayercompanionandroid.presentation.utils.showToast
 import logcat.asLog
 import logcat.logcat
 

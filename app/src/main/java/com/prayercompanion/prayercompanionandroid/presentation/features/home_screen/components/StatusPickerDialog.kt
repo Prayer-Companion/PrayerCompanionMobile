@@ -30,8 +30,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
-import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.prayercompanionandroid.presentation.utils.PresentationConsts
 import com.prayercompanion.prayercompanionandroid.presentation.utils.getPrayerStatusCorrespondingColor
 import com.prayercompanion.prayercompanionandroid.presentation.utils.getPrayerStatusNameStringRes
@@ -40,6 +38,8 @@ import com.prayercompanion.shared.domain.extensions.plus
 import com.prayercompanion.shared.domain.models.Prayer
 import com.prayercompanion.shared.domain.models.PrayerStatus
 import com.prayercompanion.shared.domain.models.PrayerStatusWithTimeRange
+import com.prayercompanion.shared.presentation.theme.LocalSpacing
+import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDateTime
 

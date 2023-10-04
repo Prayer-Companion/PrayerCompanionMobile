@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.presentation.theme
+package com.prayercompanion.shared.presentation.theme
 
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.unit.Dp

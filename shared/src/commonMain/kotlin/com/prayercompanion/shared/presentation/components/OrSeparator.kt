@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.presentation.components
+package com.prayercompanion.shared.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
@@ -10,17 +10,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.presentation.theme.LocalSpacing
+import com.prayercompanion.shared.presentation.theme.LocalSpacing
+import com.prayercompanion.shared.presentation.utils.Strings
+import com.prayercompanion.shared.presentation.utils.stringResource
 
-@Preview
 @Composable
 fun OrSeparator(
     modifier: Modifier = Modifier,
-    name: String = stringResource(id = R.string.or)
+    name: String = stringResource(id = Strings.or)
 ) {
     val spacing = LocalSpacing.current
 

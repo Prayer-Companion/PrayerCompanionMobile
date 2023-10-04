@@ -3,15 +3,15 @@ package com.prayercompanion.prayercompanionandroid.presentation.utils
 import androidx.annotation.StringRes
 import androidx.compose.ui.graphics.Color
 import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerStatusAfterHalfTimeColor
-import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerStatusJamaahColor
-import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerStatusLateColor
-import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerStatusMissedColor
-import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerStatusNotSetColor
-import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerStatusOnTimeColor
-import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerStatusQadaaColor
 import com.prayercompanion.shared.domain.models.Prayer
 import com.prayercompanion.shared.domain.models.PrayerStatus
+import com.prayercompanion.shared.presentation.theme.PrayerStatusAfterHalfTimeColor
+import com.prayercompanion.shared.presentation.theme.PrayerStatusJamaahColor
+import com.prayercompanion.shared.presentation.theme.PrayerStatusLateColor
+import com.prayercompanion.shared.presentation.theme.PrayerStatusMissedColor
+import com.prayercompanion.shared.presentation.theme.PrayerStatusNotSetColor
+import com.prayercompanion.shared.presentation.theme.PrayerStatusOnTimeColor
+import com.prayercompanion.shared.presentation.theme.PrayerStatusQadaaColor
 
 @StringRes
 fun getPrayerNameStringRes(prayer: Prayer): Int {

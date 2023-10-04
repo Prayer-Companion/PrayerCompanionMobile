@@ -13,10 +13,10 @@ import android.hardware.SensorManager.SENSOR_STATUS_UNRELIABLE
 import androidx.annotation.StringRes
 import androidx.compose.ui.graphics.Color
 import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.presentation.theme.SensorAccuracyHigh
-import com.prayercompanion.prayercompanionandroid.presentation.theme.SensorAccuracyLow
-import com.prayercompanion.prayercompanionandroid.presentation.theme.SensorAccuracyMedium
-import com.prayercompanion.prayercompanionandroid.presentation.theme.SensorAccuracyNoContact
+import com.prayercompanion.shared.presentation.theme.SensorAccuracyHigh
+import com.prayercompanion.shared.presentation.theme.SensorAccuracyLow
+import com.prayercompanion.shared.presentation.theme.SensorAccuracyMedium
+import com.prayercompanion.shared.presentation.theme.SensorAccuracyNoContact
 
 class OrientationSensor constructor(
     context: Context,

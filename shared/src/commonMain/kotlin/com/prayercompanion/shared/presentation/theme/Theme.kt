@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.presentation.theme
+package com.prayercompanion.shared.presentation.theme
 
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.lightColors

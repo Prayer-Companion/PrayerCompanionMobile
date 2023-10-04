@@ -51,8 +51,9 @@ import com.prayercompanion.prayercompanionandroid.presentation.features.quran.qu
 import com.prayercompanion.prayercompanionandroid.presentation.features.settings.SettingsScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.settings.SettingsScreenViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
-import com.prayercompanion.prayercompanionandroid.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.prayercompanionandroid.presentation.utils.FeedbackUtils
+import com.prayercompanion.prayercompanionandroid.presentation.utils.navigate
+import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
