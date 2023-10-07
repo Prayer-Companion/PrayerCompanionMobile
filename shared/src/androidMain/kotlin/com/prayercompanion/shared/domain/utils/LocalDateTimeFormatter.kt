@@ -7,59 +7,48 @@ import kotlinx.datetime.LocalTime
 import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.datetime.toJavaLocalTime
+import kotlinx.datetime.toKotlinLocalDate
+import kotlinx.datetime.toKotlinLocalDateTime
+import kotlinx.datetime.toKotlinLocalTime
 import java.time.format.DateTimeFormatter
 
 actual class LocalDateTimeFormatter private constructor(
-    private val pattern: String?,
+    private val pattern: String,
     private val locale: Locale
 ) {
 
+    private val formatter: DateTimeFormatter by lazy {
+        DateTimeFormatter.ofPattern(pattern, locale.javaLocale)
+    }
+
     actual fun format(localDateTime: LocalDateTime): String {
-        return DateTimeFormatter.ofPattern(pattern, locale.javaLocale)
-            .format(localDateTime.toJavaLocalDateTime())
+        return formatter.format(localDateTime.toJavaLocalDateTime())
     }
 
     actual fun format(localTime: LocalTime): String {
-        return DateTimeFormatter.ofPattern(pattern, locale.javaLocale)
-            .format(localTime.toJavaLocalTime())
+        return formatter.format(localTime.toJavaLocalTime())
     }
 
     actual fun format(localDate: LocalDate): String {
-        return DateTimeFormatter.ofPattern(pattern, locale.javaLocale)
-            .format(localDate.toJavaLocalDate())
+        return formatter.format(localDate.toJavaLocalDate())
     }
 
     actual fun parseToLocalDateTime(str: String): LocalDateTime {
-        val isoString = DateTimeFormatter.ISO_DATE_TIME.format(
-            DateTimeFormatter.ofPattern(
-                pattern,
-                locale.javaLocale
-            ).parse(str)
-        )
-
-        return LocalDateTime.parse(isoString)
+        return java.time.LocalDateTime
+            .parse(str, formatter)
+            .toKotlinLocalDateTime()
     }
 
     actual fun parseToLocalDate(str: String): LocalDate {
-        val isoString = DateTimeFormatter.ISO_DATE.format(
-            DateTimeFormatter.ofPattern(
-                pattern,
-                locale.javaLocale
-            ).parse(str)
-        )
-
-        return LocalDate.parse(isoString)
+        return java.time.LocalDate
+            .parse(str, formatter)
+            .toKotlinLocalDate()
     }
 
     actual fun parseToLocalTime(str: String): LocalTime {
-        val isoString = DateTimeFormatter.ISO_TIME.format(
-            DateTimeFormatter.ofPattern(
-                pattern,
-                locale.javaLocale
-            ).parse(str)
-        )
-
-        return LocalTime.parse(isoString)
+        return java.time.LocalTime
+            .parse(str, formatter)
+            .toKotlinLocalTime()
     }
 
     actual companion object {

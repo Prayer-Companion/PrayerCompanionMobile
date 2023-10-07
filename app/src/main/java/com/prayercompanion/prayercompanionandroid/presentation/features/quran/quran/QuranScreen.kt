@@ -41,7 +41,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavOptionsBuilder
 import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.presentation.components.AppBackground
 import com.prayercompanion.prayercompanionandroid.presentation.features.quran.components.QuranChapterItem
 import com.prayercompanion.prayercompanionandroid.presentation.features.quran.components.QuranSection
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
@@ -50,6 +49,7 @@ import com.prayercompanion.prayercompanionandroid.presentation.utils.compose.OnL
 import com.prayercompanion.prayercompanionandroid.presentation.utils.compose.keyboardAsState
 import com.prayercompanion.shared.domain.models.quran.PrayerQuranReadingSections
 import com.prayercompanion.shared.domain.models.quran.QuranChapter
+import com.prayercompanion.shared.presentation.components.AppBackground
 import com.prayercompanion.shared.presentation.components.TitleHeader
 import com.prayercompanion.shared.presentation.theme.LocalSpacing
 import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme

@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.presentation.navigation
+package com.prayercompanion.shared.presentation.navigation
 
 enum class Route(val routeName: String, val bottomNavBar: Boolean = true) {
     SplashScreen(routeName = "SplashScreen", bottomNavBar = false),

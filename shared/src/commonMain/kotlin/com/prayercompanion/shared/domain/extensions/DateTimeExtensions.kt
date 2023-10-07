@@ -12,16 +12,16 @@ import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Duration
 
-fun LocalDate.Companion.now(): LocalDate {
-    return Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
-}
-
 fun LocalDateTime.Companion.now(): LocalDateTime {
     return Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 }
 
+fun LocalDate.Companion.now(): LocalDate {
+    return LocalDateTime.now().date
+}
+
 fun LocalTime.Companion.now(): LocalTime {
-    return Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).time
+    return LocalDateTime.now().time
 }
 
 fun LocalTime.Companion.min(): LocalTime {
@@ -46,10 +46,14 @@ fun instantBetween(start: LocalDateTime, end: LocalDateTime): Duration {
 
 fun LocalDateTime.plus(value: Long, unit: DateTimeUnit.TimeBased): LocalDateTime {
     val timeZone = TimeZone.currentSystemDefault()
-    return toInstant(timeZone).plus(value, unit).toLocalDateTime(timeZone)
+    return this.toInstant(timeZone)
+        .plus(value, unit)
+        .toLocalDateTime(timeZone)
 }
 
 fun LocalDateTime.minus(value: Long, unit: DateTimeUnit.TimeBased): LocalDateTime {
     val timeZone = TimeZone.currentSystemDefault()
-    return toInstant(timeZone).minus(value, unit).toLocalDateTime(timeZone)
+    return this.toInstant(timeZone)
+        .minus(value, unit)
+        .toLocalDateTime(timeZone)
 }

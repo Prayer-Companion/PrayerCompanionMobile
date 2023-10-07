@@ -12,13 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.prayercompanion.shared.presentation.theme.LocalSpacing
-import com.prayercompanion.shared.presentation.utils.Strings
+import com.prayercompanion.shared.presentation.utils.StringRes
 import com.prayercompanion.shared.presentation.utils.stringResource
 
 @Composable
 fun OrSeparator(
     modifier: Modifier = Modifier,
-    name: String = stringResource(id = Strings.or)
+    name: String = stringResource(id = StringRes.or.id)
 ) {
     val spacing = LocalSpacing.current
 

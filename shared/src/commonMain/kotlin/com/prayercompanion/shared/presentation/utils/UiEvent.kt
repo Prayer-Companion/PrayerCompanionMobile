@@ -1,8 +1,7 @@
-package com.prayercompanion.prayercompanionandroid.presentation.utils
+package com.prayercompanion.shared.presentation.utils
 
 import com.prayercompanion.shared.presentation.navigation.Route
 
-//raed: moved
 sealed class UiEvent {
     data class ShowErrorSnackBar(val errorMessage: UiText) : UiEvent()
     data class Navigate(val route: Route, val args: List<Int> = emptyList()) : UiEvent()

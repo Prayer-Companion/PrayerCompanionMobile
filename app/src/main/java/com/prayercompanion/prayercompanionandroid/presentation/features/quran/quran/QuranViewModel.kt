@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
 import com.prayercompanion.shared.domain.usecases.quran.AddMemorizedChapterAyat
@@ -17,6 +16,7 @@ import com.prayercompanion.shared.domain.usecases.quran.MarkQuranSectionAsRead
 import com.prayercompanion.shared.domain.usecases.quran.RemoveMemorizedChapterAyat
 import com.prayercompanion.shared.domain.utils.tracking.TrackedButtons
 import com.prayercompanion.shared.domain.utils.tracking.Tracker
+import com.prayercompanion.shared.presentation.navigation.Route
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest

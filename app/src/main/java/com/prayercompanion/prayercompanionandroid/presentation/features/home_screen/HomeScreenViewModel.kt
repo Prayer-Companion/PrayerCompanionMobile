@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.prayercompanion.prayercompanionandroid.BuildConfig
 import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.presentation.models.RemainingDuration
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
 import com.prayercompanion.prayercompanionandroid.presentation.utils.toUiText
@@ -27,6 +26,7 @@ import com.prayercompanion.shared.domain.usecases.quran.LoadAndSaveQuranMemorize
 import com.prayercompanion.shared.domain.utils.AppLocationManager
 import com.prayercompanion.shared.domain.utils.tracking.TrackedButtons
 import com.prayercompanion.shared.domain.utils.tracking.Tracker
+import com.prayercompanion.shared.presentation.models.RemainingDuration
 import com.prayercompanion.shared.presentation.utils.printStackTraceInDebug
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -54,10 +54,10 @@ class HomeScreenViewModel constructor(
     private val getDailyPrayersCombo: GetDailyPrayersCombo,
     private val setPrayerStatusByDateTime: SetPrayerStatusByDateTime,
     private val tracker: Tracker,
-    dataStoresRepo: DataStoresRepo
+    private val dataStoresRepo: DataStoresRepo
 ) : ViewModel() {
 
-    private val appPreferences = dataStoresRepo.appPreferencesDataStore
+    private val appPreferencesData = dataStoresRepo.appPreferencesDataStoreData
 
     private var loadDailyPrayersComboJob: Job? = null
     private var loadSelectedDatePrayersJob: Job? = null
@@ -111,9 +111,9 @@ class HomeScreenViewModel constructor(
         viewModelScope.launch(Dispatchers.IO) {
             updatePrayerStatus.call(prayerInfo, prayerStatus)
                 .onSuccess {
-                    if (appPreferences.data.first().hasShownRateTheAppPopup.not()) {
+                    if (appPreferencesData.first().hasShownRateTheAppPopup.not()) {
                         sendEvent(UiEvent.ShowRateTheAppPopup)
-                        appPreferences.updateData {
+                        dataStoresRepo.updateAppPreferencesDataStore {
                             it.copy(hasShownRateTheAppPopup = true)
                         }
                     }

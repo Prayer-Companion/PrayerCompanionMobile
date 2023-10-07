@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import kotlinx.serialization.Serializable
 
+// raed: moved
 @Serializable
 sealed class UiText {
     data class DynamicString(val text: String) : UiText()

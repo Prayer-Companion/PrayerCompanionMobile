@@ -3,11 +3,11 @@ package com.prayercompanion.prayercompanionandroid.presentation.features.onboard
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
-import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.shared.data.preferences.DataStoresRepo
 import com.prayercompanion.shared.domain.usecases.IsConnectedToInternet
 import com.prayercompanion.shared.domain.utils.PermissionsManager
+import com.prayercompanion.shared.presentation.navigation.Route
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.firstOrNull
@@ -17,12 +17,11 @@ import logcat.logcat
 
 class SplashScreenViewModel constructor(
     private val permissionsManager: PermissionsManager,
-    dataStoresRepo: DataStoresRepo,
+    private val dataStoresRepo: DataStoresRepo,
     isConnectedToInternet: IsConnectedToInternet
 ) : ViewModel() {
 
-    private val appPreferences by lazy { dataStoresRepo.appPreferencesDataStore }
-    private val appPreferencesData by lazy { appPreferences.data }
+    private val appPreferencesData by lazy { dataStoresRepo.appPreferencesDataStoreData }
     private var startingTimeMillis = System.currentTimeMillis()
     private val _uiEvents = Channel<UiEvent>()
     val uiEvents = _uiEvents.receiveAsFlow()
@@ -37,7 +36,7 @@ class SplashScreenViewModel constructor(
                 val user = FirebaseAuth.getInstance().currentUser
 
                 // if the user object is not null means they are signed in
-                appPreferences.updateData {
+                dataStoresRepo.updateAppPreferencesDataStore {
                     it.copy(isSignedIn = user != null)
                 }
 

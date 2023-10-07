@@ -7,13 +7,13 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.content.ContextCompat
 
-class PermissionsManager constructor(
+actual class PermissionsManager constructor(
     private val context: Context,
 ) {
     /**
      * @return true if either [Manifest.permission.ACCESS_FINE_LOCATION] or [Manifest.permission.ACCESS_COARSE_LOCATION] were granted, false otherwise
      * */
-    val isLocationPermissionGranted: Boolean
+    actual val isLocationPermissionGranted: Boolean
         get() {
             //if either approximate or precise permission were granted then we can proceed
             //both works since approximate is not that far from the real location and can be used
@@ -25,7 +25,7 @@ class PermissionsManager constructor(
     /**
      * @return true if either OS version is less than 33 or [Manifest.permission.POST_NOTIFICATIONS] is Granted, false otherwise
      * */
-    val isPushNotificationAllowed: Boolean
+    actual val isPushNotificationAllowed: Boolean
         get() {
             return (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) ||
                 isPermissionGranted(notificationsPermission)

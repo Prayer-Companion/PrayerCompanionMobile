@@ -1,13 +1,16 @@
 package com.prayercompanion.shared.domain.models.app
 
-actual class Locale {
+import platform.Foundation.NSLocale
+import platform.Foundation.currentLocale
+
+actual class Locale private constructor(val nsLocale: NSLocale) {
     actual companion object {
         actual fun default(): Locale {
-            TODO()
+            return Locale(NSLocale.currentLocale)
         }
 
         actual fun en(): Locale {
-            TODO()
+            return Locale(NSLocale("en"))
         }
     }
 }

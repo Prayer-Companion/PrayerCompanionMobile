@@ -2,7 +2,7 @@ package com.prayercompanion.prayercompanionandroid
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
+import com.prayercompanion.shared.presentation.navigation.Route
 
 enum class BottomNavItem(
     val route: String,

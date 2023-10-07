@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.presentation.components
+package com.prayercompanion.shared.presentation.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -8,12 +8,11 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
-import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 
-@Preview(showSystemUi = true)
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun AppBackground(modifier: Modifier = Modifier) {
     PrayerCompanionAndroidTheme {
@@ -25,7 +24,7 @@ fun AppBackground(modifier: Modifier = Modifier) {
         ) {
             Image(
                 modifier = Modifier.fillMaxSize(),
-                painter = painterResource(id = R.drawable.background),
+                painter = painterResource("background.png"),
                 contentDescription = null,
                 contentScale = ContentScale.Crop
             )

@@ -6,7 +6,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.presentation.navigation.Route
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
 import com.prayercompanion.shared.data.preferences.AppPreferences
@@ -14,6 +13,7 @@ import com.prayercompanion.shared.data.preferences.DataStoresRepo
 import com.prayercompanion.shared.domain.utils.PermissionsManager
 import com.prayercompanion.shared.domain.utils.tracking.TrackedButtons
 import com.prayercompanion.shared.domain.utils.tracking.Tracker
+import com.prayercompanion.shared.presentation.navigation.Route
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -36,7 +36,7 @@ class PermissionsRequestViewModel constructor(
     init {
         fun observeDataStore() {
             viewModelScope.launch {
-                dataStoresRepo.appPreferencesDataStore.data.collect {
+                dataStoresRepo.appPreferencesDataStoreData.collect {
                     appPreferences = it
                 }
             }
@@ -80,7 +80,7 @@ class PermissionsRequestViewModel constructor(
                         uiState = uiState
                             .copy(body = UiText.StringResource(R.string.location_permission_request_deny_body))
 
-                        dataStoresRepo.appPreferencesDataStore.updateData {
+                        dataStoresRepo.updateAppPreferencesDataStore {
                             val count = appPreferences?.deniedLocationPermissionsCount ?: 0
                             it.copy(
                                 deniedLocationPermissionsCount = count + 1
@@ -98,7 +98,7 @@ class PermissionsRequestViewModel constructor(
                         uiState = uiState
                             .copy(body = UiText.StringResource(R.string.notification_permission_request_deny_body))
 
-                        dataStoresRepo.appPreferencesDataStore.updateData {
+                        dataStoresRepo.updateAppPreferencesDataStore {
                             val count = appPreferences?.deniedNotificationPermissionsCount ?: 0
                             it.copy(
                                 deniedNotificationPermissionsCount = count + 1
@@ -114,7 +114,7 @@ class PermissionsRequestViewModel constructor(
         tracker.trackButtonClicked(TrackedButtons.NOTIFICATION_PERMISSION_SKIP)
         goToHomeScreen()
         viewModelScope.launch {
-            dataStoresRepo.appPreferencesDataStore.updateData {
+            dataStoresRepo.updateAppPreferencesDataStore {
                 it.copy(hasSkippedNotificationPermission = true)
             }
         }

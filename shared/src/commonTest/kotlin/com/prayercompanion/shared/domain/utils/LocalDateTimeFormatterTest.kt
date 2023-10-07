@@ -4,8 +4,8 @@ import com.prayercompanion.shared.domain.models.app.Locale
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class LocalDateTimeFormatterTest {
 
