@@ -43,7 +43,7 @@ import androidx.navigation.NavOptionsBuilder
 import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.prayercompanionandroid.presentation.features.quran.components.QuranChapterItem
 import com.prayercompanion.prayercompanionandroid.presentation.features.quran.components.QuranSection
-import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
+import com.prayercompanion.prayercompanionandroid.presentation.utils.asString
 import com.prayercompanion.prayercompanionandroid.presentation.utils.compose.KeyboardConfig
 import com.prayercompanion.prayercompanionandroid.presentation.utils.compose.OnLifecycleEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.compose.keyboardAsState
@@ -53,6 +53,7 @@ import com.prayercompanion.shared.presentation.components.AppBackground
 import com.prayercompanion.shared.presentation.components.TitleHeader
 import com.prayercompanion.shared.presentation.theme.LocalSpacing
 import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
+import com.prayercompanion.shared.presentation.utils.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 

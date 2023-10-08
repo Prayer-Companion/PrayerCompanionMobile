@@ -1,9 +1,12 @@
 package com.prayercompanion.prayercompanionandroid
 
+import android.app.Activity
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -34,14 +37,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.HomeScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.permissions.PermissionsRequestScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.permissions.PermissionsRequestViewModel
-import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.sign_in.SignInScreen
-import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.sign_in.SignInViewModel
-import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.splash_screen.SplashScreen
-import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.splash_screen.SplashScreenViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.QiblaScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.QiblaViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.features.quran.full_sections.FullPrayerQuranSections
@@ -52,6 +52,13 @@ import com.prayercompanion.prayercompanionandroid.presentation.features.settings
 import com.prayercompanion.prayercompanionandroid.presentation.features.settings.SettingsScreenViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.utils.FeedbackUtils
 import com.prayercompanion.prayercompanionandroid.presentation.utils.navigate
+import com.prayercompanion.prayercompanionandroid.presentation.utils.showToast
+import com.prayercompanion.shared.domain.utils.Task
+import com.prayercompanion.shared.presentation.features.onboarding.sign_in.SignInEvents
+import com.prayercompanion.shared.presentation.features.onboarding.sign_in.SignInScreen
+import com.prayercompanion.shared.presentation.features.onboarding.sign_in.SignInViewModel
+import com.prayercompanion.shared.presentation.features.onboarding.splash_screen.SplashScreen
+import com.prayercompanion.shared.presentation.features.onboarding.splash_screen.SplashScreenViewModel
 import com.prayercompanion.shared.presentation.navigation.Route
 import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
 import org.koin.android.ext.android.inject
@@ -111,14 +118,56 @@ class MainActivity : AppCompatActivity() {
                             val viewModel: SplashScreenViewModel = getViewModel()
                             SplashScreen(
                                 uiEvents = viewModel.uiEvents,
-                                navigate = navController::navigate
+                                navigate = { event ->
+                                    navController.navigate(
+                                        event = event,
+                                        builder = {
+                                            popUpTo(Route.SplashScreen.name) {
+                                                inclusive = true
+                                            }
+                                        }
+                                    )
+                                }
                             )
                         }
                         composable(Route.SignIn.routeName) {
                             val viewModel: SignInViewModel = getViewModel()
+
+                            val signInWithGoogleLauncher = rememberLauncherForActivityResult(
+                                ActivityResultContracts.StartActivityForResult()
+                            ) {
+                                val result = it.resultCode == Activity.RESULT_OK
+                                val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
+                                    .let { task ->
+                                        Task(
+                                            isSuccessful = result,
+                                            result = task.result.idToken,
+                                            exception = task.exception
+                                        )
+                                    }
+
+                                viewModel.onEvent(SignInEvents.OnSignInWithGoogleResultReceived(result, task))
+                            }
+
                             SignInScreen(
-                                navigate = navController::navigate,
-                                googleSignInClient = googleSignInClient,
+                                navigate = { event ->
+                                    navController.navigate(
+                                        event = event,
+                                        builder = {
+                                            popUpTo(Route.SplashScreen.name) {
+                                                inclusive = true
+                                            }
+                                        }
+                                    )
+                                },
+                                launchGoogleSignInClient = {
+                                    signInWithGoogleLauncher.launch(
+                                        googleSignInClient.signInIntent
+                                    )
+                                },
+                                showToast = { message ->
+                                    showToast(message)
+                                },
                                 uiEvents = viewModel.uiEventsChannel,
                                 onEvent = viewModel::onEvent,
                                 isLoadingState = viewModel.isLoading

@@ -1,33 +1,32 @@
-package com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.sign_in
+package com.prayercompanion.shared.presentation.features.onboarding.sign_in
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.tasks.Task
-import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
-import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
-import com.prayercompanion.prayercompanionandroid.presentation.utils.toUiText
 import com.prayercompanion.shared.domain.repositories.AuthenticationRepository
 import com.prayercompanion.shared.domain.usecases.AccountSignIn
+import com.prayercompanion.shared.domain.utils.Task
 import com.prayercompanion.shared.domain.utils.tracking.TrackedButtons
 import com.prayercompanion.shared.domain.utils.tracking.Tracker
 import com.prayercompanion.shared.presentation.navigation.Route
+import com.prayercompanion.shared.presentation.utils.StringRes
+import com.prayercompanion.shared.presentation.utils.StringResourceReader
+import com.prayercompanion.shared.presentation.utils.UiEvent
+import com.prayercompanion.shared.presentation.utils.printStackTraceInDebug
+import com.rickclephas.kmm.viewmodel.KMMViewModel
+import com.rickclephas.kmm.viewmodel.coroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import logcat.asLog
-import logcat.logcat
 
 class SignInViewModel constructor(
     private val authenticationRepository: AuthenticationRepository,
     private val accountSignIn: AccountSignIn,
-    private val tracker: Tracker
-) : ViewModel() {
+    private val tracker: Tracker,
+    private val stringResourceReader: StringResourceReader
+) : KMMViewModel() {
 
     private val _uiEventsChannel = Channel<UiEvent>()
     val uiEventsChannel = _uiEventsChannel.receiveAsFlow()
@@ -47,15 +46,15 @@ class SignInViewModel constructor(
         }
     }
 
-    private fun onSignInWithGoogleResultReceived(result: Boolean, task: Task<GoogleSignInAccount>) {
+    private fun onSignInWithGoogleResultReceived(result: Boolean, task: Task<String>) {
         if (result.not()) {
-            sendErrorEvent(R.string.error_something_went_wrong.toUiText())
+            sendErrorEvent(stringResourceReader.read(StringRes.error_something_went_wrong))
             return
         }
 
         isLoading = true
         if (task.isSuccessful) {
-            val token = task.result.idToken ?: return
+            val token = task.result ?: return
             authenticationRepository.signInWithGoogle(
                 token,
                 onSuccess = ::onSignInSuccess,
@@ -63,8 +62,8 @@ class SignInViewModel constructor(
             )
         } else {
             isLoading = false
-            sendErrorEvent(task.exception?.message.toUiText())
-            logcat { task.exception?.asLog() ?: "" }
+            sendErrorEvent(task.exception?.message)
+            task.exception?.printStackTraceInDebug()
         }
     }
 
@@ -83,27 +82,28 @@ class SignInViewModel constructor(
     private fun onSignInSuccess() {
         isLoading = false
         tracker.trackLogin()
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.coroutineScope.launch(Dispatchers.IO) {
             val signInResult = accountSignIn.call()
             signInResult.onSuccess {
                 sendEvent(UiEvent.Navigate(Route.PermissionsRequests))
             }.onFailure {
-                sendErrorEvent(it.message.toUiText())
+                sendErrorEvent(it.message)
             }
         }
     }
 
     private fun onSignInFail(exception: Exception) {
         isLoading = false
-        sendErrorEvent(exception.message.toUiText())
+        sendErrorEvent(exception.message)
     }
 
-    private fun sendErrorEvent(text: UiText) {
-        sendEvent(UiEvent.ShowErrorSnackBar(text))
+    private fun sendErrorEvent(text: String?) {
+        if (text.isNullOrBlank()) return
+        sendEvent(UiEvent.ShowErrorSnackBarStr(text))
     }
 
     private fun sendEvent(uiEvent: UiEvent) {
-        viewModelScope.launch {
+        viewModelScope.coroutineScope.launch {
             _uiEventsChannel.send(uiEvent)
         }
     }

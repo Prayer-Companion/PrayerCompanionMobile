@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
 import com.prayercompanion.shared.domain.models.app.AppLanguage
 import com.prayercompanion.shared.domain.usecases.GetAppLanguage
 import com.prayercompanion.shared.domain.usecases.SetAppLanguage
@@ -13,6 +12,7 @@ import com.prayercompanion.shared.domain.usecases.settings.GetIsPauseMediaEnable
 import com.prayercompanion.shared.domain.usecases.settings.SetPauseMediaEnabled
 import com.prayercompanion.shared.domain.utils.tracking.TrackedButtons
 import com.prayercompanion.shared.domain.utils.tracking.Tracker
+import com.prayercompanion.shared.presentation.utils.UiEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow

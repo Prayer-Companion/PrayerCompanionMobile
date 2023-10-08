@@ -14,11 +14,20 @@ import kotlinx.coroutines.launch
 
 actual class AuthenticationRepositoryImpl constructor(
     private val googleSignInClient: GoogleSignInClient,
-    dataStoresRepo: DataStoresRepo,
-): AuthenticationRepository {
+    private val dataStoresRepo: DataStoresRepo,
+) : AuthenticationRepository {
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
-    private val appPreferences by lazy { dataStoresRepo.appPreferencesDataStore }
+
+    actual override suspend fun isSignedIn(): Boolean  {
+        val user = FirebaseAuth.getInstance().currentUser
+
+        // if the user object is not null means they are signed in
+        dataStoresRepo.updateAppPreferencesDataStore {
+            it.copy(isSignedIn = user != null)
+        }
+        return user != null
+    }
 
     actual override fun signInWithGoogle(
         token: String,
@@ -49,7 +58,7 @@ actual class AuthenticationRepositoryImpl constructor(
     ) {
         if (task.isSuccessful) {
             CoroutineScope(Dispatchers.Default).launch {
-                appPreferences.updateData {
+                dataStoresRepo.updateAppPreferencesDataStore {
                     it.copy(isSignedIn = true)
                 }
             }

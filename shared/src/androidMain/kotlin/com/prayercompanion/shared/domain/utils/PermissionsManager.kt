@@ -38,13 +38,13 @@ actual class PermissionsManager constructor(
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-    companion object {
-        val locationPermissions = listOf(
+    actual companion object {
+        actual val locationPermissions = listOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION
         )
 
         @SuppressLint("InlinedApi")
-        const val notificationsPermission = Manifest.permission.POST_NOTIFICATIONS
+        actual val notificationsPermission = Manifest.permission.POST_NOTIFICATIONS
     }
 }

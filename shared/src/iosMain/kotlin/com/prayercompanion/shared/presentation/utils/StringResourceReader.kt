@@ -4,9 +4,17 @@ import androidx.compose.runtime.Composable
 import platform.Foundation.NSBundle
 import platform.Foundation.NSURL
 
+
+actual class StringResourceReader{
+
+    actual fun read(stringRes: StringRes): String {
+        return stringRes.id.localized()
+    }
+}
+
 @Composable
-actual fun stringResource(id: String): String  {
-    return id.localized()
+actual fun stringResource(stringRes: StringRes): String  {
+    return stringRes.id.localized()
 }
 
 fun String.localized(): String {

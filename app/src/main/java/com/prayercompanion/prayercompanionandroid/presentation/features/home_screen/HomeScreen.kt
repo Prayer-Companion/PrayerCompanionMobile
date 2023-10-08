@@ -21,9 +21,10 @@ import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.prayercompanion.prayercompanionandroid.BuildConfig
 import com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.components.HomeScreenContent
-import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
+import com.prayercompanion.prayercompanionandroid.presentation.utils.asString
 import com.prayercompanion.prayercompanionandroid.presentation.utils.compose.OnLifecycleEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.showToast
+import com.prayercompanion.shared.presentation.utils.UiEvent
 import logcat.asLog
 import logcat.logcat
 

@@ -1,6 +1,10 @@
 package com.prayercompanion.shared
 
+import com.prayercompanion.shared.domain.extensions.now
 import com.prayercompanion.shared.presentation.utils.printStackTraceInDebug
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -23,3 +27,7 @@ inline fun <reified T> T.toJson(): String {
 
 fun Long.toBoolean() = this != 0L
 fun Boolean.toLong() = if (this) 1L else 0L
+
+fun currentTimeMillis(): Long {
+    return LocalDateTime.now().toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds()
+}

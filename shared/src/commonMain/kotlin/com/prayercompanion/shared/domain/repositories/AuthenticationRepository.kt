@@ -2,6 +2,8 @@ package com.prayercompanion.shared.domain.repositories
 
 interface AuthenticationRepository {
 
+    suspend fun isSignedIn(): Boolean
+
     fun signInWithGoogle(
         token: String,
         onSuccess: () -> Unit,
@@ -12,4 +14,5 @@ interface AuthenticationRepository {
         onSuccess: () -> Unit,
         onFailure: (Exception) -> Unit
     )
+
 }

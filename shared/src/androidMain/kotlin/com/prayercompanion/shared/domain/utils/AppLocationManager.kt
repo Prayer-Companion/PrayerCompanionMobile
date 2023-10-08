@@ -12,7 +12,6 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.prayercompanion.shared.data.preferences.DataStoresRepo
-import com.prayercompanion.shared.domain.extensions.toAppLocation
 import com.prayercompanion.shared.domain.models.Location
 import com.prayercompanion.shared.domain.models.app.Address
 import com.prayercompanion.shared.presentation.utils.log
@@ -33,7 +32,7 @@ actual class AppLocationManagerImpl constructor(
     actual override suspend fun getLastKnownLocation(): Location? {
         if (permissionsManager.isLocationPermissionGranted.not()) {
             log { "Location permission is missing" }
-            return dataStoresRepo.appPreferencesDataStore.data.firstOrNull()?.location
+            return dataStoresRepo.appPreferencesDataStoreData.firstOrNull()?.location
         }
 
         val location: Location? = suspendCoroutine { continuation ->
@@ -48,10 +47,10 @@ actual class AppLocationManagerImpl constructor(
                     }
                 }
         }?.also { location ->
-            dataStoresRepo.appPreferencesDataStore.updateData {
+            dataStoresRepo.updateAppPreferencesDataStore {
                 it.copy(location = location)
             }
-        } ?: dataStoresRepo.appPreferencesDataStore.data.firstOrNull()?.location
+        } ?: dataStoresRepo.appPreferencesDataStoreData.firstOrNull()?.location
         return location
     }
 
@@ -125,7 +124,7 @@ actual class AppLocationManagerImpl constructor(
         }
 
         if (address != null) {
-            dataStoresRepo.appPreferencesDataStore.updateData {
+            dataStoresRepo.updateAppPreferencesDataStore {
                 it.copy(address = address)
             }
         }
@@ -155,5 +154,9 @@ actual class AppLocationManagerImpl constructor(
 
         client.requestLocationUpdates(mLocationRequest, mLocationCallback, null)
 
+    }
+
+    private fun android.location.Location.toAppLocation(): Location {
+        return Location(latitude, longitude)
     }
 }

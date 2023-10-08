@@ -1,46 +1,43 @@
-package com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.splash_screen
+package com.prayercompanion.shared.presentation.features.onboarding.splash_screen
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
-import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
+import com.prayercompanion.shared.currentTimeMillis
 import com.prayercompanion.shared.data.preferences.DataStoresRepo
+import com.prayercompanion.shared.domain.repositories.AuthenticationRepository
 import com.prayercompanion.shared.domain.usecases.IsConnectedToInternet
 import com.prayercompanion.shared.domain.utils.PermissionsManager
 import com.prayercompanion.shared.presentation.navigation.Route
+import com.prayercompanion.shared.presentation.utils.UiEvent
+import com.prayercompanion.shared.presentation.utils.log
+import com.rickclephas.kmm.viewmodel.KMMViewModel
+import com.rickclephas.kmm.viewmodel.coroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import logcat.logcat
 
 class SplashScreenViewModel constructor(
     private val permissionsManager: PermissionsManager,
     private val dataStoresRepo: DataStoresRepo,
+    authenticationRepository: AuthenticationRepository,
     isConnectedToInternet: IsConnectedToInternet
-) : ViewModel() {
+) : KMMViewModel() {
 
     private val appPreferencesData by lazy { dataStoresRepo.appPreferencesDataStoreData }
-    private var startingTimeMillis = System.currentTimeMillis()
+    private var startingTimeMillis = currentTimeMillis()
     private val _uiEvents = Channel<UiEvent>()
     val uiEvents = _uiEvents.receiveAsFlow()
 
 
     init {
-        viewModelScope.launch {
+        viewModelScope.coroutineScope.launch {
             val hasInternet = isConnectedToInternet.call()
-            logcat { "Has Internet = $hasInternet" }
+            log { "Has Internet = $hasInternet" }
 
             if (hasInternet) {
-                val user = FirebaseAuth.getInstance().currentUser
+                val isSignedIn = authenticationRepository.isSignedIn()
 
-                // if the user object is not null means they are signed in
-                dataStoresRepo.updateAppPreferencesDataStore {
-                    it.copy(isSignedIn = user != null)
-                }
-
-                if (user != null) {
+                if (isSignedIn) {
                     goToAfterSignIn()
                 } else {
                     sendNavigateEvent(Route.SignIn)
@@ -57,7 +54,7 @@ class SplashScreenViewModel constructor(
     }
 
     private fun goToAfterSignIn() {
-        viewModelScope.launch {
+        viewModelScope.coroutineScope.launch {
             val hasSkippedNotificationPermission =
                 appPreferencesData.firstOrNull()?.hasSkippedNotificationPermission ?: false
             if (permissionsManager.isLocationPermissionGranted && (permissionsManager.isPushNotificationAllowed || hasSkippedNotificationPermission)) {
@@ -69,9 +66,9 @@ class SplashScreenViewModel constructor(
     }
 
     private fun sendNavigateEvent(route: Route) {
-        viewModelScope.launch {
+        viewModelScope.coroutineScope.launch {
             //minimum splashscreen time is 400ms
-            delay(400 - (System.currentTimeMillis() - startingTimeMillis))
+            delay(400 - (currentTimeMillis() - startingTimeMillis))
             _uiEvents.send(UiEvent.Navigate(route))
         }
     }

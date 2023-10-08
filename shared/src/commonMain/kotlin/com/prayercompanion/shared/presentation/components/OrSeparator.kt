@@ -18,7 +18,7 @@ import com.prayercompanion.shared.presentation.utils.stringResource
 @Composable
 fun OrSeparator(
     modifier: Modifier = Modifier,
-    name: String = stringResource(id = StringRes.or.id)
+    name: String = stringResource(StringRes.or)
 ) {
     val spacing = LocalSpacing.current
 

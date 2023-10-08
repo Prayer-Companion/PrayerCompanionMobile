@@ -21,7 +21,6 @@ val Context.appPreferencesDataStore: DataStore<AppPreferences> by dataStore(
 actual class DataStoresRepo constructor(
     private val context: Context
 ) {
-    val appPreferencesDataStore get() = context.appPreferencesDataStore
     actual val appPreferencesDataStoreData: Flow<AppPreferences> get() = context.appPreferencesDataStore.data
     actual suspend fun updateAppPreferencesDataStore(transform: suspend (t: AppPreferences) -> AppPreferences) {
         context.appPreferencesDataStore.updateData(transform)

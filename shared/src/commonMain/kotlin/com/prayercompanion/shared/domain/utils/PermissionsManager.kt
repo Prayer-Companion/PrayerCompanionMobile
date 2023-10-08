@@ -4,4 +4,9 @@ expect class PermissionsManager {
     val isLocationPermissionGranted: Boolean
 
     val isPushNotificationAllowed: Boolean
+
+    companion object {
+        val locationPermissions: List<String>
+        val notificationsPermission: String
+    }
 }

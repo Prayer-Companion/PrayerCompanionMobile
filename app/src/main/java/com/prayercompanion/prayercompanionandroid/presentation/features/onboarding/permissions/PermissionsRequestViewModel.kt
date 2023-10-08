@@ -6,14 +6,15 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
-import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
 import com.prayercompanion.shared.data.preferences.AppPreferences
 import com.prayercompanion.shared.data.preferences.DataStoresRepo
 import com.prayercompanion.shared.domain.utils.PermissionsManager
 import com.prayercompanion.shared.domain.utils.tracking.TrackedButtons
 import com.prayercompanion.shared.domain.utils.tracking.Tracker
 import com.prayercompanion.shared.presentation.navigation.Route
+import com.prayercompanion.shared.presentation.utils.StringRes
+import com.prayercompanion.shared.presentation.utils.UiEvent
+import com.prayercompanion.shared.presentation.utils.UiText
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -78,7 +79,7 @@ class PermissionsRequestViewModel constructor(
                         }
                     } else {
                         uiState = uiState
-                            .copy(body = UiText.StringResource(R.string.location_permission_request_deny_body))
+                            .copy(body = UiText.StringResource(StringRes.location_permission_request_deny_body))
 
                         dataStoresRepo.updateAppPreferencesDataStore {
                             val count = appPreferences?.deniedLocationPermissionsCount ?: 0
@@ -96,7 +97,7 @@ class PermissionsRequestViewModel constructor(
                         goToHomeScreen()
                     } else {
                         uiState = uiState
-                            .copy(body = UiText.StringResource(R.string.notification_permission_request_deny_body))
+                            .copy(body = UiText.StringResource(StringRes.notification_permission_request_deny_body))
 
                         dataStoresRepo.updateAppPreferencesDataStore {
                             val count = appPreferences?.deniedNotificationPermissionsCount ?: 0
@@ -177,9 +178,9 @@ class PermissionsRequestViewModel constructor(
     private fun setLocationPermissionState() {
         uiState = uiState.copy(
             icon = R.drawable.ic_location,
-            title = UiText.StringResource(R.string.location_permission_request_title),
-            body = UiText.StringResource(R.string.location_permission_request_explanation),
-            ctaText = UiText.StringResource(R.string.location_permission_request_cta),
+            title = UiText.StringResource(StringRes.location_permission_request_title),
+            body = UiText.StringResource(StringRes.location_permission_request_explanation),
+            ctaText = UiText.StringResource(StringRes.location_permission_request_cta),
             permissions = PermissionsManager.locationPermissions,
             skippable = false
         )
@@ -189,9 +190,9 @@ class PermissionsRequestViewModel constructor(
     private fun setNotificationPermissionState() {
         uiState = uiState.copy(
             icon = R.drawable.ic_location, // todo use notifications icon when provided
-            title = UiText.StringResource(R.string.notification_permission_request_title),
-            body = UiText.StringResource(R.string.notification_permission_request_explanation),
-            ctaText = UiText.StringResource(R.string.notification_permission_request_cta),
+            title = UiText.StringResource(StringRes.notification_permission_request_title),
+            body = UiText.StringResource(StringRes.notification_permission_request_explanation),
+            ctaText = UiText.StringResource(StringRes.notification_permission_request_cta),
             permissions = listOf(PermissionsManager.notificationsPermission),
             skippable = true
         )

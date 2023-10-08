@@ -1,8 +1,5 @@
-package com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.sign_in
+package com.prayercompanion.shared.presentation.features.onboarding.sign_in
 
-import android.app.Activity
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -28,55 +25,37 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavOptionsBuilder
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
-import com.prayercompanion.prayercompanionandroid.presentation.utils.showToast
-import com.prayercompanion.shared.presentation.navigation.Route
 import com.prayercompanion.shared.presentation.theme.LocalSpacing
 import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
+import com.prayercompanion.shared.presentation.utils.StringRes
+import com.prayercompanion.shared.presentation.utils.UiEvent
+import com.prayercompanion.shared.presentation.utils.stringResource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 
 
-@Preview(locale = "ar")
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun SignInScreen(
-    navigate: (UiEvent.Navigate, NavOptionsBuilder.() -> Unit) -> Unit = { _, _ -> },
-    googleSignInClient: GoogleSignInClient? = null,
+    navigate: (UiEvent.Navigate) -> Unit = {},
+    launchGoogleSignInClient: () -> Unit = {},
+    showToast: (String) -> Unit = {},
     uiEvents: Flow<UiEvent> = emptyFlow(),
     onEvent: (SignInEvents) -> Unit = {},
     isLoadingState: Boolean = false
 ) = PrayerCompanionAndroidTheme {
     val spacing = LocalSpacing.current
-    val context = LocalContext.current
-
-    val signInWithGoogleLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) {
-        val result = it.resultCode == Activity.RESULT_OK
-        val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
-        onEvent(SignInEvents.OnSignInWithGoogleResultReceived(result, task))
-    }
 
     LaunchedEffect(key1 = uiEvents) {
         uiEvents.collect {
             when (it) {
-                is UiEvent.Navigate -> navigate(it) {
-                    popUpTo(Route.SignIn.name) {
-                        inclusive = true
-                    }
-                }
+                is UiEvent.Navigate -> navigate(it)
+                is UiEvent.ShowErrorSnackBarStr -> showToast(it.errorMessage)
+                is UiEvent.LaunchSignInWithGoogle -> launchGoogleSignInClient()
 
-                is UiEvent.ShowErrorSnackBar -> context.showToast(it.errorMessage.asString(context))
-                is UiEvent.LaunchSignInWithGoogle -> signInWithGoogleLauncher.launch(googleSignInClient?.signInIntent)
                 else -> Unit
             }
         }
@@ -100,7 +79,7 @@ fun SignInScreen(
                         .align(Alignment.Center)
                         .background(MaterialTheme.colors.primary, RoundedCornerShape(100))
                         .padding(20.dp),
-                    painter = painterResource(id = R.drawable.ic_app_logo),
+                    painter = painterResource("ic_app_logo"),
                     contentDescription = "Location Icon"
                 )
                 if (isLoadingState) {
@@ -139,13 +118,13 @@ fun SignInScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_google),
-                        contentDescription = stringResource(id = R.string.continue_with_google),
+                        painter = painterResource("ic_google"),
+                        contentDescription = stringResource(StringRes.continue_with_google),
                         tint = MaterialTheme.colors.primary
                     )
                     Spacer(modifier = Modifier.width(spacing.spaceSmall))
                     Text(
-                        text = stringResource(id = R.string.continue_with_google),
+                        text = stringResource(StringRes.continue_with_google),
                         color = MaterialTheme.colors.primary,
                         style = MaterialTheme.typography.h3
                     )

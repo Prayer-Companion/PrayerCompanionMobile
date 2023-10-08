@@ -7,10 +7,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.prayercompanion.prayercompanionandroid.BuildConfig
-import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.presentation.utils.UiEvent
-import com.prayercompanion.prayercompanionandroid.presentation.utils.UiText
-import com.prayercompanion.prayercompanionandroid.presentation.utils.toUiText
 import com.prayercompanion.shared.data.preferences.DataStoresRepo
 import com.prayercompanion.shared.domain.extensions.instantBetween
 import com.prayercompanion.shared.domain.extensions.now
@@ -27,7 +23,11 @@ import com.prayercompanion.shared.domain.utils.AppLocationManager
 import com.prayercompanion.shared.domain.utils.tracking.TrackedButtons
 import com.prayercompanion.shared.domain.utils.tracking.Tracker
 import com.prayercompanion.shared.presentation.models.RemainingDuration
+import com.prayercompanion.shared.presentation.utils.StringRes
+import com.prayercompanion.shared.presentation.utils.UiEvent
+import com.prayercompanion.shared.presentation.utils.UiText
 import com.prayercompanion.shared.presentation.utils.printStackTraceInDebug
+import com.prayercompanion.shared.presentation.utils.toUiText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -120,7 +120,7 @@ class HomeScreenViewModel constructor(
                 }
                 .onFailure {
                     it.printStackTraceInDebug()
-                    sendErrorEvent(R.string.error_something_went_wrong.toUiText())
+                    sendErrorEvent(StringRes.error_something_went_wrong.toUiText())
                     return@launch
                 }
         }
@@ -142,7 +142,7 @@ class HomeScreenViewModel constructor(
                 .call(headerState.currentAndNextPrayer.first, LocalDateTime.now())
                 .onFailure {
                     it.printStackTraceInDebug()
-                    sendErrorEvent(R.string.error_something_went_wrong.toUiText())
+                    sendErrorEvent(StringRes.error_something_went_wrong.toUiText())
                     return@launch
                 }
         }
