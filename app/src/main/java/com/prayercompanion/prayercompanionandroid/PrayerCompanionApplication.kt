@@ -8,15 +8,13 @@ import androidx.work.Configuration
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.prayercompanion.prayercompanionandroid.domain.di.androidDomainModuleX
-import com.prayercompanion.prayercompanionandroid.presentation.di.presentationModule
+import com.prayercompanion.prayercompanionandroid.presentation.di.androidPresentationModule
 import com.prayercompanion.prayercompanionandroid.presentation.utils.ScheduleDailyPrayersWorker
 import com.prayercompanion.prayercompanionandroid.presentation.utils.notifications.PrayersNotificationsService
 import com.prayercompanion.shared.data.di.androidDataModule
-import com.prayercompanion.shared.data.di.dataModule
 import com.prayercompanion.shared.domain.di.androidDomainModule
-import com.prayercompanion.shared.domain.di.domainModule
 import com.prayercompanion.shared.domain.utils.PermissionsManager
+import com.prayercompanion.shared.presentation.appModule
 import logcat.AndroidLogcatLogger
 import logcat.LogPriority
 import org.koin.android.ext.android.inject
@@ -39,7 +37,12 @@ class PrayerCompanionApplication : Application(), Configuration.Provider {
         startKoin {
             androidLogger()
             androidContext(this@PrayerCompanionApplication)
-            modules(presentationModule, domainModule, androidDomainModuleX, androidDomainModule, dataModule, androidDataModule)
+            modules(
+                *appModule().toTypedArray(),
+                androidPresentationModule,
+                androidDomainModule,
+                androidDataModule
+            )
         }
 
         setupNotificationsChannels()
@@ -52,7 +55,7 @@ class PrayerCompanionApplication : Application(), Configuration.Provider {
             Context.NOTIFICATION_SERVICE
         ) as NotificationManager
 
-        //Check if the channel were already created
+        //Check if the channel was already created
         val channels = notificationManager.notificationChannels
         if (channels.any { it.id == (PrayersNotificationsService.CHANNEL_ID) }) {
             return

@@ -1,25 +1,21 @@
-package com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.components
+package com.prayercompanion.shared.presentation.features.home_screen.components
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.unit.dp
-import com.prayercompanion.prayercompanionandroid.presentation.utils.getPrayerStatusCorrespondingColor
 import com.prayercompanion.shared.domain.models.PrayerStatus
 import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
+import com.prayercompanion.shared.presentation.utils.getPrayerStatusCorrespondingColor
 
 @Composable
 fun PrayerStatusesOverViewBar(
-    modifier: Modifier = Modifier,
-    statusesCounts: List<Pair<PrayerStatus, Int>> = listOf()
+    modifier: Modifier,
+    statusesCounts: List<Pair<PrayerStatus, Int>>
 ) = PrayerCompanionAndroidTheme {
     val emptyColor = MaterialTheme.colors.secondary
     Canvas(modifier = modifier) {
@@ -59,23 +55,4 @@ fun PrayerStatusesOverViewBar(
         }
     }
 
-}
-
-@Preview(name = "Left-To-Right", locale = "en")
-@Preview(name = "Right-To-Left", locale = "ar")
-@Composable
-private fun PrayerStatusesOverViewBarPreview() {
-    PrayerStatusesOverViewBar(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(45.dp),
-        statusesCounts = listOf(
-            PrayerStatus.Jamaah to 8,
-            PrayerStatus.OnTime to 5,
-            PrayerStatus.AfterHalfTime to 5,
-            PrayerStatus.Late to 4,
-            PrayerStatus.Qadaa to 4,
-            PrayerStatus.Missed to 15,
-        )
-    )
 }

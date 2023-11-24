@@ -1,12 +1,10 @@
-package com.prayercompanion.prayercompanionandroid.presentation.features.home_screen
+package com.prayercompanion.shared.presentation.features.home_screen
 
-import android.os.CountDownTimer
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.prayercompanion.prayercompanionandroid.BuildConfig
+import com.prayercompanion.shared.BuildConfigs
+import com.prayercompanion.shared.currentTimeMillis
 import com.prayercompanion.shared.data.preferences.DataStoresRepo
 import com.prayercompanion.shared.domain.extensions.instantBetween
 import com.prayercompanion.shared.domain.extensions.now
@@ -24,11 +22,15 @@ import com.prayercompanion.shared.domain.utils.tracking.TrackedButtons
 import com.prayercompanion.shared.domain.utils.tracking.Tracker
 import com.prayercompanion.shared.presentation.models.RemainingDuration
 import com.prayercompanion.shared.presentation.utils.StringRes
+import com.prayercompanion.shared.presentation.utils.Timer
 import com.prayercompanion.shared.presentation.utils.UiEvent
 import com.prayercompanion.shared.presentation.utils.UiText
 import com.prayercompanion.shared.presentation.utils.printStackTraceInDebug
 import com.prayercompanion.shared.presentation.utils.toUiText
+import com.rickclephas.kmm.viewmodel.KMMViewModel
+import com.rickclephas.kmm.viewmodel.coroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.cancellable
@@ -55,7 +57,7 @@ class HomeScreenViewModel constructor(
     private val setPrayerStatusByDateTime: SetPrayerStatusByDateTime,
     private val tracker: Tracker,
     private val dataStoresRepo: DataStoresRepo
-) : ViewModel() {
+) : KMMViewModel() {
 
     private val appPreferencesData = dataStoresRepo.appPreferencesDataStoreData
 
@@ -63,8 +65,7 @@ class HomeScreenViewModel constructor(
     private var loadSelectedDatePrayersJob: Job? = null
     private var statusesOverviewJob: Job? = null
 
-    private var countDownTimer: CountDownTimer? = null
-    private var lastForegroundTime = System.currentTimeMillis()
+    private var lastForegroundTime = currentTimeMillis()
 
     private val _uiEvents = Channel<UiEvent>()
     val uiEvents = _uiEvents.receiveAsFlow()
@@ -75,9 +76,21 @@ class HomeScreenViewModel constructor(
     var durationUntilNextPrayer by mutableStateOf(RemainingDuration(0, 0, 0))
         private set
 
+    private val timer by lazy {
+        Timer(
+            onTick = { seconds ->
+                durationUntilNextPrayer = RemainingDuration.fromSeconds(seconds.toLong())
+            },
+            onFinish = {
+                startDurationCountDown()
+                loadStatusesOverView()
+            }
+        )
+    }
+
     init {
         fun loadQuranData() {
-            viewModelScope.launch(Dispatchers.IO) {
+            viewModelScope.coroutineScope.launch(Dispatchers.IO) {
                 loadAndSaveQuranMemorizedChapters.call()
             }
         }
@@ -93,7 +106,7 @@ class HomeScreenViewModel constructor(
     }
 
     fun onPause() {
-        lastForegroundTime = System.currentTimeMillis()
+        lastForegroundTime = currentTimeMillis()
     }
 
     fun onPreviousDayButtonClicked() {
@@ -108,7 +121,7 @@ class HomeScreenViewModel constructor(
 
     fun onStatusSelected(prayerStatus: PrayerStatus, prayerInfo: PrayerInfo) {
         tracker.trackStatusSelect()
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.coroutineScope.launch(Dispatchers.IO) {
             updatePrayerStatus.call(prayerInfo, prayerStatus)
                 .onSuccess {
                     if (appPreferencesData.first().hasShownRateTheAppPopup.not()) {
@@ -128,7 +141,7 @@ class HomeScreenViewModel constructor(
 
     fun onIshaStatusesPeriodsExplanationClicked() {
         tracker.trackButtonClicked(TrackedButtons.ISHA_STATUSES_PERIOD_EXPLANATION)
-        sendEvent(UiEvent.OpenWebUrl(BuildConfig.ISHA_STATUSES_PERIODS_EXPLANATION_URL))
+        sendEvent(UiEvent.OpenWebUrl(BuildConfigs.ISHA_STATUSES_PERIODS_EXPLANATION_URL))
     }
 
     fun onStatusOverviewBarClicked() {
@@ -137,7 +150,7 @@ class HomeScreenViewModel constructor(
 
     fun onPrayedNowClicked() {
         tracker.trackButtonClicked(TrackedButtons.HOME_PRAYED_NOW)
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.coroutineScope.launch(Dispatchers.IO) {
             setPrayerStatusByDateTime
                 .call(headerState.currentAndNextPrayer.first, LocalDateTime.now())
                 .onFailure {
@@ -158,7 +171,7 @@ class HomeScreenViewModel constructor(
 
     private fun loadStatusesOverView() {
         statusesOverviewJob?.cancel()
-        statusesOverviewJob = viewModelScope.launch(Dispatchers.IO) {
+        statusesOverviewJob = viewModelScope.coroutineScope.launch(Dispatchers.IO) {
             getStatusesOverView.call()
                 .collectLatest { statuses ->
                     withContext(Dispatchers.Main) {
@@ -173,7 +186,7 @@ class HomeScreenViewModel constructor(
             loadDailyPrayersComboJob?.cancel()
         }
 
-        loadDailyPrayersComboJob = viewModelScope.launch(Dispatchers.IO) {
+        loadDailyPrayersComboJob = viewModelScope.coroutineScope.launch(Dispatchers.IO) {
             getDailyPrayersCombo.call()
                 .cancellable()
                 .catch {
@@ -205,7 +218,7 @@ class HomeScreenViewModel constructor(
         }
 
         val selectedDate = state.selectedDate
-        loadSelectedDatePrayersJob = viewModelScope.launch(Dispatchers.IO) {
+        loadSelectedDatePrayersJob = viewModelScope.coroutineScope.launch(Dispatchers.IO) {
             getDayPrayersFlow.call(selectedDate)
                 .collectLatest {
                     it.onSuccess { dateDayPrayers ->
@@ -224,27 +237,16 @@ class HomeScreenViewModel constructor(
     }
 
     private fun startDurationCountDown() {
-        val durationInMillis = instantBetween(
+        val durationInSeconds = instantBetween(
             LocalDateTime.now(),
             headerState.currentAndNextPrayer.second.dateTime
-        ).inWholeMilliseconds
+        ).inWholeSeconds
 
-        if (durationInMillis <= 0) return
+        if (durationInSeconds <= 0) return
 
-        durationUntilNextPrayer = RemainingDuration.fromMilliSeconds(durationInMillis)
-        countDownTimer?.cancel()
-        countDownTimer = object : CountDownTimer(durationInMillis, 1000) {
-
-            override fun onTick(millisUntilFinished: Long) {
-                durationUntilNextPrayer =
-                    RemainingDuration.fromMilliSeconds(millisUntilFinished)
-            }
-
-            override fun onFinish() {
-                startDurationCountDown()
-                loadStatusesOverView()
-            }
-        }.start()
+        durationUntilNextPrayer = RemainingDuration.fromSeconds(durationInSeconds)
+        timer.stop()
+        timer.start(durationInSeconds.toInt())
     }
 
     private fun sendErrorEvent(message: UiText) {
@@ -254,7 +256,7 @@ class HomeScreenViewModel constructor(
     }
 
     private fun sendEvent(event: UiEvent) {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.coroutineScope.launch(Dispatchers.Main) {
             _uiEvents.send(event)
         }
     }

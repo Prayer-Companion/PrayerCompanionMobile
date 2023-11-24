@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.components
+package com.prayercompanion.shared.presentation.features.home_screen.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,24 +23,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.presentation.utils.getPrayerStatusCorrespondingColor
-import com.prayercompanion.prayercompanionandroid.presentation.utils.getPrayerStatusNameStringRes
-import com.prayercompanion.shared.domain.extensions.now
-import com.prayercompanion.shared.domain.extensions.plus
-import com.prayercompanion.shared.domain.models.Prayer
 import com.prayercompanion.shared.domain.models.PrayerStatus
 import com.prayercompanion.shared.domain.models.PrayerStatusWithTimeRange
 import com.prayercompanion.shared.presentation.theme.LocalSpacing
 import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.shared.presentation.utils.PresentationConsts
-import kotlinx.datetime.DateTimeUnit
+import com.prayercompanion.shared.presentation.utils.StringRes
+import com.prayercompanion.shared.presentation.utils.getPrayerStatusCorrespondingColor
+import com.prayercompanion.shared.presentation.utils.getPrayerStatusNameStringRes
+import com.prayercompanion.shared.presentation.utils.stringResource
 import kotlinx.datetime.LocalDateTime
 
 
@@ -93,7 +88,7 @@ fun StatusPickerDialog(
                             modifier = Modifier.clickable {
                                 onIshaStatusesPeriodsExplanationClicked()
                             },
-                            text = stringResource(id = R.string.prayerStatusDialog_explanation),
+                            text = stringResource(id = StringRes.prayerStatusDialog_explanation),
                             style = MaterialTheme.typography.subtitle2,
                             color = MaterialTheme.colors.onSecondary,
                             textAlign = TextAlign.Center,
@@ -124,7 +119,7 @@ private fun PrayerStatusDialogHeader(modifier: Modifier = Modifier) = PrayerComp
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = stringResource(id = R.string.prayerStatusDialog_title),
+            text = stringResource(id = StringRes.prayerStatusDialog_title),
             style = MaterialTheme.typography.subtitle1,
             color = MaterialTheme.colors.onPrimary
         )
@@ -163,22 +158,4 @@ private fun PrayerStatusDialogItem(
             )
         }
     }
-}
-
-@Preview
-@Composable
-private fun PrayerStatusDialogPreview() = PrayerCompanionAndroidTheme {
-    StatusPickerDialog(
-        statusesWithTimeRanges = listOf(
-            PrayerStatusWithTimeRange(
-                prayerStatus = PrayerStatus.Jamaah,
-                range = LocalDateTime.now()..<LocalDateTime.now().plus(1, DateTimeUnit.HOUR),
-                prayer = Prayer.DHUHR
-            )
-        ),
-        onItemSelected = {},
-        onDismissRequest = {},
-        onIshaStatusesPeriodsExplanationClicked = {},
-        showExplanation = true
-    )
 }

@@ -1,9 +1,12 @@
 package com.prayercompanion.shared.presentation.utils
 
+import platform.Foundation.NSLog
+
+
 actual fun Any.log(msg: () -> String) {
-    TODO()
+    NSLog(msg())
 }
 
 actual fun Throwable.printStackTraceInDebug() {
-    TODO()
+    NSLog(this.stackTraceToString())
 }

@@ -2,10 +2,11 @@ package com.prayercompanion.shared.presentation.utils
 
 import androidx.compose.runtime.Composable
 import platform.Foundation.NSBundle
+import platform.Foundation.NSString
 import platform.Foundation.NSURL
+import platform.Foundation.stringWithFormat
 
-
-actual class StringResourceReader{
+actual class StringResourceReader {
 
     actual fun read(stringRes: StringRes): String {
         return stringRes.id.localized()
@@ -13,8 +14,8 @@ actual class StringResourceReader{
 }
 
 @Composable
-actual fun stringResource(stringRes: StringRes): String  {
-    return stringRes.id.localized()
+actual fun stringResource(id: StringRes, args: List<Any>): String {
+    return NSString.stringWithFormat(id.id.localized())//, *args.toTypedArray()) todo ios: check how to use arguments
 }
 
 fun String.localized(): String {

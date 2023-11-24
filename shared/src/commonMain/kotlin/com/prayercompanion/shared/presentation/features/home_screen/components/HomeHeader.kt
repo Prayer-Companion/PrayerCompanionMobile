@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.components
+package com.prayercompanion.shared.presentation.features.home_screen.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,30 +24,28 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.presentation.utils.getPrayerNameStringRes
 import com.prayercompanion.shared.domain.models.PrayerInfo
 import com.prayercompanion.shared.domain.models.PrayerStatus
 import com.prayercompanion.shared.presentation.models.RemainingDuration
 import com.prayercompanion.shared.presentation.theme.LocalSpacing
 import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
+import com.prayercompanion.shared.presentation.utils.StringRes
 import com.prayercompanion.shared.presentation.utils.compose.MeasureUnconstrainedViewWidth
+import com.prayercompanion.shared.presentation.utils.getPrayerNameStringRes
+import com.prayercompanion.shared.presentation.utils.stringResource
 
-@Preview(name = "en", locale = "en")
-@Preview(name = "ar", locale = "ar")
+
 @Composable
 fun HomeHeader(
-    modifier: Modifier = Modifier,
-    currentPrayer: PrayerInfo = PrayerInfo.Default,
-    nextPrayer: PrayerInfo = PrayerInfo.Default,
-    durationUntilNextPrayer: RemainingDuration = RemainingDuration(0, 0, 0),
-    statusesCounts: List<Pair<PrayerStatus, Int>> = listOf(),
-    onPrayedNowClicked: () -> Unit = { },
-    onStatusOverviewBarClicked: () -> Unit = { }
+    modifier: Modifier,
+    currentPrayer: PrayerInfo,
+    nextPrayer: PrayerInfo,
+    durationUntilNextPrayer: RemainingDuration,
+    statusesCounts: List<Pair<PrayerStatus, Int>>,
+    onPrayedNowClicked: () -> Unit,
+    onStatusOverviewBarClicked: () -> Unit,
 ) = PrayerCompanionAndroidTheme {
 
     val spacing = LocalSpacing.current
@@ -84,7 +82,7 @@ fun HomeHeader(
                 verticalArrangement = Arrangement.Top
             ) {
                 Text(
-                    text = stringResource(id = R.string.current_prayer),
+                    text = stringResource(StringRes.current_prayer),
                     style = MaterialTheme.typography.h3,
                     color = MaterialTheme.colors.secondary
                 )
@@ -112,7 +110,7 @@ fun HomeHeader(
                             )
                         ) {
                             Text(
-                                text = stringResource(id = R.string.notification_action_prayedNow),
+                                text = stringResource(id = StringRes.notification_action_prayedNow),
                                 style = MaterialTheme.typography.button,
                                 color = MaterialTheme.colors.onPrimary
                             )
@@ -144,8 +142,8 @@ fun HomeHeader(
                     Text(
                         modifier = Modifier.alignByBaseline(),
                         text = stringResource(
-                            id = R.string.remaining_time,
-                            stringResource(id = getPrayerNameStringRes(nextPrayer.prayer))
+                            id = StringRes.remaining_time,
+                            listOf(stringResource(id = getPrayerNameStringRes(nextPrayer.prayer)))
                         ),
                         style = MaterialTheme.typography.h3,
                         color = MaterialTheme.colors.secondary,
@@ -153,7 +151,7 @@ fun HomeHeader(
                 }
                 Spacer(modifier = Modifier.height(spacing.spaceMedium))
                 Text(
-                    text = stringResource(id = R.string.status_overview),
+                    text = stringResource(id = StringRes.status_overview),
                     style = MaterialTheme.typography.subtitle2,
                     color = Color.White
                 )

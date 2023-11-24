@@ -7,6 +7,7 @@ import com.prayercompanion.shared.data.local.db.daos.PrayersInfoDao
 import com.prayercompanion.shared.data.local.db.daos.PrayersInfoDaoImpl
 import com.prayercompanion.shared.data.local.db.daos.QuranReadingSectionsDao
 import com.prayercompanion.shared.data.local.db.daos.QuranReadingSectionsDaoImpl
+import com.prayercompanion.shared.data.preferences.DataStoresRepo
 import com.prayercompanion.shared.data.remote.PrayerCompanionApi
 import com.prayercompanion.shared.data.repositories.PrayersRepositoryImpl
 import com.prayercompanion.shared.data.repositories.QuranRepositoryImpl
@@ -24,4 +25,5 @@ val dataModule = module {
     singleOf(::QuranReadingSectionsDaoImpl) { bind<QuranReadingSectionsDao>() }
     singleOf(::MemorizedQuranChapterDaoImpl) { bind<MemorizedQuranChapterDao>() }
     singleOf(::Assets)
+    singleOf(::DataStoresRepo)
 }

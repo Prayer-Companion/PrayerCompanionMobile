@@ -6,6 +6,7 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.compose")
     id("app.cash.sqldelight")
+    id("com.google.gms.google-services")
     id("org.jetbrains.kotlin.plugin.serialization")
 }
 
@@ -23,9 +24,9 @@ kotlin {
         }
     }
 
+    //todo clean up dependencies
     sourceSets {
         val koinVersion = "3.5.0"
-
         val commonMain by getting {
             dependencies {
                 implementation("app.cash.sqldelight:coroutines-extensions:2.0.0")
@@ -35,8 +36,8 @@ kotlin {
                 implementation(ProjectDependencies.ktorClientContentNegotiation)
                 implementation(ProjectDependencies.ktorClientSerialization)
                 implementation("io.insert-koin:koin-core:$koinVersion")
-                api("com.rickclephas.kmm:kmm-viewmodel-core:1.0.0-ALPHA-14")
-
+                api("com.rickclephas.kmm:kmm-viewmodel-core:1.0.0-ALPHA-14") //todo kmp remove
+                implementation("com.google.android.gms:play-services-auth:20.7.0")
                 //compose
                 implementation(compose.runtime)
                 implementation(compose.foundation)
@@ -45,6 +46,15 @@ kotlin {
                 implementation(compose.ui)
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
+
+                val voyagerVersion = "1.0.0-rc10"
+                api("cafe.adriel.voyager:voyager-navigator:$voyagerVersion")
+                api("cafe.adriel.voyager:voyager-bottom-sheet-navigator:$voyagerVersion")
+                api("cafe.adriel.voyager:voyager-koin:$voyagerVersion")
+                api("dev.gitlive:firebase-auth:1.10.4")
+
+                api("dev.icerock.moko:permissions:0.16.0")
+                api("dev.icerock.moko:permissions-compose:0.16.0") // permissions api + compose extensions
             }
         }
         val commonTest by getting {
@@ -112,7 +122,18 @@ android {
     defaultConfig {
         minSdk = ProjectConfig.minSdk
         val prayerCompanionApiBaseUrl: String by project
-        buildConfigField("String", "PRAYER_COMPANION_API_BASE_URL", prayerCompanionApiBaseUrl)
+        val ishaStatusesPeriodsExplanationUrl: String by project
+
+        buildConfigField(
+            "String",
+            "PRAYER_COMPANION_API_BASE_URL",
+            prayerCompanionApiBaseUrl
+        )
+        buildConfigField(
+            "String",
+            "ISHA_STATUSES_PERIODS_EXPLANATION_URL",
+            ishaStatusesPeriodsExplanationUrl
+        )
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

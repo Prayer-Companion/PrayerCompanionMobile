@@ -14,10 +14,10 @@ actual class StringResourceReader constructor(private val context: Context) {
 }
 
 @Composable
-actual fun stringResource(stringRes: StringRes): String {
+actual fun stringResource(id: StringRes, args: List<Any>): String{
     val context = LocalContext.current
-    val resId = stringRes.resId(context)
-    return context.getString(resId)
+    val resId = id.resId(context)
+    return context.getString(resId, *args.toTypedArray())
 }
 
 @SuppressLint("DiscouragedApi")

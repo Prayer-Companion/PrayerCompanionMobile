@@ -6,6 +6,9 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
+import cafe.adriel.voyager.core.screen.Screen
+import com.prayercompanion.shared.presentation.features.onboarding.sign_in.SignInScreen
+import com.prayercompanion.shared.presentation.navigation.Route
 
 @Stable
 fun Modifier.autoMirror(): Modifier = composed {
@@ -40,4 +43,17 @@ infix fun Long.divideWithRemaining(b: Long): Pair<Long, Long> {
     val division = this / b
     val remainder = this % b
     return Pair(division, remainder)
+}
+
+fun Route.toScreen(): Screen {
+   return when (this) {
+        Route.SignIn -> SignInScreen
+        Route.Home -> TODO()
+        Route.PermissionsRequests -> TODO()
+        Route.SplashScreen -> TODO()
+        Route.Qibla -> TODO()
+        Route.Quran -> TODO()
+        Route.Settings -> TODO()
+        Route.FullQuranSections -> TODO()
+    }
 }

@@ -38,7 +38,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavOptionsBuilder
 import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.prayercompanionandroid.presentation.features.quran.components.QuranChapterItem
@@ -54,6 +53,7 @@ import com.prayercompanion.shared.presentation.components.TitleHeader
 import com.prayercompanion.shared.presentation.theme.LocalSpacing
 import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.shared.presentation.utils.UiEvent
+import com.prayercompanion.shared.presentation.utils.compose.LifecycleEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -72,8 +72,8 @@ fun QuranScreen(
     val chaptersListState = rememberLazyListState()
     val keyboardConfig by keyboardAsState()
 
-    OnLifecycleEvent { _, event ->
-        if (event == Lifecycle.Event.ON_START) {
+    OnLifecycleEvent { event ->
+        if (event == LifecycleEvent.ON_START) {
             onEvent(QuranEvent.OnStart)
         }
     }

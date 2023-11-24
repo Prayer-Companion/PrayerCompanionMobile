@@ -1,11 +1,13 @@
 package com.prayercompanion.prayercompanionandroid
 
 import android.app.Activity
+import android.content.IntentSender
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
@@ -39,7 +41,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.HomeScreen
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.Priority
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.permissions.PermissionsRequestScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.permissions.PermissionsRequestViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.QiblaScreen
@@ -54,13 +60,16 @@ import com.prayercompanion.prayercompanionandroid.presentation.utils.FeedbackUti
 import com.prayercompanion.prayercompanionandroid.presentation.utils.navigate
 import com.prayercompanion.prayercompanionandroid.presentation.utils.showToast
 import com.prayercompanion.shared.domain.utils.Task
+import com.prayercompanion.shared.presentation.App
+import com.prayercompanion.shared.presentation.features.home_screen.HomeScreen
+import com.prayercompanion.shared.presentation.features.home_screen.HomeScreenViewModel
 import com.prayercompanion.shared.presentation.features.onboarding.sign_in.SignInEvents
 import com.prayercompanion.shared.presentation.features.onboarding.sign_in.SignInScreen
 import com.prayercompanion.shared.presentation.features.onboarding.sign_in.SignInViewModel
-import com.prayercompanion.shared.presentation.features.onboarding.splash_screen.SplashScreen
-import com.prayercompanion.shared.presentation.features.onboarding.splash_screen.SplashScreenViewModel
 import com.prayercompanion.shared.presentation.navigation.Route
 import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
+import logcat.asLog
+import logcat.logcat
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -80,6 +89,8 @@ class MainActivity : AppCompatActivity() {
             window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         }
         setContent {
+            App()
+            return@setContent
             PrayerCompanionAndroidTheme {
                 val navController = rememberNavController()
                 val scaffoldState = rememberScaffoldState()
@@ -114,22 +125,22 @@ class MainActivity : AppCompatActivity() {
                         navController = navController,
                         startDestination = Route.SplashScreen.routeName,
                     ) {
-                        composable(Route.SplashScreen.routeName) {
-                            val viewModel: SplashScreenViewModel = getViewModel()
-                            SplashScreen(
-                                uiEvents = viewModel.uiEvents,
-                                navigate = { event ->
-                                    navController.navigate(
-                                        event = event,
-                                        builder = {
-                                            popUpTo(Route.SplashScreen.name) {
-                                                inclusive = true
-                                            }
-                                        }
-                                    )
-                                }
-                            )
-                        }
+//                        composable(Route.SplashScreen.routeName) {
+//                            val viewModel: SplashScreenViewModel = getViewModel()
+//                            SplashScreen(
+//                                uiEvents = viewModel.uiEvents,
+//                                navigate = { event ->
+//                                    navController.navigate(
+//                                        event = event,
+//                                        builder = {
+//                                            popUpTo(Route.SplashScreen.name) {
+//                                                inclusive = true
+//                                            }
+//                                        }
+//                                    )
+//                                }
+//                            )
+//                        }
                         composable(Route.SignIn.routeName) {
                             val viewModel: SignInViewModel = getViewModel()
 
@@ -183,10 +194,50 @@ class MainActivity : AppCompatActivity() {
                             )
                         }
                         composable(Route.Home.routeName) {
+                            val viewModel = getViewModel<HomeScreenViewModel>()
+                            val locationSettingsLauncher = rememberLauncherForActivityResult(
+                                contract = ActivityResultContracts.StartIntentSenderForResult(),
+                                onResult = { result ->
+                                    viewModel.onLocationSettingsResult(result.resultCode == Activity.RESULT_OK)
+                                }
+                            )
+
+                            fun checkLocationService() {
+                                val intervalForLocationUpdateInMillis = 10000L
+
+                                val locationRequest = LocationRequest
+                                    .Builder(Priority.PRIORITY_HIGH_ACCURACY, intervalForLocationUpdateInMillis)
+                                    .build()
+
+                                val locationSettingsRequest = LocationSettingsRequest
+                                    .Builder()
+                                    .addLocationRequest(locationRequest)
+                                    .build()
+
+                                val client = LocationServices.getSettingsClient(this@MainActivity)
+
+                                client.checkLocationSettings(locationSettingsRequest)
+                                    .addOnFailureListener { exception ->
+                                        if (exception is ResolvableApiException) {
+                                            // Location settings are not satisfied, but this can be fixed
+                                            // by showing the user a dialog.
+                                            try {
+                                                val intentSenderRequest = IntentSenderRequest
+                                                    .Builder(exception.resolution.intentSender)
+                                                    .build()
+
+                                                locationSettingsLauncher.launch(intentSenderRequest)
+                                            } catch (sendEx: IntentSender.SendIntentException) {
+                                                logcat("HomeScreen") { sendEx.asLog() }
+                                            }
+                                        }
+                                    }
+                            }
+
                             HomeScreen(
-                                viewModel = getViewModel(),
+                                viewModel = viewModel,
                                 scaffoldState = scaffoldState,
-                                activity = this@MainActivity
+                                checkLocationService = ::checkLocationService
                             )
                         }
                         composable(Route.Qibla.routeName) {

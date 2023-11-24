@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.presentation.features.home_screen
+package com.prayercompanion.shared.presentation.features.home_screen
 
 import com.prayercompanion.shared.domain.extensions.now
 import com.prayercompanion.shared.domain.models.DailyPrayersCombo

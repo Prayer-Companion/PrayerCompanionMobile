@@ -1,15 +1,16 @@
 package com.prayercompanion.shared.presentation.features.onboarding.splash_screen
 
+import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.core.model.screenModelScope
 import com.prayercompanion.shared.currentTimeMillis
+import com.prayercompanion.shared.data.preferences.AppPreferences
 import com.prayercompanion.shared.data.preferences.DataStoresRepo
 import com.prayercompanion.shared.domain.repositories.AuthenticationRepository
 import com.prayercompanion.shared.domain.usecases.IsConnectedToInternet
-import com.prayercompanion.shared.domain.utils.PermissionsManager
 import com.prayercompanion.shared.presentation.navigation.Route
 import com.prayercompanion.shared.presentation.utils.UiEvent
 import com.prayercompanion.shared.presentation.utils.log
-import com.rickclephas.kmm.viewmodel.KMMViewModel
-import com.rickclephas.kmm.viewmodel.coroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.firstOrNull
@@ -17,20 +18,34 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class SplashScreenViewModel constructor(
-    private val permissionsManager: PermissionsManager,
     private val dataStoresRepo: DataStoresRepo,
-    authenticationRepository: AuthenticationRepository,
-    isConnectedToInternet: IsConnectedToInternet
-) : KMMViewModel() {
+    private val authenticationRepository: AuthenticationRepository,
+    private val isConnectedToInternet: IsConnectedToInternet
+) : ScreenModel {
 
-    private val appPreferencesData by lazy { dataStoresRepo.appPreferencesDataStoreData }
+    private suspend fun appPreferencesData(): AppPreferences? {
+        return dataStoresRepo.appPreferencesDataStoreData.firstOrNull()
+    }
+
     private var startingTimeMillis = currentTimeMillis()
     private val _uiEvents = Channel<UiEvent>()
+
     val uiEvents = _uiEvents.receiveAsFlow()
 
+    fun onAction(action: SplashScreenAction) {
+        when (action) {
+            is SplashScreenAction.OnStart -> onStart(
+                action.isLocationPermissionGranted,
+                action.isPushNotificationAllowed
+            )
+        }
+    }
 
-    init {
-        viewModelScope.coroutineScope.launch {
+    private fun onStart(
+        isLocationPermissionGranted: Boolean,
+        isPushNotificationAllowed: Boolean
+    ) {
+        screenModelScope.launch(Dispatchers.Default) {
             val hasInternet = isConnectedToInternet.call()
             log { "Has Internet = $hasInternet" }
 
@@ -38,14 +53,20 @@ class SplashScreenViewModel constructor(
                 val isSignedIn = authenticationRepository.isSignedIn()
 
                 if (isSignedIn) {
-                    goToAfterSignIn()
+                    goToAfterSignIn(
+                        isLocationPermissionGranted,
+                        isPushNotificationAllowed
+                    )
                 } else {
                     sendNavigateEvent(Route.SignIn)
                 }
             } else {
-                val isSignedIn = appPreferencesData.firstOrNull()?.isSignedIn ?: false
+                val isSignedIn = appPreferencesData()?.isSignedIn ?: false
                 if (isSignedIn) {
-                    goToAfterSignIn()
+                    goToAfterSignIn(
+                        isLocationPermissionGranted,
+                        isPushNotificationAllowed
+                    )
                 } else {
                     sendNavigateEvent(Route.SignIn)
                 }
@@ -53,11 +74,15 @@ class SplashScreenViewModel constructor(
         }
     }
 
-    private fun goToAfterSignIn() {
-        viewModelScope.coroutineScope.launch {
-            val hasSkippedNotificationPermission =
-                appPreferencesData.firstOrNull()?.hasSkippedNotificationPermission ?: false
-            if (permissionsManager.isLocationPermissionGranted && (permissionsManager.isPushNotificationAllowed || hasSkippedNotificationPermission)) {
+    private fun goToAfterSignIn(
+        isLocationPermissionGranted: Boolean,
+        isPushNotificationAllowed: Boolean
+    ) {
+        screenModelScope.launch(Dispatchers.Default) {
+            val skippedNotificationPermission =
+                appPreferencesData()?.hasSkippedNotificationPermission ?: false
+
+            if (isLocationPermissionGranted && (isPushNotificationAllowed || skippedNotificationPermission)) {
                 sendNavigateEvent(Route.Home)
             } else {
                 sendNavigateEvent(Route.PermissionsRequests)
@@ -66,7 +91,8 @@ class SplashScreenViewModel constructor(
     }
 
     private fun sendNavigateEvent(route: Route) {
-        viewModelScope.coroutineScope.launch {
+        return // todo remove this once sign in screen is implmeneted
+        screenModelScope.launch(Dispatchers.Default) {
             //minimum splashscreen time is 400ms
             delay(400 - (currentTimeMillis() - startingTimeMillis))
             _uiEvents.send(UiEvent.Navigate(route))

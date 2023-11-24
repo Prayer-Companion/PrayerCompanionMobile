@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.components
+package com.prayercompanion.shared.presentation.features.home_screen.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,13 +25,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.presentation.utils.getPrayerStatusCorrespondingColor
-import com.prayercompanion.prayercompanionandroid.presentation.utils.getPrayerStatusNameStringRes
 import com.prayercompanion.shared.domain.models.Prayer
 import com.prayercompanion.shared.domain.models.PrayerInfo
 import com.prayercompanion.shared.domain.models.PrayerStatus
@@ -39,16 +34,19 @@ import com.prayercompanion.shared.domain.models.PrayerStatusWithTimeRange
 import com.prayercompanion.shared.presentation.theme.LocalSpacing
 import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.shared.presentation.utils.PresentationConsts
+import com.prayercompanion.shared.presentation.utils.StringRes
 import com.prayercompanion.shared.presentation.utils.compose.MeasureUnconstrainedViewWidth
+import com.prayercompanion.shared.presentation.utils.getPrayerStatusCorrespondingColor
+import com.prayercompanion.shared.presentation.utils.getPrayerStatusNameStringRes
+import com.prayercompanion.shared.presentation.utils.stringResource
 
-@Preview(locale = "ar")
 @Composable
 fun PrayerItem(
-    modifier: Modifier = Modifier,
-    name: String = "العصر",
-    prayerInfo: PrayerInfo = PrayerInfo.Default.copy(selectedStatus = PrayerStatus.Jamaah),
-    onStatusSelected: (PrayerStatus, PrayerInfo) -> Unit = { _, _ -> },
-    onIshaStatusesPeriodsExplanationClicked: () -> Unit = { }
+    modifier: Modifier,
+    name: String,
+    prayerInfo: PrayerInfo,
+    onStatusSelected: (PrayerStatus, PrayerInfo) -> Unit,
+    onIshaStatusesPeriodsExplanationClicked: () -> Unit,
 ) = PrayerCompanionAndroidTheme {
     val spacing = LocalSpacing.current
 
@@ -74,7 +72,7 @@ fun PrayerItem(
             MeasureUnconstrainedViewWidth(
                 viewToMeasure = {
                     Text(
-                        text = stringResource(id = R.string.maghrib),
+                        text = stringResource(id = StringRes.maghrib),
                         style = MaterialTheme.typography.h2
                     )
                 }

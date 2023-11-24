@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.components
+package com.prayercompanion.shared.presentation.features.home_screen.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,20 +26,17 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import com.prayercompanion.prayercompanionandroid.presentation.utils.getPrayerNameStringRes
-import com.prayercompanion.shared.domain.extensions.now
 import com.prayercompanion.shared.domain.models.DayPrayersInfo
 import com.prayercompanion.shared.domain.models.PrayerInfo
 import com.prayercompanion.shared.domain.models.PrayerStatus
 import com.prayercompanion.shared.presentation.components.AppBackground
 import com.prayercompanion.shared.presentation.models.RemainingDuration
 import com.prayercompanion.shared.presentation.theme.LocalSpacing
-import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.shared.presentation.utils.PresentationConsts
+import com.prayercompanion.shared.presentation.utils.getPrayerNameStringRes
+import com.prayercompanion.shared.presentation.utils.stringResource
 import kotlinx.datetime.LocalDate
 
 @Composable
@@ -54,8 +51,8 @@ fun HomeScreenContent(
     onStatusOverviewBarClicked: () -> Unit,
     onPreviousDayButtonClicked: () -> Unit,
     onNextDayButtonClicked: () -> Unit,
-    onStatusSelected: (PrayerStatus, PrayerInfo) -> Unit = { _, _ -> },
-    onIshaStatusesPeriodsExplanationClicked: () -> Unit = { }
+    onStatusSelected: (PrayerStatus, PrayerInfo) -> Unit,
+    onIshaStatusesPeriodsExplanationClicked: () -> Unit
 ) {
     val spacing = LocalSpacing.current
     Box {
@@ -139,23 +136,4 @@ fun HomeScreenContent(
             }
         }
     }
-}
-
-@Preview
-@Composable
-private fun HomeScreenContentPreview() = PrayerCompanionAndroidTheme {
-    HomeScreenContent(
-        currentPrayerInfo = PrayerInfo.Default,
-        nextPrayerInfo = PrayerInfo.Default,
-        statusesOverview = listOf(),
-        durationUntilNextPrayer = RemainingDuration(0, 0, 0),
-        selectedDate = LocalDate.now(),
-        selectedDayPrayersInfo = DayPrayersInfo.Default,
-        onPrayedNowClicked = {},
-        onPreviousDayButtonClicked = {},
-        onNextDayButtonClicked = {},
-        onStatusSelected = { _, _ ->  },
-        onStatusOverviewBarClicked = {},
-        onIshaStatusesPeriodsExplanationClicked = {}
-    )
 }

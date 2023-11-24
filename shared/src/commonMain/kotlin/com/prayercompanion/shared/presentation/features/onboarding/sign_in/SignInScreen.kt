@@ -22,20 +22,65 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.prayercompanion.shared.presentation.theme.LocalSpacing
 import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.shared.presentation.utils.StringRes
 import com.prayercompanion.shared.presentation.utils.UiEvent
 import com.prayercompanion.shared.presentation.utils.stringResource
+import com.prayercompanion.shared.presentation.utils.toScreen
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
+object SignInScreen : Screen, KoinComponent {
+
+    private val viewModel: SignInViewModel by inject()
+
+    @Composable
+    override fun Content() {
+        val navigator = LocalNavigator.currentOrThrow
+        var showGoogleSignIn by remember {
+            mutableStateOf(false)
+        }
+
+        //todo check for better way to call this function
+        if (showGoogleSignIn) {
+            showGoogleSignIn = false
+            ShowGoogleSignIn { result, task ->
+                viewModel.onEvent(SignInEvents.OnSignInWithGoogleResultReceived(result, task))
+            }
+        }
+
+        SignInScreen(
+            navigate = { event ->
+                navigator.replaceAll(event.route.toScreen())
+            },
+            launchGoogleSignInClient = {
+                showGoogleSignIn = true
+            },
+            showToast = { message ->
+//                showToast(message) todo check how to show a toast
+            },
+            uiEvents = viewModel.uiEventsChannel,
+            onEvent = viewModel::onEvent,
+            isLoadingState = viewModel.isLoading
+        )
+    }
+}
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
@@ -79,7 +124,7 @@ fun SignInScreen(
                         .align(Alignment.Center)
                         .background(MaterialTheme.colors.primary, RoundedCornerShape(100))
                         .padding(20.dp),
-                    painter = painterResource("ic_app_logo"),
+                    painter = painterResource("ic_app_logo.png"),
                     contentDescription = "Location Icon"
                 )
                 if (isLoadingState) {
@@ -118,7 +163,7 @@ fun SignInScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        painter = painterResource("ic_google"),
+                        painter = painterResource("ic_google.xml"),
                         contentDescription = stringResource(StringRes.continue_with_google),
                         tint = MaterialTheme.colors.primary
                     )

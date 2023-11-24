@@ -4,7 +4,7 @@ interface AuthenticationRepository {
 
     suspend fun isSignedIn(): Boolean
 
-    fun signInWithGoogle(
+    suspend fun signInWithGoogle(
         token: String,
         onSuccess: () -> Unit,
         onFailure: (Exception) -> Unit

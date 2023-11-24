@@ -11,7 +11,6 @@ import androidx.compose.material.ScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.Lifecycle
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
@@ -20,11 +19,13 @@ import com.google.android.gms.location.Priority
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.prayercompanion.prayercompanionandroid.BuildConfig
-import com.prayercompanion.prayercompanionandroid.presentation.features.home_screen.components.HomeScreenContent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.asString
 import com.prayercompanion.prayercompanionandroid.presentation.utils.compose.OnLifecycleEvent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.showToast
+import com.prayercompanion.shared.presentation.features.home_screen.HomeScreenViewModel
+import com.prayercompanion.shared.presentation.features.home_screen.components.HomeScreenContent
 import com.prayercompanion.shared.presentation.utils.UiEvent
+import com.prayercompanion.shared.presentation.utils.compose.LifecycleEvent
 import logcat.asLog
 import logcat.logcat
 
@@ -43,7 +44,7 @@ fun HomeScreen(
         }
     )
 
-    OnLifecycleEvent { _, event ->
+    OnLifecycleEvent { event ->
         fun checkLocationService() {
             val intervalForLocationUpdateInMillis = 10000L
 
@@ -77,12 +78,12 @@ fun HomeScreen(
         }
 
         when (event) {
-            Lifecycle.Event.ON_START -> {
+            LifecycleEvent.ON_START -> {
                 viewModel.onStart()
                 checkLocationService()
             }
 
-            Lifecycle.Event.ON_PAUSE -> {
+            LifecycleEvent.ON_PAUSE -> {
                 viewModel.onPause()
             }
 

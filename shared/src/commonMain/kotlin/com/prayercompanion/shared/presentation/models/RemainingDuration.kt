@@ -18,6 +18,11 @@ data class RemainingDuration(
     }
 
     companion object {
+        fun fromSeconds(seconds: Long): RemainingDuration {
+            return fromMilliSeconds(seconds * 1000)
+        }
+
+        //todo remove if not needed
         fun fromMilliSeconds(millis: Long): RemainingDuration {
             var remaining = millis
             val hours = remaining

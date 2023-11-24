@@ -8,7 +8,6 @@ import com.prayercompanion.prayercompanionandroid.PrayerCompanionDatabase
 import com.prayercompanion.shared.BuildConfig
 import com.prayercompanion.shared.SQLDelightDriverFactory
 import com.prayercompanion.shared.data.local.assets.AssetsReader
-import com.prayercompanion.shared.data.preferences.DataStoresRepo
 import com.prayercompanion.shared.data.utils.TrackerImpl
 import com.prayercompanion.shared.domain.utils.tracking.Tracker
 import io.ktor.client.HttpClient
@@ -86,6 +85,5 @@ val androidDataModule = module {
     }
     single { FirebaseAnalytics.getInstance(androidContext()) }
     singleOf(::TrackerImpl) { bind<Tracker>() }
-    singleOf(::DataStoresRepo)
     singleOf(::AssetsReader)
 }

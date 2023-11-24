@@ -55,11 +55,14 @@ class SignInViewModel constructor(
         isLoading = true
         if (task.isSuccessful) {
             val token = task.result ?: return
-            authenticationRepository.signInWithGoogle(
-                token,
-                onSuccess = ::onSignInSuccess,
-                onFailure = ::onSignInFail,
-            )
+            viewModelScope.coroutineScope.launch {
+
+                authenticationRepository.signInWithGoogle(
+                    token,
+                    onSuccess = ::onSignInSuccess,
+                    onFailure = ::onSignInFail,
+                )
+            }
         } else {
             isLoading = false
             sendErrorEvent(task.exception?.message)

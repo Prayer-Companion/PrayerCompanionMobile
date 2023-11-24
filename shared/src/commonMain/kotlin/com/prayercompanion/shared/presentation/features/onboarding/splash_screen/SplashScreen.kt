@@ -10,15 +10,53 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
+import com.prayercompanion.shared.domain.utils.MokoPermissionsManager
 import com.prayercompanion.shared.presentation.utils.UiEvent
+import com.prayercompanion.shared.presentation.utils.toScreen
+import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import org.koin.core.component.KoinComponent
+
+object SplashScreen : Screen, KoinComponent {
+
+    @Composable
+    override fun Content() {
+        val viewModel = getScreenModel<SplashScreenViewModel>()
+
+        val navigator = LocalNavigator.currentOrThrow
+        SplashScreen(
+            onAction = viewModel::onAction,
+            uiEvents = viewModel.uiEvents,
+            navigate = { event ->
+                navigator.replaceAll(event.route.toScreen())
+            }
+        )
+    }
+}
 
 @Composable
 fun SplashScreen(
+    onAction: (SplashScreenAction) -> Unit,
     uiEvents: Flow<UiEvent> = emptyFlow(),
     navigate: (UiEvent.Navigate) -> Unit = {}
 ) {
+
+    val permissionFactory = rememberPermissionsControllerFactory()
+    val mokoPermissionsManager = MokoPermissionsManager(permissionFactory)
+
+    LaunchedEffect(key1 = Unit) {
+        onAction(
+            SplashScreenAction.OnStart(
+                mokoPermissionsManager.isLocationPermissionGranted(),
+                mokoPermissionsManager.isPushNotificationAllowed()
+            )
+        )
+    }
 
     LaunchedEffect(key1 = uiEvents) {
         uiEvents.collect {

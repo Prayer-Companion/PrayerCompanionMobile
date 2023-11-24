@@ -44,15 +44,9 @@ android {
 
         resourceConfigurations += listOf("en", "ar")
 
-        val ishaStatusesPeriodsExplanationUrl: String by project
         val doorbellId: String by project
         val doorbellPrivateKey: String by project
 
-        buildConfigField(
-            "String",
-            "ISHA_STATUSES_PERIODS_EXPLANATION_URL",
-            ishaStatusesPeriodsExplanationUrl
-        )
         buildConfigField("String", "DOORBELL_ID", doorbellId)
         buildConfigField("String", "DOORBELL_PRIVATE_KEY", doorbellPrivateKey)
     }
