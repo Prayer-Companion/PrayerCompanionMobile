@@ -10,4 +10,6 @@ fun initKoin() {
     }
 }
 
-fun MainViewController() = ComposeUIViewController { App() }
+val uiViewController = ComposeUIViewController { App() }
+
+fun MainViewController() = uiViewController

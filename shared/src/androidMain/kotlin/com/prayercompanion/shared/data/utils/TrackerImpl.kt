@@ -4,13 +4,15 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.logEvent
 import com.prayercompanion.shared.domain.utils.tracking.TrackedButtons
 import com.prayercompanion.shared.domain.utils.tracking.Tracker
+import com.prayercompanion.shared.domain.utils.tracking.TrackingEventNames
+import com.prayercompanion.shared.domain.utils.tracking.TrackingParameterNames
 
 actual class TrackerImpl constructor(
     private val firebaseAnalytics: FirebaseAnalytics
-): Tracker {
+) : Tracker {
 
     actual override fun setAppLanguage(languageCode: String) {
-        firebaseAnalytics.setUserProperty("app_language", languageCode)
+        firebaseAnalytics.setUserProperty(TrackingEventNames.APP_LANGUAGE, languageCode)
     }
 
     actual override fun trackScreenView(screenName: String, screenClass: String) {
@@ -21,21 +23,21 @@ actual class TrackerImpl constructor(
     }
 
     actual override fun trackButtonClicked(button: TrackedButtons) {
-        firebaseAnalytics.logEvent("button_clicked") {
-            param("name", button.name.lowercase())
+        firebaseAnalytics.logEvent(TrackingEventNames.BUTTON_CLICKED) {
+            param(TrackingParameterNames.BUTTON_NAME, button.name.lowercase())
         }
     }
 
     actual override fun trackStatusSelect() {
-        firebaseAnalytics.logEvent("prayer_status_selected", null)
+        firebaseAnalytics.logEvent(TrackingEventNames.PRAYER_STATUS_SELECTED, null)
     }
 
     actual override fun trackQuranChapterAdd() {
-        firebaseAnalytics.logEvent("quran_chapter_add", null)
+        firebaseAnalytics.logEvent(TrackingEventNames.QURAN_CHAPTER_ADD, null)
     }
 
     actual override fun trackQuranChapterRemove() {
-        firebaseAnalytics.logEvent("quran_chapter_remove", null)
+        firebaseAnalytics.logEvent(TrackingEventNames.QURAN_CHAPTER_REMOVE, null)
     }
 
     actual override fun trackLogin() {
@@ -43,13 +45,23 @@ actual class TrackerImpl constructor(
     }
 
     actual override fun trackLocationPermissionResult(granted: Boolean) {
-        val suffix = if (granted) "granted" else "denied"
-        firebaseAnalytics.logEvent("location_permission_${suffix}", null)
+        val suffix = if (granted) {
+            TrackingEventNames.GRANTED_SUFFIX
+        } else {
+            TrackingEventNames.DENIED_SUFFIX
+        }
+
+        firebaseAnalytics.logEvent(TrackingEventNames.LOCATION_PERMISSION_PREFIX + suffix, null)
     }
 
     actual override fun trackNotificationPermissionResult(granted: Boolean) {
-        val suffix = if (granted) "granted" else "denied"
-        firebaseAnalytics.logEvent("notification_permission_${suffix}", null)
+        val suffix = if (granted) {
+            TrackingEventNames.GRANTED_SUFFIX
+        } else {
+            TrackingEventNames.DENIED_SUFFIX
+        }
+
+        firebaseAnalytics.logEvent(TrackingEventNames.NOTIFICATION_PERMISSION_PREFIX + suffix, null)
     }
 
 }

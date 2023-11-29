@@ -3,6 +3,8 @@ package com.prayercompanion.shared.presentation.features.onboarding.sign_in
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.core.model.screenModelScope
 import com.prayercompanion.shared.domain.repositories.AuthenticationRepository
 import com.prayercompanion.shared.domain.usecases.AccountSignIn
 import com.prayercompanion.shared.domain.utils.Task
@@ -13,8 +15,6 @@ import com.prayercompanion.shared.presentation.utils.StringRes
 import com.prayercompanion.shared.presentation.utils.StringResourceReader
 import com.prayercompanion.shared.presentation.utils.UiEvent
 import com.prayercompanion.shared.presentation.utils.printStackTraceInDebug
-import com.rickclephas.kmm.viewmodel.KMMViewModel
-import com.rickclephas.kmm.viewmodel.coroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.channels.Channel
@@ -26,7 +26,7 @@ class SignInViewModel constructor(
     private val accountSignIn: AccountSignIn,
     private val tracker: Tracker,
     private val stringResourceReader: StringResourceReader
-) : KMMViewModel() {
+) : ScreenModel {
 
     private val _uiEventsChannel = Channel<UiEvent>()
     val uiEventsChannel = _uiEventsChannel.receiveAsFlow()
@@ -41,12 +41,13 @@ class SignInViewModel constructor(
             )
 
             is SignInEvents.OnSignInWithGoogleClicked -> onSignInWithGoogleClicked()
-
-            is SignInEvents.OnSignInAnonymously -> onSignInAnonymouslyClicked()
         }
     }
 
-    private fun onSignInWithGoogleResultReceived(result: Boolean, task: Task<String>) {
+    private fun onSignInWithGoogleResultReceived(
+        result: Boolean,
+        task: Task<Pair<String?, String?>>
+    ) {
         if (result.not()) {
             sendErrorEvent(stringResourceReader.read(StringRes.error_something_went_wrong))
             return
@@ -54,11 +55,14 @@ class SignInViewModel constructor(
 
         isLoading = true
         if (task.isSuccessful) {
-            val token = task.result ?: return
-            viewModelScope.coroutineScope.launch {
-
+            val (idToken, accessToken) = task.result ?: return
+            if (idToken == null) {
+                return
+            }
+            screenModelScope.launch {
                 authenticationRepository.signInWithGoogle(
-                    token,
+                    idToken,
+                    accessToken,
                     onSuccess = ::onSignInSuccess,
                     onFailure = ::onSignInFail,
                 )
@@ -75,17 +79,10 @@ class SignInViewModel constructor(
         sendEvent(UiEvent.LaunchSignInWithGoogle)
     }
 
-    private fun onSignInAnonymouslyClicked() {
-        authenticationRepository.signInAnonymously(
-            onSuccess = ::onSignInSuccess,
-            onFailure = ::onSignInFail
-        )
-    }
-
     private fun onSignInSuccess() {
         isLoading = false
         tracker.trackLogin()
-        viewModelScope.coroutineScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(Dispatchers.IO) {
             val signInResult = accountSignIn.call()
             signInResult.onSuccess {
                 sendEvent(UiEvent.Navigate(Route.PermissionsRequests))
@@ -106,7 +103,7 @@ class SignInViewModel constructor(
     }
 
     private fun sendEvent(uiEvent: UiEvent) {
-        viewModelScope.coroutineScope.launch {
+        screenModelScope.launch {
             _uiEventsChannel.send(uiEvent)
         }
     }

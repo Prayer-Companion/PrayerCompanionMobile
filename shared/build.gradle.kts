@@ -6,8 +6,8 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.compose")
     id("app.cash.sqldelight")
-    id("com.google.gms.google-services")
     id("org.jetbrains.kotlin.plugin.serialization")
+    kotlin("native.cocoapods")
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -17,8 +17,23 @@ kotlin {
         iosX64(),
         iosArm64(),
         iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
+    )
+
+    cocoapods {
+        version = "1.0"
+        name = "Pods_PrayerCompanionIOS"
+        summary = "PrayerCompanion CocoaPods"
+        homepage = "https://github.com/JetBrains/kotlin"
+
+        ios.deploymentTarget = "16.0"
+        podfile = project.file("../iosApp//Podfile")
+
+        pod("FirebaseAnalytics")
+        pod("GoogleSignIn") {
+            version = "7.0.0"
+        }
+
+        framework {
             baseName = "shared"
             isStatic = true
         }
@@ -33,11 +48,11 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
                 implementation(ProjectDependencies.ktorClientCore)
+                implementation(ProjectDependencies.ktorClientLogging)
                 implementation(ProjectDependencies.ktorClientContentNegotiation)
                 implementation(ProjectDependencies.ktorClientSerialization)
                 implementation("io.insert-koin:koin-core:$koinVersion")
                 api("com.rickclephas.kmm:kmm-viewmodel-core:1.0.0-ALPHA-14") //todo kmp remove
-                implementation("com.google.android.gms:play-services-auth:20.7.0")
                 //compose
                 implementation(compose.runtime)
                 implementation(compose.foundation)
@@ -78,7 +93,6 @@ kotlin {
                 implementation("com.google.firebase:firebase-analytics-ktx")
                 implementation("com.google.firebase:firebase-crashlytics-ktx")
                 implementation("com.google.android.gms:play-services-auth:20.7.0")
-                implementation("com.google.firebase:firebase-auth-ktx:22.1.2")
                 implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.11")
                 implementation("com.google.android.gms:play-services-location:21.0.1")
                 implementation(ProjectDependencies.ktorClientOkHttp)

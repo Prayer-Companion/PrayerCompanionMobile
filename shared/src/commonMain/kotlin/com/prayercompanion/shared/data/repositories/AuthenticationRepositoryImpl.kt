@@ -8,27 +8,13 @@ import dev.gitlive.firebase.auth.GoogleAuthProvider
 import dev.gitlive.firebase.auth.auth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
-
-//expect class AuthenticationRepositoryImplX : AuthenticationRepository {
-//
-//    override suspend fun isSignedIn(): Boolean
-//
-//    override suspend fun signInWithGoogle(
-//        token: String,
-//        onSuccess: () -> Unit,
-//        onFailure: (Exception) -> Unit
-//    )
-//
-//    override fun signInAnonymously(
-//        onSuccess: () -> Unit,
-//        onFailure: (Exception) -> Unit
-//    )
-//}
+import kotlinx.coroutines.withContext
 
 class AuthenticationRepositoryImpl constructor(
     private val dataStoresRepo: DataStoresRepo,
-): AuthenticationRepository {
+) : AuthenticationRepository {
 
     private val auth = Firebase.auth
 
@@ -44,10 +30,12 @@ class AuthenticationRepositoryImpl constructor(
 
     override suspend fun signInWithGoogle(
         token: String,
+        accessToken: String?,
         onSuccess: () -> Unit,
         onFailure: (Exception) -> Unit
-    ) {
-        val credential = GoogleAuthProvider.credential(token, null)
+    ) = withContext(Dispatchers.IO) {
+        signOut()
+        val credential = GoogleAuthProvider.credential(token, accessToken)
         try {
             auth.signInWithCredential(credential)
 
@@ -63,8 +51,12 @@ class AuthenticationRepositoryImpl constructor(
         }
     }
 
-    override fun signInAnonymously(onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
-        TODO("Not yet implemented")
+    override suspend fun getIdToken(): String? {
+        return auth.currentUser?.getIdToken(false)
+    }
+
+    override suspend fun signOut() {
+        auth.signOut()
     }
 
     private suspend fun onSignInFail(
@@ -74,9 +66,5 @@ class AuthenticationRepositoryImpl constructor(
         signOut()
         onFailure(exception)
         exception.printStackTraceInDebug()
-    }
-
-    private suspend fun signOut() {
-        auth.signOut()
     }
 }

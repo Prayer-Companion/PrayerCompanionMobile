@@ -46,6 +46,7 @@ class SplashScreenViewModel constructor(
         isPushNotificationAllowed: Boolean
     ) {
         screenModelScope.launch(Dispatchers.Default) {
+            authenticationRepository.signOut() // todo remove this line
             val hasInternet = isConnectedToInternet.call()
             log { "Has Internet = $hasInternet" }
 
@@ -91,7 +92,6 @@ class SplashScreenViewModel constructor(
     }
 
     private fun sendNavigateEvent(route: Route) {
-        return // todo remove this once sign in screen is implmeneted
         screenModelScope.launch(Dispatchers.Default) {
             //minimum splashscreen time is 400ms
             delay(400 - (currentTimeMillis() - startingTimeMillis))

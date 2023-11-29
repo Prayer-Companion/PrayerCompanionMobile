@@ -6,13 +6,13 @@ interface AuthenticationRepository {
 
     suspend fun signInWithGoogle(
         token: String,
+        accessToken: String?,
         onSuccess: () -> Unit,
         onFailure: (Exception) -> Unit
     )
 
-    fun signInAnonymously(
-        onSuccess: () -> Unit,
-        onFailure: (Exception) -> Unit
-    )
+    suspend fun getIdToken(): String?
+
+    suspend fun signOut()
 
 }

@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>GOOGLE_ANALYTICS_REGISTRATION_WITH_AD_NETWORK_ENABLED</key>
+	<false/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>bold.ttf</string>
@@ -9,5 +11,16 @@
 		<string>light.ttf</string>
 		<string>regular.ttf</string>
 	</array>
+    <key>GIDClientID</key>
+    <string>923721998607-mvdq5eodi7q03l53r41pth7qbdjf0bna.apps.googleusercontent.com</string>
+    <key>CFBundleURLTypes</key>
+    <array>
+      <dict>
+        <key>CFBundleURLSchemes</key>
+        <array>
+          <string>com.googleusercontent.apps.923721998607-mvdq5eodi7q03l53r41pth7qbdjf0bna</string>
+        </array>
+      </dict>
+    </array>
 </dict>
 </plist>

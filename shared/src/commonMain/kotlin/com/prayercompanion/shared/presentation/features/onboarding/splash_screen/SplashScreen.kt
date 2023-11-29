@@ -17,6 +17,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.prayercompanion.shared.domain.utils.MokoPermissionsManager
 import com.prayercompanion.shared.presentation.utils.UiEvent
 import com.prayercompanion.shared.presentation.utils.toScreen
+import dev.icerock.moko.permissions.compose.BindEffect
 import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -30,7 +31,9 @@ object SplashScreen : Screen, KoinComponent {
 
         val navigator = LocalNavigator.currentOrThrow
         SplashScreen(
-            onAction = viewModel::onAction,
+            onAction = {
+                viewModel.onAction(it)
+            },
             uiEvents = viewModel.uiEvents,
             navigate = { event ->
                 navigator.replaceAll(event.route.toScreen())
@@ -40,7 +43,7 @@ object SplashScreen : Screen, KoinComponent {
 }
 
 @Composable
-fun SplashScreen(
+private fun SplashScreen(
     onAction: (SplashScreenAction) -> Unit,
     uiEvents: Flow<UiEvent> = emptyFlow(),
     navigate: (UiEvent.Navigate) -> Unit = {}
@@ -48,9 +51,10 @@ fun SplashScreen(
 
     val permissionFactory = rememberPermissionsControllerFactory()
     val mokoPermissionsManager = MokoPermissionsManager(permissionFactory)
+    BindEffect(mokoPermissionsManager.permissionsController)
 
     LaunchedEffect(key1 = Unit) {
-        onAction(
+        onAction.invoke(
             SplashScreenAction.OnStart(
                 mokoPermissionsManager.isLocationPermissionGranted(),
                 mokoPermissionsManager.isPushNotificationAllowed()

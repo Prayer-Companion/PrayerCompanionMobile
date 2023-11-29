@@ -1,16 +1,17 @@
 package com.prayercompanion.shared.data.utils
 
 import com.prayercompanion.shared.domain.utils.tracking.TrackedButtons
+import com.prayercompanion.shared.domain.utils.tracking.Tracker
 
-expect class TrackerImpl {
+expect class TrackerImpl: Tracker {
 
-    fun setAppLanguage(languageCode: String)
-    fun trackScreenView(screenName: String, screenClass: String)
-    fun trackButtonClicked(button: TrackedButtons)
-    fun trackStatusSelect()
-    fun trackQuranChapterAdd()
-    fun trackQuranChapterRemove()
-    fun trackLogin()
-    fun trackLocationPermissionResult(granted: Boolean)
-    fun trackNotificationPermissionResult(granted: Boolean)
+    override fun setAppLanguage(languageCode: String)
+    override fun trackScreenView(screenName: String, screenClass: String)
+    override fun trackButtonClicked(button: TrackedButtons)
+    override fun trackStatusSelect()
+    override fun trackQuranChapterAdd()
+    override fun trackQuranChapterRemove()
+    override fun trackLogin()
+    override fun trackLocationPermissionResult(granted: Boolean)
+    override fun trackNotificationPermissionResult(granted: Boolean)
 }

@@ -12,7 +12,6 @@ import com.prayercompanion.prayercompanionandroid.presentation.utils.Orientation
 import com.prayercompanion.prayercompanionandroid.presentation.utils.ScheduleDailyPrayersWorker
 import com.prayercompanion.prayercompanionandroid.presentation.utils.notifications.PrayersNotificationsService
 import com.prayercompanion.shared.presentation.features.home_screen.HomeScreenViewModel
-import com.prayercompanion.shared.presentation.utils.StringResourceReader
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
@@ -30,5 +29,4 @@ val androidPresentationModule = module {
     singleOf(::OrientationSensor)
     singleOf(::MediaController)
     singleOf(::ScheduleDailyPrayersWorker)
-    singleOf(::StringResourceReader)
 }

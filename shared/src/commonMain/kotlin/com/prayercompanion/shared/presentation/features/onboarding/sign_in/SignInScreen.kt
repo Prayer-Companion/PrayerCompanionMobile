@@ -22,10 +22,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -53,24 +49,15 @@ object SignInScreen : Screen, KoinComponent {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        var showGoogleSignIn by remember {
-            mutableStateOf(false)
-        }
-
-        //todo check for better way to call this function
-        if (showGoogleSignIn) {
-            showGoogleSignIn = false
-            ShowGoogleSignIn { result, task ->
-                viewModel.onEvent(SignInEvents.OnSignInWithGoogleResultReceived(result, task))
-            }
-        }
 
         SignInScreen(
             navigate = { event ->
                 navigator.replaceAll(event.route.toScreen())
             },
             launchGoogleSignInClient = {
-                showGoogleSignIn = true
+                showGoogleSignIn { result, task ->
+                    viewModel.onEvent(SignInEvents.OnSignInWithGoogleResultReceived(result, task))
+                }
             },
             showToast = { message ->
 //                showToast(message) todo check how to show a toast

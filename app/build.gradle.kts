@@ -51,6 +51,12 @@ android {
         buildConfigField("String", "DOORBELL_PRIVATE_KEY", doorbellPrivateKey)
     }
     signingConfigs {
+        create("debug_pc") {
+            storeFile = file("../app/src/debug/prayer_companion_debug_keystore.jks")
+            keyAlias = "prayercompaniondebugkey"
+            storePassword = "prayercompanion"
+            keyPassword = "prayercompanion"
+        }
         create("release") {
             storeFile = file("../prayer_companion_keystore.jks")
             keyAlias = "PrayerCompanionKeyStore"
@@ -59,12 +65,11 @@ android {
         }
     }
     buildTypes {
-        getByName("debug") {
-            signingConfig = android.signingConfigs.getByName("debug")
-
+        debug {
+            signingConfig = android.signingConfigs.getByName("debug_pc")
             isDebuggable = true
-            isMinifyEnabled = true
-            isShrinkResources = true
+            isMinifyEnabled = false
+            isShrinkResources = false
 
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
@@ -77,7 +82,7 @@ android {
             )
             testProguardFiles("test-proguard-rules.pro")
         }
-        getByName("release") {
+        release {
             signingConfig = signingConfigs.getByName("release")
 
             isDebuggable = false

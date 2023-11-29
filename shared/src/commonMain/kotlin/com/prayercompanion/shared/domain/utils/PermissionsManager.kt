@@ -21,7 +21,7 @@ class MokoPermissionsManager(
     permissionsControllerFactory: PermissionsControllerFactory
 ) {
 
-    private val permissionsController = permissionsControllerFactory.createPermissionsController()
+    val permissionsController = permissionsControllerFactory.createPermissionsController()
 
     suspend fun isLocationPermissionGranted(): Boolean = coroutineScope {
         return@coroutineScope locationPermissions
