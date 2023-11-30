@@ -1,7 +1,6 @@
 package com.prayercompanion.prayercompanionandroid.presentation.di
 
 import com.prayercompanion.prayercompanionandroid.MainActivityViewModel
-import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.permissions.PermissionsRequestViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.QiblaViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.features.quran.full_sections.FullPrayerQuranSectionsViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.features.quran.quran.QuranViewModel
@@ -21,7 +20,6 @@ val androidPresentationModule = module {
     viewModelOf(::MainActivityViewModel)
     viewModelOf(::QuranViewModel)
     viewModelOf(::QiblaViewModel)
-    viewModelOf(::PermissionsRequestViewModel)
     viewModelOf(::HomeScreenViewModel)
     viewModelOf(::FullPrayerQuranSectionsViewModel)
     singleOf(::PrayersNotificationsService)

@@ -1,30 +1,29 @@
-package com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.permissions
+package com.prayercompanion.shared.presentation.features.onboarding.permissions
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.prayercompanion.prayercompanionandroid.R
+import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.core.model.screenModelScope
 import com.prayercompanion.shared.data.preferences.AppPreferences
 import com.prayercompanion.shared.data.preferences.DataStoresRepo
-import com.prayercompanion.shared.domain.utils.PermissionsManager
+import com.prayercompanion.shared.domain.utils.MokoPermissionsManager
 import com.prayercompanion.shared.domain.utils.tracking.TrackedButtons
 import com.prayercompanion.shared.domain.utils.tracking.Tracker
 import com.prayercompanion.shared.presentation.navigation.Route
 import com.prayercompanion.shared.presentation.utils.StringRes
 import com.prayercompanion.shared.presentation.utils.UiEvent
 import com.prayercompanion.shared.presentation.utils.UiText
+import dev.icerock.moko.permissions.Permission
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class PermissionsRequestViewModel constructor(
-    private val permissionsManager: PermissionsManager,
     private val dataStoresRepo: DataStoresRepo,
     private val tracker: Tracker
-) : ViewModel() {
+) : ScreenModel {
 
     private val _uiEvents = Channel<UiEvent>()
     val uiEvents = _uiEvents.receiveAsFlow()
@@ -33,19 +32,32 @@ class PermissionsRequestViewModel constructor(
     private var currentState = State.Location
 
     private var appPreferences: AppPreferences? = null
+    private var isLocationPermissionGranted = false
+    private var isPushNotificationAllowed = false
 
-    init {
+    fun onEvent(event: PermissionsRequestEvent) {
+        when (event) {
+            is PermissionsRequestEvent.OnStart -> onStart(event.isLocationPermissionGranted, event.isPushNotificationAllowed)
+            is PermissionsRequestEvent.OnPermissionResult -> onPermissionResult(event.permissions)
+            is PermissionsRequestEvent.OnSkipNotificationPermission -> onSkipNotificationPermission()
+            is PermissionsRequestEvent.OnCTAClicked -> onCTAClicked()
+        }
+    }
+
+    private fun onStart(isLocationPermissionGranted: Boolean, isPushNotificationAllowed: Boolean) {
+        this.isLocationPermissionGranted = isLocationPermissionGranted
+        this.isPushNotificationAllowed = isPushNotificationAllowed
         fun observeDataStore() {
-            viewModelScope.launch {
+            screenModelScope.launch {
                 dataStoresRepo.appPreferencesDataStoreData.collect {
                     appPreferences = it
                 }
             }
         }
 
-        if (permissionsManager.isLocationPermissionGranted.not()) {
+        if (isLocationPermissionGranted.not()) {
             setLocationPermissionState()
-        } else if (permissionsManager.isPushNotificationAllowed.not()) {
+        } else if (isPushNotificationAllowed.not()) {
             setNotificationPermissionState()
         } else {
             goToHomeScreen()
@@ -54,16 +66,8 @@ class PermissionsRequestViewModel constructor(
         observeDataStore()
     }
 
-    fun onEvent(event: PermissionsRequestEvent) {
-        when (event) {
-            is PermissionsRequestEvent.OnPermissionResult -> onPermissionResult(event.permissions)
-            is PermissionsRequestEvent.OnSkipNotificationPermission -> onSkipNotificationPermission()
-            is PermissionsRequestEvent.OnCTAClicked -> onCTAClicked()
-        }
-    }
-
-    private fun onPermissionResult(permissions: Map<String, Boolean>) {
-        viewModelScope.launch {
+    private fun onPermissionResult(permissions: Map<Permission, Boolean>) {
+        screenModelScope.launch {
             //a small delay for dialog to be dismissed so we can show feedback/changes on the screen
             delay(500)
             when (currentState) {
@@ -72,7 +76,7 @@ class PermissionsRequestViewModel constructor(
                     val granted = permissions.any { it.value }
                     tracker.trackLocationPermissionResult(granted)
                     if (granted) {
-                        if (permissionsManager.isPushNotificationAllowed) {
+                        if (isPushNotificationAllowed) {
                             goToHomeScreen()
                         } else {
                             nextState()
@@ -114,7 +118,7 @@ class PermissionsRequestViewModel constructor(
     private fun onSkipNotificationPermission() {
         tracker.trackButtonClicked(TrackedButtons.NOTIFICATION_PERMISSION_SKIP)
         goToHomeScreen()
-        viewModelScope.launch {
+        screenModelScope.launch {
             dataStoresRepo.updateAppPreferencesDataStore {
                 it.copy(hasSkippedNotificationPermission = true)
             }
@@ -124,15 +128,14 @@ class PermissionsRequestViewModel constructor(
     private fun onCTAClicked() {
         when (currentState) {
             State.Location -> {
-                val isLocationPermissionGranted = permissionsManager.isLocationPermissionGranted
                 if (isLocationPermissionGranted.not()) {
                     val denialCount = appPreferences?.deniedLocationPermissionsCount ?: 0
                     if (denialCount < 2) {
-                        viewModelScope.launch {
+                        screenModelScope.launch {
                             _uiEvents.send(UiEvent.RequestPermissions(uiState.permissions))
                         }
                     } else {
-                        viewModelScope.launch {
+                        screenModelScope.launch {
                             _uiEvents.send(UiEvent.OpenAppSettings)
                         }
                     }
@@ -142,15 +145,14 @@ class PermissionsRequestViewModel constructor(
             }
 
             State.Notification -> {
-                val isNotificationPermissionGranted = permissionsManager.isPushNotificationAllowed
-                if (isNotificationPermissionGranted.not()) {
+                if (isPushNotificationAllowed.not()) {
                     val denialCount = appPreferences?.deniedNotificationPermissionsCount ?: 0
                     if (denialCount < 2) {
-                        viewModelScope.launch {
+                        screenModelScope.launch {
                             _uiEvents.send(UiEvent.RequestPermissions(uiState.permissions))
                         }
                     } else {
-                        viewModelScope.launch {
+                        screenModelScope.launch {
                             _uiEvents.send(UiEvent.OpenAppSettings)
                         }
                     }
@@ -164,7 +166,7 @@ class PermissionsRequestViewModel constructor(
     private fun nextState() {
         when (currentState) {
             State.Location -> {
-                if (permissionsManager.isPushNotificationAllowed) {
+                if (isPushNotificationAllowed) {
                     goToHomeScreen()
                 } else {
                     setNotificationPermissionState()
@@ -176,12 +178,13 @@ class PermissionsRequestViewModel constructor(
     }
 
     private fun setLocationPermissionState() {
+        //todo delegate those values to the view, and pass only a state of current permission
         uiState = uiState.copy(
-            icon = R.drawable.ic_location,
+            icon = "ic_location.xml",
             title = UiText.StringResource(StringRes.location_permission_request_title),
             body = UiText.StringResource(StringRes.location_permission_request_explanation),
             ctaText = UiText.StringResource(StringRes.location_permission_request_cta),
-            permissions = PermissionsManager.locationPermissions,
+            permissions = MokoPermissionsManager.locationPermissions,
             skippable = false
         )
         currentState = State.Location
@@ -189,18 +192,18 @@ class PermissionsRequestViewModel constructor(
 
     private fun setNotificationPermissionState() {
         uiState = uiState.copy(
-            icon = R.drawable.ic_location, // todo use notifications icon when provided
+            icon = "ic_location.xml", // todo use notifications icon
             title = UiText.StringResource(StringRes.notification_permission_request_title),
             body = UiText.StringResource(StringRes.notification_permission_request_explanation),
             ctaText = UiText.StringResource(StringRes.notification_permission_request_cta),
-            permissions = listOf(PermissionsManager.notificationsPermission),
+            permissions = listOf(MokoPermissionsManager.notificationsPermission),
             skippable = true
         )
         currentState = State.Notification
     }
 
     private fun goToHomeScreen() {
-        viewModelScope.launch {
+        screenModelScope.launch {
             _uiEvents.send(UiEvent.Navigate(Route.Home))
         }
     }

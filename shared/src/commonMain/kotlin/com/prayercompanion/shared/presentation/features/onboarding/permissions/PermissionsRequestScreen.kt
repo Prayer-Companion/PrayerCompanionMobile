@@ -1,10 +1,5 @@
-package com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.permissions
+package com.prayercompanion.shared.presentation.features.onboarding.permissions
 
-import android.content.Intent
-import android.net.Uri
-import android.provider.Settings
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,62 +25,107 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat.startActivity
-import androidx.navigation.NavOptionsBuilder
-import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.shared.presentation.navigation.Route
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
+import com.prayercompanion.shared.domain.utils.MokoPermissionsManager
 import com.prayercompanion.shared.presentation.theme.LocalSpacing
 import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
+import com.prayercompanion.shared.presentation.utils.StringRes
 import com.prayercompanion.shared.presentation.utils.UiEvent
+import com.prayercompanion.shared.presentation.utils.stringResource
+import com.prayercompanion.shared.presentation.utils.toScreen
+import dev.icerock.moko.permissions.Permission
+import dev.icerock.moko.permissions.compose.BindEffect
+import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
+import org.koin.core.component.KoinComponent
 
-@Preview
+object PermissionsRequestScreen : Screen, KoinComponent {
+
+    @Composable
+    override fun Content() {
+        val viewModel = getScreenModel<PermissionsRequestViewModel>()
+        val navigator = LocalNavigator.currentOrThrow
+        PermissionsRequestScreen(
+            navigate = { event ->
+                navigator.replaceAll(event.route.toScreen())
+            },
+            uiState = viewModel.uiState,
+            uiEvents = viewModel.uiEvents,
+            onEvent = {
+                viewModel.onEvent(it)
+            }
+
+        )
+    }
+}
+
+@OptIn(ExperimentalResourceApi::class)
 @Composable
-fun PermissionsRequestScreen(
-    navigate: (UiEvent.Navigate, NavOptionsBuilder.() -> Unit) -> Unit = { _, _ -> },
-    uiState: PermissionsRequestUiState = PermissionsRequestUiState(),
+private fun PermissionsRequestScreen(
+    navigate: (UiEvent.Navigate) -> Unit,
+    uiState: PermissionsRequestUiState,
     uiEvents: Flow<UiEvent> = emptyFlow(),
     onEvent: (PermissionsRequestEvent) -> Unit = { },
 ) {
 
     val spacing = LocalSpacing.current
-    val context = LocalContext.current
 
-    val permissionContract = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        onEvent(PermissionsRequestEvent.OnPermissionResult(permissions))
+    val permissionFactory = rememberPermissionsControllerFactory()
+    val mokoPermissionsManager = remember(permissionFactory) {
+        MokoPermissionsManager(permissionFactory)
+    }
+    BindEffect(mokoPermissionsManager.permissionsController)
+    val coroutineScope = rememberCoroutineScope()
+
+    fun requestPermissions(permissions: List<Permission>) {
+        coroutineScope.launch {
+            // this doesn't have to be in an awaitAll block because each permission is asked on its own
+            val permissionsResult = permissions.associateWith {
+                mokoPermissionsManager.requestPermission(it)
+            }
+            onEvent(PermissionsRequestEvent.OnPermissionResult(permissionsResult))
+        }
     }
 
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(key1 = Unit) {
+        onEvent.invoke(
+            PermissionsRequestEvent.OnStart(
+                mokoPermissionsManager.isLocationPermissionGranted(),
+                mokoPermissionsManager.isPushNotificationAllowed()
+            )
+        )
+    }
+
+    LaunchedEffect(key1 = Unit) {
         uiEvents.collect {
             when (it) {
                 is UiEvent.Navigate -> {
-                    navigate(it) {
-                        popUpTo(Route.PermissionsRequests.name) {
-                            inclusive = true
-                        }
-                    }
+                    navigate(it)
                 }
 
                 is UiEvent.RequestPermissions -> {
-                    permissionContract.launch(it.permissions.toTypedArray())
+                    requestPermissions(it.permissions)
                 }
 
                 is UiEvent.OpenAppSettings -> {
-                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                    val uri: Uri = Uri.fromParts("package", context.packageName, null)
-                    intent.data = uri
-                    startActivity(context, intent, null)
+                    //todo open settings
+//                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+//                    val uri: Uri = Uri.fromParts("package", context.packageName, null)
+//                    intent.data = uri
+//                    startActivity(context, intent, null)
                 }
 
                 else -> Unit
@@ -112,7 +152,7 @@ fun PermissionsRequestScreen(
                             .align(Alignment.Center)
                             .background(MaterialTheme.colors.primary, RoundedCornerShape(100))
                             .padding(30.dp),
-                        painter = painterResource(id = uiState.icon),
+                        painter = painterResource(uiState.icon),
                         contentDescription = "Location Icon",
                         tint = MaterialTheme.colors.onPrimary
                     )
@@ -189,7 +229,7 @@ fun PermissionsRequestScreen(
                             onEvent(PermissionsRequestEvent.OnSkipNotificationPermission)
                         }) {
                             Text(
-                                text = stringResource(id = R.string.skip),
+                                text = stringResource(id = StringRes.skip),
                                 style = MaterialTheme.typography.body2,
                                 color = MaterialTheme.colors.secondary
                             )

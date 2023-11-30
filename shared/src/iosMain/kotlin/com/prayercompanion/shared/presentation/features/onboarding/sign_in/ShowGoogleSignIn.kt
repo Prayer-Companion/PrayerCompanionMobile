@@ -7,7 +7,6 @@ import com.prayercompanion.shared.presentation.uiViewController
 actual fun showGoogleSignIn(
     onSignInWithGoogleResultReceived: (Boolean, Task<Pair<String?, String?>>) -> Unit
 ) {
-    GIDSignIn.sharedInstance.signOut() //todo remove
     GIDSignIn.sharedInstance.signInWithPresentingViewController(uiViewController) { result, error ->
         val token = result?.user?.idToken?.tokenString
         val accessToken = result?.user?.refreshToken?.tokenString

@@ -47,8 +47,6 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.Priority
-import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.permissions.PermissionsRequestScreen
-import com.prayercompanion.prayercompanionandroid.presentation.features.onboarding.permissions.PermissionsRequestViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.QiblaScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.QiblaViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.features.quran.full_sections.FullPrayerQuranSections
@@ -153,74 +151,6 @@ class MainActivity : AppCompatActivity() {
                         navController = navController,
                         startDestination = Route.SplashScreen.routeName,
                     ) {
-//                        composable(Route.SplashScreen.routeName) {
-//                            val viewModel: SplashScreenViewModel = getViewModel()
-//                            SplashScreen(
-//                                uiEvents = viewModel.uiEvents,
-//                                navigate = { event ->
-//                                    navController.navigate(
-//                                        event = event,
-//                                        builder = {
-//                                            popUpTo(Route.SplashScreen.name) {
-//                                                inclusive = true
-//                                            }
-//                                        }
-//                                    )
-//                                }
-//                            )
-//                        }
-//                        composable(Route.SignIn.routeName) {
-//                            val viewModel: SignInViewModel = getViewModel()
-//
-//                            val signInWithGoogleLauncher = rememberLauncherForActivityResult(
-//                                ActivityResultContracts.StartActivityForResult()
-//                            ) {
-//                                val result = it.resultCode == Activity.RESULT_OK
-//                                val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
-//                                    .let { task ->
-//                                        Task(
-//                                            isSuccessful = result,
-//                                            result = task.result.idToken,
-//                                            exception = task.exception
-//                                        )
-//                                    }
-//
-//                                viewModel.onEvent(SignInEvents.OnSignInWithGoogleResultReceived(result, task))
-//                            }
-
-//                            SignInScreen(
-//                                navigate = { event ->
-//                                    navController.navigate(
-//                                        event = event,
-//                                        builder = {
-//                                            popUpTo(Route.SplashScreen.name) {
-//                                                inclusive = true
-//                                            }
-//                                        }
-//                                    )
-//                                },
-//                                launchGoogleSignInClient = {
-//                                    signInWithGoogleLauncher.launch(
-//                                        googleSignInClient.signInIntent
-//                                    )
-//                                },
-//                                showToast = { message ->
-//                                    showToast(message)
-//                                },
-//                                uiEvents = viewModel.uiEventsChannel,
-//                                onEvent = viewModel::onEvent,
-//                                isLoadingState = viewModel.isLoading
-//                            )
-//                        }
-                        composable(Route.PermissionsRequests.routeName) {
-                            val viewModel: PermissionsRequestViewModel = getViewModel()
-                            PermissionsRequestScreen(
-                                navigate = navController::navigate,
-                                uiState = viewModel.uiState,
-                                uiEvents = viewModel.uiEvents,
-                                onEvent = viewModel::onEvent
-                            )
-                        }
                         composable(Route.Home.routeName) {
                             val viewModel = getViewModel<HomeScreenViewModel>()
                             val locationSettingsLauncher = rememberLauncherForActivityResult(
@@ -363,7 +293,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun signInWithGoogle() {
-        googleSignInClient.signOut() //todo remove
         signInWithGoogleLauncher.launch(
             googleSignInClient.signInIntent
         )

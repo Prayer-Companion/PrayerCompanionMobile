@@ -46,7 +46,6 @@ class SplashScreenViewModel constructor(
         isPushNotificationAllowed: Boolean
     ) {
         screenModelScope.launch(Dispatchers.Default) {
-            authenticationRepository.signOut() // todo remove this line
             val hasInternet = isConnectedToInternet.call()
             log { "Has Internet = $hasInternet" }
 

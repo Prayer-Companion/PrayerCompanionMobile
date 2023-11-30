@@ -7,6 +7,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import cafe.adriel.voyager.core.screen.Screen
+import com.prayercompanion.shared.presentation.features.onboarding.permissions.PermissionsRequestScreen
 import com.prayercompanion.shared.presentation.features.onboarding.sign_in.SignInScreen
 import com.prayercompanion.shared.presentation.navigation.Route
 
@@ -49,7 +50,7 @@ fun Route.toScreen(): Screen {
    return when (this) {
         Route.SignIn -> SignInScreen
         Route.Home -> TODO()
-        Route.PermissionsRequests -> TODO()
+        Route.PermissionsRequests -> PermissionsRequestScreen
         Route.SplashScreen -> TODO()
         Route.Qibla -> TODO()
         Route.Quran -> TODO()
