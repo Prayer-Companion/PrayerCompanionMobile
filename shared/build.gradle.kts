@@ -52,7 +52,6 @@ kotlin {
                 implementation(ProjectDependencies.ktorClientContentNegotiation)
                 implementation(ProjectDependencies.ktorClientSerialization)
                 implementation("io.insert-koin:koin-core:$koinVersion")
-                api("com.rickclephas.kmm:kmm-viewmodel-core:1.0.0-ALPHA-14") //todo kmp remove
                 //compose
                 implementation(compose.runtime)
                 implementation(compose.foundation)

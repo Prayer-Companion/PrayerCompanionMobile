@@ -4,7 +4,7 @@ import platform.Foundation.NSLog
 
 
 actual fun log(msg: () -> String) {
-    NSLog(msg())
+    NSLog("DebugLog: ${msg()}")
 }
 
 actual fun Throwable.printStackTraceInDebug() {
