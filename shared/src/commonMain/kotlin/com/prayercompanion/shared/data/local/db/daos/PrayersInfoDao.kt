@@ -44,6 +44,7 @@ interface PrayersInfoDao {
     )
 
     fun delete(startDateTime: LocalDateTime, endDateTime: LocalDateTime)
+
     fun deleteOldAndInsertNewTransaction(
         startDateTime: LocalDateTime,
         endDateTime: LocalDateTime,

@@ -1,4 +1,4 @@
-package com.prayercompanion.shared.domain.utils
+package com.prayercompanion.shared.data.system
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -14,6 +14,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.prayercompanion.shared.data.preferences.DataStoresRepo
 import com.prayercompanion.shared.domain.models.Location
 import com.prayercompanion.shared.domain.models.app.Address
+import com.prayercompanion.shared.domain.utils.PermissionsManager
 import com.prayercompanion.shared.presentation.utils.log
 import kotlinx.coroutines.flow.firstOrNull
 import java.util.Locale
@@ -131,6 +132,7 @@ actual class AppLocationManagerImpl constructor(
 
         return address
     }
+
     @SuppressLint("MissingPermission")
     actual override fun getRequestLocationUpdates(onLocationRetrieved: (Location) -> Unit) {
         if (permissionsManager.isLocationPermissionGranted.not()) {

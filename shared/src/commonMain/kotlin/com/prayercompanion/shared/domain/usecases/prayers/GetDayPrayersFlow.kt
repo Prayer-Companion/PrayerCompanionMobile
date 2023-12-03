@@ -1,12 +1,12 @@
 package com.prayercompanion.shared.domain.usecases.prayers
 
 import com.prayercompanion.shared.data.local.db.entities.PrayerInfoEntity
+import com.prayercompanion.shared.data.system.AppLocationManager
 import com.prayercompanion.shared.domain.models.DayPrayersInfo
 import com.prayercompanion.shared.domain.models.PrayerInfo
 import com.prayercompanion.shared.domain.models.PrayerStatus
 import com.prayercompanion.shared.domain.models.PrayerStatusWithTimeRange
 import com.prayercompanion.shared.domain.repositories.PrayersRepository
-import com.prayercompanion.shared.domain.utils.AppLocationManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalDate

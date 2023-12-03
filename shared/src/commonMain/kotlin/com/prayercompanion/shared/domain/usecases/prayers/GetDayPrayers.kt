@@ -1,8 +1,8 @@
 package com.prayercompanion.shared.domain.usecases.prayers
 
+import com.prayercompanion.shared.data.system.AppLocationManager
 import com.prayercompanion.shared.domain.models.DayPrayersInfo
 import com.prayercompanion.shared.domain.repositories.PrayersRepository
-import com.prayercompanion.shared.domain.utils.AppLocationManager
 import kotlinx.datetime.LocalDate
 
 class GetDayPrayers constructor(

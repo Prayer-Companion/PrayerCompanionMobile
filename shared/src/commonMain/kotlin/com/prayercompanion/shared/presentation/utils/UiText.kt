@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 sealed class UiText {
     data class DynamicString(val text: String) : UiText()
     data class StringResource(val stringRes: StringRes) : UiText()
+
     @Composable
     fun asString(): String {
         return when (this) {
@@ -14,12 +15,16 @@ sealed class UiText {
             is StringResource -> stringResource(stringRes)
         }
     }
-}
 
-fun String?.toUiText(): UiText.DynamicString {
-    return UiText.DynamicString(this ?: "")
 }
 
 fun StringRes.toUiText(): UiText.StringResource {
     return UiText.StringResource(this)
+}
+
+fun UiText.asString(stringResourceReader: StringResourceReader): String {
+    return when (this) {
+        is UiText.DynamicString -> text
+        is UiText.StringResource -> stringResourceReader.read(stringRes)
+    }
 }

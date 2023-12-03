@@ -14,4 +14,5 @@ sealed class UiEvent {
     data object ShowRateTheAppPopup : UiEvent()
     data object ShowFeedbackDialog : UiEvent()
     data object LaunchSignInWithGoogle : UiEvent()
+    data object ShowEnableLocationSettingsDialog : UiEvent()
 }

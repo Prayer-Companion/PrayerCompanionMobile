@@ -62,10 +62,6 @@ actual class LocalDateTimeFormatter private constructor(
     }
 
     actual fun parseToLocalDateTime(str: String): LocalDateTime {
-        val formatter = NSDateFormatter().apply {
-            dateFormat = "dd/MM/yyyy - HH:mm"
-            locale = this@LocalDateTimeFormatter.locale.nsLocale
-        }
         return formatter
             .dateFromString(str)
             ?.toKotlinInstant()
@@ -79,7 +75,7 @@ actual class LocalDateTimeFormatter private constructor(
             ?.toKotlinInstant()
             ?.toLocalDateTime(TimeZone.currentSystemDefault())
             ?.date
-            ?: throw IllegalStateException("Failed to convert String $str to LocalDateTime")
+            ?: throw IllegalStateException("Failed to convert String $str to LocalDate")
     }
 
     actual fun parseToLocalTime(str: String): LocalTime {
@@ -88,7 +84,7 @@ actual class LocalDateTimeFormatter private constructor(
             ?.toKotlinInstant()
             ?.toLocalDateTime(TimeZone.currentSystemDefault())
             ?.time
-            ?: throw IllegalStateException("Failed to convert String $str to LocalDateTime")
+            ?: throw IllegalStateException("Failed to convert String $str to LocalTime")
     }
 
     actual companion object {

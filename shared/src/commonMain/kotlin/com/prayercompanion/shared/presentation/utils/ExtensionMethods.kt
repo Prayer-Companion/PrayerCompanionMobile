@@ -7,8 +7,10 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import cafe.adriel.voyager.core.screen.Screen
+import com.prayercompanion.shared.presentation.features.home_screen.HomeScreen
 import com.prayercompanion.shared.presentation.features.onboarding.permissions.PermissionsRequestScreen
 import com.prayercompanion.shared.presentation.features.onboarding.sign_in.SignInScreen
+import com.prayercompanion.shared.presentation.features.onboarding.splash_screen.SplashScreen
 import com.prayercompanion.shared.presentation.navigation.Route
 
 @Stable
@@ -48,10 +50,10 @@ infix fun Long.divideWithRemaining(b: Long): Pair<Long, Long> {
 
 fun Route.toScreen(): Screen {
    return when (this) {
-        Route.SignIn -> SignInScreen
-        Route.Home -> TODO()
-        Route.PermissionsRequests -> PermissionsRequestScreen
-        Route.SplashScreen -> TODO()
+       Route.SplashScreen -> SplashScreen
+       Route.SignIn -> SignInScreen
+       Route.Home -> HomeScreen
+       Route.PermissionsRequests -> PermissionsRequestScreen
         Route.Qibla -> TODO()
         Route.Quran -> TODO()
         Route.Settings -> TODO()

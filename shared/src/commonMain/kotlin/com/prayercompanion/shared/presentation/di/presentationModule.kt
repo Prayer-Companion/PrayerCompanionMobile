@@ -2,6 +2,7 @@ package com.prayercompanion.shared.presentation.di
 
 import com.prayercompanion.shared.data.repositories.AuthenticationRepositoryImpl
 import com.prayercompanion.shared.domain.repositories.AuthenticationRepository
+import com.prayercompanion.shared.presentation.features.home_screen.HomeScreenViewModel
 import com.prayercompanion.shared.presentation.features.onboarding.permissions.PermissionsRequestViewModel
 import com.prayercompanion.shared.presentation.features.onboarding.sign_in.SignInViewModel
 import com.prayercompanion.shared.presentation.features.onboarding.splash_screen.SplashScreenViewModel
@@ -16,5 +17,6 @@ val presentationModule = module {
     factoryOf(::SplashScreenViewModel)
     singleOf(::SignInViewModel)
     singleOf(::PermissionsRequestViewModel)
+    singleOf(::HomeScreenViewModel)
     singleOf(::StringResourceReader)
 }

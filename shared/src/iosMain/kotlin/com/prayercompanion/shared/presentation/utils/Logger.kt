@@ -3,7 +3,7 @@ package com.prayercompanion.shared.presentation.utils
 import platform.Foundation.NSLog
 
 
-actual fun Any.log(msg: () -> String) {
+actual fun log(msg: () -> String) {
     NSLog(msg())
 }
 

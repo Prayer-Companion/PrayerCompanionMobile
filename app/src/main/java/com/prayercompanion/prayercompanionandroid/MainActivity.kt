@@ -1,13 +1,10 @@
 package com.prayercompanion.prayercompanionandroid
 
 import android.app.Activity
-import android.content.IntentSender
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
-import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
@@ -42,11 +39,6 @@ import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ResolvableApiException
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.LocationSettingsRequest
-import com.google.android.gms.location.Priority
 import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.QiblaScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.QiblaViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.features.quran.full_sections.FullPrayerQuranSections
@@ -59,13 +51,9 @@ import com.prayercompanion.prayercompanionandroid.presentation.utils.FeedbackUti
 import com.prayercompanion.prayercompanionandroid.presentation.utils.navigate
 import com.prayercompanion.shared.domain.utils.Task
 import com.prayercompanion.shared.presentation.App
-import com.prayercompanion.shared.presentation.features.home_screen.HomeScreen
-import com.prayercompanion.shared.presentation.features.home_screen.HomeScreenViewModel
 import com.prayercompanion.shared.presentation.features.onboarding.sign_in.GoogleSignInSetup
 import com.prayercompanion.shared.presentation.navigation.Route
 import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
-import logcat.asLog
-import logcat.logcat
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -151,56 +139,6 @@ class MainActivity : AppCompatActivity() {
                         navController = navController,
                         startDestination = Route.SplashScreen.routeName,
                     ) {
-                        composable(Route.Home.routeName) {
-                            val viewModel = getViewModel<HomeScreenViewModel>()
-                            val locationSettingsLauncher = rememberLauncherForActivityResult(
-                                contract = ActivityResultContracts.StartIntentSenderForResult(),
-                                onResult = { result ->
-                                    viewModel.onLocationSettingsResult(result.resultCode == Activity.RESULT_OK)
-                                }
-                            )
-
-                            fun checkLocationService() {
-                                val intervalForLocationUpdateInMillis = 10000L
-
-                                val locationRequest = LocationRequest
-                                    .Builder(
-                                        Priority.PRIORITY_HIGH_ACCURACY,
-                                        intervalForLocationUpdateInMillis
-                                    )
-                                    .build()
-
-                                val locationSettingsRequest = LocationSettingsRequest
-                                    .Builder()
-                                    .addLocationRequest(locationRequest)
-                                    .build()
-
-                                val client = LocationServices.getSettingsClient(this@MainActivity)
-
-                                client.checkLocationSettings(locationSettingsRequest)
-                                    .addOnFailureListener { exception ->
-                                        if (exception is ResolvableApiException) {
-                                            // Location settings are not satisfied, but this can be fixed
-                                            // by showing the user a dialog.
-                                            try {
-                                                val intentSenderRequest = IntentSenderRequest
-                                                    .Builder(exception.resolution.intentSender)
-                                                    .build()
-
-                                                locationSettingsLauncher.launch(intentSenderRequest)
-                                            } catch (sendEx: IntentSender.SendIntentException) {
-                                                logcat("HomeScreen") { sendEx.asLog() }
-                                            }
-                                        }
-                                    }
-                            }
-
-                            HomeScreen(
-                                viewModel = viewModel,
-                                scaffoldState = scaffoldState,
-                                checkLocationService = ::checkLocationService
-                            )
-                        }
                         composable(Route.Qibla.routeName) {
                             val viewModel: QiblaViewModel = getViewModel()
                             QiblaScreen(

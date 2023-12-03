@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.prayercompanion.prayercompanionandroid.presentation.utils.OrientationSensor
 import com.prayercompanion.prayercompanionandroid.presentation.utils.SensorAccuracy
-import com.prayercompanion.shared.domain.utils.AppLocationManager
+import com.prayercompanion.shared.data.system.AppLocationManager
 import com.prayercompanion.shared.domain.utils.QiblaUtils
 import kotlinx.coroutines.launch
 import kotlin.math.abs

@@ -3,9 +3,12 @@ package com.prayercompanion.shared.presentation.features.home_screen
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.core.model.screenModelScope
 import com.prayercompanion.shared.BuildConfigs
 import com.prayercompanion.shared.currentTimeMillis
 import com.prayercompanion.shared.data.preferences.DataStoresRepo
+import com.prayercompanion.shared.data.system.AppLocationManager
 import com.prayercompanion.shared.domain.extensions.instantBetween
 import com.prayercompanion.shared.domain.extensions.now
 import com.prayercompanion.shared.domain.models.DayPrayersInfo
@@ -16,8 +19,6 @@ import com.prayercompanion.shared.domain.usecases.prayers.GetDayPrayersFlow
 import com.prayercompanion.shared.domain.usecases.prayers.GetStatusesOverView
 import com.prayercompanion.shared.domain.usecases.prayers.SetPrayerStatusByDateTime
 import com.prayercompanion.shared.domain.usecases.prayers.UpdatePrayerStatus
-import com.prayercompanion.shared.domain.usecases.quran.LoadAndSaveQuranMemorizedChapters
-import com.prayercompanion.shared.domain.utils.AppLocationManager
 import com.prayercompanion.shared.domain.utils.tracking.TrackedButtons
 import com.prayercompanion.shared.domain.utils.tracking.Tracker
 import com.prayercompanion.shared.presentation.models.RemainingDuration
@@ -27,8 +28,6 @@ import com.prayercompanion.shared.presentation.utils.UiEvent
 import com.prayercompanion.shared.presentation.utils.UiText
 import com.prayercompanion.shared.presentation.utils.printStackTraceInDebug
 import com.prayercompanion.shared.presentation.utils.toUiText
-import com.rickclephas.kmm.viewmodel.KMMViewModel
-import com.rickclephas.kmm.viewmodel.coroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
@@ -52,12 +51,12 @@ class HomeScreenViewModel constructor(
     private val updatePrayerStatus: UpdatePrayerStatus,
     private val getStatusesOverView: GetStatusesOverView,
     private val locationManager: AppLocationManager,
-    private val loadAndSaveQuranMemorizedChapters: LoadAndSaveQuranMemorizedChapters,
+//    private val loadAndSaveQuranMemorizedChapters: LoadAndSaveQuranMemorizedChapters,
     private val getDailyPrayersCombo: GetDailyPrayersCombo,
     private val setPrayerStatusByDateTime: SetPrayerStatusByDateTime,
     private val tracker: Tracker,
     private val dataStoresRepo: DataStoresRepo
-) : KMMViewModel() {
+) : ScreenModel {
 
     private val appPreferencesData = dataStoresRepo.appPreferencesDataStoreData
 
@@ -90,8 +89,8 @@ class HomeScreenViewModel constructor(
 
     init {
         fun loadQuranData() {
-            viewModelScope.coroutineScope.launch(Dispatchers.IO) {
-                loadAndSaveQuranMemorizedChapters.call()
+            screenModelScope.launch(Dispatchers.IO) {
+//                loadAndSaveQuranMemorizedChapters.call()
             }
         }
 
@@ -102,6 +101,7 @@ class HomeScreenViewModel constructor(
 
     fun onStart() {
         state = state.copy(selectedDate = LocalDate.now())
+        sendEvent(UiEvent.ShowEnableLocationSettingsDialog)
         loadDailyPrayersCombo()
     }
 
@@ -121,7 +121,7 @@ class HomeScreenViewModel constructor(
 
     fun onStatusSelected(prayerStatus: PrayerStatus, prayerInfo: PrayerInfo) {
         tracker.trackStatusSelect()
-        viewModelScope.coroutineScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(Dispatchers.IO) {
             updatePrayerStatus.call(prayerInfo, prayerStatus)
                 .onSuccess {
                     if (appPreferencesData.first().hasShownRateTheAppPopup.not()) {
@@ -150,7 +150,7 @@ class HomeScreenViewModel constructor(
 
     fun onPrayedNowClicked() {
         tracker.trackButtonClicked(TrackedButtons.HOME_PRAYED_NOW)
-        viewModelScope.coroutineScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(Dispatchers.IO) {
             setPrayerStatusByDateTime
                 .call(headerState.currentAndNextPrayer.first, LocalDateTime.now())
                 .onFailure {
@@ -171,7 +171,7 @@ class HomeScreenViewModel constructor(
 
     private fun loadStatusesOverView() {
         statusesOverviewJob?.cancel()
-        statusesOverviewJob = viewModelScope.coroutineScope.launch(Dispatchers.IO) {
+        statusesOverviewJob = screenModelScope.launch(Dispatchers.IO) {
             getStatusesOverView.call()
                 .collectLatest { statuses ->
                     withContext(Dispatchers.Main) {
@@ -186,7 +186,7 @@ class HomeScreenViewModel constructor(
             loadDailyPrayersComboJob?.cancel()
         }
 
-        loadDailyPrayersComboJob = viewModelScope.coroutineScope.launch(Dispatchers.IO) {
+        loadDailyPrayersComboJob = screenModelScope.launch(Dispatchers.IO) {
             getDailyPrayersCombo.call()
                 .cancellable()
                 .catch {
@@ -218,7 +218,7 @@ class HomeScreenViewModel constructor(
         }
 
         val selectedDate = state.selectedDate
-        loadSelectedDatePrayersJob = viewModelScope.coroutineScope.launch(Dispatchers.IO) {
+        loadSelectedDatePrayersJob = screenModelScope.launch(Dispatchers.IO) {
             getDayPrayersFlow.call(selectedDate)
                 .collectLatest {
                     it.onSuccess { dateDayPrayers ->
@@ -246,7 +246,7 @@ class HomeScreenViewModel constructor(
 
         durationUntilNextPrayer = RemainingDuration.fromSeconds(durationInSeconds)
         timer.stop()
-        timer.start(durationInSeconds.toInt())
+        timer.start(durationInSeconds.toInt(), Timer.CounterType.DOWN)
     }
 
     private fun sendErrorEvent(message: UiText) {
@@ -256,7 +256,7 @@ class HomeScreenViewModel constructor(
     }
 
     private fun sendEvent(event: UiEvent) {
-        viewModelScope.coroutineScope.launch(Dispatchers.Main) {
+        screenModelScope.launch(Dispatchers.Main) {
             _uiEvents.send(event)
         }
     }

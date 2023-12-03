@@ -10,7 +10,6 @@ import com.prayercompanion.prayercompanionandroid.presentation.utils.MediaContro
 import com.prayercompanion.prayercompanionandroid.presentation.utils.OrientationSensor
 import com.prayercompanion.prayercompanionandroid.presentation.utils.ScheduleDailyPrayersWorker
 import com.prayercompanion.prayercompanionandroid.presentation.utils.notifications.PrayersNotificationsService
-import com.prayercompanion.shared.presentation.features.home_screen.HomeScreenViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
@@ -20,7 +19,6 @@ val androidPresentationModule = module {
     viewModelOf(::MainActivityViewModel)
     viewModelOf(::QuranViewModel)
     viewModelOf(::QiblaViewModel)
-    viewModelOf(::HomeScreenViewModel)
     viewModelOf(::FullPrayerQuranSectionsViewModel)
     singleOf(::PrayersNotificationsService)
     singleOf(::AndroidPrayersAlarmScheduler)

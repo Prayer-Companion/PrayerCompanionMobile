@@ -1,6 +1,9 @@
 package com.prayercompanion.shared.data.di
 
+import app.cash.sqldelight.db.SqlDriver
+import com.prayercompanion.prayercompanionandroid.PrayerCompanionDatabase
 import com.prayercompanion.shared.BuildConfigs
+import com.prayercompanion.shared.data.local.DatabaseDriverFactory
 import com.prayercompanion.shared.data.local.assets.Assets
 import com.prayercompanion.shared.data.local.db.daos.MemorizedQuranChapterDao
 import com.prayercompanion.shared.data.local.db.daos.MemorizedQuranChapterDaoImpl
@@ -58,6 +61,13 @@ val dataModule = module {
         }
     }
 
+    single {
+        val factory: DatabaseDriverFactory = get()
+        val driver: SqlDriver = factory.createDriver()
+        PrayerCompanionDatabase(driver)
+    }
+
+    singleOf(::DatabaseDriverFactory)
     singleOf(::PrayerCompanionApi)
     singleOf(::PrayersRepositoryImpl) { bind<PrayersRepository>() }
     singleOf(::QuranRepositoryImpl) { bind<QuranRepository>() }
