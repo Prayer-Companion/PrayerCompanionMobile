@@ -16,14 +16,12 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.sp
+import com.prayercompanion.prayercompanionandroid.moko_resources.Res
 import com.prayercompanion.shared.domain.models.quran.PrayerQuranReadingSection
 import com.prayercompanion.shared.presentation.theme.LocalSpacing
-import com.prayercompanion.shared.presentation.utils.StringRes
 import com.prayercompanion.shared.presentation.utils.stringResource
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
+import dev.icerock.moko.resources.compose.painterResource
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun QuranSection(
     modifier: Modifier = Modifier,
@@ -39,7 +37,7 @@ fun QuranSection(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                painter = painterResource("ic_bullet_point.xml"),
+                painter = painterResource(Res.images.ic_bullet_point),
                 contentDescription = "",
                 tint = MaterialTheme.colors.primaryVariant
             )
@@ -57,7 +55,7 @@ fun QuranSection(
             Column {
                 Text(
                     text = stringResource(
-                        id = StringRes.quran_reading_section_chapter_name,
+                        id = Res.strings.quran_reading_section_chapter_name,
                         args = listOf(
                             section.chapterName,
                             section.startVerse,
@@ -70,7 +68,7 @@ fun QuranSection(
                 Spacer(modifier = Modifier.height(spacing.spaceExtraSmall))
                 Text(
                     text = stringResource(
-                        id = StringRes.quran_reading_section,
+                        id = Res.strings.quran_reading_section,
                         args = listOf(section.verses.joinToString { "${it.text} (${it.index})" })
                     ),
                     overflow = TextOverflow.Ellipsis,

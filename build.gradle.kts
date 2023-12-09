@@ -4,6 +4,7 @@ buildscript {
     val kotlinVersion by extra("1.9.10")
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion")
+        classpath("dev.icerock.moko:resources-generator:0.23.0")
     }
     configurations.all {
         resolutionStrategy {

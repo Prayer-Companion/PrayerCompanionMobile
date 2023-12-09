@@ -8,6 +8,7 @@ plugins {
     id("app.cash.sqldelight")
     id("org.jetbrains.kotlin.plugin.serialization")
     kotlin("native.cocoapods")
+    id("dev.icerock.mobile.multiplatform-resources")
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -36,6 +37,7 @@ kotlin {
         framework {
             baseName = "shared"
             isStatic = true
+            export("dev.icerock.moko:resources:0.23.0")
         }
     }
 
@@ -68,7 +70,9 @@ kotlin {
                 api("dev.gitlive:firebase-auth:1.10.4")
 
                 api("dev.icerock.moko:permissions:0.16.0")
-                api("dev.icerock.moko:permissions-compose:0.16.0") // permissions api + compose extensions
+                api("dev.icerock.moko:permissions-compose:0.16.0")
+                api("dev.icerock.moko:resources:0.23.0")
+                api("dev.icerock.moko:resources-compose:0.23.0")
             }
         }
         val commonTest by getting {
@@ -80,6 +84,9 @@ kotlin {
             }
         }
         val androidMain by getting {
+            sourceSets {
+                getByName("androidMain").kotlin.srcDirs("build/generated/moko/androidMain/src")
+            }
             dependencies {
                 api("androidx.activity:activity-compose:1.7.2")
                 api("androidx.appcompat:appcompat:1.6.1")
@@ -104,9 +111,15 @@ kotlin {
                 implementation(compose.uiTooling)
             }
         }
-        val iosX64Main by getting
-        val iosArm64Main by getting
-        val iosSimulatorArm64Main by getting
+        val iosX64Main by getting {
+            resources.srcDirs("build/generated/moko/iosX64Main/src")
+        }
+        val iosArm64Main by getting {
+            resources.srcDirs("build/generated/moko/iosArm64Main/src")
+        }
+        val iosSimulatorArm64Main by getting {
+            resources.srcDirs("build/generated/moko/iosSimulatorArm64Main/src")
+        }
         val iosTest by creating {
             dependsOn(commonTest)
         }
@@ -164,4 +177,10 @@ sqldelight {
             schemaOutputDirectory.set(file("src/main/sqldelight/databases"))
         }
     }
+}
+
+multiplatformResources {
+    multiplatformResourcesPackage = "com.prayercompanion.prayercompanionandroid.moko_resources"
+    multiplatformResourcesClassName = "Res"
+    multiplatformResourcesSourceSet = "commonMain"
 }

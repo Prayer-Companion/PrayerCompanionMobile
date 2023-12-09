@@ -39,11 +39,11 @@ import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.prayercompanion.prayercompanionandroid.moko_resources.Res
 import com.prayercompanion.shared.domain.models.quran.QuranChapter
 import com.prayercompanion.shared.presentation.theme.LocalSpacing
 import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.shared.presentation.theme.SmallTextStyle
-import com.prayercompanion.shared.presentation.utils.StringRes
 import com.prayercompanion.shared.presentation.utils.stringResource
 
 @Composable
@@ -181,7 +181,7 @@ fun QuranChapterItem(
                         color = MaterialTheme.colors.onPrimary
                     )
                     Text(
-                        text = stringResource(id = StringRes.verses_count, args = listOf(quranChapter.versesCount)),
+                        text = stringResource(id = Res.strings.verses_count, args = listOf(quranChapter.versesCount)),
                         style = SmallTextStyle,
                         color = MaterialTheme.colors.onPrimary
                     )
@@ -192,7 +192,7 @@ fun QuranChapterItem(
             ) {
                 Text(
                     modifier = Modifier.padding(bottom = spacing.spaceExtraSmall),
-                    text = stringResource(id = StringRes.from_verse),
+                    text = stringResource(id = Res.strings.from_verse),
                     style = SmallTextStyle,
                     color = MaterialTheme.colors.onPrimary
                 )
@@ -205,7 +205,7 @@ fun QuranChapterItem(
                 Spacer(modifier = Modifier.width(spacing.spaceExtraSmall))
                 Text(
                     modifier = Modifier.padding(bottom = spacing.spaceExtraSmall),
-                    text = stringResource(id = StringRes.to_verse),
+                    text = stringResource(id = Res.strings.to_verse),
                     style = SmallTextStyle,
                     color = MaterialTheme.colors.onPrimary
                 )
@@ -248,7 +248,7 @@ fun QuranChapterItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     inputField(
-                        title = stringResource(id = StringRes.edit_aya_from),
+                        title = stringResource(id = Res.strings.edit_aya_from),
                         text = fromVerseText,
                         onTextChange = {
                             applyIfValidInput(
@@ -278,7 +278,7 @@ fun QuranChapterItem(
                         }
                     )
                     inputField(
-                        title = stringResource(id = StringRes.edit_aya_to),
+                        title = stringResource(id = Res.strings.edit_aya_to),
                         text = toVerseText,
                         onTextChange = {
                             applyIfValidInput(

@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.prayercompanion.prayercompanionandroid.moko_resources.Res
 import com.prayercompanion.shared.domain.models.Prayer
 import com.prayercompanion.shared.domain.models.PrayerInfo
 import com.prayercompanion.shared.domain.models.PrayerStatus
@@ -34,7 +35,6 @@ import com.prayercompanion.shared.domain.models.PrayerStatusWithTimeRange
 import com.prayercompanion.shared.presentation.theme.LocalSpacing
 import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.shared.presentation.utils.PresentationConsts
-import com.prayercompanion.shared.presentation.utils.StringRes
 import com.prayercompanion.shared.presentation.utils.compose.MeasureUnconstrainedViewWidth
 import com.prayercompanion.shared.presentation.utils.getPrayerStatusCorrespondingColor
 import com.prayercompanion.shared.presentation.utils.getPrayerStatusNameStringRes
@@ -72,7 +72,7 @@ fun PrayerItem(
             MeasureUnconstrainedViewWidth(
                 viewToMeasure = {
                     Text(
-                        text = stringResource(id = StringRes.maghrib),
+                        text = stringResource(id = Res.strings.maghrib),
                         style = MaterialTheme.typography.h2
                     )
                 }

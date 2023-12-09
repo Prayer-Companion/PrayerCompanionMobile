@@ -4,6 +4,7 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+        maven("https://dl.bintray.com/icerockdev/plugins")
     }
 }
 dependencyResolutionManagement {
@@ -14,11 +15,12 @@ dependencyResolutionManagement {
         //noinspection JcenterRepositoryObsolete
         jcenter()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+        maven("https://dl.bintray.com/icerockdev/moko")
     }
 }
 
 plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version("0.4.0")
+    id("org.gradle.toolchains.foojay-resolver-convention") version ("0.4.0")
 }
 
 rootProject.name = "PrayerCompanionAndroid"

@@ -5,13 +5,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import com.prayercompanion.prayercompanionandroid.moko_resources.Res
 import com.prayercompanion.shared.data.preferences.AppPreferences
 import com.prayercompanion.shared.data.preferences.DataStoresRepo
 import com.prayercompanion.shared.domain.utils.MokoPermissionsManager
 import com.prayercompanion.shared.domain.utils.tracking.TrackedButtons
 import com.prayercompanion.shared.domain.utils.tracking.Tracker
 import com.prayercompanion.shared.presentation.navigation.Route
-import com.prayercompanion.shared.presentation.utils.StringRes
 import com.prayercompanion.shared.presentation.utils.UiEvent
 import com.prayercompanion.shared.presentation.utils.UiText
 import dev.icerock.moko.permissions.Permission
@@ -83,7 +83,7 @@ class PermissionsRequestViewModel constructor(
                         }
                     } else {
                         uiState = uiState
-                            .copy(body = UiText.StringResource(StringRes.location_permission_request_deny_body))
+                            .copy(body = UiText.StringResource(Res.strings.location_permission_request_deny_body))
 
                         dataStoresRepo.updateAppPreferencesDataStore {
                             val count = appPreferences?.deniedLocationPermissionsCount ?: 0
@@ -101,7 +101,7 @@ class PermissionsRequestViewModel constructor(
                         goToHomeScreen()
                     } else {
                         uiState = uiState
-                            .copy(body = UiText.StringResource(StringRes.notification_permission_request_deny_body))
+                            .copy(body = UiText.StringResource(Res.strings.notification_permission_request_deny_body))
 
                         dataStoresRepo.updateAppPreferencesDataStore {
                             val count = appPreferences?.deniedNotificationPermissionsCount ?: 0
@@ -180,10 +180,10 @@ class PermissionsRequestViewModel constructor(
     private fun setLocationPermissionState() {
         //todo delegate those values to the view, and pass only a state of current permission
         uiState = uiState.copy(
-            icon = "ic_location.xml",
-            title = UiText.StringResource(StringRes.location_permission_request_title),
-            body = UiText.StringResource(StringRes.location_permission_request_explanation),
-            ctaText = UiText.StringResource(StringRes.location_permission_request_cta),
+            icon = Res.images.ic_location,
+            title = UiText.StringResource(Res.strings.location_permission_request_title),
+            body = UiText.StringResource(Res.strings.location_permission_request_explanation),
+            ctaText = UiText.StringResource(Res.strings.location_permission_request_cta),
             permissions = MokoPermissionsManager.locationPermissions,
             skippable = false
         )
@@ -192,10 +192,10 @@ class PermissionsRequestViewModel constructor(
 
     private fun setNotificationPermissionState() {
         uiState = uiState.copy(
-            icon = "ic_location.xml", // todo use notifications icon
-            title = UiText.StringResource(StringRes.notification_permission_request_title),
-            body = UiText.StringResource(StringRes.notification_permission_request_explanation),
-            ctaText = UiText.StringResource(StringRes.notification_permission_request_cta),
+            icon = Res.images.ic_location, // todo use notifications icon
+            title = UiText.StringResource(Res.strings.notification_permission_request_title),
+            body = UiText.StringResource(Res.strings.notification_permission_request_explanation),
+            ctaText = UiText.StringResource(Res.strings.notification_permission_request_cta),
             permissions = listOf(MokoPermissionsManager.notificationsPermission),
             skippable = true
         )

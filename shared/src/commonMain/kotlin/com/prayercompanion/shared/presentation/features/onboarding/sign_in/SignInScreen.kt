@@ -29,16 +29,15 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.prayercompanion.prayercompanionandroid.moko_resources.Res
 import com.prayercompanion.shared.presentation.theme.LocalSpacing
 import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
-import com.prayercompanion.shared.presentation.utils.StringRes
 import com.prayercompanion.shared.presentation.utils.UiEvent
 import com.prayercompanion.shared.presentation.utils.stringResource
 import com.prayercompanion.shared.presentation.utils.toScreen
+import dev.icerock.moko.resources.compose.painterResource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -69,7 +68,6 @@ object SignInScreen : Screen, KoinComponent {
     }
 }
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun SignInScreen(
     navigate: (UiEvent.Navigate) -> Unit = {},
@@ -111,7 +109,7 @@ fun SignInScreen(
                         .align(Alignment.Center)
                         .background(MaterialTheme.colors.primary, RoundedCornerShape(100))
                         .padding(20.dp),
-                    painter = painterResource("ic_app_logo.png"),
+                    painter = painterResource(Res.images.ic_app_logo),
                     contentDescription = "Location Icon"
                 )
                 if (isLoadingState) {
@@ -150,13 +148,13 @@ fun SignInScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        painter = painterResource("ic_google.xml"),
-                        contentDescription = stringResource(StringRes.continue_with_google),
+                        painter = painterResource(Res.images.ic_google),
+                        contentDescription = stringResource(Res.strings.continue_with_google),
                         tint = MaterialTheme.colors.primary
                     )
                     Spacer(modifier = Modifier.width(spacing.spaceSmall))
                     Text(
-                        text = stringResource(StringRes.continue_with_google),
+                        text = stringResource(Res.strings.continue_with_google),
                         color = MaterialTheme.colors.primary,
                         style = MaterialTheme.typography.h3
                     )

@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import com.prayercompanion.prayercompanionandroid.moko_resources.Res
 import com.prayercompanion.shared.BuildConfigs
 import com.prayercompanion.shared.currentTimeMillis
 import com.prayercompanion.shared.data.preferences.DataStoresRepo
@@ -22,7 +23,6 @@ import com.prayercompanion.shared.domain.usecases.prayers.UpdatePrayerStatus
 import com.prayercompanion.shared.domain.utils.tracking.TrackedButtons
 import com.prayercompanion.shared.domain.utils.tracking.Tracker
 import com.prayercompanion.shared.presentation.models.RemainingDuration
-import com.prayercompanion.shared.presentation.utils.StringRes
 import com.prayercompanion.shared.presentation.utils.Timer
 import com.prayercompanion.shared.presentation.utils.UiEvent
 import com.prayercompanion.shared.presentation.utils.UiText
@@ -133,7 +133,7 @@ class HomeScreenViewModel constructor(
                 }
                 .onFailure {
                     it.printStackTraceInDebug()
-                    sendErrorEvent(StringRes.error_something_went_wrong.toUiText())
+                    sendErrorEvent(Res.strings.error_something_went_wrong.toUiText())
                     return@launch
                 }
         }
@@ -155,7 +155,7 @@ class HomeScreenViewModel constructor(
                 .call(headerState.currentAndNextPrayer.first, LocalDateTime.now())
                 .onFailure {
                     it.printStackTraceInDebug()
-                    sendErrorEvent(StringRes.error_something_went_wrong.toUiText())
+                    sendErrorEvent(Res.strings.error_something_went_wrong.toUiText())
                     return@launch
                 }
         }

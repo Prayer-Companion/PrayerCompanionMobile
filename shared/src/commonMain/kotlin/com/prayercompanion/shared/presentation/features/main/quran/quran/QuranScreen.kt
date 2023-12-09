@@ -39,6 +39,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.prayercompanion.prayercompanionandroid.moko_resources.Res
 import com.prayercompanion.shared.domain.models.quran.PrayerQuranReadingSections
 import com.prayercompanion.shared.domain.models.quran.QuranChapter
 import com.prayercompanion.shared.presentation.components.AppBackground
@@ -47,7 +48,6 @@ import com.prayercompanion.shared.presentation.features.main.quran.components.Qu
 import com.prayercompanion.shared.presentation.features.main.quran.components.QuranSection
 import com.prayercompanion.shared.presentation.theme.LocalSpacing
 import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
-import com.prayercompanion.shared.presentation.utils.StringRes
 import com.prayercompanion.shared.presentation.utils.StringResourceReader
 import com.prayercompanion.shared.presentation.utils.UiEvent
 import com.prayercompanion.shared.presentation.utils.asString
@@ -80,10 +80,6 @@ class QuranScreen(private val scaffoldState: ScaffoldState) : Screen, KoinCompon
             scaffoldState = scaffoldState
         )
     }
-
-//    override val options: TabOptions
-//        @Composable
-//        get() = createTabOptions(BottomNavItem.Quran)
 }
 
 @Composable
@@ -131,7 +127,7 @@ fun QuranScreen(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            TitleHeader(title = stringResource(id = StringRes.quran_title))
+            TitleHeader(title = stringResource(id = Res.strings.quran_title))
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
             Column(
                 modifier = Modifier
@@ -207,13 +203,13 @@ private fun QuranReadingSections(
         ) {
             if (readingSections != null) {
                 QuranSection(
-                    title = stringResource(id = StringRes.first_quran_reading_section),
+                    title = stringResource(id = Res.strings.first_quran_reading_section),
                     section = readingSections.firstSection,
                     numberOfLines = 1
                 )
                 Spacer(modifier = Modifier.height(spacing.spaceMedium))
                 QuranSection(
-                    title = stringResource(id = StringRes.second_quran_reading_section),
+                    title = stringResource(id = Res.strings.second_quran_reading_section),
                     section = readingSections.secondSection,
                     numberOfLines = 1
                 )
@@ -229,14 +225,14 @@ private fun QuranReadingSections(
                             modifier = Modifier.clickable {
                                 onLoadQuranSectionsClicked()
                             },
-                            text = stringResource(id = StringRes.load_quran_sections),
+                            text = stringResource(id = Res.strings.load_quran_sections),
                             style = MaterialTheme.typography.body2,
                             textDecoration = TextDecoration.Underline,
                             color = MaterialTheme.colors.onPrimary
                         )
                     } else {
                         Text(
-                            text = stringResource(id = StringRes.empty_quran_sections_prompt),
+                            text = stringResource(id = Res.strings.empty_quran_sections_prompt),
                             style = MaterialTheme.typography.body2,
                             color = MaterialTheme.colors.onPrimary
                         )
@@ -265,7 +261,7 @@ private fun QuranReadingSections(
                     contentPadding = PaddingValues(0.dp)
                 ) {
                     Text(
-                        text = stringResource(id = StringRes.show_full_quran_reading_sections),
+                        text = stringResource(id = Res.strings.show_full_quran_reading_sections),
                         style = MaterialTheme.typography.body2,
                         textDecoration = TextDecoration.Underline,
                         color = MaterialTheme.colors.onPrimary
@@ -276,7 +272,7 @@ private fun QuranReadingSections(
                     contentPadding = PaddingValues(0.dp)
                 ) {
                     Text(
-                        text = stringResource(id = StringRes.next_quran_reading_sections),
+                        text = stringResource(id = Res.strings.next_quran_reading_sections),
                         style = MaterialTheme.typography.body2,
                         textDecoration = TextDecoration.Underline,
                         color = MaterialTheme.colors.onPrimary
@@ -317,7 +313,7 @@ private fun QuranChaptersSearchAndList(
             },
             placeholder = {
                 Text(
-                    text = stringResource(id = StringRes.chapter_name),
+                    text = stringResource(id = Res.strings.chapter_name),
                     color = MaterialTheme.colors.secondary,
                     style = MaterialTheme.typography.subtitle2
                 )

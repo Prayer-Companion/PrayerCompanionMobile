@@ -30,12 +30,12 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import com.prayercompanion.prayercompanionandroid.moko_resources.Res
 import com.prayercompanion.shared.BottomNavItem
 import com.prayercompanion.shared.domain.models.app.AppLanguage
 import com.prayercompanion.shared.presentation.components.AppBackground
 import com.prayercompanion.shared.presentation.components.TitleHeader
 import com.prayercompanion.shared.presentation.theme.LocalSpacing
-import com.prayercompanion.shared.presentation.utils.StringRes
 import com.prayercompanion.shared.presentation.utils.UiEvent
 import com.prayercompanion.shared.presentation.utils.createTabOptions
 import com.prayercompanion.shared.presentation.utils.stringResource
@@ -85,12 +85,12 @@ fun SettingsScreen(
         AppBackground()
         Column(modifier = Modifier.fillMaxSize()) {
             TitleHeader(
-                title = stringResource(id = StringRes.settings_title)
+                title = stringResource(id = Res.strings.settings_title)
             )
             Spacer(modifier = Modifier.height(spacing.spaceLarge))
             SettingsSection(
                 modifier = Modifier.padding(horizontal = spacing.spaceLarge),
-                title = stringResource(id = StringRes.settings_items_language)
+                title = stringResource(id = Res.strings.settings_items_language)
             ) {
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                     LanguageSelector(
@@ -105,11 +105,11 @@ fun SettingsScreen(
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
             SettingsSection(
                 modifier = Modifier.padding(horizontal = spacing.spaceLarge),
-                title = stringResource(id = StringRes.settings_items_preferences)
+                title = stringResource(id = Res.strings.settings_items_preferences)
             ) {
                 SettingsToggle(
                     modifier = Modifier.fillMaxWidth(),
-                    text = stringResource(id = StringRes.settings_items_preferences_pauseMedia),
+                    text = stringResource(id = Res.strings.settings_items_preferences_pauseMedia),
                     isChecked = state.isPauseMediaPreferencesEnabled,
                     onCheckedChange = {
                         onEvent(SettingsEvent.OnPauseMediaCheckedChange(it))
@@ -119,7 +119,7 @@ fun SettingsScreen(
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
             SettingsSection(
                 modifier = Modifier.padding(horizontal = spacing.spaceLarge),
-                title = stringResource(id = StringRes.settings_items_feedback_title)
+                title = stringResource(id = Res.strings.settings_items_feedback_title)
             ) {
                 FeedbackBox(
                     modifier = Modifier
@@ -179,7 +179,7 @@ private fun LanguageSelector(
             ),
             shape = RoundedCornerShape(topStart = 15.dp, bottomStart = 15.dp)
         ) {
-            Text(text = stringResource(id = StringRes.settings_items_language_options_english))
+            Text(text = stringResource(id = Res.strings.settings_items_language_options_english))
         }
         Button(
             modifier = Modifier.weight(1f),
@@ -191,7 +191,7 @@ private fun LanguageSelector(
             ),
             shape = RoundedCornerShape(topEnd = 15.dp, bottomEnd = 15.dp)
         ) {
-            Text(text = stringResource(id = StringRes.settings_items_language_options_arabic))
+            Text(text = stringResource(id = Res.strings.settings_items_language_options_arabic))
         }
 
     }
@@ -253,7 +253,7 @@ private fun FeedbackBox(
             )
             .padding(spacing.spaceSmall)
             .padding(bottom = spacing.spaceMedium),
-        text = stringResource(id = StringRes.settings_items_feedback_prompt),
+        text = stringResource(id = Res.strings.settings_items_feedback_prompt),
         style = MaterialTheme.typography.subtitle2,
         color = MaterialTheme.colors.secondary
     )

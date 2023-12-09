@@ -26,12 +26,12 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.prayercompanion.prayercompanionandroid.moko_resources.Res
 import com.prayercompanion.shared.domain.models.PrayerInfo
 import com.prayercompanion.shared.domain.models.PrayerStatus
 import com.prayercompanion.shared.presentation.models.RemainingDuration
 import com.prayercompanion.shared.presentation.theme.LocalSpacing
 import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
-import com.prayercompanion.shared.presentation.utils.StringRes
 import com.prayercompanion.shared.presentation.utils.compose.MeasureUnconstrainedViewWidth
 import com.prayercompanion.shared.presentation.utils.getPrayerNameStringRes
 import com.prayercompanion.shared.presentation.utils.stringResource
@@ -82,7 +82,7 @@ fun HomeHeader(
                 verticalArrangement = Arrangement.Top
             ) {
                 Text(
-                    text = stringResource(StringRes.current_prayer),
+                    text = stringResource(Res.strings.current_prayer),
                     style = MaterialTheme.typography.h3,
                     color = MaterialTheme.colors.secondary
                 )
@@ -110,7 +110,7 @@ fun HomeHeader(
                             )
                         ) {
                             Text(
-                                text = stringResource(id = StringRes.notification_action_prayedNow),
+                                text = stringResource(id = Res.strings.notification_action_prayedNow),
                                 style = MaterialTheme.typography.button,
                                 color = MaterialTheme.colors.onPrimary
                             )
@@ -142,7 +142,7 @@ fun HomeHeader(
                     Text(
                         modifier = Modifier.alignByBaseline(),
                         text = stringResource(
-                            id = StringRes.remaining_time,
+                            id = Res.strings.remaining_time,
                             listOf(stringResource(id = getPrayerNameStringRes(nextPrayer.prayer)))
                         ),
                         style = MaterialTheme.typography.h3,
@@ -151,7 +151,7 @@ fun HomeHeader(
                 }
                 Spacer(modifier = Modifier.height(spacing.spaceMedium))
                 Text(
-                    text = stringResource(id = StringRes.status_overview),
+                    text = stringResource(id = Res.strings.status_overview),
                     style = MaterialTheme.typography.subtitle2,
                     color = Color.White
                 )

@@ -17,8 +17,7 @@ import com.prayercompanion.shared.presentation.features.onboarding.permissions.P
 import com.prayercompanion.shared.presentation.features.onboarding.sign_in.SignInScreen
 import com.prayercompanion.shared.presentation.features.onboarding.splash_screen.SplashScreen
 import com.prayercompanion.shared.presentation.navigation.Route
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
+import dev.icerock.moko.resources.compose.painterResource
 
 @Stable
 fun Modifier.autoMirror(): Modifier = composed {
@@ -69,7 +68,6 @@ fun Route.toScreen(): Screen {
     }
 }
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun createTabOptions(item: BottomNavItem): TabOptions {
     val title = stringResource(item.stringRes)

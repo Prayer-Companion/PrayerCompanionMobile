@@ -1,6 +1,7 @@
 package com.prayercompanion.shared.presentation.utils
 
 import androidx.compose.ui.graphics.Color
+import com.prayercompanion.prayercompanionandroid.moko_resources.Res
 import com.prayercompanion.shared.domain.models.Prayer
 import com.prayercompanion.shared.domain.models.PrayerStatus
 import com.prayercompanion.shared.presentation.theme.PrayerStatusAfterHalfTimeColor
@@ -10,41 +11,42 @@ import com.prayercompanion.shared.presentation.theme.PrayerStatusMissedColor
 import com.prayercompanion.shared.presentation.theme.PrayerStatusNotSetColor
 import com.prayercompanion.shared.presentation.theme.PrayerStatusOnTimeColor
 import com.prayercompanion.shared.presentation.theme.PrayerStatusQadaaColor
+import dev.icerock.moko.resources.StringResource
 
-fun getPrayerNameStringRes(prayer: Prayer): StringRes {
+fun getPrayerNameStringRes(prayer: Prayer): StringResource {
     return when (prayer) {
-        Prayer.FAJR -> StringRes.fajr
-        Prayer.DUHA -> StringRes.sunrise
-        Prayer.DHUHR -> StringRes.dhuhr
-        Prayer.ASR -> StringRes.asr
-        Prayer.MAGHRIB -> StringRes.maghrib
-        Prayer.ISHA -> StringRes.isha
+        Prayer.FAJR -> Res.strings.fajr
+        Prayer.DUHA -> Res.strings.sunrise
+        Prayer.DHUHR -> Res.strings.dhuhr
+        Prayer.ASR -> Res.strings.asr
+        Prayer.MAGHRIB -> Res.strings.maghrib
+        Prayer.ISHA -> Res.strings.isha
     }
 }
 
-fun getPrayerStatusNameStringRes(prayerStatus: PrayerStatus, prayer: Prayer): StringRes {
+fun getPrayerStatusNameStringRes(prayerStatus: PrayerStatus, prayer: Prayer): StringResource {
     return when (prayerStatus) {
-        PrayerStatus.Jamaah -> StringRes.prayerStatus_in_the_mosque
-        PrayerStatus.OnTime -> StringRes.prayerStatus_onTime
+        PrayerStatus.Jamaah -> Res.strings.prayerStatus_in_the_mosque
+        PrayerStatus.OnTime -> Res.strings.prayerStatus_onTime
         PrayerStatus.AfterHalfTime -> {
             if (prayer == Prayer.ISHA) {
-                StringRes.prayerStatus_isha_late1
+                Res.strings.prayerStatus_isha_late1
             } else {
-                StringRes.prayerStatus_late1
+                Res.strings.prayerStatus_late1
             }
         }
 
         PrayerStatus.Late -> {
             if (prayer == Prayer.ISHA) {
-                StringRes.prayerStatus_isha_late2
+                Res.strings.prayerStatus_isha_late2
             } else {
-                StringRes.prayerStatus_late2
+                Res.strings.prayerStatus_late2
             }
         }
 
-        PrayerStatus.Missed -> StringRes.prayerStatus_missed
-        PrayerStatus.Qadaa -> StringRes.prayerStatus_qadaa
-        PrayerStatus.None -> StringRes.prayerStatus_none
+        PrayerStatus.Missed -> Res.strings.prayerStatus_missed
+        PrayerStatus.Qadaa -> Res.strings.prayerStatus_qadaa
+        PrayerStatus.None -> Res.strings.prayerStatus_none
     }
 }
 

@@ -19,13 +19,13 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.prayercompanion.prayercompanionandroid.moko_resources.Res
 import com.prayercompanion.shared.domain.models.quran.PrayerQuranReadingSections
 import com.prayercompanion.shared.presentation.components.AppBackground
 import com.prayercompanion.shared.presentation.components.TitleHeader
 import com.prayercompanion.shared.presentation.features.main.quran.components.QuranSection
 import com.prayercompanion.shared.presentation.theme.LocalSpacing
 import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
-import com.prayercompanion.shared.presentation.utils.StringRes
 import com.prayercompanion.shared.presentation.utils.stringResource
 
 object FullPrayerQuranSections : Screen {
@@ -55,7 +55,7 @@ private fun FullPrayerQuranSections(
             .verticalScroll(rememberScrollState())
     ) {
         TitleHeader(
-            title = stringResource(id = StringRes.quran_title),
+            title = stringResource(id = Res.strings.quran_title),
             onBack = onBack
         )
         Spacer(modifier = Modifier.height(spacing.spaceMedium))
@@ -71,7 +71,7 @@ private fun FullPrayerQuranSections(
         ) {
             QuranSection(
                 modifier = Modifier,
-                stringResource(id = StringRes.first_quran_reading_section),
+                stringResource(id = Res.strings.first_quran_reading_section),
                 prayerQuranReadingSections.firstSection
             )
         }
@@ -88,7 +88,7 @@ private fun FullPrayerQuranSections(
         ) {
             QuranSection(
                 modifier = Modifier,
-                stringResource(id = StringRes.second_quran_reading_section),
+                stringResource(id = Res.strings.second_quran_reading_section),
                 prayerQuranReadingSections.secondSection
             )
         }

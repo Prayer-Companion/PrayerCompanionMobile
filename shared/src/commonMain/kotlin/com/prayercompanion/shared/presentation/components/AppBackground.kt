@@ -8,11 +8,10 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import com.prayercompanion.prayercompanionandroid.moko_resources.Res
 import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
+import dev.icerock.moko.resources.compose.painterResource
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun AppBackground(modifier: Modifier = Modifier) {
     PrayerCompanionAndroidTheme {
@@ -24,7 +23,7 @@ fun AppBackground(modifier: Modifier = Modifier) {
         ) {
             Image(
                 modifier = Modifier.fillMaxSize(),
-                painter = painterResource("background.png"),
+                painter = painterResource(Res.images.background),
                 contentDescription = null,
                 contentScale = ContentScale.Crop
             )

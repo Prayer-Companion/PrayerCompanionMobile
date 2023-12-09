@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.prayercompanion.prayercompanionandroid.moko_resources.Res
 import com.prayercompanion.shared.domain.extensions.now
 import com.prayercompanion.shared.domain.extensions.plus
 import com.prayercompanion.shared.domain.models.DayPrayersInfo
@@ -33,7 +34,6 @@ import com.prayercompanion.shared.presentation.features.main.settings.SettingsSt
 import com.prayercompanion.shared.presentation.models.RemainingDuration
 import com.prayercompanion.shared.presentation.theme.LocalSpacing
 import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
-import com.prayercompanion.shared.presentation.utils.StringRes
 import com.prayercompanion.shared.presentation.utils.stringResource
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.datetime.DateTimeUnit
@@ -147,7 +147,7 @@ private fun QuranSectionPreview() = PrayerCompanionAndroidTheme {
             .padding(spacing.spaceMedium)
     ) {
         QuranSection(
-            title = stringResource(id = StringRes.first_quran_reading_section),
+            title = stringResource(id = Res.strings.first_quran_reading_section),
             numberOfLines = 1,
             section = PrayerQuranReadingSection(
                 sectionId = 0,

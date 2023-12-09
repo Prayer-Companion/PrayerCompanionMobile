@@ -5,13 +5,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import com.prayercompanion.prayercompanionandroid.moko_resources.Res
 import com.prayercompanion.shared.domain.repositories.AuthenticationRepository
 import com.prayercompanion.shared.domain.usecases.AccountSignIn
 import com.prayercompanion.shared.domain.utils.Task
 import com.prayercompanion.shared.domain.utils.tracking.TrackedButtons
 import com.prayercompanion.shared.domain.utils.tracking.Tracker
 import com.prayercompanion.shared.presentation.navigation.Route
-import com.prayercompanion.shared.presentation.utils.StringRes
 import com.prayercompanion.shared.presentation.utils.StringResourceReader
 import com.prayercompanion.shared.presentation.utils.UiEvent
 import com.prayercompanion.shared.presentation.utils.printStackTraceInDebug
@@ -49,7 +49,7 @@ class SignInViewModel constructor(
         task: Task<Pair<String?, String?>>
     ) {
         if (result.not()) {
-            sendErrorEvent(stringResourceReader.read(StringRes.error_something_went_wrong))
+            sendErrorEvent(stringResourceReader.read(Res.strings.error_something_went_wrong))
             return
         }
 

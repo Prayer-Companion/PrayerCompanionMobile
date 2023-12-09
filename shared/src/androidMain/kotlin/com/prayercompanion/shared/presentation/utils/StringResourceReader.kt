@@ -1,27 +1,21 @@
 package com.prayercompanion.shared.presentation.utils
 
-import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import dev.icerock.moko.resources.StringResource
+import dev.icerock.moko.resources.desc.ResourceFormatted
+import dev.icerock.moko.resources.desc.StringDesc
 
 actual class StringResourceReader constructor(private val context: Context) {
 
-    actual fun read(stringRes: StringRes): String {
-        val resId = stringRes.resId(context)
-        return context.getString(resId)
+    actual fun read(stringRes: StringResource, args: List<Any>): String {
+        return StringDesc.ResourceFormatted(stringRes, args).toString(context)
     }
 }
 
 @Composable
-actual fun stringResource(id: StringRes, args: List<Any>): String{
+actual fun stringResource(id: StringResource, args: List<Any>): String {
     val context = LocalContext.current
-    val resId = id.resId(context)
-    return context.getString(resId, *args.toTypedArray())
-}
-
-@SuppressLint("DiscouragedApi")
-@androidx.annotation.StringRes
-fun StringRes.resId(context: Context): Int {
-    return context.resources.getIdentifier(id, "string", context.packageName)
+    return StringDesc.ResourceFormatted(id, args).toString(context)
 }

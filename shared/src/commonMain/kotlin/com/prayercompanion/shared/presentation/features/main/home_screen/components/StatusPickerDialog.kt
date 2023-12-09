@@ -27,12 +27,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.prayercompanion.prayercompanionandroid.moko_resources.Res
 import com.prayercompanion.shared.domain.models.PrayerStatus
 import com.prayercompanion.shared.domain.models.PrayerStatusWithTimeRange
 import com.prayercompanion.shared.presentation.theme.LocalSpacing
 import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.shared.presentation.utils.PresentationConsts
-import com.prayercompanion.shared.presentation.utils.StringRes
 import com.prayercompanion.shared.presentation.utils.getPrayerStatusCorrespondingColor
 import com.prayercompanion.shared.presentation.utils.getPrayerStatusNameStringRes
 import com.prayercompanion.shared.presentation.utils.stringResource
@@ -88,7 +88,7 @@ fun StatusPickerDialog(
                             modifier = Modifier.clickable {
                                 onIshaStatusesPeriodsExplanationClicked()
                             },
-                            text = stringResource(id = StringRes.prayerStatusDialog_explanation),
+                            text = stringResource(id = Res.strings.prayerStatusDialog_explanation),
                             style = MaterialTheme.typography.subtitle2,
                             color = MaterialTheme.colors.onSecondary,
                             textAlign = TextAlign.Center,
@@ -119,7 +119,7 @@ private fun PrayerStatusDialogHeader(modifier: Modifier = Modifier) = PrayerComp
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = stringResource(id = StringRes.prayerStatusDialog_title),
+            text = stringResource(id = Res.strings.prayerStatusDialog_title),
             style = MaterialTheme.typography.subtitle1,
             color = MaterialTheme.colors.onPrimary
         )

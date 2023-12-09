@@ -35,21 +35,20 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.prayercompanion.prayercompanionandroid.moko_resources.Res
 import com.prayercompanion.shared.domain.utils.MokoPermissionsManager
 import com.prayercompanion.shared.presentation.theme.LocalSpacing
 import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
-import com.prayercompanion.shared.presentation.utils.StringRes
 import com.prayercompanion.shared.presentation.utils.UiEvent
 import com.prayercompanion.shared.presentation.utils.stringResource
 import com.prayercompanion.shared.presentation.utils.toScreen
 import dev.icerock.moko.permissions.Permission
 import dev.icerock.moko.permissions.compose.BindEffect
 import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
+import dev.icerock.moko.resources.compose.painterResource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
 import org.koin.core.component.KoinComponent
 
 object PermissionsRequestScreen : Screen, KoinComponent {
@@ -72,7 +71,6 @@ object PermissionsRequestScreen : Screen, KoinComponent {
     }
 }
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 private fun PermissionsRequestScreen(
     navigate: (UiEvent.Navigate) -> Unit,
@@ -229,7 +227,7 @@ private fun PermissionsRequestScreen(
                             onEvent(PermissionsRequestEvent.OnSkipNotificationPermission)
                         }) {
                             Text(
-                                text = stringResource(id = StringRes.skip),
+                                text = stringResource(id = Res.strings.skip),
                                 style = MaterialTheme.typography.body2,
                                 color = MaterialTheme.colors.secondary
                             )
