@@ -1,10 +1,10 @@
-package com.prayercompanion.prayercompanionandroid.presentation.features.settings
+package com.prayercompanion.shared.presentation.features.main.settings
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.core.model.screenModelScope
 import com.prayercompanion.shared.domain.models.app.AppLanguage
 import com.prayercompanion.shared.domain.usecases.GetAppLanguage
 import com.prayercompanion.shared.domain.usecases.SetAppLanguage
@@ -24,7 +24,7 @@ class SettingsScreenViewModel constructor(
     private val setPauseMediaEnabled: SetPauseMediaEnabled,
     private val getIsPauseMediaEnabled: GetIsPauseMediaEnabled,
     private val tracker: Tracker
-) : ViewModel() {
+) : ScreenModel {
 
     private val _uiEvents = Channel<UiEvent>()
     val uiEvents = _uiEvents.receiveAsFlow()
@@ -41,7 +41,7 @@ class SettingsScreenViewModel constructor(
     }
 
     private fun onStart() {
-        viewModelScope.launch {
+        screenModelScope.launch {
             val language = getAppLanguage.call()
             val isPauseMediaEnabled = getIsPauseMediaEnabled.call()
             state = state.copy(
@@ -62,14 +62,14 @@ class SettingsScreenViewModel constructor(
         } else {
             tracker.trackButtonClicked(TrackedButtons.DISABLE_STOP_MEDIA_ON_PRAYER_CALL)
         }
-        viewModelScope.launch {
+        screenModelScope.launch {
             setPauseMediaEnabled.call(checked)
             state = state.copy(isPauseMediaPreferencesEnabled = checked)
         }
     }
 
     private fun sendEvent(event: UiEvent) {
-        viewModelScope.launch(Dispatchers.Main) {
+        screenModelScope.launch(Dispatchers.Main) {
             _uiEvents.send(event)
         }
     }

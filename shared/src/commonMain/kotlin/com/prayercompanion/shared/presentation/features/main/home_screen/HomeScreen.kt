@@ -1,18 +1,13 @@
-package com.prayercompanion.shared.presentation.features.home_screen
+package com.prayercompanion.shared.presentation.features.main.home_screen
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
-import androidx.compose.material.Snackbar
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
-import com.prayercompanion.shared.presentation.features.home_screen.components.HomeScreenContent
+import cafe.adriel.voyager.navigator.tab.Tab
+import cafe.adriel.voyager.navigator.tab.TabOptions
+import com.prayercompanion.shared.BottomNavItem
+import com.prayercompanion.shared.presentation.features.main.home_screen.components.HomeScreenContent
 import com.prayercompanion.shared.presentation.utils.StringResourceReader
 import com.prayercompanion.shared.presentation.utils.UiEvent
 import com.prayercompanion.shared.presentation.utils.asString
@@ -20,32 +15,25 @@ import com.prayercompanion.shared.presentation.utils.compose.LifecycleEvent
 import com.prayercompanion.shared.presentation.utils.compose.LocationSettingsLauncher
 import com.prayercompanion.shared.presentation.utils.compose.OnLifecycleEvent
 import com.prayercompanion.shared.presentation.utils.compose.OpenWebBrowser
+import com.prayercompanion.shared.presentation.utils.createTabOptions
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-object HomeScreen : Screen, KoinComponent {
+class HomeScreen(private val scaffoldState: ScaffoldState) : Tab, KoinComponent {
 
     private val stringResourceReader: StringResourceReader by inject()
 
     @Composable
     override fun Content() {
         val viewModel = getScreenModel<HomeScreenViewModel>()
-        val scaffoldState = rememberScaffoldState()
-        Scaffold(
-            modifier= Modifier.fillMaxSize(),
-            scaffoldState = scaffoldState,
-            snackbarHost = {
-                SnackbarHost(it) { data ->
-                    Snackbar(
-                        snackbarData = data,
-                        backgroundColor = Color.LightGray,
-                    )
-                }
-            }
-        ) {
-            HomeScreen(viewModel, scaffoldState, stringResourceReader)
-        }
+
+        HomeScreen(viewModel, scaffoldState, stringResourceReader)
     }
+
+
+    override val options: TabOptions
+        @Composable
+        get() = createTabOptions(BottomNavItem.Home)
 }
 
 @Composable

@@ -1,17 +1,24 @@
 package com.prayercompanion.shared.presentation.utils
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import cafe.adriel.voyager.core.screen.Screen
-import com.prayercompanion.shared.presentation.features.home_screen.HomeScreen
+import cafe.adriel.voyager.navigator.tab.TabOptions
+import com.prayercompanion.shared.BottomNavItem
+import com.prayercompanion.shared.presentation.features.main.MainScreen
+import com.prayercompanion.shared.presentation.features.main.quran.full_sections.FullPrayerQuranSections
 import com.prayercompanion.shared.presentation.features.onboarding.permissions.PermissionsRequestScreen
 import com.prayercompanion.shared.presentation.features.onboarding.sign_in.SignInScreen
 import com.prayercompanion.shared.presentation.features.onboarding.splash_screen.SplashScreen
 import com.prayercompanion.shared.presentation.navigation.Route
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 
 @Stable
 fun Modifier.autoMirror(): Modifier = composed {
@@ -49,14 +56,31 @@ infix fun Long.divideWithRemaining(b: Long): Pair<Long, Long> {
 }
 
 fun Route.toScreen(): Screen {
-   return when (this) {
-       Route.SplashScreen -> SplashScreen
-       Route.SignIn -> SignInScreen
-       Route.Home -> HomeScreen
-       Route.PermissionsRequests -> PermissionsRequestScreen
+    return when (this) {
+        Route.SplashScreen -> SplashScreen
+        Route.SignIn -> SignInScreen
+        Route.PermissionsRequests -> PermissionsRequestScreen
+        Route.Main -> MainScreen
+        Route.Home -> TODO() //HomeScreen
         Route.Qibla -> TODO()
         Route.Quran -> TODO()
         Route.Settings -> TODO()
-        Route.FullQuranSections -> TODO()
+        Route.FullQuranSections -> FullPrayerQuranSections
+    }
+}
+
+@OptIn(ExperimentalResourceApi::class)
+@Composable
+fun createTabOptions(item: BottomNavItem): TabOptions {
+    val title = stringResource(item.stringRes)
+    val icon = painterResource(item.icon)
+    val index = item.ordinal.toUShort()
+
+    return remember {
+        TabOptions(
+            title = title,
+            icon = icon,
+            index = index
+        )
     }
 }

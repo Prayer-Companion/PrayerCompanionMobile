@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.presentation.features.quran.full_sections
+package com.prayercompanion.shared.presentation.features.main.quran.full_sections
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -14,22 +14,38 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.presentation.features.quran.components.QuranSection
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.prayercompanion.shared.domain.models.quran.PrayerQuranReadingSections
 import com.prayercompanion.shared.presentation.components.AppBackground
 import com.prayercompanion.shared.presentation.components.TitleHeader
+import com.prayercompanion.shared.presentation.features.main.quran.components.QuranSection
 import com.prayercompanion.shared.presentation.theme.LocalSpacing
 import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
+import com.prayercompanion.shared.presentation.utils.StringRes
+import com.prayercompanion.shared.presentation.utils.stringResource
 
-@Preview(locale = "ar")
+object FullPrayerQuranSections : Screen {
+    @Composable
+    override fun Content() {
+        val navigator = LocalNavigator.currentOrThrow
+        val viewModel = getScreenModel<FullPrayerQuranSectionsViewModel>()
+        FullPrayerQuranSections(
+            prayerQuranReadingSections = viewModel.quranReadingSections,
+            onBack = {
+                navigator.pop()
+            }
+        )
+    }
+}
+
 @Composable
-fun FullPrayerQuranSections(
-    prayerQuranReadingSections: PrayerQuranReadingSections = PrayerQuranReadingSections.EMPTY,
-    onBack: () -> Unit = {}
+private fun FullPrayerQuranSections(
+    prayerQuranReadingSections: PrayerQuranReadingSections,
+    onBack: () -> Unit,
 ) = PrayerCompanionAndroidTheme {
     val spacing = LocalSpacing.current
     AppBackground()
@@ -39,7 +55,7 @@ fun FullPrayerQuranSections(
             .verticalScroll(rememberScrollState())
     ) {
         TitleHeader(
-            title = stringResource(id = R.string.quran_title),
+            title = stringResource(id = StringRes.quran_title),
             onBack = onBack
         )
         Spacer(modifier = Modifier.height(spacing.spaceMedium))
@@ -55,7 +71,7 @@ fun FullPrayerQuranSections(
         ) {
             QuranSection(
                 modifier = Modifier,
-                stringResource(id = R.string.first_quran_reading_section),
+                stringResource(id = StringRes.first_quran_reading_section),
                 prayerQuranReadingSections.firstSection
             )
         }
@@ -72,7 +88,7 @@ fun FullPrayerQuranSections(
         ) {
             QuranSection(
                 modifier = Modifier,
-                stringResource(id = R.string.second_quran_reading_section),
+                stringResource(id = StringRes.second_quran_reading_section),
                 prayerQuranReadingSections.secondSection
             )
         }

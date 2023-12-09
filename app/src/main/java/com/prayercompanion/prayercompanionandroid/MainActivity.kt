@@ -41,14 +41,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.QiblaScreen
 import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.QiblaViewModel
-import com.prayercompanion.prayercompanionandroid.presentation.features.quran.full_sections.FullPrayerQuranSections
-import com.prayercompanion.prayercompanionandroid.presentation.features.quran.full_sections.FullPrayerQuranSectionsViewModel
-import com.prayercompanion.prayercompanionandroid.presentation.features.quran.quran.QuranScreen
-import com.prayercompanion.prayercompanionandroid.presentation.features.quran.quran.QuranViewModel
-import com.prayercompanion.prayercompanionandroid.presentation.features.settings.SettingsScreen
-import com.prayercompanion.prayercompanionandroid.presentation.features.settings.SettingsScreenViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.utils.FeedbackUtils
-import com.prayercompanion.prayercompanionandroid.presentation.utils.navigate
 import com.prayercompanion.shared.domain.utils.Task
 import com.prayercompanion.shared.presentation.App
 import com.prayercompanion.shared.presentation.features.onboarding.sign_in.GoogleSignInSetup
@@ -146,36 +139,6 @@ class MainActivity : AppCompatActivity() {
                                 sensorAccuracy = viewModel.sensorAccuracy,
                                 qiblaDirection = viewModel.qiblaDirection
                             )
-                        }
-                        composable(Route.Quran.routeName) {
-                            val viewModel: QuranViewModel = getViewModel()
-                            QuranScreen(
-                                navigate = navController::navigate,
-                                state = viewModel.state,
-                                onEvent = viewModel::onEvent,
-                                uiEventsChannel = viewModel.uiEventsChannel,
-                                showSnackBar = {
-                                    showSnackBar(scaffoldState, it)
-                                }
-                            )
-                        }
-                        composable(
-                            route = Route.FullQuranSections.routeName,
-                        ) {
-                            val viewModel: FullPrayerQuranSectionsViewModel = getViewModel()
-                            FullPrayerQuranSections(viewModel.quranReadingSections) {
-                                navController.popBackStack()
-                            }
-                        }
-                        composable(Route.Settings.routeName) {
-                            val viewModel: SettingsScreenViewModel = getViewModel()
-                            SettingsScreen(
-                                state = viewModel.state,
-                                onEvent = viewModel::onEvent,
-                                uiEvents = viewModel.uiEvents
-                            ) {
-                                feedbackUtils.showFeedbackDialog()
-                            }
                         }
                     }
                 }

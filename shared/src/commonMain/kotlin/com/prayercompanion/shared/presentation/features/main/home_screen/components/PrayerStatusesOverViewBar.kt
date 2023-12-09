@@ -1,4 +1,4 @@
-package com.prayercompanion.shared.presentation.features.home_screen.components
+package com.prayercompanion.shared.presentation.features.main.home_screen.components
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.material.MaterialTheme

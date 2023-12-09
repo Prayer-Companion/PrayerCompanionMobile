@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.presentation.features.settings
+package com.prayercompanion.shared.presentation.features.main.settings
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,26 +25,43 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import com.prayercompanion.prayercompanionandroid.R
+import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.navigator.tab.Tab
+import cafe.adriel.voyager.navigator.tab.TabOptions
+import com.prayercompanion.shared.BottomNavItem
 import com.prayercompanion.shared.domain.models.app.AppLanguage
 import com.prayercompanion.shared.presentation.components.AppBackground
 import com.prayercompanion.shared.presentation.components.TitleHeader
 import com.prayercompanion.shared.presentation.theme.LocalSpacing
-import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
+import com.prayercompanion.shared.presentation.utils.StringRes
 import com.prayercompanion.shared.presentation.utils.UiEvent
+import com.prayercompanion.shared.presentation.utils.createTabOptions
+import com.prayercompanion.shared.presentation.utils.stringResource
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
+
+object SettingsScreen : Tab {
+    @Composable
+    override fun Content() {
+        val viewModel = getScreenModel<SettingsScreenViewModel>()
+        SettingsScreen(
+            state = viewModel.state,
+            onEvent = viewModel::onEvent,
+            uiEvents = viewModel.uiEvents
+        )
+    }
+
+    override val options: TabOptions
+        @Composable
+        get() = createTabOptions(BottomNavItem.Settings)
+}
 
 @Composable
 fun SettingsScreen(
     state: SettingsState,
     onEvent: (SettingsEvent) -> Unit,
     uiEvents: Flow<UiEvent>,
-    showFeedbackDialog: suspend () -> Unit
 ) {
     val spacing = LocalSpacing.current
 
@@ -55,7 +72,10 @@ fun SettingsScreen(
     LaunchedEffect(key1 = Unit) {
         uiEvents.collect {
             when (it) {
-                is UiEvent.ShowFeedbackDialog -> showFeedbackDialog()
+                is UiEvent.ShowFeedbackDialog -> {
+//                    showFeedbackDialog() todo kmp
+                }
+
                 else -> Unit
             }
         }
@@ -65,12 +85,12 @@ fun SettingsScreen(
         AppBackground()
         Column(modifier = Modifier.fillMaxSize()) {
             TitleHeader(
-                title = stringResource(id = R.string.settings_title)
+                title = stringResource(id = StringRes.settings_title)
             )
             Spacer(modifier = Modifier.height(spacing.spaceLarge))
             SettingsSection(
                 modifier = Modifier.padding(horizontal = spacing.spaceLarge),
-                title = stringResource(id = R.string.settings_items_language)
+                title = stringResource(id = StringRes.settings_items_language)
             ) {
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                     LanguageSelector(
@@ -85,11 +105,11 @@ fun SettingsScreen(
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
             SettingsSection(
                 modifier = Modifier.padding(horizontal = spacing.spaceLarge),
-                title = stringResource(id = R.string.settings_items_preferences)
+                title = stringResource(id = StringRes.settings_items_preferences)
             ) {
                 SettingsToggle(
                     modifier = Modifier.fillMaxWidth(),
-                    text = stringResource(id = R.string.settings_items_preferences_pauseMedia),
+                    text = stringResource(id = StringRes.settings_items_preferences_pauseMedia),
                     isChecked = state.isPauseMediaPreferencesEnabled,
                     onCheckedChange = {
                         onEvent(SettingsEvent.OnPauseMediaCheckedChange(it))
@@ -99,7 +119,7 @@ fun SettingsScreen(
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
             SettingsSection(
                 modifier = Modifier.padding(horizontal = spacing.spaceLarge),
-                title = stringResource(id = R.string.settings_items_feedback_title)
+                title = stringResource(id = StringRes.settings_items_feedback_title)
             ) {
                 FeedbackBox(
                     modifier = Modifier
@@ -159,7 +179,7 @@ private fun LanguageSelector(
             ),
             shape = RoundedCornerShape(topStart = 15.dp, bottomStart = 15.dp)
         ) {
-            Text(text = stringResource(id = R.string.settings_items_language_options_english))
+            Text(text = stringResource(id = StringRes.settings_items_language_options_english))
         }
         Button(
             modifier = Modifier.weight(1f),
@@ -171,7 +191,7 @@ private fun LanguageSelector(
             ),
             shape = RoundedCornerShape(topEnd = 15.dp, bottomEnd = 15.dp)
         ) {
-            Text(text = stringResource(id = R.string.settings_items_language_options_arabic))
+            Text(text = stringResource(id = StringRes.settings_items_language_options_arabic))
         }
 
     }
@@ -233,14 +253,8 @@ private fun FeedbackBox(
             )
             .padding(spacing.spaceSmall)
             .padding(bottom = spacing.spaceMedium),
-        text = stringResource(id = R.string.settings_items_feedback_prompt),
+        text = stringResource(id = StringRes.settings_items_feedback_prompt),
         style = MaterialTheme.typography.subtitle2,
         color = MaterialTheme.colors.secondary
     )
-}
-
-@Preview(locale = "en", showSystemUi = true)
-@Composable
-private fun SettingsScreenPreview() = PrayerCompanionAndroidTheme {
-    SettingsScreen(SettingsState(), {}, emptyFlow(), {})
 }

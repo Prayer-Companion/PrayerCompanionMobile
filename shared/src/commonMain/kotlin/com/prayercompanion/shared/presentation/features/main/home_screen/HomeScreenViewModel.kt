@@ -1,4 +1,4 @@
-package com.prayercompanion.shared.presentation.features.home_screen
+package com.prayercompanion.shared.presentation.features.main.home_screen
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.presentation.features.settings
+package com.prayercompanion.shared.presentation.features.main.settings
 
 import com.prayercompanion.shared.domain.models.app.AppLanguage
 

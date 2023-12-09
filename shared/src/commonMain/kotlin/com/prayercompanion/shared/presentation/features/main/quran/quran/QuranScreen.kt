@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.presentation.features.quran.quran
+package com.prayercompanion.shared.presentation.features.main.quran.quran
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.TextField
@@ -29,48 +30,75 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavOptionsBuilder
-import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.presentation.features.quran.components.QuranChapterItem
-import com.prayercompanion.prayercompanionandroid.presentation.features.quran.components.QuranSection
-import com.prayercompanion.prayercompanionandroid.presentation.utils.asString
-import com.prayercompanion.prayercompanionandroid.presentation.utils.compose.KeyboardConfig
-import com.prayercompanion.prayercompanionandroid.presentation.utils.compose.OnLifecycleEvent
-import com.prayercompanion.prayercompanionandroid.presentation.utils.compose.keyboardAsState
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.prayercompanion.shared.domain.models.quran.PrayerQuranReadingSections
 import com.prayercompanion.shared.domain.models.quran.QuranChapter
 import com.prayercompanion.shared.presentation.components.AppBackground
 import com.prayercompanion.shared.presentation.components.TitleHeader
+import com.prayercompanion.shared.presentation.features.main.quran.components.QuranChapterItem
+import com.prayercompanion.shared.presentation.features.main.quran.components.QuranSection
 import com.prayercompanion.shared.presentation.theme.LocalSpacing
 import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
+import com.prayercompanion.shared.presentation.utils.StringRes
+import com.prayercompanion.shared.presentation.utils.StringResourceReader
 import com.prayercompanion.shared.presentation.utils.UiEvent
+import com.prayercompanion.shared.presentation.utils.asString
 import com.prayercompanion.shared.presentation.utils.compose.LifecycleEvent
+import com.prayercompanion.shared.presentation.utils.compose.OnLifecycleEvent
+import com.prayercompanion.shared.presentation.utils.stringResource
+import com.prayercompanion.shared.presentation.utils.toScreen
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-@Preview(locale = "ar", showSystemUi = true)
+
+class QuranScreen(private val scaffoldState: ScaffoldState) : Screen, KoinComponent {
+
+    private val stringResourceReader: StringResourceReader by inject()
+
+    @Composable
+    override fun Content() {
+        val viewModel = getScreenModel<QuranViewModel>()
+        val navigator = LocalNavigator.currentOrThrow
+
+        QuranScreen(
+            navigate = {
+                navigator.push(it.route.toScreen())
+            },
+            state = viewModel.state,
+            onEvent = viewModel::onEvent,
+            uiEventsChannel = viewModel.uiEventsChannel,
+            stringResourceReader = stringResourceReader,
+            scaffoldState = scaffoldState
+        )
+    }
+
+//    override val options: TabOptions
+//        @Composable
+//        get() = createTabOptions(BottomNavItem.Quran)
+}
+
 @Composable
 fun QuranScreen(
-    navigate: (UiEvent.Navigate, NavOptionsBuilder.() -> Unit) -> Unit = { _, _ -> },
-    state: QuranState = QuranState(),
-    onEvent: (QuranEvent) -> Unit = {},
-    uiEventsChannel: Flow<UiEvent> = emptyFlow(),
-    showSnackBar: suspend (String) -> Unit = {},
+    navigate: (UiEvent.Navigate) -> Unit,
+    state: QuranState,
+    onEvent: (QuranEvent) -> Unit,
+    uiEventsChannel: Flow<UiEvent>,
+    stringResourceReader: StringResourceReader,
+    scaffoldState: ScaffoldState
 ) = PrayerCompanionAndroidTheme {
 
     val spacing = LocalSpacing.current
-    val context = LocalContext.current
     val chaptersListState = rememberLazyListState()
-    val keyboardConfig by keyboardAsState()
+//    val keyboardConfig by keyboardAsState() todo kmp
 
     OnLifecycleEvent { event ->
         if (event == LifecycleEvent.ON_START) {
@@ -81,8 +109,16 @@ fun QuranScreen(
     LaunchedEffect(key1 = true) {
         uiEventsChannel.collect {
             when (it) {
-                is UiEvent.ShowErrorSnackBar -> showSnackBar(it.errorMessage.asString(context))
-                is UiEvent.Navigate -> navigate(it) {}
+                is UiEvent.ShowErrorSnackBar -> {
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        it.errorMessage.asString(
+                            stringResourceReader
+                        )
+                    )
+                }
+
+
+                is UiEvent.Navigate -> navigate(it)
                 is UiEvent.ScrollListToPosition -> chaptersListState.scrollToItem(it.position)
                 else -> Unit
             }
@@ -95,22 +131,22 @@ fun QuranScreen(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            TitleHeader(title = stringResource(id = R.string.quran_title))
+            TitleHeader(title = stringResource(id = StringRes.quran_title))
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .animateContentSize()
             ) {
-                if (keyboardConfig == KeyboardConfig.Closed) {
-                    QuranReadingSections(
-                        readingSections = state.sections,
-                        hasAnyMemorizedChapters = state.hasAnyMemorizedChapters,
-                        onLoadQuranSectionsClicked = { onEvent(QuranEvent.OnLoadQuranSectionsClicked) },
-                        onViewFullClicked = { onEvent(QuranEvent.OnViewFullClicked) },
-                        onNextSectionClicked = { onEvent(QuranEvent.OnNextSectionClicked) }
-                    )
-                }
+//                if (keyboardConfig == KeyboardConfig.Closed) {
+                QuranReadingSections(
+                    readingSections = state.sections,
+                    hasAnyMemorizedChapters = state.hasAnyMemorizedChapters,
+                    onLoadQuranSectionsClicked = { onEvent(QuranEvent.OnLoadQuranSectionsClicked) },
+                    onViewFullClicked = { onEvent(QuranEvent.OnViewFullClicked) },
+                    onNextSectionClicked = { onEvent(QuranEvent.OnNextSectionClicked) }
+                )
+//                }
             }
 
             QuranChaptersSearchAndList(
@@ -171,13 +207,13 @@ private fun QuranReadingSections(
         ) {
             if (readingSections != null) {
                 QuranSection(
-                    title = stringResource(id = R.string.first_quran_reading_section),
+                    title = stringResource(id = StringRes.first_quran_reading_section),
                     section = readingSections.firstSection,
                     numberOfLines = 1
                 )
                 Spacer(modifier = Modifier.height(spacing.spaceMedium))
                 QuranSection(
-                    title = stringResource(id = R.string.second_quran_reading_section),
+                    title = stringResource(id = StringRes.second_quran_reading_section),
                     section = readingSections.secondSection,
                     numberOfLines = 1
                 )
@@ -193,14 +229,14 @@ private fun QuranReadingSections(
                             modifier = Modifier.clickable {
                                 onLoadQuranSectionsClicked()
                             },
-                            text = stringResource(id = R.string.load_quran_sections),
+                            text = stringResource(id = StringRes.load_quran_sections),
                             style = MaterialTheme.typography.body2,
                             textDecoration = TextDecoration.Underline,
                             color = MaterialTheme.colors.onPrimary
                         )
                     } else {
                         Text(
-                            text = stringResource(id = R.string.empty_quran_sections_prompt),
+                            text = stringResource(id = StringRes.empty_quran_sections_prompt),
                             style = MaterialTheme.typography.body2,
                             color = MaterialTheme.colors.onPrimary
                         )
@@ -229,7 +265,7 @@ private fun QuranReadingSections(
                     contentPadding = PaddingValues(0.dp)
                 ) {
                     Text(
-                        text = stringResource(id = R.string.show_full_quran_reading_sections),
+                        text = stringResource(id = StringRes.show_full_quran_reading_sections),
                         style = MaterialTheme.typography.body2,
                         textDecoration = TextDecoration.Underline,
                         color = MaterialTheme.colors.onPrimary
@@ -240,7 +276,7 @@ private fun QuranReadingSections(
                     contentPadding = PaddingValues(0.dp)
                 ) {
                     Text(
-                        text = stringResource(id = R.string.next_quran_reading_sections),
+                        text = stringResource(id = StringRes.next_quran_reading_sections),
                         style = MaterialTheme.typography.body2,
                         textDecoration = TextDecoration.Underline,
                         color = MaterialTheme.colors.onPrimary
@@ -281,7 +317,7 @@ private fun QuranChaptersSearchAndList(
             },
             placeholder = {
                 Text(
-                    text = stringResource(id = R.string.chapter_name),
+                    text = stringResource(id = StringRes.chapter_name),
                     color = MaterialTheme.colors.secondary,
                     style = MaterialTheme.typography.subtitle2
                 )

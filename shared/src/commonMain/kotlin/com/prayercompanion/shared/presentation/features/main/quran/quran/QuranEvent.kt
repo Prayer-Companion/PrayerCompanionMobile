@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.presentation.features.quran.quran
+package com.prayercompanion.shared.presentation.features.main.quran.quran
 
 sealed class QuranEvent {
     data object OnStart: QuranEvent()

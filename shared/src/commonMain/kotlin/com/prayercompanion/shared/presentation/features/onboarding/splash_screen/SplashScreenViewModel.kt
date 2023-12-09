@@ -83,7 +83,7 @@ class SplashScreenViewModel constructor(
                 appPreferencesData()?.hasSkippedNotificationPermission ?: false
 
             if (isLocationPermissionGranted && (isPushNotificationAllowed || skippedNotificationPermission)) {
-                sendNavigateEvent(Route.Home)
+                sendNavigateEvent(Route.Main)
             } else {
                 sendNavigateEvent(Route.PermissionsRequests)
             }

@@ -5,6 +5,7 @@ import com.prayercompanion.prayercompanionandroid.PrayerCompanionDatabase
 import com.prayercompanion.shared.BuildConfigs
 import com.prayercompanion.shared.data.local.DatabaseDriverFactory
 import com.prayercompanion.shared.data.local.assets.Assets
+import com.prayercompanion.shared.data.local.assets.AssetsReader
 import com.prayercompanion.shared.data.local.db.daos.MemorizedQuranChapterDao
 import com.prayercompanion.shared.data.local.db.daos.MemorizedQuranChapterDaoImpl
 import com.prayercompanion.shared.data.local.db.daos.PrayersInfoDao
@@ -77,4 +78,5 @@ val dataModule = module {
     singleOf(::Assets)
     singleOf(::DataStoresRepo)
     singleOf(::TrackerImpl) { bind<Tracker>() }
+    singleOf(::AssetsReader)
 }

@@ -63,8 +63,8 @@ kotlin {
 
                 val voyagerVersion = "1.0.0-rc10"
                 api("cafe.adriel.voyager:voyager-navigator:$voyagerVersion")
-                api("cafe.adriel.voyager:voyager-bottom-sheet-navigator:$voyagerVersion")
                 api("cafe.adriel.voyager:voyager-koin:$voyagerVersion")
+                api("cafe.adriel.voyager:voyager-tab-navigator:$voyagerVersion")
                 api("dev.gitlive:firebase-auth:1.10.4")
 
                 api("dev.icerock.moko:permissions:0.16.0")

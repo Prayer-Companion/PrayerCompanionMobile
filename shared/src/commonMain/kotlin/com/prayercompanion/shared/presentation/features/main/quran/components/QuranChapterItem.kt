@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid.presentation.features.quran.components
+package com.prayercompanion.shared.presentation.features.main.quran.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -36,16 +36,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.prayercompanion.prayercompanionandroid.R
 import com.prayercompanion.shared.domain.models.quran.QuranChapter
 import com.prayercompanion.shared.presentation.theme.LocalSpacing
 import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.shared.presentation.theme.SmallTextStyle
+import com.prayercompanion.shared.presentation.utils.StringRes
+import com.prayercompanion.shared.presentation.utils.stringResource
 
 @Composable
 fun QuranChapterItem(
@@ -182,7 +181,7 @@ fun QuranChapterItem(
                         color = MaterialTheme.colors.onPrimary
                     )
                     Text(
-                        text = stringResource(id = R.string.verses_count, quranChapter.versesCount),
+                        text = stringResource(id = StringRes.verses_count, args = listOf(quranChapter.versesCount)),
                         style = SmallTextStyle,
                         color = MaterialTheme.colors.onPrimary
                     )
@@ -193,7 +192,7 @@ fun QuranChapterItem(
             ) {
                 Text(
                     modifier = Modifier.padding(bottom = spacing.spaceExtraSmall),
-                    text = stringResource(id = R.string.from_verse),
+                    text = stringResource(id = StringRes.from_verse),
                     style = SmallTextStyle,
                     color = MaterialTheme.colors.onPrimary
                 )
@@ -206,7 +205,7 @@ fun QuranChapterItem(
                 Spacer(modifier = Modifier.width(spacing.spaceExtraSmall))
                 Text(
                     modifier = Modifier.padding(bottom = spacing.spaceExtraSmall),
-                    text = stringResource(id = R.string.to_verse),
+                    text = stringResource(id = StringRes.to_verse),
                     style = SmallTextStyle,
                     color = MaterialTheme.colors.onPrimary
                 )
@@ -249,7 +248,7 @@ fun QuranChapterItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     inputField(
-                        title = stringResource(id = R.string.edit_aya_from),
+                        title = stringResource(id = StringRes.edit_aya_from),
                         text = fromVerseText,
                         onTextChange = {
                             applyIfValidInput(
@@ -279,7 +278,7 @@ fun QuranChapterItem(
                         }
                     )
                     inputField(
-                        title = stringResource(id = R.string.edit_aya_to),
+                        title = stringResource(id = StringRes.edit_aya_to),
                         text = toVerseText,
                         onTextChange = {
                             applyIfValidInput(
@@ -334,23 +333,4 @@ fun QuranChapterItem(
             }
         }
     }
-}
-
-@Preview(locale = "ar")
-@Composable
-private fun QuranItemPreview() {
-    QuranChapterItem(
-        modifier = Modifier.fillMaxWidth(),
-        quranChapter = QuranChapter(
-            index = 1,
-            name = "المدثر",
-            verses = listOf()
-        ),
-        onCheckedChange = { _, _, _ ->
-
-        },
-        onSaveClicked = { _, _ ->
-
-        }
-    )
 }

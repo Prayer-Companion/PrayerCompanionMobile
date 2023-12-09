@@ -55,6 +55,7 @@ enum class StringRes(val id: String) {
     edit_aya_from("edit_aya_from"),
     edit_aya_to("edit_aya_to"),
     first_quran_reading_section("first_quran_reading_section"),
+    quran_reading_section("quran_reading_section"),
     second_quran_reading_section("second_quran_reading_section"),
     show_full_quran_reading_sections("show_full_quran_reading_sections"),
     next_quran_reading_sections("next_quran_reading_sections"),
@@ -78,4 +79,5 @@ enum class StringRes(val id: String) {
     feedbackDialog_messageHint("feedbackDialog_messageHint"),
     feedbackDialog_action_send("feedbackDialog_action_send"),
     feedbackDialog_action_cancel("feedbackDialog_action_cancel"),
+    quran_reading_section_chapter_name("quran_reading_section_chapter_name"),
 }

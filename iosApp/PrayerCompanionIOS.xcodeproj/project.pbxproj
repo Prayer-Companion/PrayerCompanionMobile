@@ -17,6 +17,7 @@
 		473CF1392ABBF6A00040713A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 473CF1382ABBF6A00040713A /* Assets.xcassets */; };
 		473CF13D2ABBF6A00040713A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 473CF13C2ABBF6A00040713A /* Preview Assets.xcassets */; };
 		473FC9A42B0EAA1900BEE28E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 473FC9A32B0EAA1900BEE28E /* GoogleService-Info.plist */; };
+		477941692B24655E00FC7CFA /* quran_data.json in Resources */ = {isa = PBXBuildFile; fileRef = 477941682B24655E00FC7CFA /* quran_data.json */; };
 		47BF7CA02B172745007B70E1 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 47BF7C9F2B172745007B70E1 /* FirebaseAnalytics */; };
 		47BF7CA22B172745007B70E1 /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = 47BF7CA12B172745007B70E1 /* FirebaseAnalyticsOnDeviceConversion */; };
 		47BF7CA42B172745007B70E1 /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 47BF7CA32B172745007B70E1 /* FirebaseAnalyticsSwift */; };
@@ -58,12 +59,13 @@
 		470051CB2ACD6B2500C734E5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		47369BF02ABC86FC00198035 /* shared */ = {isa = PBXFileReference; lastKnownFileType = folder; name = shared; path = ../shared; sourceTree = "<group>"; };
 		473CF1312ABBF69F0040713A /* PrayerCompanionIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PrayerCompanionIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		473CF1342ABBF69F0040713A /* PrayerCompanionIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerCompanionIOSApp.swift; sourceTree = "<group>"; };
+		473CF1342ABBF69F0040713A /* PrayerCompanionIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerCompanionIOSApp.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.xcfilelist; };
 		473CF1362ABBF69F0040713A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		473CF1382ABBF6A00040713A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		473CF13A2ABBF6A00040713A /* PrayerCompanionIOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PrayerCompanionIOS.entitlements; sourceTree = "<group>"; };
 		473CF13C2ABBF6A00040713A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		473FC9A32B0EAA1900BEE28E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		477941682B24655E00FC7CFA /* quran_data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = quran_data.json; sourceTree = "<group>"; };
 		47BF7C8D2B16F442007B70E1 /* GoogleSignIn.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = GoogleSignIn.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		47D244782ACC3D2300AA463C /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		8EA736E2060A77E86DAB4008 /* Pods_PrayerCompanionIOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PrayerCompanionIOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -145,6 +147,7 @@
 		473CF1332ABBF69F0040713A /* PrayerCompanionIOS */ = {
 			isa = PBXGroup;
 			children = (
+				477941682B24655E00FC7CFA /* quran_data.json */,
 				473FC9A32B0EAA1900BEE28E /* GoogleService-Info.plist */,
 				470051CB2ACD6B2500C734E5 /* Info.plist */,
 				470051BE2ACD69D300C734E5 /* Fonts */,
@@ -295,6 +298,7 @@
 				473FC9A42B0EAA1900BEE28E /* GoogleService-Info.plist in Resources */,
 				470051C72ACD6A1100C734E5 /* light.ttf in Resources */,
 				47369BF12ABC86FC00198035 /* shared in Resources */,
+				477941692B24655E00FC7CFA /* quran_data.json in Resources */,
 				47D244792ACC3D2300AA463C /* Localizable.xcstrings in Resources */,
 				473CF1392ABBF6A00040713A /* Assets.xcassets in Resources */,
 				470051C92ACD6A1100C734E5 /* extra_bold.ttf in Resources */,

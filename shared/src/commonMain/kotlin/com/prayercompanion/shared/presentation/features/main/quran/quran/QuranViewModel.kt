@@ -1,10 +1,10 @@
-package com.prayercompanion.prayercompanionandroid.presentation.features.quran.quran
+package com.prayercompanion.shared.presentation.features.main.quran.quran
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.core.model.screenModelScope
 import com.prayercompanion.shared.domain.usecases.quran.AddMemorizedChapterAyat
 import com.prayercompanion.shared.domain.usecases.quran.EditMemorizedChapterAyat
 import com.prayercompanion.shared.domain.usecases.quran.GetFullQuranWithMemorized
@@ -18,6 +18,7 @@ import com.prayercompanion.shared.presentation.navigation.Route
 import com.prayercompanion.shared.presentation.utils.UiEvent
 import com.prayercompanion.shared.presentation.utils.UiText
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -33,7 +34,7 @@ class QuranViewModel constructor(
     private val loadQuranReadingSuggestions: LoadQuranReadingSuggestions,
     private val markQuranSectionAsRead: MarkQuranSectionAsRead,
     private val tracker: Tracker
-) : ViewModel() {
+) : ScreenModel {
 
     private var hasChaptersBeenSorted = false
     private var chaptersOrder = listOf<Int>()
@@ -43,7 +44,7 @@ class QuranViewModel constructor(
     val uiEventsChannel = _uiEventsChannel.receiveAsFlow()
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(Dispatchers.IO) {
             launch {
                 getFullQuranWithMemorized.call()
                     .collectLatest { quranResult ->
@@ -118,7 +119,7 @@ class QuranViewModel constructor(
 
     private fun addMemorizedChapterAyat(chapterId: Int, fromVerse: Int, toVerse: Int) {
         tracker.trackQuranChapterAdd()
-        viewModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(Dispatchers.IO) {
             addMemorizedChapterAyat.call(chapterId, fromVerse, toVerse)
                 .onFailure {
                     sendUiEvent(UiEvent.ShowErrorSnackBar(UiText.DynamicString(it.toString())))
@@ -127,7 +128,7 @@ class QuranViewModel constructor(
     }
 
     private fun editMemorizedChapterAyat(chapterId: Int, fromVerse: Int, toVerse: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(Dispatchers.IO) {
             editMemorizedChapterAyat.call(chapterId, fromVerse, toVerse)
                 .onFailure {
                     sendUiEvent(UiEvent.ShowErrorSnackBar(UiText.DynamicString(it.toString())))
@@ -137,7 +138,7 @@ class QuranViewModel constructor(
 
     private fun removeMemorizedChapterAyat(chapterId: Int) {
         tracker.trackQuranChapterRemove()
-        viewModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(Dispatchers.IO) {
             removeMemorizedChapterAyat.call(chapterId)
                 .onFailure {
                     sendUiEvent(UiEvent.ShowErrorSnackBar(UiText.DynamicString(it.toString())))
@@ -146,7 +147,7 @@ class QuranViewModel constructor(
     }
 
     private fun onLoadQuranSectionsClicked() {
-        viewModelScope.launch(Dispatchers.IO) {
+        screenModelScope.launch(Dispatchers.IO) {
             loadQuranReadingSuggestions.call()
         }
     }
@@ -154,7 +155,7 @@ class QuranViewModel constructor(
     private fun onNextSectionClicked() {
         tracker.trackButtonClicked(TrackedButtons.NEXT_QURAN_READING_SECTION)
         state.sections?.let { sections ->
-            viewModelScope.launch(Dispatchers.IO) {
+            screenModelScope.launch(Dispatchers.IO) {
                 markQuranSectionAsRead.call(sections)
             }
         }
@@ -172,7 +173,7 @@ class QuranViewModel constructor(
     }
 
     private fun sendUiEvent(uiEvent: UiEvent) {
-        viewModelScope.launch {
+        screenModelScope.launch {
             _uiEventsChannel.send(uiEvent)
         }
     }

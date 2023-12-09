@@ -204,7 +204,7 @@ class PermissionsRequestViewModel constructor(
 
     private fun goToHomeScreen() {
         screenModelScope.launch {
-            _uiEvents.send(UiEvent.Navigate(Route.Home))
+            _uiEvents.send(UiEvent.Navigate(Route.Main))
         }
     }
 

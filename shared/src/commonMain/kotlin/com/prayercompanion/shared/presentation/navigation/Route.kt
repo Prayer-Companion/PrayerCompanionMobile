@@ -4,6 +4,7 @@ enum class Route(val routeName: String, val bottomNavBar: Boolean = true) {
     SplashScreen(routeName = "SplashScreen", bottomNavBar = false),
     SignIn(routeName = "SignIn", bottomNavBar = false),
     PermissionsRequests(routeName = "PermissionsRequests", bottomNavBar = false),
+    Main(routeName = "Main"),
     Home(routeName = "Home"),
     Qibla(routeName = "Qibla"),
     Quran(routeName = "Quran"),
