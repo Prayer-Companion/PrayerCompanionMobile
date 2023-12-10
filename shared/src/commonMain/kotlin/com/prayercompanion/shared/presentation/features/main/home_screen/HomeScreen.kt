@@ -1,12 +1,13 @@
 package com.prayercompanion.shared.presentation.features.main.home_screen
 
-import androidx.compose.material.ScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalUriHandler
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.prayercompanion.shared.BottomNavItem
+import com.prayercompanion.shared.presentation.features.main.LocalScaffoldState
 import com.prayercompanion.shared.presentation.features.main.home_screen.components.HomeScreenContent
 import com.prayercompanion.shared.presentation.utils.StringResourceReader
 import com.prayercompanion.shared.presentation.utils.UiEvent
@@ -14,12 +15,11 @@ import com.prayercompanion.shared.presentation.utils.asString
 import com.prayercompanion.shared.presentation.utils.compose.LifecycleEvent
 import com.prayercompanion.shared.presentation.utils.compose.LocationSettingsLauncher
 import com.prayercompanion.shared.presentation.utils.compose.OnLifecycleEvent
-import com.prayercompanion.shared.presentation.utils.compose.OpenWebBrowser
 import com.prayercompanion.shared.presentation.utils.createTabOptions
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class HomeScreen(private val scaffoldState: ScaffoldState) : Tab, KoinComponent {
+object HomeScreen : Tab, KoinComponent {
 
     private val stringResourceReader: StringResourceReader by inject()
 
@@ -27,7 +27,7 @@ class HomeScreen(private val scaffoldState: ScaffoldState) : Tab, KoinComponent 
     override fun Content() {
         val viewModel = getScreenModel<HomeScreenViewModel>()
 
-        HomeScreen(viewModel, scaffoldState, stringResourceReader)
+        HomeScreen(viewModel, stringResourceReader)
     }
 
 
@@ -39,14 +39,14 @@ class HomeScreen(private val scaffoldState: ScaffoldState) : Tab, KoinComponent 
 @Composable
 fun HomeScreen(
     viewModel: HomeScreenViewModel,
-    scaffoldState: ScaffoldState,
     stringResourceReader: StringResourceReader
 ) {
     val launchLocationSettingsDialog = LocationSettingsLauncher {
         viewModel.onLocationSettingsResult(it)
     }
 
-    val openWebBrowser = OpenWebBrowser()
+    val uriHandler = LocalUriHandler.current
+    val scaffoldState = LocalScaffoldState.current
 
     OnLifecycleEvent { event ->
         when (event) {
@@ -104,7 +104,7 @@ fun HomeScreen(
                 }
 
                 is UiEvent.OpenWebUrl -> {
-                    openWebBrowser.invoke(it.url)
+                    uriHandler.openUri(it.url)
                 }
 
                 else -> Unit

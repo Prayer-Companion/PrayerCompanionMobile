@@ -21,7 +21,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.TextField
@@ -44,6 +43,7 @@ import com.prayercompanion.shared.domain.models.quran.PrayerQuranReadingSections
 import com.prayercompanion.shared.domain.models.quran.QuranChapter
 import com.prayercompanion.shared.presentation.components.AppBackground
 import com.prayercompanion.shared.presentation.components.TitleHeader
+import com.prayercompanion.shared.presentation.features.main.LocalScaffoldState
 import com.prayercompanion.shared.presentation.features.main.quran.components.QuranChapterItem
 import com.prayercompanion.shared.presentation.features.main.quran.components.QuranSection
 import com.prayercompanion.shared.presentation.theme.LocalSpacing
@@ -60,7 +60,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 
-class QuranScreen(private val scaffoldState: ScaffoldState) : Screen, KoinComponent {
+object QuranScreen : Screen, KoinComponent {
 
     private val stringResourceReader: StringResourceReader by inject()
 
@@ -76,8 +76,7 @@ class QuranScreen(private val scaffoldState: ScaffoldState) : Screen, KoinCompon
             state = viewModel.state,
             onEvent = viewModel::onEvent,
             uiEventsChannel = viewModel.uiEventsChannel,
-            stringResourceReader = stringResourceReader,
-            scaffoldState = scaffoldState
+            stringResourceReader = stringResourceReader
         )
     }
 }
@@ -89,10 +88,10 @@ fun QuranScreen(
     onEvent: (QuranEvent) -> Unit,
     uiEventsChannel: Flow<UiEvent>,
     stringResourceReader: StringResourceReader,
-    scaffoldState: ScaffoldState
 ) = PrayerCompanionAndroidTheme {
 
     val spacing = LocalSpacing.current
+    val scaffoldState = LocalScaffoldState.current
     val chaptersListState = rememberLazyListState()
 //    val keyboardConfig by keyboardAsState() todo kmp
 
