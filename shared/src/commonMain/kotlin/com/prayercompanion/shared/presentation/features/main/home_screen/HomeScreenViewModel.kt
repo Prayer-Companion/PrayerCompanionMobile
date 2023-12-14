@@ -169,6 +169,13 @@ class HomeScreenViewModel constructor(
         }
     }
 
+    fun onInAppReviewFailed(exception: Exception) {
+//        FirebaseCrashlytics.getInstance().recordException(exception)
+    }
+    fun onInAppReviewCompleted() {
+//        show toast
+    }
+
     private fun loadStatusesOverView() {
         statusesOverviewJob?.cancel()
         statusesOverviewJob = screenModelScope.launch(Dispatchers.IO) {

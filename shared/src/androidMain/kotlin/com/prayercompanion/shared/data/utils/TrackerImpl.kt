@@ -1,5 +1,6 @@
 package com.prayercompanion.shared.data.utils
 
+import android.content.Context
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.logEvent
 import com.prayercompanion.shared.domain.utils.tracking.TrackedButtons
@@ -8,8 +9,10 @@ import com.prayercompanion.shared.domain.utils.tracking.TrackingEventNames
 import com.prayercompanion.shared.domain.utils.tracking.TrackingParameterNames
 
 actual class TrackerImpl constructor(
-    private val firebaseAnalytics: FirebaseAnalytics
+    context: Context
 ) : Tracker {
+
+    private val firebaseAnalytics = FirebaseAnalytics.getInstance(context)
 
     actual override fun setAppLanguage(languageCode: String) {
         firebaseAnalytics.setUserProperty(TrackingEventNames.APP_LANGUAGE, languageCode)

@@ -109,6 +109,9 @@ kotlin {
 
                 implementation(compose.preview)
                 implementation(compose.uiTooling)
+
+                implementation("com.google.android.play:review:2.0.1")
+                implementation("com.google.android.play:review-ktx:2.0.1")
             }
         }
         val iosX64Main by getting {

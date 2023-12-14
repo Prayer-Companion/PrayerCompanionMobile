@@ -11,7 +11,6 @@ import androidx.work.WorkManager
 import com.prayercompanion.prayercompanionandroid.presentation.di.androidPresentationModule
 import com.prayercompanion.prayercompanionandroid.presentation.utils.ScheduleDailyPrayersWorker
 import com.prayercompanion.prayercompanionandroid.presentation.utils.notifications.PrayersNotificationsService
-import com.prayercompanion.shared.data.di.androidDataModule
 import com.prayercompanion.shared.domain.utils.PermissionsManager
 import com.prayercompanion.shared.presentation.appModule
 import logcat.AndroidLogcatLogger
@@ -39,7 +38,6 @@ class PrayerCompanionApplication : Application(), Configuration.Provider {
             modules(
                 *appModule().toTypedArray(),
                 androidPresentationModule,
-                androidDataModule
             )
         }
 

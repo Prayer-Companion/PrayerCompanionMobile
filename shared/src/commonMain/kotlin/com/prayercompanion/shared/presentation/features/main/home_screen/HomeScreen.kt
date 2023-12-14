@@ -7,6 +7,7 @@ import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.prayercompanion.shared.BottomNavItem
+import com.prayercompanion.shared.presentation.components.InAppReview
 import com.prayercompanion.shared.presentation.features.main.LocalScaffoldState
 import com.prayercompanion.shared.presentation.features.main.home_screen.components.HomeScreenContent
 import com.prayercompanion.shared.presentation.utils.StringResourceReader
@@ -41,6 +42,10 @@ fun HomeScreen(
     viewModel: HomeScreenViewModel,
     stringResourceReader: StringResourceReader
 ) {
+    val inAppReview = InAppReview(
+        onFailure = viewModel::onInAppReviewFailed,
+        onCompleted = viewModel::onInAppReviewCompleted
+    )
     val launchLocationSettingsDialog = LocationSettingsLauncher {
         viewModel.onLocationSettingsResult(it)
     }
@@ -74,33 +79,7 @@ fun HomeScreen(
                 }
 
                 is UiEvent.ShowRateTheAppPopup -> {
-//                    todo implement in app review kmm
-//                    val manager = ReviewManagerFactory.create(context)
-//                    val request = manager.requestReviewFlow()
-//                    request.addOnCompleteListener { task ->
-//                        if (task.isSuccessful) {
-//                            val reviewInfo = task.result
-//                            manager.launchReviewFlow(activity, reviewInfo)
-//                                .addOnSuccessListener {
-//                                    if (BuildConfig.DEBUG) {
-//                                        context.showToast("In app review shown")
-//                                    }
-//                                }
-//                                .addOnFailureListener { exception ->
-//                                    if (BuildConfig.DEBUG) {
-//                                        context.showToast("launchReviewFlow failed")
-//                                    }
-//                                    FirebaseCrashlytics.getInstance().recordException(exception)
-//                                }
-//                        } else {
-//                            if (BuildConfig.DEBUG) {
-//                                context.showToast("requestReviewFlow failed")
-//                            }
-//                            task.exception?.let { exception ->
-//                                FirebaseCrashlytics.getInstance().recordException(exception)
-//                            }
-//                        }
-//                    }
+                    inAppReview.show()
                 }
 
                 is UiEvent.OpenWebUrl -> {

@@ -166,8 +166,6 @@ dependencies {
 
     implementation("androidx.compose.material:material-icons-extended:$composeUiVersion")
 
-    implementation("com.google.android.play:review:2.0.1")
-    implementation("com.google.android.play:review-ktx:2.0.1")
     implementation("io.doorbell:android-sdk:0.4.7@aar")
 
     implementation("app.cash.sqldelight:coroutines-extensions:2.0.0")
