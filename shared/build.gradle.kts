@@ -80,7 +80,7 @@ kotlin {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
-
+                implementation("io.mockk:mockk-common:1.12.5")
             }
         }
         val androidMain by getting {
