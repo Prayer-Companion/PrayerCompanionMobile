@@ -20,6 +20,8 @@ import com.prayercompanion.shared.domain.usecases.prayers.GetDayPrayersFlow
 import com.prayercompanion.shared.domain.usecases.prayers.GetStatusesOverView
 import com.prayercompanion.shared.domain.usecases.prayers.SetPrayerStatusByDateTime
 import com.prayercompanion.shared.domain.usecases.prayers.UpdatePrayerStatus
+import com.prayercompanion.shared.domain.usecases.quran.LoadAndSaveQuranMemorizedChapters
+import com.prayercompanion.shared.domain.utils.ErrorLogger
 import com.prayercompanion.shared.domain.utils.tracking.TrackedButtons
 import com.prayercompanion.shared.domain.utils.tracking.Tracker
 import com.prayercompanion.shared.presentation.models.RemainingDuration
@@ -51,10 +53,11 @@ class HomeScreenViewModel constructor(
     private val updatePrayerStatus: UpdatePrayerStatus,
     private val getStatusesOverView: GetStatusesOverView,
     private val locationManager: AppLocationManager,
-//    private val loadAndSaveQuranMemorizedChapters: LoadAndSaveQuranMemorizedChapters,
+    private val loadAndSaveQuranMemorizedChapters: LoadAndSaveQuranMemorizedChapters,
     private val getDailyPrayersCombo: GetDailyPrayersCombo,
     private val setPrayerStatusByDateTime: SetPrayerStatusByDateTime,
     private val tracker: Tracker,
+    private val errorLogger: ErrorLogger,
     private val dataStoresRepo: DataStoresRepo
 ) : ScreenModel {
 
@@ -90,7 +93,7 @@ class HomeScreenViewModel constructor(
     init {
         fun loadQuranData() {
             screenModelScope.launch(Dispatchers.IO) {
-//                loadAndSaveQuranMemorizedChapters.call()
+                loadAndSaveQuranMemorizedChapters.call()
             }
         }
 
@@ -126,14 +129,11 @@ class HomeScreenViewModel constructor(
                 .onSuccess {
                     if (appPreferencesData.first().hasShownRateTheAppPopup.not()) {
                         sendEvent(UiEvent.ShowRateTheAppPopup)
-                        dataStoresRepo.updateAppPreferencesDataStore {
-                            it.copy(hasShownRateTheAppPopup = true)
-                        }
                     }
                 }
                 .onFailure {
                     it.printStackTraceInDebug()
-                    sendErrorEvent(Res.strings.error_something_went_wrong.toUiText())
+                    sendMessageEvent(Res.strings.error_something_went_wrong.toUiText())
                     return@launch
                 }
         }
@@ -155,7 +155,7 @@ class HomeScreenViewModel constructor(
                 .call(headerState.currentAndNextPrayer.first, LocalDateTime.now())
                 .onFailure {
                     it.printStackTraceInDebug()
-                    sendErrorEvent(Res.strings.error_something_went_wrong.toUiText())
+                    sendMessageEvent(Res.strings.error_something_went_wrong.toUiText())
                     return@launch
                 }
         }
@@ -170,10 +170,19 @@ class HomeScreenViewModel constructor(
     }
 
     fun onInAppReviewFailed(exception: Exception) {
-//        FirebaseCrashlytics.getInstance().recordException(exception)
+        errorLogger.logException(exception)
     }
+
     fun onInAppReviewCompleted() {
-//        show toast
+        if (BuildConfigs.isDebug) {
+            sendMessageEvent(UiText.DynamicString("in app review shown"))
+        }
+
+        screenModelScope.launch {
+            dataStoresRepo.updateAppPreferencesDataStore {
+                it.copy(hasShownRateTheAppPopup = true)
+            }
+        }
     }
 
     private fun loadStatusesOverView() {
@@ -198,7 +207,7 @@ class HomeScreenViewModel constructor(
                 .cancellable()
                 .catch {
                     it.printStackTraceInDebug()
-                    sendErrorEvent(UiText.DynamicString(it.message.toString()))
+                    sendMessageEvent(UiText.DynamicString(it.message.toString()))
                 }
                 .onCompletion {
                     loadSelectedDatePrayers()
@@ -236,7 +245,7 @@ class HomeScreenViewModel constructor(
                         withContext(Dispatchers.Main) {
                             it.printStackTraceInDebug()
                             state = state.copy(selectedDayPrayersInfo = DayPrayersInfo.Default)
-                            sendErrorEvent(UiText.DynamicString(it.message.toString()))
+                            sendMessageEvent(UiText.DynamicString(it.message.toString()))
                         }
                     }
                 }
@@ -256,9 +265,9 @@ class HomeScreenViewModel constructor(
         timer.start(durationInSeconds.toInt(), Timer.CounterType.DOWN)
     }
 
-    private fun sendErrorEvent(message: UiText) {
+    private fun sendMessageEvent(message: UiText) {
         sendEvent(
-            UiEvent.ShowErrorSnackBar(message)
+            UiEvent.ShowMessage(message)
         )
     }
 

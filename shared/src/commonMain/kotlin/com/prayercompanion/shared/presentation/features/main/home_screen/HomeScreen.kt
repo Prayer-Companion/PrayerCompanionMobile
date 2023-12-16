@@ -72,10 +72,10 @@ fun HomeScreen(
                     launchLocationSettingsDialog.invoke()
                 }
 
-                is UiEvent.ShowErrorSnackBar -> {
+                is UiEvent.ShowMessage -> {
                     scaffoldState
                         .snackbarHostState
-                        .showSnackbar(it.errorMessage.asString(stringResourceReader))
+                        .showSnackbar(it.message.asString(stringResourceReader))
                 }
 
                 is UiEvent.ShowRateTheAppPopup -> {

@@ -10,10 +10,10 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.prayercompanion.shared.data.preferences.DataStoresRepo
 import com.prayercompanion.shared.domain.models.Location
 import com.prayercompanion.shared.domain.models.app.Address
+import com.prayercompanion.shared.domain.utils.ErrorLogger
 import com.prayercompanion.shared.domain.utils.PermissionsManager
 import com.prayercompanion.shared.presentation.utils.log
 import kotlinx.coroutines.flow.firstOrNull
@@ -24,7 +24,8 @@ import kotlin.coroutines.suspendCoroutine
 actual class AppLocationManagerImpl constructor(
     private val context: Context,
     private val dataStoresRepo: DataStoresRepo,
-    private val permissionsManager: PermissionsManager
+    private val permissionsManager: PermissionsManager,
+    private val errorLogger: ErrorLogger
 ) : AppLocationManager {
 
     private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
@@ -102,7 +103,7 @@ actual class AppLocationManagerImpl constructor(
                 /* maxResults = */ 1
             ) ?: emptyList()
         } catch (e: Exception) {
-            FirebaseCrashlytics.getInstance().recordException(e)
+            errorLogger.logException(e)
 
             emptyList()
         }

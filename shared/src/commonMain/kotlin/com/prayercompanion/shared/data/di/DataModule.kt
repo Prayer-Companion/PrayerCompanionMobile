@@ -14,12 +14,14 @@ import com.prayercompanion.shared.data.local.db.daos.QuranReadingSectionsDao
 import com.prayercompanion.shared.data.local.db.daos.QuranReadingSectionsDaoImpl
 import com.prayercompanion.shared.data.preferences.DataStoresRepo
 import com.prayercompanion.shared.data.remote.PrayerCompanionApi
+import com.prayercompanion.shared.data.remote.logger.ErrorLoggerImpl
 import com.prayercompanion.shared.data.repositories.PrayersRepositoryImpl
 import com.prayercompanion.shared.data.repositories.QuranRepositoryImpl
 import com.prayercompanion.shared.data.utils.TrackerImpl
 import com.prayercompanion.shared.domain.repositories.AuthenticationRepository
 import com.prayercompanion.shared.domain.repositories.PrayersRepository
 import com.prayercompanion.shared.domain.repositories.QuranRepository
+import com.prayercompanion.shared.domain.utils.ErrorLogger
 import com.prayercompanion.shared.domain.utils.tracking.Tracker
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -79,4 +81,5 @@ val dataModule = module {
     singleOf(::DataStoresRepo)
     singleOf(::TrackerImpl) { bind<Tracker>() }
     singleOf(::AssetsReader)
+    singleOf(::ErrorLoggerImpl) { bind<ErrorLogger>() }
 }

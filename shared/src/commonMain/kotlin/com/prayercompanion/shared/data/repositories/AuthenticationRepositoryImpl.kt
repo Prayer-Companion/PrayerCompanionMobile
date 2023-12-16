@@ -6,6 +6,7 @@ import com.prayercompanion.shared.presentation.utils.printStackTraceInDebug
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.GoogleAuthProvider
 import dev.gitlive.firebase.auth.auth
+import dev.gitlive.firebase.crashlytics.crashlytics
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -17,6 +18,12 @@ class AuthenticationRepositoryImpl constructor(
 ) : AuthenticationRepository {
 
     private val auth = Firebase.auth
+
+    init {
+        auth.currentUser?.uid?.let {
+            Firebase.crashlytics.setUserId(it)
+        }
+    }
 
     override suspend fun isSignedIn(): Boolean {
         val user = auth.currentUser
@@ -37,12 +44,16 @@ class AuthenticationRepositoryImpl constructor(
         signOut()
         val credential = GoogleAuthProvider.credential(token, accessToken)
         try {
-            auth.signInWithCredential(credential)
+            val result = auth.signInWithCredential(credential)
 
             CoroutineScope(Dispatchers.Default).launch {
                 dataStoresRepo.updateAppPreferencesDataStore {
                     it.copy(isSignedIn = true)
                 }
+            }
+
+            result.user?.uid?.let {
+                Firebase.crashlytics.setUserId(it)
             }
             onSuccess()
         } catch (e: Exception) {

@@ -4,7 +4,7 @@ import com.prayercompanion.shared.presentation.navigation.Route
 import dev.icerock.moko.permissions.Permission
 
 sealed class UiEvent {
-    data class ShowErrorSnackBar(val errorMessage: UiText) : UiEvent()
+    data class ShowMessage(val message: UiText) : UiEvent()
     data class ShowErrorSnackBarStr(val errorMessage: String) : UiEvent()
     data class Navigate(val route: Route, val args: List<Int> = emptyList()) : UiEvent()
     data class RequestPermissions(val permissions: List<Permission>) : UiEvent()

@@ -9,6 +9,7 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization")
     kotlin("native.cocoapods")
     id("dev.icerock.mobile.multiplatform-resources")
+    id("com.google.firebase.crashlytics")
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -68,6 +69,7 @@ kotlin {
                 api("cafe.adriel.voyager:voyager-koin:$voyagerVersion")
                 api("cafe.adriel.voyager:voyager-tab-navigator:$voyagerVersion")
                 api("dev.gitlive:firebase-auth:1.10.4")
+                api("dev.gitlive:firebase-crashlytics:1.10.4")
 
                 api("dev.icerock.moko:permissions:0.16.0")
                 api("dev.icerock.moko:permissions-compose:0.16.0")

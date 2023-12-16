@@ -122,7 +122,7 @@ class QuranViewModel constructor(
         screenModelScope.launch(Dispatchers.IO) {
             addMemorizedChapterAyat.call(chapterId, fromVerse, toVerse)
                 .onFailure {
-                    sendUiEvent(UiEvent.ShowErrorSnackBar(UiText.DynamicString(it.toString())))
+                    sendUiEvent(UiEvent.ShowMessage(UiText.DynamicString(it.toString())))
                 }
         }
     }
@@ -131,7 +131,7 @@ class QuranViewModel constructor(
         screenModelScope.launch(Dispatchers.IO) {
             editMemorizedChapterAyat.call(chapterId, fromVerse, toVerse)
                 .onFailure {
-                    sendUiEvent(UiEvent.ShowErrorSnackBar(UiText.DynamicString(it.toString())))
+                    sendUiEvent(UiEvent.ShowMessage(UiText.DynamicString(it.toString())))
                 }
         }
     }
@@ -141,7 +141,7 @@ class QuranViewModel constructor(
         screenModelScope.launch(Dispatchers.IO) {
             removeMemorizedChapterAyat.call(chapterId)
                 .onFailure {
-                    sendUiEvent(UiEvent.ShowErrorSnackBar(UiText.DynamicString(it.toString())))
+                    sendUiEvent(UiEvent.ShowMessage(UiText.DynamicString(it.toString())))
                 }
         }
     }

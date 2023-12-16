@@ -104,9 +104,9 @@ fun QuranScreen(
     LaunchedEffect(key1 = true) {
         uiEventsChannel.collect {
             when (it) {
-                is UiEvent.ShowErrorSnackBar -> {
+                is UiEvent.ShowMessage -> {
                     scaffoldState.snackbarHostState.showSnackbar(
-                        it.errorMessage.asString(
+                        it.message.asString(
                             stringResourceReader
                         )
                     )
