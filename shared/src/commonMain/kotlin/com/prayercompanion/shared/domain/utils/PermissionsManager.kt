@@ -9,17 +9,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 
-expect class PermissionsManager {
-    val isLocationPermissionGranted: Boolean
-
-    val isPushNotificationAllowed: Boolean
-
-    companion object {
-        val locationPermissions: List<String>
-        val notificationsPermission: String
-    }
-}
-
 class MokoPermissionsManager(
     permissionsControllerFactory: PermissionsControllerFactory
 ) {

@@ -14,7 +14,7 @@ import com.prayercompanion.shared.data.preferences.DataStoresRepo
 import com.prayercompanion.shared.domain.models.Location
 import com.prayercompanion.shared.domain.models.app.Address
 import com.prayercompanion.shared.domain.utils.ErrorLogger
-import com.prayercompanion.shared.domain.utils.PermissionsManager
+import com.prayercompanion.shared.domain.utils.MokoPermissionsManager
 import com.prayercompanion.shared.presentation.utils.log
 import kotlinx.coroutines.flow.firstOrNull
 import java.util.Locale
@@ -24,7 +24,7 @@ import kotlin.coroutines.suspendCoroutine
 actual class AppLocationManagerImpl constructor(
     private val context: Context,
     private val dataStoresRepo: DataStoresRepo,
-    private val permissionsManager: PermissionsManager,
+    private val permissionsManager: MokoPermissionsManager,
     private val errorLogger: ErrorLogger
 ) : AppLocationManager {
 
@@ -32,7 +32,7 @@ actual class AppLocationManagerImpl constructor(
 
     @SuppressLint("MissingPermission")
     actual override suspend fun getLastKnownLocation(): Location? {
-        if (permissionsManager.isLocationPermissionGranted.not()) {
+        if (permissionsManager.isLocationPermissionGranted().not()) {
             log { "Location permission is missing" }
             return dataStoresRepo.appPreferencesDataStoreData.firstOrNull()?.location
         }
@@ -135,8 +135,8 @@ actual class AppLocationManagerImpl constructor(
     }
 
     @SuppressLint("MissingPermission")
-    actual override fun getRequestLocationUpdates(onLocationRetrieved: (Location) -> Unit) {
-        if (permissionsManager.isLocationPermissionGranted.not()) {
+    actual override suspend fun getRequestLocationUpdates(onLocationRetrieved: (Location) -> Unit) {
+        if (permissionsManager.isLocationPermissionGranted().not()) {
             log { "Location permission is missing" }
             return
         }

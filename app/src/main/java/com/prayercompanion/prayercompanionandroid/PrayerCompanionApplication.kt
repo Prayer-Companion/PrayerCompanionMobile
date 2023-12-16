@@ -11,8 +11,10 @@ import androidx.work.WorkManager
 import com.prayercompanion.prayercompanionandroid.presentation.di.androidPresentationModule
 import com.prayercompanion.prayercompanionandroid.presentation.utils.ScheduleDailyPrayersWorker
 import com.prayercompanion.prayercompanionandroid.presentation.utils.notifications.PrayersNotificationsService
-import com.prayercompanion.shared.domain.utils.PermissionsManager
+import com.prayercompanion.shared.domain.utils.MokoPermissionsManager
 import com.prayercompanion.shared.presentation.appModule
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import logcat.AndroidLogcatLogger
 import logcat.LogPriority
 import org.koin.android.ext.android.inject
@@ -23,7 +25,7 @@ import java.util.concurrent.TimeUnit
 
 class PrayerCompanionApplication : Application(), Configuration.Provider {
 
-    private val permissionsManager: PermissionsManager by inject()
+    private val permissionsManager: MokoPermissionsManager by inject()
 
     override fun getWorkManagerConfiguration() =
         Configuration.Builder()
@@ -68,9 +70,9 @@ class PrayerCompanionApplication : Application(), Configuration.Provider {
         notificationManager.createNotificationChannel(channel)
     }
 
-    private fun setupScheduleDailyPrayersWorker() {
-        if (permissionsManager.isLocationPermissionGranted.not()) {
-            return
+    private fun setupScheduleDailyPrayersWorker() = MainScope().launch {
+        if (permissionsManager.isLocationPermissionGranted().not()) {
+            return@launch
         }
 
         val scheduleDailyPrayersPeriodicWorkRequest =
@@ -78,7 +80,7 @@ class PrayerCompanionApplication : Application(), Configuration.Provider {
                 .build()
 
 
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+        WorkManager.getInstance(this@PrayerCompanionApplication).enqueueUniquePeriodicWork(
             ScheduleDailyPrayersWorker::class.simpleName!!,
             ExistingPeriodicWorkPolicy.UPDATE,
             scheduleDailyPrayersPeriodicWorkRequest

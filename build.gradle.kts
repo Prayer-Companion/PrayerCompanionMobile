@@ -26,6 +26,5 @@ plugins {
     id("app.cash.sqldelight") version ("2.0.0") apply (false)
     id("org.jetbrains.kotlin.jvm") version kotlinVersion apply false
     id("com.google.devtools.ksp") version "1.9.20-1.0.14" apply false
-    id("com.rickclephas.kmp.nativecoroutines") version "1.0.0-ALPHA-18" apply false
     kotlin("native.cocoapods") version "1.9.10" apply false
 }

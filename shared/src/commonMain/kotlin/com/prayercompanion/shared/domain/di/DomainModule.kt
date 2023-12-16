@@ -23,7 +23,6 @@ import com.prayercompanion.shared.domain.usecases.quran.MarkQuranSectionAsRead
 import com.prayercompanion.shared.domain.usecases.quran.RemoveMemorizedChapterAyat
 import com.prayercompanion.shared.domain.usecases.settings.GetIsPauseMediaEnabled
 import com.prayercompanion.shared.domain.usecases.settings.SetPauseMediaEnabled
-import com.prayercompanion.shared.domain.utils.PermissionsManager
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
@@ -51,5 +50,4 @@ val domainModule = module {
     singleOf(::SetPauseMediaEnabled)
     singleOf(::AccountSignIn)
     singleOf(::IsConnectedToInternet)
-    singleOf(::PermissionsManager)
 }
