@@ -60,4 +60,4 @@ class AppLocationManagerImpl : AppLocationManager {
         return
         TODO("ios")
     }
-}§
+}
