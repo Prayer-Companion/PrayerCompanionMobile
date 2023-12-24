@@ -42,3 +42,6 @@ prayer_companion_keystore.jks
 /captures
 .externalNativeBuild
 .cxx
+
+# ios
+Pods/
