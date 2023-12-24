@@ -160,10 +160,33 @@ gdt_cct_LogEvent GDTCCTConstructLogEvent(GDTCOREvent *event) {
     return logEvent;
   }
   logEvent.source_extension = GDTCCTEncodeData(extensionBytes);  // read bytes from the file.
+  if (event.productData) {
+    logEvent.compliance_data = GDTCCTConstructComplianceData(event.productData);
+    logEvent.has_compliance_data = 1;
+  }
   return logEvent;
 }
 
-gdt_cct_ClientInfo GDTCCTConstructClientInfo() {
+gdt_cct_ComplianceData GDTCCTConstructComplianceData(GDTCORProductData *productData) {
+  privacy_context_external_ExternalPRequestContext prequest =
+      privacy_context_external_ExternalPRequestContext_init_default;
+  prequest.origin_associated_product_id = productData.productID;
+  prequest.has_origin_associated_product_id = 1;
+
+  privacy_context_external_ExternalPrivacyContext privacy_context =
+      privacy_context_external_ExternalPrivacyContext_init_default;
+  privacy_context.prequest = prequest;
+  privacy_context.has_prequest = 1;
+
+  gdt_cct_ComplianceData complianceData = gdt_cct_ComplianceData_init_default;
+  complianceData.privacy_context = privacy_context;
+  complianceData.has_privacy_context = 1;
+  complianceData.product_id_origin = gdt_cct_ComplianceData_ProductIdOrigin_EVENT_OVERRIDE;
+  complianceData.has_product_id_origin = 1;
+  return complianceData;
+}
+
+gdt_cct_ClientInfo GDTCCTConstructClientInfo(void) {
   gdt_cct_ClientInfo clientInfo = gdt_cct_ClientInfo_init_default;
   clientInfo.client_type = gdt_cct_ClientInfo_ClientType_IOS_FIREBASE;
   clientInfo.has_client_type = 1;
@@ -177,7 +200,7 @@ gdt_cct_ClientInfo GDTCCTConstructClientInfo() {
   return clientInfo;
 }
 
-gdt_cct_IosClientInfo GDTCCTConstructiOSClientInfo() {
+gdt_cct_IosClientInfo GDTCCTConstructiOSClientInfo(void) {
   gdt_cct_IosClientInfo iOSClientInfo = gdt_cct_IosClientInfo_init_default;
 #if TARGET_OS_IOS || TARGET_OS_TV
   UIDevice *device = [UIDevice currentDevice];
@@ -203,7 +226,7 @@ gdt_cct_IosClientInfo GDTCCTConstructiOSClientInfo() {
   return iOSClientInfo;
 }
 
-gdt_cct_MacClientInfo GDTCCTConstructMacClientInfo() {
+gdt_cct_MacClientInfo GDTCCTConstructMacClientInfo(void) {
   gdt_cct_MacClientInfo macOSClientInfo = gdt_cct_MacClientInfo_init_default;
 
   NSOperatingSystemVersion osVersion = [NSProcessInfo processInfo].operatingSystemVersion;
@@ -231,7 +254,7 @@ gdt_cct_MacClientInfo GDTCCTConstructMacClientInfo() {
   return macOSClientInfo;
 }
 
-NSData *GDTCCTConstructNetworkConnectionInfoData() {
+NSData *GDTCCTConstructNetworkConnectionInfoData(void) {
   gdt_cct_NetworkConnectionInfo networkConnectionInfo = gdt_cct_NetworkConnectionInfo_init_default;
   NSInteger currentNetworkType = GDTCORNetworkTypeMessage();
   if (currentNetworkType) {
@@ -252,7 +275,7 @@ NSData *GDTCCTConstructNetworkConnectionInfoData() {
   return networkConnectionInfoData;
 }
 
-gdt_cct_NetworkConnectionInfo_MobileSubtype GDTCCTNetworkConnectionInfoNetworkMobileSubtype() {
+gdt_cct_NetworkConnectionInfo_MobileSubtype GDTCCTNetworkConnectionInfoNetworkMobileSubtype(void) {
   NSNumber *networkMobileSubtypeMessage = @(GDTCORNetworkMobileSubTypeMessage());
   if (!networkMobileSubtypeMessage.intValue) {
     return gdt_cct_NetworkConnectionInfo_MobileSubtype_UNKNOWN_MOBILE_SUBTYPE;

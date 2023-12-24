@@ -162,11 +162,9 @@ class HomeScreenViewModel constructor(
     }
 
     fun onLocationSettingsResult(result: Boolean) {
-        screenModelScope.launch {
-            if (result) {
-                locationManager.getRequestLocationUpdates {
-                    loadDailyPrayersCombo()
-                }
+        if (result) {
+            locationManager.getRequestLocationUpdates {
+                loadDailyPrayersCombo()
             }
         }
     }

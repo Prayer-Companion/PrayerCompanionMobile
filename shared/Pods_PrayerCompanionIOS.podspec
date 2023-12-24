@@ -9,7 +9,7 @@ Pod::Spec.new do |spec|
     spec.vendored_frameworks      = 'build/cocoapods/framework/shared.framework'
     spec.libraries                = 'c++'
     spec.ios.deployment_target = '16.0'
-    spec.dependency 'FirebaseAnalytics'
+    spec.dependency 'FirebaseAnalytics', '9.6.0'
     spec.dependency 'GoogleSignIn', '7.0.0'
                 
     spec.pod_target_xcconfig = {

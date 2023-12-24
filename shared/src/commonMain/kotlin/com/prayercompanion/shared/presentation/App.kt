@@ -8,7 +8,7 @@ import com.prayercompanion.shared.presentation.di.presentationModule
 import com.prayercompanion.shared.presentation.features.onboarding.splash_screen.SplashScreen
 import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
 
-fun appModule() = listOf(presentationModule, domainModule, dataModule)
+fun appModules() = listOf(presentationModule, domainModule, dataModule)
 
 @Composable
 fun App() {

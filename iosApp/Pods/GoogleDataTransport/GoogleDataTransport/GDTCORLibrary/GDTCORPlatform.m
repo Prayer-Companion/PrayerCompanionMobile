@@ -84,7 +84,7 @@ BOOL GDTCORReachabilityFlagsContainWWAN(GDTCORNetworkReachabilityFlags flags) {
 #endif  // TARGET_OS_IOS
 }
 
-GDTCORNetworkType GDTCORNetworkTypeMessage() {
+GDTCORNetworkType GDTCORNetworkTypeMessage(void) {
 #if !TARGET_OS_WATCH
   SCNetworkReachabilityFlags reachabilityFlags = [GDTCORReachability currentFlags];
   if ((reachabilityFlags & kSCNetworkReachabilityFlagsReachable) ==
@@ -99,8 +99,10 @@ GDTCORNetworkType GDTCORNetworkTypeMessage() {
   return GDTCORNetworkTypeUNKNOWN;
 }
 
-GDTCORNetworkMobileSubtype GDTCORNetworkMobileSubTypeMessage() {
-#if TARGET_OS_IOS
+GDTCORNetworkMobileSubtype GDTCORNetworkMobileSubTypeMessage(void) {
+// TODO(Xcode 15): When Xcode 15 is the minimum supported Xcode version,
+// it will be unnecessary to check if `TARGET_OS_VISION` is defined.
+#if TARGET_OS_IOS && (!defined(TARGET_OS_VISION) || !TARGET_OS_VISION)
   static NSDictionary<NSString *, NSNumber *> *CTRadioAccessTechnologyToNetworkSubTypeMessage;
   static CTTelephonyNetworkInfo *networkInfo;
   static dispatch_once_t onceToken;
@@ -149,12 +151,12 @@ GDTCORNetworkMobileSubtype GDTCORNetworkMobileSubTypeMessage() {
   } else {
     return GDTCORNetworkMobileSubtypeUNKNOWN;
   }
-#else   // TARGET_OS_IOS
+#else   // TARGET_OS_IOS && (!defined(TARGET_OS_VISION) || !TARGET_OS_VISION)
   return GDTCORNetworkMobileSubtypeUNKNOWN;
-#endif  // TARGET_OS_IOS
+#endif  // TARGET_OS_IOS && (!defined(TARGET_OS_VISION) || !TARGET_OS_VISION)
 }
 
-NSString *_Nonnull GDTCORDeviceModel() {
+NSString *_Nonnull GDTCORDeviceModel(void) {
   static NSString *deviceModel = @"Unknown";
 
 #if TARGET_OS_IOS || TARGET_OS_TV
@@ -205,8 +207,12 @@ NSData *_Nullable GDTCOREncodeArchive(id<NSSecureCoding> obj,
     }
     if (filePath.length > 0) {
       result = [resultData writeToFile:filePath options:NSDataWritingAtomic error:error];
-      if (result == NO || *error) {
-        GDTCORLogDebug(@"Attempt to write archive failed: path:%@ error:%@", filePath, *error);
+      if (result == NO || (error != NULL && *error != nil)) {
+        if (error != NULL && *error != nil) {
+          GDTCORLogDebug(@"Attempt to write archive failed: path:%@ error:%@", filePath, *error);
+        } else {
+          GDTCORLogDebug(@"Attempt to write archive failed: path:%@", filePath);
+        }
       } else {
         GDTCORLogDebug(@"Writing archive succeeded: %@", filePath);
       }

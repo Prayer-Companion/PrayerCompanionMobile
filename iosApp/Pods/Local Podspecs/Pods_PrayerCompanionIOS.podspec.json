@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "FirebaseAnalytics": [
-
+      "9.6.0"
     ],
     "GoogleSignIn": [
       "7.0.0"

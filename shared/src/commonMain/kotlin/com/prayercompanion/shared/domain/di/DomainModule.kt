@@ -1,11 +1,6 @@
 package com.prayercompanion.shared.domain.di
 
-import com.prayercompanion.shared.data.system.AppLocationManager
-import com.prayercompanion.shared.data.system.AppLocationManagerImpl
 import com.prayercompanion.shared.domain.usecases.AccountSignIn
-import com.prayercompanion.shared.domain.usecases.GetAppLanguage
-import com.prayercompanion.shared.domain.usecases.IsConnectedToInternet
-import com.prayercompanion.shared.domain.usecases.SetAppLanguage
 import com.prayercompanion.shared.domain.usecases.prayers.GetDailyPrayersCombo
 import com.prayercompanion.shared.domain.usecases.prayers.GetDayPrayers
 import com.prayercompanion.shared.domain.usecases.prayers.GetDayPrayersFlow
@@ -23,14 +18,11 @@ import com.prayercompanion.shared.domain.usecases.quran.MarkQuranSectionAsRead
 import com.prayercompanion.shared.domain.usecases.quran.RemoveMemorizedChapterAyat
 import com.prayercompanion.shared.domain.usecases.settings.GetIsPauseMediaEnabled
 import com.prayercompanion.shared.domain.usecases.settings.SetPauseMediaEnabled
-import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val domainModule = module {
-    singleOf(::AppLocationManagerImpl) { bind<AppLocationManager>() }
-    singleOf(::GetAppLanguage)
-    singleOf(::SetAppLanguage)
+
     singleOf(::GetDailyPrayersCombo)
     singleOf(::GetDayPrayers)
     singleOf(::GetDayPrayersFlow)
@@ -49,5 +41,4 @@ val domainModule = module {
     singleOf(::GetIsPauseMediaEnabled)
     singleOf(::SetPauseMediaEnabled)
     singleOf(::AccountSignIn)
-    singleOf(::IsConnectedToInternet)
 }

@@ -1,4 +1,4 @@
-package com.prayercompanion.shared.data.system
+package com.prayercompanion.shared.data.local.system
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -11,28 +11,28 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.prayercompanion.shared.data.preferences.DataStoresRepo
+import com.prayercompanion.shared.data.system.AppLocationManager
 import com.prayercompanion.shared.domain.models.Location
 import com.prayercompanion.shared.domain.models.app.Address
 import com.prayercompanion.shared.domain.utils.ErrorLogger
-import com.prayercompanion.shared.domain.utils.MokoPermissionsManager
 import com.prayercompanion.shared.presentation.utils.log
 import kotlinx.coroutines.flow.firstOrNull
 import java.util.Locale
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-actual class AppLocationManagerImpl constructor(
+class AppLocationManagerImpl constructor(
     private val context: Context,
     private val dataStoresRepo: DataStoresRepo,
-    private val permissionsManager: MokoPermissionsManager,
+    private val permissionsManager: PermissionsManager,
     private val errorLogger: ErrorLogger
 ) : AppLocationManager {
 
     private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
 
     @SuppressLint("MissingPermission")
-    actual override suspend fun getLastKnownLocation(): Location? {
-        if (permissionsManager.isLocationPermissionGranted().not()) {
+    override suspend fun getLastKnownLocation(): Location? {
+        if (permissionsManager.isLocationPermissionGranted.not()) {
             log { "Location permission is missing" }
             return dataStoresRepo.appPreferencesDataStoreData.firstOrNull()?.location
         }
@@ -115,7 +115,7 @@ actual class AppLocationManagerImpl constructor(
         return Address(address.countryCode, address.locality)
     }
 
-    actual override suspend fun getAddressByLocation(location: Location?): Address? {
+    override suspend fun getAddressByLocation(location: Location?): Address? {
         if (location == null)
             return null
 
@@ -135,8 +135,8 @@ actual class AppLocationManagerImpl constructor(
     }
 
     @SuppressLint("MissingPermission")
-    actual override suspend fun getRequestLocationUpdates(onLocationRetrieved: (Location) -> Unit) {
-        if (permissionsManager.isLocationPermissionGranted().not()) {
+    override fun getRequestLocationUpdates(onLocationRetrieved: (Location) -> Unit) {
+        if (permissionsManager.isLocationPermissionGranted.not()) {
             log { "Location permission is missing" }
             return
         }

@@ -30,7 +30,9 @@ kotlin {
         ios.deploymentTarget = "16.0"
         podfile = project.file("../iosApp//Podfile")
 
-        pod("FirebaseAnalytics")
+        pod("FirebaseAnalytics") {
+            version = "9.6.0"
+        }
         pod("GoogleSignIn") {
             version = "7.0.0"
         }
