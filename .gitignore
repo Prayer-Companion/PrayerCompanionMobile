@@ -23,7 +23,7 @@ deploymentTargetDropDown.xml
 render.experimental.xml
 
 # Keystore files
-*.jks
+prayer_companion_keystore.jks
 *.keystore
 
 # Android Profiling
