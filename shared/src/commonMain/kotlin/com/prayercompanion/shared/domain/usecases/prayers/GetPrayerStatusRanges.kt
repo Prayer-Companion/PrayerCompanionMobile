@@ -1,12 +1,12 @@
 package com.prayercompanion.shared.domain.usecases.prayers
 
-import com.prayercompanion.shared.data.system.AppLocationManager
 import com.prayercompanion.shared.domain.extensions.instantBetween
 import com.prayercompanion.shared.domain.extensions.plus
 import com.prayercompanion.shared.domain.models.Location
 import com.prayercompanion.shared.domain.models.Prayer
 import com.prayercompanion.shared.domain.models.PrayerStatus
 import com.prayercompanion.shared.domain.models.app.Address
+import com.prayercompanion.shared.domain.repositories.LocationRepository
 import com.prayercompanion.shared.domain.repositories.PrayersRepository
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDateTime
@@ -14,15 +14,15 @@ import kotlinx.datetime.plus
 
 class GetPrayerStatusRanges constructor(
     private val prayersRepository: PrayersRepository,
-    private val appLocationManager: AppLocationManager
+    private val locationRepository: LocationRepository
 ) {
 
     suspend fun call(
         prayerDateTime: LocalDateTime,
         nextPrayer: Prayer?
     ): Map<PrayerStatus, OpenEndRange<LocalDateTime>>? {
-        val location = appLocationManager.getLastKnownLocation()
-        val address = appLocationManager.getAddressByLocation(location)
+        val location = locationRepository.getLastKnownLocation()
+        val address = locationRepository.getAddressByLocation(location)
 
         return if (nextPrayer != null) {
             getRangesForSameDayPrayers(

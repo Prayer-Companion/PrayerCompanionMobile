@@ -2,7 +2,6 @@ package com.prayercompanion.prayercompanionandroid.presentation.di
 
 import com.prayercompanion.prayercompanionandroid.MainActivityViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.utils.AndroidPrayersAlarmScheduler
-import com.prayercompanion.prayercompanionandroid.presentation.utils.MediaController
 import com.prayercompanion.prayercompanionandroid.presentation.utils.ScheduleDailyPrayersWorker
 import com.prayercompanion.prayercompanionandroid.presentation.utils.notifications.PrayersNotificationsService
 import org.koin.androidx.viewmodel.dsl.viewModelOf
@@ -13,6 +12,5 @@ val androidPresentationModule = module {
     viewModelOf(::MainActivityViewModel)
     singleOf(::PrayersNotificationsService)
     singleOf(::AndroidPrayersAlarmScheduler)
-    singleOf(::MediaController)
     singleOf(::ScheduleDailyPrayersWorker)
 }

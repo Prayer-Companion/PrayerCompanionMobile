@@ -1,11 +1,11 @@
-package com.prayercompanion.prayercompanionandroid.presentation.utils
+package com.prayercompanion.shared.data.local.system
 
 import android.content.Context
 import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
 
-class MediaController constructor(
+actual class MediaController constructor(
     context: Context
 ) {
     private val audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
@@ -15,7 +15,7 @@ class MediaController constructor(
         )
         .build()
 
-    fun pauseMedia() {
+    actual fun pauseMedia() {
         audioManager.requestAudioFocus(focusRequest)
         audioManager.abandonAudioFocusRequest(focusRequest)
     }

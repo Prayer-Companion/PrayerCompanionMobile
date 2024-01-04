@@ -1,10 +1,10 @@
 package com.prayercompanion.prayercompanionandroid.domain.utils
 
-import com.prayercompanion.shared.data.system.AppLocationManager
 import com.prayercompanion.shared.domain.models.Location
 import com.prayercompanion.shared.domain.models.app.Address
+import com.prayercompanion.shared.domain.repositories.LocationRepository
 
-internal class FakeAppLocationManager : AppLocationManager {
+internal class FakeLocationRepository : LocationRepository {
     override suspend fun getLastKnownLocation(): Location = Location(
         latitude = 31.963158,
         longitude = 35.930359,

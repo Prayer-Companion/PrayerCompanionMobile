@@ -1,7 +1,8 @@
-package com.prayercompanion.shared.data.system
+package com.prayercompanion.shared.data.local
 
 import com.prayercompanion.shared.domain.models.Location
 import com.prayercompanion.shared.domain.models.app.Address
+import com.prayercompanion.shared.domain.repositories.LocationRepository
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents
 import kotlinx.coroutines.Dispatchers
@@ -16,7 +17,7 @@ import platform.CoreLocation.CLLocationManagerDelegateProtocol
 import platform.CoreLocation.CLPlacemark
 import platform.darwin.NSObject
 
-class AppLocationManagerImpl : AppLocationManager {
+class LocationRepositoryImpl : LocationRepository {
 
     private val location = MutableStateFlow<Location?>(null)
     private val address = MutableStateFlow<Address?>(null)
@@ -73,7 +74,7 @@ private class LocationManager(
         }
     }
 
-    private fun getAddressForLocation(location: CLLocation, callback: (Address) -> Unit)  {
+    private fun getAddressForLocation(location: CLLocation, callback: (Address) -> Unit) {
         return clGeocoder.reverseGeocodeLocation(location) { placeMarks, _ ->
             val place = placeMarks?.firstOrNull() as CLPlacemark?
 

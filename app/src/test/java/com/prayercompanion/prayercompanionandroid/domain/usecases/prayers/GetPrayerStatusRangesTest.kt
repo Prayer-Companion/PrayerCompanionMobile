@@ -1,10 +1,10 @@
 package com.prayercompanion.prayercompanionandroid.domain.usecases.prayers
 
-import com.prayercompanion.prayercompanionandroid.domain.utils.FakeAppLocationManager
+import com.prayercompanion.prayercompanionandroid.domain.utils.FakeLocationRepository
 import com.prayercompanion.prayercompanionandroid.domain.utils.PrayersFakeRepository
-import com.prayercompanion.shared.data.system.AppLocationManager
 import com.prayercompanion.shared.domain.extensions.now
 import com.prayercompanion.shared.domain.models.Prayer
+import com.prayercompanion.shared.domain.repositories.LocationRepository
 import com.prayercompanion.shared.domain.repositories.PrayersRepository
 import com.prayercompanion.shared.domain.usecases.prayers.GetPrayerStatusRanges
 import kotlinx.coroutines.test.runTest
@@ -17,11 +17,11 @@ internal class GetPrayerStatusRangesTest {
 
     private lateinit var usecase: GetPrayerStatusRanges
     private val prayersRepository: PrayersRepository = PrayersFakeRepository()
-    private val appLocationManager: AppLocationManager = FakeAppLocationManager()
+    private val locationRepository: LocationRepository = FakeLocationRepository()
 
     @Before
     fun setUp() {
-        usecase = GetPrayerStatusRanges(prayersRepository, appLocationManager)
+        usecase = GetPrayerStatusRanges(prayersRepository, locationRepository)
     }
 
     @Test

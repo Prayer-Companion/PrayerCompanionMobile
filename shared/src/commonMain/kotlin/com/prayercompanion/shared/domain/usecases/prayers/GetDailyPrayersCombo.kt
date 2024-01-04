@@ -1,9 +1,9 @@
 package com.prayercompanion.shared.domain.usecases.prayers
 
-import com.prayercompanion.shared.data.system.AppLocationManager
 import com.prayercompanion.shared.domain.extensions.now
 import com.prayercompanion.shared.domain.models.DailyPrayersCombo
 import com.prayercompanion.shared.domain.models.app.YearMonth
+import com.prayercompanion.shared.domain.repositories.LocationRepository
 import com.prayercompanion.shared.domain.repositories.PrayersRepository
 import com.prayercompanion.shared.domain.usecases.IsConnectedToInternet
 import com.prayercompanion.shared.domain.utils.exceptions.LocationMissingException
@@ -16,7 +16,7 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 
 class GetDailyPrayersCombo constructor(
-    private val appLocationManager: AppLocationManager,
+    private val locationRepository: LocationRepository,
     private val prayersRepository: PrayersRepository,
     private val isConnectedToInternet: IsConnectedToInternet
 ) {
@@ -24,8 +24,8 @@ class GetDailyPrayersCombo constructor(
     suspend fun call(): Flow<DailyPrayersCombo> {
         val currentDate = LocalDate.now()
         val yearMonth = YearMonth.from(currentDate)
-        val location = appLocationManager.getLastKnownLocation()
-        val address = appLocationManager.getAddressByLocation(location)
+        val location = locationRepository.getLastKnownLocation()
+        val address = locationRepository.getAddressByLocation(location)
 
         return flow {
             getDailyPrayersInfoComboFromDB()?.let {

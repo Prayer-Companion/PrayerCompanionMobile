@@ -6,14 +6,14 @@ import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.prayercompanion.shared.data.local.system.sensors.OrientationSensor
-import com.prayercompanion.shared.data.system.AppLocationManager
 import com.prayercompanion.shared.domain.models.SensorAccuracy
+import com.prayercompanion.shared.domain.repositories.LocationRepository
 import com.prayercompanion.shared.domain.utils.QiblaUtils
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
 class QiblaViewModel constructor(
-    private val appLocationManager: AppLocationManager,
+    private val locationRepository: LocationRepository,
     private val orientationSensor: OrientationSensor,
 ) : ScreenModel {
 
@@ -31,7 +31,7 @@ class QiblaViewModel constructor(
 
     private fun onStart() {
         screenModelScope.launch {
-            val location = appLocationManager.getLastKnownLocation()
+            val location = locationRepository.getLastKnownLocation()
 
             orientationSensor.initialize(
                 onOrientationChangedListener = { orientation ->

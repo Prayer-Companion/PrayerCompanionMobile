@@ -11,9 +11,9 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.prayercompanion.shared.data.preferences.DataStoresRepo
-import com.prayercompanion.shared.data.system.AppLocationManager
 import com.prayercompanion.shared.domain.models.Location
 import com.prayercompanion.shared.domain.models.app.Address
+import com.prayercompanion.shared.domain.repositories.LocationRepository
 import com.prayercompanion.shared.domain.utils.ErrorLogger
 import com.prayercompanion.shared.presentation.utils.log
 import kotlinx.coroutines.flow.firstOrNull
@@ -21,12 +21,12 @@ import java.util.Locale
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class AppLocationManagerImpl constructor(
+class LocationRepositoryImpl constructor(
     private val context: Context,
     private val dataStoresRepo: DataStoresRepo,
     private val permissionsManager: PermissionsManager,
     private val errorLogger: ErrorLogger
-) : AppLocationManager {
+) : LocationRepository {
 
     private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
 

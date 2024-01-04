@@ -9,12 +9,12 @@ import com.prayercompanion.prayercompanionandroid.moko_resources.Res
 import com.prayercompanion.shared.BuildConfigs
 import com.prayercompanion.shared.currentTimeMillis
 import com.prayercompanion.shared.data.preferences.DataStoresRepo
-import com.prayercompanion.shared.data.system.AppLocationManager
 import com.prayercompanion.shared.domain.extensions.instantBetween
 import com.prayercompanion.shared.domain.extensions.now
 import com.prayercompanion.shared.domain.models.DayPrayersInfo
 import com.prayercompanion.shared.domain.models.PrayerInfo
 import com.prayercompanion.shared.domain.models.PrayerStatus
+import com.prayercompanion.shared.domain.repositories.LocationRepository
 import com.prayercompanion.shared.domain.usecases.prayers.GetDailyPrayersCombo
 import com.prayercompanion.shared.domain.usecases.prayers.GetDayPrayersFlow
 import com.prayercompanion.shared.domain.usecases.prayers.GetStatusesOverView
@@ -52,7 +52,7 @@ class HomeScreenViewModel constructor(
     private val getDayPrayersFlow: GetDayPrayersFlow,
     private val updatePrayerStatus: UpdatePrayerStatus,
     private val getStatusesOverView: GetStatusesOverView,
-    private val locationManager: AppLocationManager,
+    private val locationManager: LocationRepository,
     private val loadAndSaveQuranMemorizedChapters: LoadAndSaveQuranMemorizedChapters,
     private val getDailyPrayersCombo: GetDailyPrayersCombo,
     private val setPrayerStatusByDateTime: SetPrayerStatusByDateTime,
