@@ -1,6 +1,5 @@
-package com.prayercompanion.prayercompanionandroid.presentation.features.qibla
+package com.prayercompanion.shared.presentation.features.main.qibla
 
-import android.annotation.SuppressLint
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,19 +26,40 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.components.QiblaSensorAccuracyDialog
-import com.prayercompanion.prayercompanionandroid.presentation.features.qibla.components.QiblaSensorAccuracyIndicator
-import com.prayercompanion.prayercompanionandroid.presentation.utils.SensorAccuracy
+import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.navigator.tab.Tab
+import cafe.adriel.voyager.navigator.tab.TabOptions
+import com.prayercompanion.prayercompanionandroid.moko_resources.Res
+import com.prayercompanion.shared.BottomNavItem
+import com.prayercompanion.shared.domain.models.SensorAccuracy
+import com.prayercompanion.shared.presentation.features.main.qibla.components.QiblaSensorAccuracyDialog
+import com.prayercompanion.shared.presentation.features.main.qibla.components.QiblaSensorAccuracyIndicator
 import com.prayercompanion.shared.presentation.theme.LocalSpacing
 import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
+import com.prayercompanion.shared.presentation.utils.createTabOptions
+import dev.icerock.moko.resources.compose.painterResource
+import dev.icerock.moko.resources.compose.stringResource
+import org.koin.core.component.KoinComponent
 
-@SuppressLint("MissingPermission")
-@Preview(locale = "ar", showSystemUi = true)
+object QiblaScreen : Tab, KoinComponent {
+
+    @Composable
+    override fun Content() {
+        val viewModel = getScreenModel<QiblaViewModel>()
+
+        QiblaScreen(
+            onEvent = viewModel::onEvent,
+            sensorAccuracy = viewModel.sensorAccuracy,
+            qiblaDirection = viewModel.qiblaDirection
+        )
+    }
+
+    override val options: TabOptions
+        @Composable
+        get() = createTabOptions(BottomNavItem.Qibla)
+}
+
 @Composable
 fun QiblaScreen(
     onEvent: (QiblaUiEvent) -> Unit = { },
@@ -85,7 +105,7 @@ fun QiblaScreen(
                 modifier = Modifier
                     .size(280.dp)
                     .rotate(rotation),
-                painter = painterResource(R.drawable.img_qibla_compass),
+                painter = painterResource(Res.images.img_qibla_compass),
                 contentDescription = "Qibla compass",
             )
 
@@ -110,7 +130,7 @@ fun QiblaScreen(
 
                 Text(
                     modifier = Modifier.padding(start = spacing.spaceSmall),
-                    text = stringResource(id = sensorAccuracy.nameId),
+                    text = stringResource(sensorAccuracy.nameId),
                     style = MaterialTheme.typography.h3,
                     color = MaterialTheme.colors.secondary
                 )

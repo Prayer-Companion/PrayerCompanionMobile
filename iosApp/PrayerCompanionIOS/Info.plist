@@ -7,19 +7,6 @@
 		<string>en</string>
 		<string>Arabic</string>
 	</array>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Location permission is required</string>
-	<key>GOOGLE_ANALYTICS_REGISTRATION_WITH_AD_NETWORK_ENABLED</key>
-	<false/>
-	<key>UIAppFonts</key>
-	<array>
-		<string>bold.ttf</string>
-		<string>extra_bold.ttf</string>
-		<string>light.ttf</string>
-		<string>regular.ttf</string>
-	</array>
-	<key>GIDClientID</key>
-	<string>923721998607-mvdq5eodi7q03l53r41pth7qbdjf0bna.apps.googleusercontent.com</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -28,6 +15,17 @@
 				<string>com.googleusercontent.apps.923721998607-mvdq5eodi7q03l53r41pth7qbdjf0bna</string>
 			</array>
 		</dict>
+	</array>
+	<key>GIDClientID</key>
+	<string>923721998607-mvdq5eodi7q03l53r41pth7qbdjf0bna.apps.googleusercontent.com</string>
+	<key>GOOGLE_ANALYTICS_REGISTRATION_WITH_AD_NETWORK_ENABLED</key>
+	<false/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>bold.ttf</string>
+		<string>extra_bold.ttf</string>
+		<string>light.ttf</string>
+		<string>regular.ttf</string>
 	</array>
 </dict>
 </plist>

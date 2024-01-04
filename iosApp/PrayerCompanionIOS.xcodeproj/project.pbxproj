@@ -495,6 +495,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PrayerCompanionIOS/Info.plist;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Location permission is required";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -511,7 +512,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 13.5;
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = "-fprofile-instr-generate";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.prayer-companion.PrayerCompanionIOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.prayer-companion.PrayerCompanionIOS1";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -538,6 +539,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PrayerCompanionIOS/Info.plist;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Location permission is required";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -554,7 +556,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 13.5;
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = "-fprofile-instr-generate";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.prayer-companion.PrayerCompanionIOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.prayer-companion.PrayerCompanionIOS1";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
