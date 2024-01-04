@@ -1,13 +1,13 @@
-package com.prayercompanion.prayercompanionandroid.presentation.features.qibla
+package com.prayercompanion.shared.presentation.features.main.qibla
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.prayercompanion.prayercompanionandroid.presentation.utils.OrientationSensor
-import com.prayercompanion.prayercompanionandroid.presentation.utils.SensorAccuracy
+import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.core.model.screenModelScope
+import com.prayercompanion.shared.data.local.system.sensors.OrientationSensor
 import com.prayercompanion.shared.data.system.AppLocationManager
+import com.prayercompanion.shared.domain.models.SensorAccuracy
 import com.prayercompanion.shared.domain.utils.QiblaUtils
 import kotlinx.coroutines.launch
 import kotlin.math.abs
@@ -15,7 +15,7 @@ import kotlin.math.abs
 class QiblaViewModel constructor(
     private val appLocationManager: AppLocationManager,
     private val orientationSensor: OrientationSensor,
-) : ViewModel() {
+) : ScreenModel {
 
     var sensorAccuracy by mutableStateOf(SensorAccuracy.NO_CONTACT)
         private set
@@ -30,7 +30,7 @@ class QiblaViewModel constructor(
     }
 
     private fun onStart() {
-        viewModelScope.launch {
+        screenModelScope.launch {
             val location = appLocationManager.getLastKnownLocation()
 
             orientationSensor.initialize(
@@ -54,7 +54,7 @@ class QiblaViewModel constructor(
 
     }
 
-    private fun onDispose() {
+    override fun onDispose() {
         orientationSensor.dispose()
     }
 

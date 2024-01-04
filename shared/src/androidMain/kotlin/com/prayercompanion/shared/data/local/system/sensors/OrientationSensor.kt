@@ -1,24 +1,13 @@
-package com.prayercompanion.prayercompanionandroid.presentation.utils
+package com.prayercompanion.shared.data.local.system.sensors
 
 import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.hardware.SensorManager.SENSOR_STATUS_ACCURACY_HIGH
-import android.hardware.SensorManager.SENSOR_STATUS_ACCURACY_LOW
-import android.hardware.SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM
-import android.hardware.SensorManager.SENSOR_STATUS_NO_CONTACT
-import android.hardware.SensorManager.SENSOR_STATUS_UNRELIABLE
-import androidx.annotation.StringRes
-import androidx.compose.ui.graphics.Color
-import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.shared.presentation.theme.SensorAccuracyHigh
-import com.prayercompanion.shared.presentation.theme.SensorAccuracyLow
-import com.prayercompanion.shared.presentation.theme.SensorAccuracyMedium
-import com.prayercompanion.shared.presentation.theme.SensorAccuracyNoContact
+import com.prayercompanion.shared.domain.models.SensorAccuracy
 
-class OrientationSensor constructor(
+actual class OrientationSensor constructor(
     context: Context,
 ) : SensorEventListener {
     private val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -28,7 +17,7 @@ class OrientationSensor constructor(
     private var onOrientationChangedListener: (Float) -> Unit = {}
     private var onAccuracyChangedListener: (SensorAccuracy) -> Unit = {}
 
-    fun initialize(
+    actual fun initialize(
         onOrientationChangedListener: (Float) -> Unit,
         onAccuracyChangedListener: (SensorAccuracy) -> Unit,
     ) {
@@ -50,7 +39,7 @@ class OrientationSensor constructor(
         )
     }
 
-    fun dispose() {
+    actual fun dispose() {
         sensorManager.unregisterListener(this)
     }
 
@@ -77,27 +66,18 @@ class OrientationSensor constructor(
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-        val sensorAccuracy = SensorAccuracy.fromInt(accuracy)
+        val sensorAccuracy = sensorAccuracyFromInt(accuracy)
         onAccuracyChangedListener(sensorAccuracy)
     }
 
-}
-
-enum class SensorAccuracy(val accuracy: Int, @StringRes val nameId: Int, val color: Color) {
-    HIGH(SENSOR_STATUS_ACCURACY_HIGH, R.string.sensor_accuracy_high, SensorAccuracyHigh),
-    MEDIUM(SENSOR_STATUS_ACCURACY_MEDIUM, R.string.sensor_accuracy_medium, SensorAccuracyMedium),
-    LOW(SENSOR_STATUS_ACCURACY_LOW, R.string.sensor_accuracy_low, SensorAccuracyLow),
-    UNRELIABLE(SENSOR_STATUS_UNRELIABLE, R.string.sensor_accuracy_low, SensorAccuracyLow),
-    NO_CONTACT(
-        SENSOR_STATUS_NO_CONTACT,
-        R.string.sensor_accuracy_no_contact,
-        SensorAccuracyNoContact
-    );
-
-    companion object {
-        fun fromInt(accuracy: Int): SensorAccuracy {
-            return values().firstOrNull { it.accuracy == accuracy } ?: NO_CONTACT
+    private fun sensorAccuracyFromInt(accuracy: Int): SensorAccuracy {
+        return when (accuracy) {
+            SensorManager.SENSOR_STATUS_ACCURACY_HIGH -> SensorAccuracy.HIGH
+            SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM -> SensorAccuracy.MEDIUM
+            SensorManager.SENSOR_STATUS_ACCURACY_LOW -> SensorAccuracy.LOW
+            SensorManager.SENSOR_STATUS_UNRELIABLE -> SensorAccuracy.UNRELIABLE
+            SensorManager.SENSOR_STATUS_NO_CONTACT -> SensorAccuracy.NO_CONTACT
+            else -> SensorAccuracy.NO_CONTACT
         }
     }
-
 }

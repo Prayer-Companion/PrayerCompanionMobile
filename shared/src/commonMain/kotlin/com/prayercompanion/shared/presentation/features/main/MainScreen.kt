@@ -22,6 +22,7 @@ import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import com.prayercompanion.shared.presentation.features.main.home_screen.HomeScreen
+import com.prayercompanion.shared.presentation.features.main.qibla.QiblaScreen
 import com.prayercompanion.shared.presentation.features.main.quran.QuranTab
 import com.prayercompanion.shared.presentation.features.main.settings.SettingsScreen
 
@@ -54,9 +55,10 @@ object MainScreen : Screen {
                     },
                     bottomBar = {
                         BottomNavigation {
-                            TabNavigationItem(HomeScreen)
-                            TabNavigationItem(SettingsScreen)
                             TabNavigationItem(QuranTab)
+                            TabNavigationItem(HomeScreen)
+                            TabNavigationItem(QiblaScreen)
+                            TabNavigationItem(SettingsScreen)
                         }
                     }
                 )
