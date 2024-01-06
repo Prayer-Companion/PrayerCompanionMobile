@@ -8,8 +8,6 @@ import com.prayercompanion.shared.data.remote.PrayerCompanionApi
 import com.prayercompanion.shared.data.remote.dto.DayPrayerResponse
 import com.prayercompanion.shared.data.remote.dto.DayPrayerStatusResponse
 import com.prayercompanion.shared.data.utils.Consts
-import com.prayercompanion.shared.domain.extensions.atEndOfDay
-import com.prayercompanion.shared.domain.extensions.atStartOfDay
 import com.prayercompanion.shared.domain.models.DayPrayersInfo
 import com.prayercompanion.shared.domain.models.Location
 import com.prayercompanion.shared.domain.models.Prayer
@@ -20,6 +18,8 @@ import com.prayercompanion.shared.domain.models.app.YearMonth
 import com.prayercompanion.shared.domain.repositories.PrayersRepository
 import com.prayercompanion.shared.domain.utils.exceptions.LocationMissingException
 import com.prayercompanion.shared.domain.utils.exceptions.UnknownException
+import com.raedghazal.kotlinx_datetime_ext.atEndOfDay
+import com.raedghazal.kotlinx_datetime_ext.atStartOfDay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map

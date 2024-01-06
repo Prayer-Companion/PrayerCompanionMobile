@@ -1,6 +1,6 @@
 package com.prayercompanion.shared.domain.models
 
-import com.prayercompanion.shared.domain.extensions.now
+import com.raedghazal.kotlinx_datetime_ext.now
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime

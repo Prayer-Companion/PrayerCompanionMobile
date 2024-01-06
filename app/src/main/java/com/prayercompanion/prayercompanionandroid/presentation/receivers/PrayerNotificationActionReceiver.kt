@@ -5,12 +5,12 @@ import android.content.Context
 import android.content.Intent
 import com.prayercompanion.prayercompanionandroid.presentation.utils.notifications.PrayerNotificationAction
 import com.prayercompanion.prayercompanionandroid.presentation.utils.notifications.PrayersNotificationsService
-import com.prayercompanion.shared.domain.extensions.now
 import com.prayercompanion.shared.domain.models.PrayerInfo
 import com.prayercompanion.shared.domain.usecases.prayers.SetPrayerStatusByDateTime
 import com.prayercompanion.shared.domain.utils.tracking.TrackedButtons
 import com.prayercompanion.shared.domain.utils.tracking.Tracker
 import com.prayercompanion.shared.fromJson
+import com.raedghazal.kotlinx_datetime_ext.now
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

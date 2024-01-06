@@ -1,13 +1,13 @@
 package com.prayercompanion.shared.domain.usecases.prayers
 
-import com.prayercompanion.shared.domain.extensions.instantBetween
-import com.prayercompanion.shared.domain.extensions.plus
 import com.prayercompanion.shared.domain.models.Location
 import com.prayercompanion.shared.domain.models.Prayer
 import com.prayercompanion.shared.domain.models.PrayerStatus
 import com.prayercompanion.shared.domain.models.app.Address
 import com.prayercompanion.shared.domain.repositories.LocationRepository
 import com.prayercompanion.shared.domain.repositories.PrayersRepository
+import com.raedghazal.kotlinx_datetime_ext.instantBetween
+import com.raedghazal.kotlinx_datetime_ext.plus
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.plus

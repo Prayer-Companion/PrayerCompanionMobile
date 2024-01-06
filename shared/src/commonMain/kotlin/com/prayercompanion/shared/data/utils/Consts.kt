@@ -1,7 +1,7 @@
 package com.prayercompanion.shared.data.utils
 
-import com.prayercompanion.shared.domain.models.app.Locale
-import com.prayercompanion.shared.domain.utils.LocalDateTimeFormatter
+import com.raedghazal.kotlinx_datetime_ext.LocalDateTimeFormatter
+import com.raedghazal.kotlinx_datetime_ext.Locale
 
 object Consts {
     val FullDateTimeFormatter: LocalDateTimeFormatter = LocalDateTimeFormatter

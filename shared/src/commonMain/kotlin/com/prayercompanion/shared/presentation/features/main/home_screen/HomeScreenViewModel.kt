@@ -9,8 +9,6 @@ import com.prayercompanion.prayercompanionandroid.moko_resources.Res
 import com.prayercompanion.shared.BuildConfigs
 import com.prayercompanion.shared.currentTimeMillis
 import com.prayercompanion.shared.data.preferences.DataStoresRepo
-import com.prayercompanion.shared.domain.extensions.instantBetween
-import com.prayercompanion.shared.domain.extensions.now
 import com.prayercompanion.shared.domain.models.DayPrayersInfo
 import com.prayercompanion.shared.domain.models.PrayerInfo
 import com.prayercompanion.shared.domain.models.PrayerStatus
@@ -30,6 +28,8 @@ import com.prayercompanion.shared.presentation.utils.UiEvent
 import com.prayercompanion.shared.presentation.utils.UiText
 import com.prayercompanion.shared.presentation.utils.printStackTraceInDebug
 import com.prayercompanion.shared.presentation.utils.toUiText
+import com.raedghazal.kotlinx_datetime_ext.instantBetween
+import com.raedghazal.kotlinx_datetime_ext.now
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job

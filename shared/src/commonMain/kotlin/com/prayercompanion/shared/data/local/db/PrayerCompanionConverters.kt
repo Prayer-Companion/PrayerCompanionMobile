@@ -1,7 +1,7 @@
 package com.prayercompanion.shared.data.local.db
 
-import com.prayercompanion.shared.domain.models.app.Locale
-import com.prayercompanion.shared.domain.utils.LocalDateTimeFormatter
+import com.raedghazal.kotlinx_datetime_ext.LocalDateTimeFormatter
+import com.raedghazal.kotlinx_datetime_ext.Locale
 import kotlinx.datetime.LocalDateTime
 
 class PrayerCompanionConverters {

@@ -1,6 +1,5 @@
 package com.prayercompanion.shared.domain.usecases.prayers
 
-import com.prayercompanion.shared.domain.extensions.now
 import com.prayercompanion.shared.domain.models.DailyPrayersCombo
 import com.prayercompanion.shared.domain.models.app.YearMonth
 import com.prayercompanion.shared.domain.repositories.LocationRepository
@@ -8,6 +7,7 @@ import com.prayercompanion.shared.domain.repositories.PrayersRepository
 import com.prayercompanion.shared.domain.usecases.IsConnectedToInternet
 import com.prayercompanion.shared.domain.utils.exceptions.LocationMissingException
 import com.prayercompanion.shared.domain.utils.exceptions.UnknownException
+import com.raedghazal.kotlinx_datetime_ext.now
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.datetime.DateTimeUnit

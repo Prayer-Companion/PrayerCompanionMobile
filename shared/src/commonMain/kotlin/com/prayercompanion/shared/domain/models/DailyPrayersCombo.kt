@@ -1,8 +1,8 @@
 package com.prayercompanion.shared.domain.models
 
-import com.prayercompanion.shared.domain.extensions.max
-import com.prayercompanion.shared.domain.extensions.min
-import com.prayercompanion.shared.domain.extensions.now
+import com.raedghazal.kotlinx_datetime_ext.MAX
+import com.raedghazal.kotlinx_datetime_ext.MIN
+import com.raedghazal.kotlinx_datetime_ext.now
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
@@ -27,11 +27,11 @@ data class DailyPrayersCombo(
             val todayFajr = todayPrayersInfo.get(Prayer.FAJR)
             val todayIsha = todayPrayersInfo.get(Prayer.ISHA)
 
-            if (now in LocalTime.min() ..< todayFajr.time) {
+            if (now in LocalTime.MIN ..< todayFajr.time) {
                 return yesterdayPrayersInfo?.get(Prayer.ISHA) ?: PrayerInfo.Default
             }
 
-            if (now in todayIsha.time .. LocalTime.max()) {
+            if (now in todayIsha.time .. LocalTime.MAX) {
                 return todayIsha
             }
 

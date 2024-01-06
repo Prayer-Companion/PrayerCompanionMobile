@@ -1,9 +1,9 @@
 package com.prayercompanion.shared.domain.usecases.prayers
 
-import com.prayercompanion.shared.domain.extensions.minus
-import com.prayercompanion.shared.domain.extensions.now
 import com.prayercompanion.shared.domain.models.PrayerStatus
 import com.prayercompanion.shared.domain.repositories.PrayersRepository
+import com.raedghazal.kotlinx_datetime_ext.minus
+import com.raedghazal.kotlinx_datetime_ext.now
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.DateTimeUnit

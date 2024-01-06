@@ -1,7 +1,7 @@
 package com.prayercompanion.shared
 
-import com.prayercompanion.shared.domain.extensions.now
 import com.prayercompanion.shared.presentation.utils.printStackTraceInDebug
+import com.raedghazal.kotlinx_datetime_ext.now
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant

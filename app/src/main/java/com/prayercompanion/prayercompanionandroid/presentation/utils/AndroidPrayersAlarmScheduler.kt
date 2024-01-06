@@ -7,12 +7,12 @@ import android.content.Context
 import android.content.Intent
 import com.prayercompanion.prayercompanionandroid.presentation.receivers.AlarmReceiver
 import com.prayercompanion.shared.data.utils.Consts
-import com.prayercompanion.shared.domain.extensions.now
 import com.prayercompanion.shared.domain.models.Prayer
 import com.prayercompanion.shared.domain.models.PrayerNotificationItem
 import com.prayercompanion.shared.domain.usecases.prayers.GetDayPrayers
 import com.prayercompanion.shared.presentation.utils.printStackTraceInDebug
 import com.prayercompanion.shared.toJson
+import com.raedghazal.kotlinx_datetime_ext.now
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant

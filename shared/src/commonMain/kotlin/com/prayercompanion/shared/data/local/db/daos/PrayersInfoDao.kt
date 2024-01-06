@@ -6,10 +6,10 @@ import app.cash.sqldelight.coroutines.mapToList
 import com.prayercompanion.prayercompanionandroid.PrayerCompanionDatabase
 import com.prayercompanion.shared.data.local.db.PrayerCompanionConverters
 import com.prayercompanion.shared.data.local.db.entities.PrayerInfoEntity
-import com.prayercompanion.shared.domain.extensions.atEndOfDay
-import com.prayercompanion.shared.domain.extensions.atStartOfDay
 import com.prayercompanion.shared.domain.models.Prayer
 import com.prayercompanion.shared.domain.models.PrayerStatus
+import com.raedghazal.kotlinx_datetime_ext.atEndOfDay
+import com.raedghazal.kotlinx_datetime_ext.atStartOfDay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow

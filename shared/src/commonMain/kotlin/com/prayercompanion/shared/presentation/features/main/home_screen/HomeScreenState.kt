@@ -1,9 +1,9 @@
 package com.prayercompanion.shared.presentation.features.main.home_screen
 
-import com.prayercompanion.shared.domain.extensions.now
 import com.prayercompanion.shared.domain.models.DailyPrayersCombo
 import com.prayercompanion.shared.domain.models.DayPrayersInfo
 import com.prayercompanion.shared.domain.models.PrayerStatus
+import com.raedghazal.kotlinx_datetime_ext.now
 import kotlinx.datetime.LocalDate
 
 data class HomeScreenState(

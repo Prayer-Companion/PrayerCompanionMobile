@@ -12,8 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.prayercompanion.prayercompanionandroid.moko_resources.Res
-import com.prayercompanion.shared.domain.extensions.now
-import com.prayercompanion.shared.domain.extensions.plus
 import com.prayercompanion.shared.domain.models.DayPrayersInfo
 import com.prayercompanion.shared.domain.models.Prayer
 import com.prayercompanion.shared.domain.models.PrayerInfo
@@ -35,6 +33,8 @@ import com.prayercompanion.shared.presentation.models.RemainingDuration
 import com.prayercompanion.shared.presentation.theme.LocalSpacing
 import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.shared.presentation.utils.stringResource
+import com.raedghazal.kotlinx_datetime_ext.now
+import com.raedghazal.kotlinx_datetime_ext.plus
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate

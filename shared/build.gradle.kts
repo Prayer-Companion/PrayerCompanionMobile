@@ -77,6 +77,7 @@ kotlin {
                 api("dev.icerock.moko:permissions-compose:0.16.0")
                 api("dev.icerock.moko:resources:0.23.0")
                 api("dev.icerock.moko:resources-compose:0.23.0")
+                api("com.raedghazal:kotlinx_datetime_ext:1.0.1")
             }
         }
         val commonTest by getting {
