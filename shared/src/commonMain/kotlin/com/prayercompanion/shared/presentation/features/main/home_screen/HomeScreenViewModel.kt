@@ -28,7 +28,7 @@ import com.prayercompanion.shared.presentation.utils.UiEvent
 import com.prayercompanion.shared.presentation.utils.UiText
 import com.prayercompanion.shared.presentation.utils.printStackTraceInDebug
 import com.prayercompanion.shared.presentation.utils.toUiText
-import com.raedghazal.kotlinx_datetime_ext.instantBetween
+import com.raedghazal.kotlinx_datetime_ext.durationUntil
 import com.raedghazal.kotlinx_datetime_ext.now
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -253,10 +253,9 @@ class HomeScreenViewModel constructor(
     }
 
     private fun startDurationCountDown() {
-        val durationInSeconds = instantBetween(
-            LocalDateTime.now(),
-            headerState.currentAndNextPrayer.second.dateTime
-        ).inWholeSeconds
+        val durationInSeconds = LocalDateTime.now()
+            .durationUntil(headerState.currentAndNextPrayer.second.dateTime)
+            .inWholeSeconds
 
         if (durationInSeconds <= 0) return
 

@@ -6,7 +6,7 @@ import com.prayercompanion.shared.domain.models.PrayerStatus
 import com.prayercompanion.shared.domain.models.app.Address
 import com.prayercompanion.shared.domain.repositories.LocationRepository
 import com.prayercompanion.shared.domain.repositories.PrayersRepository
-import com.raedghazal.kotlinx_datetime_ext.instantBetween
+import com.raedghazal.kotlinx_datetime_ext.durationUntil
 import com.raedghazal.kotlinx_datetime_ext.plus
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDateTime
@@ -52,7 +52,7 @@ class GetPrayerStatusRanges constructor(
             .map { it.get(nextPrayer) }
             .onSuccess { nextPrayerInfo ->
 
-                val fullTimeMinutes = instantBetween(prayerDateTime, nextPrayerInfo.dateTime).inWholeMinutes
+                val fullTimeMinutes = prayerDateTime.durationUntil(nextPrayerInfo.dateTime).inWholeMinutes
 
                 return mapOf(
                     PrayerStatus.Late to run {
@@ -102,7 +102,7 @@ class GetPrayerStatusRanges constructor(
             .getOrNull() ?: return null
 
         // The night in islam is the time between Maghrib and Fajr
-        val nightTimeInMinutes = instantBetween(maghribDateTime, fajr.dateTime).inWholeMinutes
+        val nightTimeInMinutes = maghribDateTime.durationUntil(fajr.dateTime).inWholeMinutes
 
         return mapOf(
             // After middle of the night
