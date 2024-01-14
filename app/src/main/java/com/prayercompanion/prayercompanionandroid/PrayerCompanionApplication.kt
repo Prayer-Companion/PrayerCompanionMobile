@@ -8,6 +8,7 @@ import androidx.work.Configuration
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.prayercompanion.prayercompanionandroid.presentation.di.androidPresentationModule
 import com.prayercompanion.prayercompanionandroid.presentation.utils.ScheduleDailyPrayersWorker
 import com.prayercompanion.prayercompanionandroid.presentation.utils.notifications.PrayersNotificationsService
@@ -20,7 +21,17 @@ import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
+import org.koin.dsl.module
 import java.util.concurrent.TimeUnit
+
+val androidAppModule = module {
+    single {
+        GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(androidContext().getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+    }
+}
 
 class PrayerCompanionApplication : Application(), Configuration.Provider {
 
@@ -41,6 +52,7 @@ class PrayerCompanionApplication : Application(), Configuration.Provider {
                 *appModules().toTypedArray(),
                 *androidMainModules().toTypedArray(),
                 androidPresentationModule,
+                androidAppModule
             )
         }
 

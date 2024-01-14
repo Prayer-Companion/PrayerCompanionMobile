@@ -1,9 +1,9 @@
 package com.prayercompanion.prayercompanionandroid.presentation.di
 
-import com.prayercompanion.prayercompanionandroid.MainActivityViewModel
 import com.prayercompanion.prayercompanionandroid.presentation.utils.AndroidPrayersAlarmScheduler
 import com.prayercompanion.prayercompanionandroid.presentation.utils.ScheduleDailyPrayersWorker
 import com.prayercompanion.prayercompanionandroid.presentation.utils.notifications.PrayersNotificationsService
+import com.prayercompanion.shared.MainActivityViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module

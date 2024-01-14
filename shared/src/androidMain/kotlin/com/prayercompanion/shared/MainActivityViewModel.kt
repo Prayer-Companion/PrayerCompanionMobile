@@ -1,4 +1,4 @@
-package com.prayercompanion.prayercompanionandroid
+package com.prayercompanion.shared
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

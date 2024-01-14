@@ -1,44 +1,36 @@
-package com.prayercompanion.prayercompanionandroid
+package com.prayercompanion.shared
 
-import android.app.Activity
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.prayercompanion.shared.domain.utils.Task
 import com.prayercompanion.shared.presentation.App
 import com.prayercompanion.shared.presentation.features.onboarding.sign_in.GoogleSignInSetup
-import com.prayercompanion.shared.presentation.navigation.Route
-import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainActivityViewModel by viewModel()
 
+    private val gso by inject<GoogleSignInOptions>()
     private val googleSignInClient: GoogleSignInClient by lazy {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
-            .requestEmail()
-            .build()
-
-
         GoogleSignIn.getClient(this, gso)
     }
 
     private val signInWithGoogleLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
-        val result = it.resultCode == Activity.RESULT_OK
+        val result = it.resultCode == RESULT_OK
         val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
             .let { task ->
-                Task<Pair<String?,String?>>(
+                Task<Pair<String?, String?>>(
                     isSuccessful = result,
                     result = task.result.idToken to null,
                     exception = task.exception
@@ -63,14 +55,13 @@ class MainActivity : AppCompatActivity() {
 
         setContent {
             App()
-            return@setContent
-            PrayerCompanionAndroidTheme {
-                val navController = rememberNavController()
-                navController.addOnDestinationChangedListener { _, destination, _ ->
-                    val route = Route.fromStringRoute(destination.route)
-                    viewModel.onScreenChanged(route)
-                }
-            }
+//            PrayerCompanionAndroidTheme {
+//                val navController = rememberNavController()
+//                navController.addOnDestinationChangedListener { _, destination, _ ->
+//                    val route = Route.fromStringRoute(destination.route)
+//                    viewModel.onScreenChanged(route)
+//                }
+//            }
         }
     }
 

@@ -22,7 +22,7 @@
         tools:ignore="DataExtractionRules"
         tools:targetApi="tiramisu">
         <activity
-            android:name=".MainActivity"
+            android:name="com.prayercompanion.shared.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.PrayerCompanionAndroid"
