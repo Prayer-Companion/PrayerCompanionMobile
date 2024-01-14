@@ -23,8 +23,26 @@ deploymentTargetDropDown.xml
 render.experimental.xml
 
 # Keystore files
-*.jks
+prayer_companion_keystore.jks
 *.keystore
 
 # Android Profiling
 *.hprof
+
+# Fleet configurations
+.fleet/
+
+# Kmm
+.gradle
+/local.properties
+.idea
+.DS_Store
+/build
+*/build
+/captures
+.externalNativeBuild
+.cxx
+
+# ios
+Pods/
+xcuserdata

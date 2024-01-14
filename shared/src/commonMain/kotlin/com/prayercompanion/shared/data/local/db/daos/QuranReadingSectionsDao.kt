@@ -1,0 +1,60 @@
+package com.prayercompanion.shared.data.local.db.daos
+
+import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToList
+import com.prayercompanion.prayercompanionandroid.PrayerCompanionDatabase
+import com.prayercompanion.shared.data.local.db.entities.QuranReadingSectionEntity
+import com.prayercompanion.shared.toBoolean
+import com.prayercompanion.shared.toLong
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.flow.Flow
+
+interface QuranReadingSectionsDao {
+    fun insertReadingSections(entities: List<QuranReadingSectionEntity>)
+    fun getNextReadingSections(): Flow<List<QuranReadingSectionEntity>>
+    fun markSectionAsRead(ids: List<Int>)
+    fun deleteQuranReadingSectionByChapter(chapterId: Int)
+}
+
+class QuranReadingSectionsDaoImpl constructor(
+    db: PrayerCompanionDatabase
+) : QuranReadingSectionsDao {
+
+    private val queries = db.quranReadingSectionsQueries
+
+    override fun insertReadingSections(entities: List<QuranReadingSectionEntity>) {
+        queries.transaction {
+            afterRollback { throw Exception("Failed to insert reading sections ") }
+            entities.forEach {
+                queries.insert(
+                    id = null,
+                    chapterId = it.chapterId.toLong(),
+                    startVerse = it.startVerse.toLong(),
+                    endVerse = it.endVerse.toLong(),
+                    isRead = it.isRead.toLong()
+                )
+            }
+        }
+    }
+
+    override fun getNextReadingSections(): Flow<List<QuranReadingSectionEntity>> {
+        return queries.getNextReadingSections { id, chapterId, startVerse, endVerse, isRead ->
+            QuranReadingSectionEntity(
+                id = id.toInt(),
+                chapterId = chapterId.toInt(),
+                startVerse = startVerse.toInt(),
+                endVerse = endVerse.toInt(),
+                isRead = isRead.toBoolean()
+            )
+        }.asFlow().mapToList(Dispatchers.IO)
+    }
+
+    override fun markSectionAsRead(ids: List<Int>) {
+        queries.markSectionAsRead(ids.map { it.toLong() })
+    }
+
+    override fun deleteQuranReadingSectionByChapter(chapterId: Int) {
+        queries.deleteQuranReadingSectionByChapter(chapterId.toLong())
+    }
+}

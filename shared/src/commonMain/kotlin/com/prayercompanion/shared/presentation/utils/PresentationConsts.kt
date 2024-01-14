@@ -1,0 +1,14 @@
+package com.prayercompanion.shared.presentation.utils
+
+import com.raedghazal.kotlinx_datetime_ext.LocalDateTimeFormatter
+import com.raedghazal.kotlinx_datetime_ext.Locale
+
+object PresentationConsts {
+    val DateFormatter: LocalDateTimeFormatter
+        get() = LocalDateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.default())
+    val TimeFormatter: LocalDateTimeFormatter
+        get() = LocalDateTimeFormatter.ofPattern("hh:mm a", Locale.default())
+
+    val CounterTimeFormatter: LocalDateTimeFormatter
+        get() = LocalDateTimeFormatter.ofPattern("HH:mm:ss", Locale.default())
+}

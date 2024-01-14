@@ -4,36 +4,39 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.dataStore
 import androidx.work.Configuration
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.prayercompanion.prayercompanionandroid.data.di.dataModule
-import com.prayercompanion.prayercompanionandroid.data.preferences.AppPreferences
-import com.prayercompanion.prayercompanionandroid.data.preferences.AppPreferencesSerializer
-import com.prayercompanion.prayercompanionandroid.data.utils.notifications.PrayersNotificationsService
-import com.prayercompanion.prayercompanionandroid.domain.di.domainModule
-import com.prayercompanion.prayercompanionandroid.domain.utils.PermissionsManager
-import com.prayercompanion.prayercompanionandroid.domain.utils.ScheduleDailyPrayersWorker
-import com.prayercompanion.prayercompanionandroid.presentation.di.presentationModule
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.prayercompanion.prayercompanionandroid.presentation.di.androidPresentationModule
+import com.prayercompanion.prayercompanionandroid.presentation.utils.ScheduleDailyPrayersWorker
+import com.prayercompanion.prayercompanionandroid.presentation.utils.notifications.PrayersNotificationsService
+import com.prayercompanion.shared.androidMainModules
+import com.prayercompanion.shared.data.local.system.PermissionsManager
+import com.prayercompanion.shared.presentation.appModules
 import logcat.AndroidLogcatLogger
 import logcat.LogPriority
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
+import org.koin.dsl.module
 import java.util.concurrent.TimeUnit
 
-val Context.appPreferencesDataStore: DataStore<AppPreferences> by dataStore(
-    "app_preferences1.json",
-    AppPreferencesSerializer
-)
+val androidAppModule = module {
+    single {
+        GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(androidContext().getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+    }
+}
 
 class PrayerCompanionApplication : Application(), Configuration.Provider {
 
-    private val permissionsManager: PermissionsManager by inject()
+
+    private val permissionsManager by inject<PermissionsManager>()
 
     override fun getWorkManagerConfiguration() =
         Configuration.Builder()
@@ -45,7 +48,12 @@ class PrayerCompanionApplication : Application(), Configuration.Provider {
         startKoin {
             androidLogger()
             androidContext(this@PrayerCompanionApplication)
-            modules(presentationModule, domainModule, dataModule)
+            modules(
+                *appModules().toTypedArray(),
+                *androidMainModules().toTypedArray(),
+                androidPresentationModule,
+                androidAppModule
+            )
         }
 
         setupNotificationsChannels()
@@ -58,7 +66,7 @@ class PrayerCompanionApplication : Application(), Configuration.Provider {
             Context.NOTIFICATION_SERVICE
         ) as NotificationManager
 
-        //Check if the channel were already created
+        //Check if the channel was already created
         val channels = notificationManager.notificationChannels
         if (channels.any { it.id == (PrayersNotificationsService.CHANNEL_ID) }) {
             return
@@ -76,6 +84,7 @@ class PrayerCompanionApplication : Application(), Configuration.Provider {
     }
 
     private fun setupScheduleDailyPrayersWorker() {
+
         if (permissionsManager.isLocationPermissionGranted.not()) {
             return
         }
@@ -85,11 +94,10 @@ class PrayerCompanionApplication : Application(), Configuration.Provider {
                 .build()
 
 
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+        WorkManager.getInstance(this@PrayerCompanionApplication).enqueueUniquePeriodicWork(
             ScheduleDailyPrayersWorker::class.simpleName!!,
             ExistingPeriodicWorkPolicy.UPDATE,
             scheduleDailyPrayersPeriodicWorkRequest
         )
     }
-
 }
