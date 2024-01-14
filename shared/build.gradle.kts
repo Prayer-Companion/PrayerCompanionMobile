@@ -117,6 +117,11 @@ kotlin {
 
                 implementation("com.google.android.play:review:2.0.1")
                 implementation("com.google.android.play:review-ktx:2.0.1")
+
+                val workManagerVersion = "2.8.1"
+                val koinAndroidVersion = "3.5.0"
+                implementation("androidx.work:work-runtime-ktx:$workManagerVersion")
+                implementation("io.insert-koin:koin-androidx-workmanager:$koinAndroidVersion")
             }
         }
         val iosX64Main by getting {

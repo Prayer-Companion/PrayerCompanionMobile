@@ -3,6 +3,7 @@ package com.prayercompanion.shared.presentation.features.main.home_screen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalUriHandler
+import cafe.adriel.voyager.core.lifecycle.LifecycleEffect
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
@@ -13,9 +14,7 @@ import com.prayercompanion.shared.presentation.features.main.home_screen.compone
 import com.prayercompanion.shared.presentation.utils.StringResourceReader
 import com.prayercompanion.shared.presentation.utils.UiEvent
 import com.prayercompanion.shared.presentation.utils.asString
-import com.prayercompanion.shared.presentation.utils.compose.LifecycleEvent
 import com.prayercompanion.shared.presentation.utils.compose.LocationSettingsLauncher
-import com.prayercompanion.shared.presentation.utils.compose.OnLifecycleEvent
 import com.prayercompanion.shared.presentation.utils.createTabOptions
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -27,6 +26,14 @@ object HomeScreen : Tab, KoinComponent {
     @Composable
     override fun Content() {
         val viewModel = getScreenModel<HomeScreenViewModel>()
+        LifecycleEffect(
+            onStarted = {
+                viewModel.onStart()
+            },
+            onDisposed = {
+                viewModel.onPause()
+            }
+        )
 
         HomeScreen(viewModel, stringResourceReader)
     }
@@ -52,18 +59,6 @@ fun HomeScreen(
 
     val uriHandler = LocalUriHandler.current
     val scaffoldState = LocalScaffoldState.current
-
-    OnLifecycleEvent { event ->
-        when (event) {
-            LifecycleEvent.ON_START -> {
-                viewModel.onStart()
-            }
-
-            LifecycleEvent.ON_PAUSE -> {
-                viewModel.onPause()
-            }
-        }
-    }
 
     LaunchedEffect(key1 = true) {
         viewModel.uiEvents.collect {

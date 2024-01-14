@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.lifecycle.LifecycleEffect
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -51,8 +52,6 @@ import com.prayercompanion.shared.presentation.theme.PrayerCompanionAndroidTheme
 import com.prayercompanion.shared.presentation.utils.StringResourceReader
 import com.prayercompanion.shared.presentation.utils.UiEvent
 import com.prayercompanion.shared.presentation.utils.asString
-import com.prayercompanion.shared.presentation.utils.compose.LifecycleEvent
-import com.prayercompanion.shared.presentation.utils.compose.OnLifecycleEvent
 import com.prayercompanion.shared.presentation.utils.stringResource
 import com.prayercompanion.shared.presentation.utils.toScreen
 import kotlinx.coroutines.flow.Flow
@@ -68,6 +67,12 @@ object QuranScreen : Screen, KoinComponent {
     override fun Content() {
         val viewModel = getScreenModel<QuranViewModel>()
         val navigator = LocalNavigator.currentOrThrow
+
+        LifecycleEffect(
+            onStarted = {
+                viewModel.onEvent(QuranEvent.OnStart)
+            }
+        )
 
         QuranScreen(
             navigate = {
@@ -95,12 +100,6 @@ fun QuranScreen(
     val chaptersListState = rememberLazyListState()
 //    val keyboardConfig by keyboardAsState() todo kmp
 
-    OnLifecycleEvent { event ->
-        if (event == LifecycleEvent.ON_START) {
-            onEvent(QuranEvent.OnStart)
-        }
-    }
-
     LaunchedEffect(key1 = true) {
         uiEventsChannel.collect {
             when (it) {
@@ -111,7 +110,6 @@ fun QuranScreen(
                         )
                     )
                 }
-
 
                 is UiEvent.Navigate -> navigate(it)
                 is UiEvent.ScrollListToPosition -> chaptersListState.scrollToItem(it.position)

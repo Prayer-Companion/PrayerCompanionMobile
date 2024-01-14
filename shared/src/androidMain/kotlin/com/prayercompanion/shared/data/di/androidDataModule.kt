@@ -5,6 +5,8 @@ import com.prayercompanion.shared.data.local.assets.AssetsReader
 import com.prayercompanion.shared.data.local.system.LocationRepositoryImpl
 import com.prayercompanion.shared.data.local.system.MediaController
 import com.prayercompanion.shared.data.local.system.PermissionsManager
+import com.prayercompanion.shared.data.local.system.notification.AndroidPrayersAlarmScheduler
+import com.prayercompanion.shared.data.local.system.notification.PrayersNotificationsService
 import com.prayercompanion.shared.data.local.system.sensors.OrientationSensor
 import com.prayercompanion.shared.data.preferences.DataStoresRepo
 import com.prayercompanion.shared.data.utils.TrackerImpl
@@ -24,4 +26,6 @@ val androidDataModule = module {
     singleOf(::PermissionsManager)
     singleOf(::OrientationSensor)
     singleOf(::MediaController)
+    singleOf(::AndroidPrayersAlarmScheduler)
+    singleOf(::PrayersNotificationsService)
 }

@@ -1,10 +1,10 @@
-package com.prayercompanion.prayercompanionandroid.presentation.receivers
+package com.prayercompanion.shared.data.local.system.receiver
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.prayercompanion.prayercompanionandroid.presentation.utils.notifications.PrayerNotificationAction
-import com.prayercompanion.prayercompanionandroid.presentation.utils.notifications.PrayersNotificationsService
+import com.prayercompanion.shared.data.local.system.notification.PrayerNotificationAction
+import com.prayercompanion.shared.data.local.system.notification.PrayersNotificationsService
 import com.prayercompanion.shared.domain.models.PrayerInfo
 import com.prayercompanion.shared.domain.usecases.prayers.SetPrayerStatusByDateTime
 import com.prayercompanion.shared.domain.utils.tracking.TrackedButtons

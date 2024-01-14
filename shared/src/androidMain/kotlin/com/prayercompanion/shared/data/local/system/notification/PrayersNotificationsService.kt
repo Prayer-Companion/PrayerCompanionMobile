@@ -1,23 +1,23 @@
-package com.prayercompanion.prayercompanionandroid.presentation.utils.notifications
+package com.prayercompanion.shared.data.local.system.notification
 
 import android.app.Notification
-import android.app.Notification.Action
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Icon
 import androidx.core.text.HtmlCompat
-import com.prayercompanion.prayercompanionandroid.R
-import com.prayercompanion.prayercompanionandroid.presentation.receivers.PrayerNotificationActionReceiver
-import com.prayercompanion.prayercompanionandroid.presentation.utils.getPrayerNameStringRes
-import com.prayercompanion.prayercompanionandroid.presentation.utils.getPrayerStatusNameStringRes
+import com.prayercompanion.prayercompanionandroid.moko_resources.Res
 import com.prayercompanion.shared.MainActivity
+import com.prayercompanion.shared.data.local.system.receiver.PrayerNotificationActionReceiver
 import com.prayercompanion.shared.domain.models.PrayerInfo
 import com.prayercompanion.shared.domain.models.PrayerNotificationItem
 import com.prayercompanion.shared.domain.models.PrayerStatus
 import com.prayercompanion.shared.presentation.utils.PresentationConsts
+import com.prayercompanion.shared.presentation.utils.getPrayerNameStringRes
+import com.prayercompanion.shared.presentation.utils.getPrayerStatusNameStringRes
 import com.prayercompanion.shared.toJson
+import dev.icerock.moko.resources.format
 import kotlinx.coroutines.delay
 
 class PrayersNotificationsService constructor(
@@ -45,7 +45,10 @@ class PrayersNotificationsService constructor(
 
             val actionIntent = Intent(context, PrayerNotificationActionReceiver::class.java).apply {
                 putExtra(PrayerNotificationActionReceiver.EXTRA_NOTIFICATION_ID, notificationId)
-                putExtra(PrayerNotificationActionReceiver.EXTRA_PRAYER_INFO, item.prayerInfo.toJson())
+                putExtra(
+                    PrayerNotificationActionReceiver.EXTRA_PRAYER_INFO,
+                    item.prayerInfo.toJson()
+                )
                 putExtra(
                     PrayerNotificationActionReceiver.EXTRA_PRAYER_NOTIFICATION_ACTION,
                     PrayerNotificationAction.Prayed.name
@@ -60,18 +63,23 @@ class PrayersNotificationsService constructor(
             )
         }
 
-        val prayerName = context.getString(getPrayerNameStringRes(item.prayerInfo.prayer))
+        val prayerName = getPrayerNameStringRes(item.prayerInfo.prayer).getString(context)
         val prayerTime = PresentationConsts.TimeFormatter.format(item.prayerInfo.time)
-        val title = context.getString(R.string.prayer_notification_title, prayerName, prayerTime)
+        val title = Res.strings.prayer_notification_title
+            .format(prayerName, prayerTime)
+            .toString(context)
 
-        val actionIcon = Icon.createWithResource(context, R.drawable.ic_app_logo)
-        val actionTitle = context.getString(R.string.notification_action_prayedNow)
+        val actionIcon = Icon.createWithResource(context, Res.images.ic_app_logo.drawableResId)
+        val actionTitle = Res.strings.notification_action_prayedNow.getString(context)
 
-        val prayedNowAction = Action.Builder(actionIcon, actionTitle, actionPendingInject).build()
+        val prayedNowAction = Notification.Action.Builder(
+            actionIcon,
+            actionTitle,
+            actionPendingInject
+        ).build()
 
-        val notification = Notification
-            .Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_app_logo)
+        val notification = Notification.Builder(context, CHANNEL_ID)
+            .setSmallIcon(Res.images.ic_app_logo.drawableResId)
             .setContentTitle(title)
             .setContentIntent(activityPendingInject)
             .setOngoing(item.isOngoing)
@@ -88,18 +96,15 @@ class PrayersNotificationsService constructor(
         prayerInfo: PrayerInfo,
         status: PrayerStatus
     ) {
-        val prayerName = context.getString(getPrayerNameStringRes(prayerInfo.prayer))
-        val statusName = context.getString(getPrayerStatusNameStringRes(status, prayerInfo.prayer))
+        val prayerName = getPrayerNameStringRes(prayerInfo.prayer).getString(context)
+        val statusName = getPrayerStatusNameStringRes(status, prayerInfo.prayer).getString(context)
 
-        val notificationTitle = context.getString(
-            R.string.notification_action_response_statusUpdate,
-            prayerName,
-            "<b>$statusName</b>"
-        )
+        val notificationTitle = Res.strings.notification_action_response_statusUpdate
+            .format(prayerName, "<b>$statusName</b>")
+            .toString(context)
 
-        val notification = Notification
-            .Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_app_logo)
+        val notification = Notification.Builder(context, CHANNEL_ID)
+            .setSmallIcon(Res.images.ic_app_logo.drawableResId)
             .setContentTitle(
                 HtmlCompat.fromHtml(notificationTitle, HtmlCompat.FROM_HTML_MODE_LEGACY)
             )
@@ -120,9 +125,8 @@ class PrayersNotificationsService constructor(
             PendingIntent.FLAG_IMMUTABLE
         )
 
-        val notification = Notification
-            .Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_app_logo)
+        val notification = Notification.Builder(context, CHANNEL_ID)
+            .setSmallIcon(Res.images.ic_app_logo.drawableResId)
             .setContentTitle(title)
             .setContentIntent(activityPendingInject)
             .setContentText(content)

@@ -1,10 +1,11 @@
-package com.prayercompanion.prayercompanionandroid.presentation.utils
+package com.prayercompanion.shared.data.local.system
 
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.prayercompanion.shared.data.local.system.notification.AndroidPrayersAlarmScheduler
 
-class ScheduleDailyPrayersWorker constructor(
+class ScheduleDailyPrayersNotificationsWorker constructor(
     private val alarmScheduler: AndroidPrayersAlarmScheduler,
     context: Context,
     workerParams: WorkerParameters,

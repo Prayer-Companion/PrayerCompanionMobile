@@ -1,15 +1,16 @@
-package com.prayercompanion.prayercompanionandroid.presentation.utils
+package com.prayercompanion.shared.data.local.system.notification
 
 import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import com.prayercompanion.prayercompanionandroid.presentation.receivers.AlarmReceiver
+import com.prayercompanion.shared.data.local.system.receiver.AlarmReceiver
 import com.prayercompanion.shared.data.utils.Consts
 import com.prayercompanion.shared.domain.models.Prayer
 import com.prayercompanion.shared.domain.models.PrayerNotificationItem
 import com.prayercompanion.shared.domain.usecases.prayers.GetDayPrayers
+import com.prayercompanion.shared.presentation.utils.getPrayerNameStringRes
 import com.prayercompanion.shared.presentation.utils.printStackTraceInDebug
 import com.prayercompanion.shared.toJson
 import com.raedghazal.kotlinx_datetime_ext.now
@@ -54,7 +55,7 @@ class AndroidPrayersAlarmScheduler constructor(
         val intent = Intent(context, AlarmReceiver::class.java).apply {
             putExtra(AlarmReceiver.EXTRA_PRAYER_NOTIFICATION_ITEM, item.toJson())
         }
-        val prayerName = context.getString(getPrayerNameStringRes(item.prayerInfo.prayer))
+        val prayerName = getPrayerNameStringRes(item.prayerInfo.prayer).getString(context)
         val prayerTime = Consts.FullDateTimeFormatter.format(item.prayerInfo.dateTime)
 
         val notificationId = "$prayerName|$prayerTime".hashCode()

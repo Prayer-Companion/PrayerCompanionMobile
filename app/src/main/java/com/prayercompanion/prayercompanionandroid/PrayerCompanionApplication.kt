@@ -9,11 +9,10 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.prayercompanion.prayercompanionandroid.presentation.di.androidPresentationModule
-import com.prayercompanion.prayercompanionandroid.presentation.utils.ScheduleDailyPrayersWorker
-import com.prayercompanion.prayercompanionandroid.presentation.utils.notifications.PrayersNotificationsService
 import com.prayercompanion.shared.androidMainModules
 import com.prayercompanion.shared.data.local.system.PermissionsManager
+import com.prayercompanion.shared.data.local.system.ScheduleDailyPrayersNotificationsWorker
+import com.prayercompanion.shared.data.local.system.notification.PrayersNotificationsService
 import com.prayercompanion.shared.presentation.appModules
 import logcat.AndroidLogcatLogger
 import logcat.LogPriority
@@ -51,7 +50,6 @@ class PrayerCompanionApplication : Application(), Configuration.Provider {
             modules(
                 *appModules().toTypedArray(),
                 *androidMainModules().toTypedArray(),
-                androidPresentationModule,
                 androidAppModule
             )
         }
@@ -89,15 +87,16 @@ class PrayerCompanionApplication : Application(), Configuration.Provider {
             return
         }
 
-        val scheduleDailyPrayersPeriodicWorkRequest =
-            PeriodicWorkRequestBuilder<ScheduleDailyPrayersWorker>(1, TimeUnit.HOURS)
+        val scheduleDailyPeriodicWorkRequest =
+            PeriodicWorkRequestBuilder<ScheduleDailyPrayersNotificationsWorker>(1, TimeUnit.HOURS)
                 .build()
 
 
-        WorkManager.getInstance(this@PrayerCompanionApplication).enqueueUniquePeriodicWork(
-            ScheduleDailyPrayersWorker::class.simpleName!!,
-            ExistingPeriodicWorkPolicy.UPDATE,
-            scheduleDailyPrayersPeriodicWorkRequest
-        )
+        WorkManager.getInstance(this@PrayerCompanionApplication)
+            .enqueueUniquePeriodicWork(
+                ScheduleDailyPrayersNotificationsWorker::class.simpleName!!,
+                ExistingPeriodicWorkPolicy.UPDATE,
+                scheduleDailyPeriodicWorkRequest
+            )
     }
 }
