@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">رفيق الصلاة</string>
+
+    <string name="fajr">الفجر</string>
+    <string name="sunrise">الشروق</string>
+    <string name="dhuhr">الظهر</string>
+    <string name="asr">العصر</string>
+    <string name="maghrib">المغرب</string>
+    <string name="isha">العشاء</string>
+
+    <string name="status">الحالة</string>
+    <string name="remaining_time">الوقت المتبقي حتى صلاة %1$s</string>
+
+    <string name="error_something_went_wrong">نأسف, يبدوا ان هنالك مشكلة ما</string>
+
+    <string name="home_tab">الرئيسية</string>
+    <string name="qibla_tab">القبلة</string>
+    <string name="quran_tab">القرآن</string>
+    <string name="settings_tab">الإعدادات</string>
+
+    <!-- Prayer Statuses -->
+    <string name="prayerStatusDialog_title">تحديث الحالة</string>
+    <string name="prayerStatusDialog_explanation">كيف تم حساب فترات صلاة العشاء</string>
+
+    <string name="prayerStatus_in_the_mosque">في المسجد</string>
+    <string name="prayerStatus_onTime">في وقتها</string>
+
+    <string name="prayerStatus_late1">بعد نصف الوقت</string>
+    <string name="prayerStatus_late2">متاخر</string>
+    <string name="prayerStatus_isha_late1">بعد الثلث الاول من الليل</string>
+    <string name="prayerStatus_isha_late2">بعد منتصف الليل</string>
+
+    <string name="prayerStatus_missed">فاتت</string>
+    <string name="prayerStatus_qadaa">قضاء</string>
+    <string name="prayerStatus_none">غير محدد</string>
+
+
+    <string name="continue_with_google">تسجيل الدخول ب Google</string>
+    <string name="continue_as_guest">الاستمرار ك ضيف</string>
+    <!--  app name is used here  -->
+    <string name="location_permission_request_title">السماح لتطبيق رفيق الصلاة باستخدام موقعك الحالي</string>
+    <string name="location_permission_request_explanation">لتقديم اوقات صلاة دقيقة تناسب موقعك الحالي</string>
+    <string name="location_permission_request_cta">منح إذن الموقع</string>
+    <string name="location_permission_request_deny_body">لا يمكن استخدام التطبيق بدون الوصول لموقعك الحالي</string>
+
+    <!--  app name is used here  -->
+    <string name="notification_permission_request_title">السماح لتطبيق رفيق الصلاة بإرسال الاشعارات</string>
+    <string name="notification_permission_request_explanation">تتوجب لتوفير خدمة التذكير بالصلاة</string>
+    <string name="notification_permission_request_cta">منح إذن الاشعارات</string>
+    <string name="notification_permission_request_deny_body">إذن الاشعارات مطلوب للحصول على مزايا التطبيق كاملة</string>
+
+    <string name="prayer_reminders_channel_name">التذكير للصلاوات</string>
+    <string name="prayer_reminders_channel_description">التذكير للصلوات اليومية</string> <!-- change to a more useful description-->
+    <string name="prayer_notification_title">حان الآن موعد اذان %1$s %2$s</string>
+
+    <string name="current_prayer">الصلاة الحالية</string>
+
+    <string name="sensor_accuracy_high">دقة مستشعر الهاتف جيدة</string>
+    <string name="sensor_accuracy_medium">دقة مستشعر الهاتف متوسطة</string>
+    <string name="sensor_accuracy_low">دقة مستشعر الهاتف تحتاج الى معايرة</string>
+    <string name="sensor_accuracy_no_contact">مستشعر الهاتف لا يعمل</string>
+
+    <string name="qibla_dialog_sensor_accuracy_title">هل دقة المستشعر منخفضة ؟</string>
+    <string name="qibla_dialog_sensor_accuracy_text">يرجى تحريك هاتفك في الهواء على شكل الرقم 8 من اجل الحصول على اتجاهات القبلة الدقيقة</string>
+
+    <string name="verses_count">%1$d أية</string>
+    <string name="from_verse">من آية</string>
+    <string name="to_verse">الى آية</string>
+
+    <string name="quran_title">السور المحفوظة</string>
+    <string name="chapter_name">اسم السورة</string>
+
+    <string name="edit_aya_from">من</string>
+    <string name="edit_aya_to">الى</string>
+
+    <string name="quran_reading_section_chapter_name">سورة %1$s (%2$d-%3$d):</string>
+    <string name="quran_reading_section">{%1$s}</string>
+
+    <string name="first_quran_reading_section">في الركعة الاولى</string>
+    <string name="second_quran_reading_section">في الركعة الثانية</string>
+    <string name="show_full_quran_reading_sections">إظهار الكل</string>
+    <string name="next_quran_reading_sections">التالي</string>
+    <string name="load_quran_sections">حمل اقسام القرآن</string>
+    <string name="empty_quran_sections_prompt">اختر بعض سور القران لتحصل على اقتراحات القرائة</string>
+
+    <!-- General -->
+    <string name="ok">حسنا</string>
+    <string name="skip">تخطي</string>
+
+    <!-- Settings screen -->
+    <string name="settings_title">الإعدادات</string>
+    <string name="settings_items_language">اللغة</string>
+    <string name="settings_items_language_options_arabic">العربية</string>
+    <string name="settings_items_language_options_english">English</string>
+    <string name="settings_items_preferences">التفضيلات</string>
+    <string name="settings_items_preferences_pauseMedia">ايقاف الوسائط المتعددة عند نداء الاذان</string>
+    <string name="settings_items_feedback_title">شاركنا رأيك</string>
+    <string name="settings_items_feedback_prompt">طلب ميزات جديدة,\n الابلاغ عن مشكلة,\n او مجرد مشاركتنا رأيك…\n رأيك يهمنا!</string>
+    <string name="settings_items_signOut">تسجيل الخروج</string>
+
+    <string name="status_overview">الأيام الثلاثة الماضية</string>
+    <string name="notification_action_prayedNow">أديتُ الصلاة</string>
+    <string name="notification_action_response_statusUpdate">تم تسجيل حالة صلاة %1$s: %2$s</string>
+
+    <!-- Feedback dialog -->
+    <string name="feedbackDialog_title">شاركنا رأيك</string>
+    <string name="feedbackDialog_messageHint">رأيك يهمنا!</string>
+    <string name="feedbackDialog_action_send">أرسل</string>
+    <string name="feedbackDialog_action_cancel">إلغاء</string>
+</resources>
